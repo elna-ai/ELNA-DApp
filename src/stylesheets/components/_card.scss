@@ -1,0 +1,128 @@
+.contact-card.elna-card {
+    box-shadow: 0 10px 28px -7px rgba(153, 161, 170, 0.15);
+    border-color: transparent;
+}
+
+.card .card-body {
+    padding: 1.25rem;
+    min-height: 1px;
+}
+
+.contact-card.elna-card .user-name,
+.contact-card.elna-card .user-name a {
+    font-weight: 700;
+    color: #007D88;
+    text-decoration: none !important;
+}
+
+.card {
+    margin-bottom: 0.875rem;
+    border-radius: 0.5rem;
+}
+
+.card.contact-card.elna-card .card-footer>a {
+    justify-content: center;
+    width: 100%;
+    color: #6f6f6f;
+    font-size: 13px;
+}
+
+.card.contact-card.elna-card .card-footer>a {
+    text-decoration: none;
+}
+
+.contact-card.elna-card .user-desg {
+    font-size: 13px;
+}
+
+.card .card-footer {
+    border-color: #eaeaea;
+    background-color: #fff;
+}
+
+.contact-card.elna-card:hover {
+    box-shadow: 0 20px 48px -14px rgba(153, 161, 170, 0.45);
+    border-color: transparent;
+}
+
+/*Avatar*/
+.avatar {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    background-color: transparent;
+}
+
+.avatar.avatar-xl {
+    width: 7rem;
+    height: 7rem;
+}
+
+/*Avatar Intial*/
+
+.avatar.avatar-soft-primary>.initial-wrap {
+    background-color: #ebf5f5 !important;
+    color: #007D88;
+}
+
+.avatar.avatar-xl>.initial-wrap {
+    font-size: 1.75rem;
+}
+
+.avatar.avatar-rounded .avatar-img,
+.avatar.avatar-rounded .initial-wrap {
+    border-radius: 50%;
+}
+
+.avatar>.initial-wrap {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    justify-content: center;
+    -webkit-justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.avatar .avatar-img,
+.avatar .initial-wrap {
+    width: 100%;
+    height: 100%;
+    border-radius: 0.5rem;
+    -o-object-fit: cover;
+    object-fit: cover;
+}
+
+
+/*Create Agent*/
+.position-bottom-end-overflow {
+    bottom: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    -webkit-transform: translate(50%, 50%) !important;
+    -moz-transform: translate(50%, 50%) !important;
+    -ms-transform: translate(50%, 50%) !important;
+    -o-transform: translate(50%, 50%) !important;
+    transform: translate(50%, 50%) !important;
+}
+
+.card-img-overlay.coming-soon h5 {
+    display: none;
+}
+
+.card-img-overlay.coming-soon:hover {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    color: #fff;
+    z-index: 5;
+    cursor: pointer;
+    text-align: center;
+}
+
+.card-img-overlay.coming-soon:hover h5 {
+    display: block;
+}

@@ -1,0 +1,122 @@
+{
+  "chat": {
+    "inputPlaceholder": "Send a message",
+    "warning": "Ai Wizards may display inaccurate or offensive information about people, places and facts that doesn't represent Team Elna's views"
+  },
+  "footer": {
+    "name": "ELNA © 2023 All rights reserved.",
+    "privacyPolicy": "Privacy Policy",
+    "t&c": "T&C"
+  },
+  "header": {
+    "connectWallet": "Connect Wallet"
+  },
+  "sidebar": {
+    "plusDescription": "Supercharge your experience!",
+    "home": "Home",
+    "create": "Create",
+    "feedback": "Feedback",
+    "docs": "Docs"
+  },
+  "wizards": {
+    "myWizards": "My Wizards",
+    "noWizards": "You don't have any created wizards",
+    "popularWizards": "Popular Ai Wizard's",
+    "popularWizardsDesc": "Adored by users around the globe, winning their hearts and earning their smiles."
+  },
+  "signIn": {
+    "connectWallet": "Connect your wallet",
+    "walletDescription": "If you don't have a wallet, you can select a provider and create one now. <a>Learn more</a>",
+    "connectingWallet": "Connecting to wallet..",
+    "walletList": {
+      "dfinity": "Internet Identity",
+      "stoic": "Stoic Wallet",
+      "plug": "Plug",
+      "astrox": "AstroX ME",
+      "bitfinity": "Infinity Wallet"
+    }
+  },
+  "createAgent": {
+    "title": "creating to your own agent",
+    "fromStrach": "Create From Scratch",
+    "nameAgent": "Name your Agent",
+    "persona": "Persona",
+    "biography": "Biography",
+    "biographyDesc": "A snapshot of your wizard, including their backstory, personality, and interest",
+    "greeting": "Greeting",
+    "greetingDesc": "Create a greeting for your wizard that will introduce them to the user and set the tone for the conversation",
+    "visibility": {
+      "title": "Visibility",
+      "public": "Public <span>Anyone can chat</span>",
+      "unlisted": "Unlisted <span> Anyone with the link can chat </span>",
+      "private": "Private <span>Only you can chat</span>"
+    },
+    "knowledge": {
+      "knowledge": "Knowledge",
+      "title": "Add Webpage and Documents",
+      "description": "Train your agent with customize data",
+      "addWebpages": "Add Webpages",
+      "addDocuments": "Add Documents",
+      "maxFileSize": "Please select a valid PDF file (max 5MB).",
+      "uploadFile": {
+        "title": "Browse to select files",
+        "maxSize": "Maximum upload size per file: <b>5MB</b> ",
+        "supportedType": "Supported file type: <b>PDF</b>"
+      }
+    },
+    "form": {
+      "label": {
+        "name": "Name"
+      },
+      "placeholder": {
+        "name": "Enter Bot name"
+      },
+      "validations": {
+        "name": "Name should have minimum 2 characters",
+        "biography": "Biography should have minimum 30 characters",
+        "greeting": "Greeting should have minimum 20 characters",
+        "visibility": "Please select a visibility option"
+      }
+    },
+    "noPermission": {
+      "title": "Oops! It seems you don't have permission to create Wizards.",
+      "gainAccess": "To gain access, simply join our whitelist.",
+      "askAccess": "Click the link to fill out the form and <a><strong><u>Get started!</u></strong></a>"
+    },
+    "templateStore": {
+      "title": "Template Store",
+      "description": "Get started on creating an engaging agent with a pre-made template.",
+      "selectTemplate": "Select Template"
+    }
+  },
+  "404Page": {
+    "problem": "We have a problem...",
+    "title": "404, Page Not Found",
+    "description": "We couldn't find the page you're looking for."
+  },
+  "errorBoundary": {
+    "title": "{{appName}}, we have a problem...",
+    "description": "<h3>404 Not Found</h3> <p>We couldn't find the page you're looking for.</p>"
+  },
+  "common": {
+    "elna": "Elna",
+    "eywa": "Eywa",
+    "signIn": "Sign In",
+    "send": "Send",
+    "commingSoon": "Coming Soon",
+    "viewAll": "View All",
+    "logout": "Log out",
+    "cancel": "Cancel",
+    "ok": "Ok",
+    "template": "Template",
+    "scratch": "Scratch",
+    "publish": "Publish",
+    "loadingPage": "Loading page",
+    "noPermission": "No Permission",
+    "next": "Next",
+    "backToHome": "Back to home",
+    "learning": "Learning",
+    "learned": "Learned",
+    "uploading": "Uploading..."
+  }
+}
