@@ -23,8 +23,8 @@ function WalletList({ isOpen, onClose, setIsLoggedIn }: WalletListProps) {
   const handleConnection = async (id: string) => {
     try {
       setIsLoading(true);
+      if(wallet === undefined) return;
       await wallet.connect(id);
-
       setIsLoggedIn(!!localStorage.getItem("dfinityWallet"));
       onClose();
     } catch (error) {

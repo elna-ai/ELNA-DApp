@@ -6,7 +6,7 @@ function CreateAgent() {
   return (
     <Routes>
       <Route path="/" element={<View />} />
-      <Route path="/edit/:uuid" element={<Create />} />
+      <Route path="/edit/:uuid?" element={<Create />} />
     </Routes>
   );
 }

@@ -5,8 +5,12 @@ import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import { useUserStore } from "stores/useUser";
-import { UserState } from "types";
+import { toast } from "react-toastify";
+import { t } from "i18next";
+import { Trans } from "react-i18next";
+
+import { wizard_details as wizardDetails } from "declarations/wizard_details";
+import { useWallet } from "hooks/useWallet";
 
 import TemplateStore from "./TemplateSore";
 import {
@@ -14,29 +18,35 @@ import {
   CREATE_BOT_MODAL_VALIDATION_SCHEMA,
 } from "./constants";
 import NoAccessImg from "../../images/no-access.png";
-import { t } from "i18next";
-import { Trans } from "react-i18next";
+import { backend } from "declarations/backend";
 
 function View() {
   const [isCreate, setIsCreate] = useState(false);
   const [isNoPermission, setIsNoPermission] = useState(false);
 
   const navigate = useNavigate();
-  const user = useUserStore((state: UserState) => state.user);
-  // const { mutate: createAgent } = useCreateAgentName();
+  const wallet = useWallet();
 
-  const handleSubmit = ({ name }) => {
-    // createAgent(
-    //   { name },
-    //   {
-    //     onSuccess: ({ data: { data } }) => {
-    //       navigate(`/create-agent/edit/${data.agent.uuid}`);
-    //     },
-    //     onError: data => {
-    //       console.log("error", data);
-    //     },
-    //   }
-    // );
+  const handleCreate = async () => {
+    if(wallet === undefined || !wallet?.principalId) {
+      setIsNoPermission(true)
+      return;
+    }
+
+    const isWhiteListed = await backend.isUserWhitelisted(wallet.principalId);
+    isWhiteListed ? setIsCreate(true) : setIsNoPermission(true);
+  }
+
+  const handleSubmit = async ({ name }: {name: string}) => {
+    if(wallet === undefined) return;
+
+    const isNameValid: boolean = await wizardDetails.isWizardNameValid(wallet.principalId,name);
+    if(!isNameValid) {
+      toast.error("Wizard name exist for user");
+      return;
+    }
+
+    navigate({pathname:"/create-agent/edit", search:`?name=${name}`});
   };
 
   return (
@@ -84,11 +94,7 @@ function View() {
               <div className="user-name mt-1 mb-1">
                 <div
                   className="btn-link stretched-link text-decoration-none"
-                  onClick={() =>
-                    user.is_whitelisted
-                      ? setIsCreate(true)
-                      : setIsNoPermission(true)
-                  }
+                  onClick={() => handleCreate()}
                 >
                   {t("createAgent.fromStrach")}
                 </div>

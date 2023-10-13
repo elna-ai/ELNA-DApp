@@ -1,18 +1,36 @@
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Spinner } from "react-bootstrap";
-import { useUserStore } from "stores/useUser";
+import { toast } from "react-toastify";
 import NoChatBotImg from "images/no-chatbot.png";
-import {UserState} from "types";
+import { wizard_details as wizardDetails } from "declarations/wizard_details";
+import { useWallet } from "hooks/useWallet";
 
 import Card from "./Card";
 
 function MyWizards() {
-  const user = useUserStore((state: UserState)=> state.user);
+  const [isUserWizardsLoading, setIsUserWizardsLoading] = useState(true);
+  const [userWizards, setUserWizards] = useState([]);
+
   const { t } = useTranslation();
-  // const { data: userAgents, isFetching: isUserAgentsLoading } =
-  //   useFetchUserAgents(user?.id);
-  const userAgents = {};
-  const isUserAgentsLoading = true;
+  const wallet = useWallet();
+
+  const getUserWizards = async (userId?: string) => {
+    if(userId === undefined) return;
+
+    try{
+     setIsUserWizardsLoading(true);
+      const data = await wizardDetails.getUserWizards(userId);
+      setUserWizards(data);
+      setIsUserWizardsLoading(false);
+    }catch(e){
+       toast.error("Something went wrong!");
+       console.error(e);
+    }
+   };
+
+   useEffect(() => { getUserWizards(wallet?.principalId); },[]);
+
 
   return (
     <>
@@ -33,16 +51,16 @@ function MyWizards() {
         </span>
         {t("wizards.myWizards")}
       </h5>
-      {isUserAgentsLoading ? (
+      {isUserWizardsLoading ? (
         <Spinner className="!flex mx-auto" />
-      ) : userAgents?.agents.length > 0 ? (
+      ) : userWizards?.length > 0 ? (
         <div className="row gx-3 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
-          {userAgents?.agents.map(agent => (
-            <div key={agent.uuid} className="col">
+          {userWizards?.map(({id,name,biography,uuid}) => (
+            <div key={id} className="col">
               <Card
-                name={agent.name}
-                description={agent.biography}
-                id={agent.uuid}
+                name={name}
+                description={biography}
+                id={uuid}
               />
             </div>
           ))}
