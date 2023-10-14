@@ -1,8 +1,8 @@
-.wallet-list{
-  &-modal-header{
+.wallet-list {
+  &-modal-header {
     align-items: flex-start;
 
-    &--title{
+    &--title {
       font-weight: 400;
       color: var(--gray-700);
       font-size: 0.875rem; /* 14px */
@@ -10,28 +10,28 @@
     }
   }
 
-  &--modal-body{
+  &--modal-body {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
   }
 
-  &--wallet{
+  &--wallet {
     display: flex;
     align-items: center;
     gap: 0.75rem;
     padding: 0.5rem;
 
-    &:hover{
+    &:hover {
       background-color: var(--gray-100);
     }
 
-    &--button{
+    &--button {
       border-radius: 0.125rem;
-      text-decoration-line: none ;
+      text-decoration-line: none;
     }
 
-    &--image{
+    &--image {
       width: 2rem;
       height: 2rem;
       object-fit: cover;

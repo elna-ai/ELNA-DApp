@@ -78,7 +78,8 @@ const docsIcons = () => (
   </svg>
 );
 
-export const SIDEBAR_LINK = [
+// TODO: Figure out why directly declaring an array is causing t() to not work
+const sidebarLink = () => [
   { to: "/", label: t("sidebar.home"), Icon: homeIcon },
   {
     to: "/create-agent",
@@ -93,3 +94,5 @@ export const SIDEBAR_LINK = [
     otherParams: { target: "_blank", rel: "noopener noreferrer" },
   },
 ];
+
+export const SIDEBAR_LINK = sidebarLink();
