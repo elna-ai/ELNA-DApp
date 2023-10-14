@@ -22,13 +22,13 @@ function Chat() {
   const lastBubbleRef = useRef(null);
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
   // const { data: agent, isLoading } = useShowUserAgent({ agentId: id });
-  const agent ={};
+  const agent = {};
   const isLoading = false;
 
   useEffect(() => {
     if (isLoading === false) {
       // message: agent.greeting
-      const newMessage = { user: DEFAULT_USER, };
+      const newMessage = { user: DEFAULT_USER };
       setMessages(prev => [...prev, newMessage]);
     }
   }, [isLoading]);
@@ -160,7 +160,9 @@ function Chat() {
                   readyState !== ReadyState.OPEN ||
                   isResponseLoading
                 }
-              >{t("common.send")}</Button>
+              >
+                {t("common.send")}
+              </Button>
             </div>
             <p className="text-muted fs-8 text-center">{t("chat.warning")}</p>
           </div>

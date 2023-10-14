@@ -2,25 +2,65 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { Formik } from "formik";
-import PropTypes from "prop-types";
+import { Trans, useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+
+import { useWallet } from "hooks/useWallet";
+import { wizard_details as wizardDetails } from "declarations/wizard_details";
 
 import { PERSONA_VALIDATION_SCHEMA } from "./constants";
-import { Trans, useTranslation } from "react-i18next";
+import {
+  WizardDetails,
+  WizardVisibility,
+  WizardVisibilityBackend,
+} from "types";
 
-function Persona({ agent, setCurrentNav }: {agent: any, setCurrentNav: React.Dispatch<React.SetStateAction<string>>}) {
+function Persona({
+  agent,
+  setCurrentNav,
+  name,
+}: {
+  agent: any;
+  setCurrentNav: React.Dispatch<React.SetStateAction<string>>;
+  name: string | null;
+}) {
   const { t } = useTranslation();
+  const wallet = useWallet();
+  const navigate = useNavigate();
   // const { mutate: updateAgent } = useUpdateAgent(agent?.uuid);
 
-  const handleSubmit = values => {
-    const { visibility, ...payload } = values;
-    // updateAgent(
-    //   { visibility, uuid: agent.uuid, payload },
-    //   {
-    //     onSuccess: () => {
-    //       setCurrentNav("knowledge");
-    //     },
-    //   }
-    // );
+  type PersonaValues = {
+    biography: string;
+    greeting: string;
+    visibility: WizardVisibility;
+  };
+  const handleSubmit = async (values: PersonaValues) => {
+    const userId = wallet?.principalId;
+    const visibility: WizardVisibilityBackend = {};
+
+    visibility[`${values.visibility}Visibility`] = null;
+    const payload: WizardDetails = {
+      ...values,
+      id: crypto.randomUUID(),
+      userId,
+      name,
+      visibility,
+      summary: [],
+      avatar: [],
+    };
+
+    const result = await wizardDetails.addWizard(userId, payload);
+    console.log(result.status);
+    console.log(typeof result.status);
+    if (result.status === 422n) {
+      toast.error(result.message);
+      throw new Error(result.message);
+    } else {
+      toast.success(result.message);
+      //       setCurrentNav("knowledge");
+      navigate("/");
+    }
   };
   return (
     <Formik
@@ -202,8 +242,4 @@ function Persona({ agent, setCurrentNav }: {agent: any, setCurrentNav: React.Dis
   );
 }
 
-Persona.propTypes = {
-  agent: PropTypes.object,
-  setCurrentNav: PropTypes.func,
-};
 export default Persona;

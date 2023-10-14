@@ -1,8 +1,13 @@
 {
   "canisters": {
     "backend": {
+      "dependencies": ["wizard_details"],
       "type": "motoko",
       "main": "backend/Backend.mo"
+    },
+    "wizard_details": {
+      "type": "motoko",
+      "main": "wizard_details/Main.mo"
     },
     "frontend": {
       "dependencies": ["backend"],

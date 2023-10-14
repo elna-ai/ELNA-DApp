@@ -1,11 +1,11 @@
 import classNames from "classnames";
 
 interface ExpandButton {
-  className?: string,
-  handleExpand: () => void
+  className?: string;
+  handleExpand: () => void;
 }
 
-function ExpandButton({ className = "", handleExpand}: ExpandButton) {
+function ExpandButton({ className = "", handleExpand }: ExpandButton) {
   return (
     <button
       className={classNames(
@@ -39,6 +39,5 @@ function ExpandButton({ className = "", handleExpand}: ExpandButton) {
     </button>
   );
 }
-
 
 export default ExpandButton;

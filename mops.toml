@@ -1,3 +1,4 @@
 [dependencies]
 base = "0.7.4"
 motoko-hash-map = "https://github.com/ZhenyaUsenko/motoko-hash-map#v7.0.0"
+vector = "0.2.0"

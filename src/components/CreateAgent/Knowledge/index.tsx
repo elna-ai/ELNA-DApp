@@ -7,14 +7,14 @@ import Card from "./Card";
 import UploadFile from "./UploadFile";
 
 interface KnowledgeProps {
-  agentId: string,
-  setIsPolling: React.Dispatch<React.SetStateAction<boolean>>,
+  agentId: string;
+  setIsPolling: React.Dispatch<React.SetStateAction<boolean>>;
   document: {
-    uuid: string,
-    summary: string,
-    file_name: string,
-    is_active: boolean
-  }
+    uuid: string;
+    summary: string;
+    file_name: string;
+    is_active: boolean;
+  };
 }
 
 function Knowledge({ agentId, setIsPolling, document }: KnowledgeProps) {

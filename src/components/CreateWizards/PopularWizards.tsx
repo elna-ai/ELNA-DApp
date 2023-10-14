@@ -1,13 +1,35 @@
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Spinner } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 import { AVATAR_DUMMY_IMAGE } from "components/Chat/constants";
+import { wizard_details as wizardDetails } from "declarations/wizard_details";
+
 import Card from "./Card";
 
 function PopularWizards() {
+  const [isPopularWizardsLoading, setIsPopularWizardsLoading] = useState(true);
+  const [popularWizards, setPopularWizards] = useState([]);
+
   const { t } = useTranslation();
-  const popularAgents = {};
-  const isPopularAgentsLoading = true;
+
+  const getPopularWizards = async () => {
+    try {
+      setIsPopularWizardsLoading(true);
+      const data = await wizardDetails.getWizards();
+      console.log(data);
+      setPopularWizards(data);
+      setIsPopularWizardsLoading(false);
+    } catch (e) {
+      toast.error("Something went wrong!");
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    getPopularWizards();
+  }, []);
 
   return (
     <>
@@ -37,13 +59,13 @@ function PopularWizards() {
         </a>
       </div>
       <div className="row gx-3 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
-        {isPopularAgentsLoading ? (
+        {isPopularWizardsLoading ? (
           <Spinner className="m-auto" />
         ) : (
-          popularAgents?.agents?.map(({ biography, uuid, name, avatar }) => {
-            const imgUrl = AVATAR_DUMMY_IMAGE.find(
-              dummy => dummy.id === uuid
-            )?.imgUrl;
+          popularWizards?.map(({ biography, uuid, name, avatar, userId }) => {
+            const imgUrl =
+              AVATAR_DUMMY_IMAGE.find(dummy => dummy.id === uuid)?.imgUrl ||
+              AVATAR_DUMMY_IMAGE[0].imgUrl;
             return (
               <Card
                 {...{ name }}
@@ -51,7 +73,7 @@ function PopularWizards() {
                 description={biography}
                 key={uuid}
                 imageUrl={imgUrl}
-                userId={"0x1B7a...cD6F5"}
+                userId={userId}
               />
             );
           })

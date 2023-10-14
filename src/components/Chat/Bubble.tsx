@@ -3,9 +3,9 @@ import DOMPurify from "dompurify";
 import { useTranslation } from "react-i18next";
 
 interface BubbleProps {
-  message: string,
-  user: { name: string },
-  isLoading: boolean
+  message: string;
+  user: { name: string };
+  isLoading: boolean;
 }
 
 function Bubble({ user, message, isLoading = false }: BubbleProps) {

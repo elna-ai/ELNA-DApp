@@ -27,6 +27,7 @@
       "images/*": ["./src/images"],
       "stores/*": ["./src/stores"],
       "types": ["./src/types.ts"],
+      "declarations": ["./src/declarations"],
     }
   },
   "include": ["src"]

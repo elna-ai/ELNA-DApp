@@ -48,6 +48,7 @@ export default defineConfig({
       images: path.resolve("./src/images"),
       stores: path.resolve("./src/stores"),
       types: path.resolve("./src/types.ts"),
+      declarations: path.resolve("./src/declarations"),
       src: path.resolve("./src/"),
     },
   },

@@ -3,41 +3,30 @@ import Nat "mo:base/Nat";
 import D "mo:base/Debug";
 import Map "mo:motoko-hash-map/Map";
 import { thash } "mo:motoko-hash-map/Map";
-
+// import WizardDetails "canister:wizard_details";
 import Option "mo:base/Option";
+import Array "mo:base/Array";
+import Bool "mo:base/Bool";
+
+import Types "./Types";
 
 actor class Backend() {
-  type UserAddress = Text;
-  type UserDetails = {
-    count: Nat;
-  };
 
-  stable var userDetails = Map.new<UserAddress,UserDetails>();
+  stable var userDetails = Map.new<Types.UserAddress, Types.UserDetails>();
+  stable var whitelistedUsers : [Types.UserAddress] = [
+    "espul-tcuci-bsdly-lsq3g-rinm2-vl22z-fnpar-rpshl-wdsei-fe5id-dqe"
+  ];
 
- func displayUsers () {
-  D.print("\n\n Start display");
-  D.print(debug_show(userDetails));
-  D.print("End Display \n\n");
- };
-
- func displayUserCount(userId: UserAddress) {
-  D.print(debug_show(Map.get(userDetails,thash,userId)));
- };
-
-  public query func get(userId: UserAddress) : async Nat {
-    switch(Map.get(userDetails,thash,userId)) {
-      case null { return 0 };
-      case (?details) { return details.count};
-    };
-    // let details: ?UserDetails = Map.get(userDetails,thash,userId);
-    // let count: UserDetails = Option.get(user, {count=0});
-
-  };
-
-  public func inc(userId: UserAddress) : async () {
-    switch (Map.get(userDetails,thash,userId)) {
-      case null { Map.set(userDetails, thash, userId, {count=1}); };
-      case (?details) { Map.set(userDetails, thash, userId, {count = details.count +1}); };
+  public query func isUserWhitelisted(userId : Types.UserAddress) : async Bool {
+    let isWhitelisted : ?Text = Array.find(
+      whitelistedUsers,
+      func(whitelistedUser : Types.UserAddress) : Bool {
+        whitelistedUser == userId;
+      },
+    );
+    switch (isWhitelisted) {
+      case null { false };
+      case _ { true };
     };
   };
 };

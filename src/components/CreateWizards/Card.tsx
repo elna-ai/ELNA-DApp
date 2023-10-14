@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
 
 interface CardProps {
-  name: string,
-  description: string,
-  imageUrl?: string,
-  userId?: string,
-  id: string
+  name: string;
+  description: string;
+  imageUrl?: string;
+  userId?: string;
+  id: string;
 }
 
 function Card({ name, description, imageUrl, userId, id }: CardProps) {
-  const Avatar = ({ name }: {name: string}) => (
+  const Avatar = ({ name }: { name: string }) => (
     <div className="avatar avatar-xl avatar-soft-primary avatar-rounded bg-gray-300 text-green-700">
       <span className="initial-wrap">{name[0].toUpperCase()}</span>
     </div>

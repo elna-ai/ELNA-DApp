@@ -5,7 +5,11 @@ import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
+import PageLoader from "components/common/PageLoader";
+import { wizard_details as wizardDetails } from "declarations/wizard_details";
 
 import Persona from "./Persona";
 import Knowledge from "./Knowledge";
@@ -14,18 +18,26 @@ import Knowledge from "./Knowledge";
 //   useShowUserAgent,
 //   useShowUserAgentPolling,
 // } from "hooks/reactQuery/useAgentsApi";
-import PageLoader from "components/common/PageLoader";
 import { CREATE_BOT_MODAL_VALIDATION_SCHEMA } from "./constants";
-import { useTranslation } from "react-i18next";
 
 function Create() {
   const [isPolling, setIsPolling] = useState(false);
   const [currentNav, setCurrentNav] = useState("persona");
 
   const { t } = useTranslation();
-  const { uuid: agentId } = useParams();
+  const { uuid: wizardId } = useParams();
+  const [urlSearchParams, _] = useSearchParams();
   const navigate = useNavigate();
   const isLoading = false;
+
+  const getWizard = async (wizardId: string | undefined) => {
+    if (wizardId === undefined) return;
+
+    const wizard = await wizardDetails.getWizard(wizardId);
+    return wizard;
+  };
+
+  const agent = wizardId && getWizard(wizardId);
   // const { data: agent, isLoading } = useShowUserAgent({
   //   agentId,
   // });
@@ -58,7 +70,10 @@ function Create() {
   return (
     <>
       <Formik
-        initialValues={{ name: agent?.name, isNameEdit: false }}
+        initialValues={{
+          name: agent?.name || urlSearchParams.get("name"),
+          isNameEdit: false,
+        }}
         validationSchema={CREATE_BOT_MODAL_VALIDATION_SCHEMA}
         onSubmit={values => console.log(values)}
       >
@@ -132,7 +147,7 @@ function Create() {
             <Nav.Link
               className="btn nav-pill-chat"
               eventKey="knowledge"
-              disabled={!agent.biography || !agent.greeting}
+              disabled={!agent?.biography || !agent?.greeting}
             >
               {t("createAgent.knowledge.knowledge")}
             </Nav.Link>
@@ -141,20 +156,24 @@ function Create() {
 
         <div>
           <Button
-            disabled={!agent.is_active || isPublishing || agent.is_published}
+            // || isPublishing
+            disabled={!agent?.is_active || agent?.is_published}
             onClick={handlePublish}
           >
             <span className="mr-2">{t("common.publish")}</span>
-            {isPublishing && <Spinner animation="border" size="sm" />}
+            {/* {isPublishing && <Spinner animation="border" size="sm" />} */}
           </Button>
         </div>
       </div>
       <hr className="mt-0" />
       {currentNav === "persona" ? (
-        <Persona {...{ agent, setCurrentNav }} />
+        <Persona
+          name={urlSearchParams.get("name")}
+          {...{ agent, setCurrentNav }}
+        />
       ) : (
         <Knowledge
-          agentId={agent.uuid}
+          agentId={agent?.id}
           setIsPolling={setIsPolling}
           document={document}
         />

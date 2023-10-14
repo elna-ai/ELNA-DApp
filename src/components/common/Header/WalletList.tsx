@@ -9,8 +9,8 @@ import { useWallet } from "hooks/useWallet";
 import { WALLET_LIST } from "./constants";
 
 interface WalletListProps {
-  isOpen: boolean,
-  onClose: () => void,
+  isOpen: boolean;
+  onClose: () => void;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -23,8 +23,8 @@ function WalletList({ isOpen, onClose, setIsLoggedIn }: WalletListProps) {
   const handleConnection = async (id: string) => {
     try {
       setIsLoading(true);
+      if (wallet === undefined) return;
       await wallet.connect(id);
-
       setIsLoggedIn(!!localStorage.getItem("dfinityWallet"));
       onClose();
     } catch (error) {
@@ -35,10 +35,10 @@ function WalletList({ isOpen, onClose, setIsLoggedIn }: WalletListProps) {
   };
   return (
     <Modal show={isOpen} onHide={onClose} centered>
-      <Modal.Header closeButton className="align-items-start">
+      <Modal.Header closeButton className="wallet-list-modal-header">
         <Modal.Title>
           <div>{t("signIn.connectWallet")}</div>
-          <p className=" font-normal text-gray-700 text-sm">
+          <p className="wallet-list-modal-header--title">
             <Trans
               i18nKey="signIn.walletDescription"
               components={{ a: <a href="#" /> }}
@@ -46,17 +46,21 @@ function WalletList({ isOpen, onClose, setIsLoggedIn }: WalletListProps) {
           </p>
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body className="flex flex-col gap-2">
+      <Modal.Body className="wallet-list--modal-body">
         {WALLET_LIST.map(({ name, icon, id }) => (
           <Button
             variant="link"
             key={name}
-            className="rounded-sm !no-underline"
+            className="wallet-list--wallet--button"
             onClick={() => handleConnection(id)}
             disabled={isLoading}
           >
-            <div className="flex items-center gap-3 p-2 hover:bg-gray-100">
-              <img src={icon} alt={name} className="h-8 w-8 object-cover" />
+            <div className="wallet-list--wallet">
+              <img
+                src={icon}
+                alt={name}
+                className="wallet-list--wallet--image"
+              />
               <span>{name}</span>
             </div>
           </Button>
