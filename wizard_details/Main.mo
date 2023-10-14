@@ -4,8 +4,6 @@ import Bool "mo:base/Bool";
 import Debug "mo:base/Debug";
 import Vec "mo:vector";
 
-
-
 import Types "./Types";
 import {
   getWizardsByUser;
