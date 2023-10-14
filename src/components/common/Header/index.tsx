@@ -11,17 +11,17 @@ import { UserState } from "types";
 import { useWallet } from "hooks/useWallet";
 
 interface HeaderProps {
-  isLoggedIn: boolean,
+  isLoggedIn: boolean;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function Header({ isLoggedIn, setIsLoggedIn }:  HeaderProps) {
+function Header({ isLoggedIn, setIsLoggedIn }: HeaderProps) {
   const [isWalletModelOpen, setIsWalletModelOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const { t } = useTranslation();
   const wallet = useWallet();
-  const setUser = useUserStore((state:UserState) => state.setUser);
+  const setUser = useUserStore((state: UserState) => state.setUser);
   const user = useUserStore((state: UserState) => state.user);
 
   const handleClick = async () => {
@@ -40,10 +40,12 @@ function Header({ isLoggedIn, setIsLoggedIn }:  HeaderProps) {
   };
 
   const displayAddress = () => {
-    if(!wallet?.principalId) return "user";
+    if (!wallet?.principalId) return "user";
 
     const firstPart = wallet?.principalId?.substring(0, 6);
-    const lastPart = wallet?.principalId?.substring(wallet.principalId.length - 6);
+    const lastPart = wallet?.principalId?.substring(
+      wallet.principalId.length - 6
+    );
     return `${firstPart}...${lastPart}`;
   };
 
@@ -124,6 +126,5 @@ function Header({ isLoggedIn, setIsLoggedIn }:  HeaderProps) {
     </>
   );
 }
-
 
 export default Header;

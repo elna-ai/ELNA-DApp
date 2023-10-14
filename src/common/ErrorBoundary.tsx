@@ -1,4 +1,4 @@
-import React, {ErrorInfo} from "react";
+import React, { ErrorInfo } from "react";
 
 import { Button } from "react-bootstrap";
 import { t } from "i18next";
@@ -11,7 +11,10 @@ interface ErrorBoundaryState {
   hasError: boolean;
 }
 
-class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+class ErrorBoundary extends React.Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };

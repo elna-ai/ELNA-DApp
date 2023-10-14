@@ -4,6 +4,6 @@ module {
   public type UserAddress = Text;
 
   public type UserDetails = {
-    botList: [Text];
+    botList : [Text];
   };
 };

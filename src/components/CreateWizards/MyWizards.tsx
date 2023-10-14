@@ -16,21 +16,22 @@ function MyWizards() {
   const wallet = useWallet();
 
   const getUserWizards = async (userId?: string) => {
-    if(userId === undefined) return;
+    if (userId === undefined) return;
 
-    try{
-     setIsUserWizardsLoading(true);
+    try {
+      setIsUserWizardsLoading(true);
       const data = await wizardDetails.getUserWizards(userId);
       setUserWizards(data);
       setIsUserWizardsLoading(false);
-    }catch(e){
-       toast.error("Something went wrong!");
-       console.error(e);
+    } catch (e) {
+      toast.error("Something went wrong!");
+      console.error(e);
     }
-   };
+  };
 
-   useEffect(() => { getUserWizards(wallet?.principalId); },[]);
-
+  useEffect(() => {
+    getUserWizards(wallet?.principalId);
+  }, []);
 
   return (
     <>
@@ -55,13 +56,9 @@ function MyWizards() {
         <Spinner className="!flex mx-auto" />
       ) : userWizards?.length > 0 ? (
         <div className="row gx-3 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
-          {userWizards?.map(({id,name,biography,uuid}) => (
+          {userWizards?.map(({ id, name, biography, uuid }) => (
             <div key={id} className="col">
-              <Card
-                name={name}
-                description={biography}
-                id={uuid}
-              />
+              <Card name={name} description={biography} id={uuid} />
             </div>
           ))}
         </div>

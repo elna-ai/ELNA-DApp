@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 // import useIsMobileScreen from "hooks/useIsMobileScreen";
 import useIsMobileScreen from "../../../hooks/useIsMobileScreen";
 
-import BrandSm  from "images/brandSm.svg?react";
-import  ElanLogo  from "images/logoElna.svg?react";
+import BrandSm from "images/brandSm.svg?react";
+import ElanLogo from "images/logoElna.svg?react";
 import { SIDEBAR_LINK } from "./constant";
 import { useLocation } from "react-router-dom";
 import ExpandButton from "./ExpandButton";
@@ -110,6 +110,5 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
     </div>
   );
 }
-
 
 export default Sidebar;

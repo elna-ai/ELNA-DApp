@@ -10,40 +10,50 @@ import { useWallet } from "hooks/useWallet";
 import { wizard_details as wizardDetails } from "declarations/wizard_details";
 
 import { PERSONA_VALIDATION_SCHEMA } from "./constants";
-import { WizardDetails, WizardVisibility, WizardVisibilityBackend } from "types";
+import {
+  WizardDetails,
+  WizardVisibility,
+  WizardVisibilityBackend,
+} from "types";
 
-
-
-function Persona({ agent, setCurrentNav, name }: {agent: any, setCurrentNav: React.Dispatch<React.SetStateAction<string>>, name: string | null}) {
+function Persona({
+  agent,
+  setCurrentNav,
+  name,
+}: {
+  agent: any;
+  setCurrentNav: React.Dispatch<React.SetStateAction<string>>;
+  name: string | null;
+}) {
   const { t } = useTranslation();
   const wallet = useWallet();
   const navigate = useNavigate();
   // const { mutate: updateAgent } = useUpdateAgent(agent?.uuid);
 
   type PersonaValues = {
-    biography: string,
-    greeting: string,
-    visibility: WizardVisibility
+    biography: string;
+    greeting: string;
+    visibility: WizardVisibility;
   };
   const handleSubmit = async (values: PersonaValues) => {
     const userId = wallet?.principalId;
     const visibility: WizardVisibilityBackend = {};
 
     visibility[`${values.visibility}Visibility`] = null;
-    const payload : WizardDetails = {
+    const payload: WizardDetails = {
       ...values,
       id: crypto.randomUUID(),
       userId,
       name,
       visibility,
       summary: [],
-      avatar: []
+      avatar: [],
     };
 
     const result = await wizardDetails.addWizard(userId, payload);
     console.log(result.status);
     console.log(typeof result.status);
-    if(result.status ===422n) {
+    if (result.status === 422n) {
       toast.error(result.message);
       throw new Error(result.message);
     } else {

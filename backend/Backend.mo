@@ -12,16 +12,19 @@ import Types "./Types";
 
 actor class Backend() {
 
-  stable var userDetails = Map.new<Types.UserAddress,Types.UserDetails>();
-  stable var whitelistedUsers: [Types.UserAddress] = [
+  stable var userDetails = Map.new<Types.UserAddress, Types.UserDetails>();
+  stable var whitelistedUsers : [Types.UserAddress] = [
     "espul-tcuci-bsdly-lsq3g-rinm2-vl22z-fnpar-rpshl-wdsei-fe5id-dqe"
   ];
 
-  public query func isUserWhitelisted(userId: Types.UserAddress): async Bool {
-    let isWhitelisted: ?Text = Array.find(whitelistedUsers, func (whitelistedUser: Types.UserAddress): Bool {
-      whitelistedUser == userId
-    });
-    switch(isWhitelisted){
+  public query func isUserWhitelisted(userId : Types.UserAddress) : async Bool {
+    let isWhitelisted : ?Text = Array.find(
+      whitelistedUsers,
+      func(whitelistedUser : Types.UserAddress) : Bool {
+        whitelistedUser == userId;
+      },
+    );
+    switch (isWhitelisted) {
       case null { false };
       case _ { true };
     };

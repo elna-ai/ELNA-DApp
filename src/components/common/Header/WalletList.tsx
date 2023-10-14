@@ -9,8 +9,8 @@ import { useWallet } from "hooks/useWallet";
 import { WALLET_LIST } from "./constants";
 
 interface WalletListProps {
-  isOpen: boolean,
-  onClose: () => void,
+  isOpen: boolean;
+  onClose: () => void;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -23,7 +23,7 @@ function WalletList({ isOpen, onClose, setIsLoggedIn }: WalletListProps) {
   const handleConnection = async (id: string) => {
     try {
       setIsLoading(true);
-      if(wallet === undefined) return;
+      if (wallet === undefined) return;
       await wallet.connect(id);
       setIsLoggedIn(!!localStorage.getItem("dfinityWallet"));
       onClose();
@@ -56,7 +56,11 @@ function WalletList({ isOpen, onClose, setIsLoggedIn }: WalletListProps) {
             disabled={isLoading}
           >
             <div className="wallet-list--wallet">
-              <img src={icon} alt={name} className="wallet-list--wallet--image" />
+              <img
+                src={icon}
+                alt={name}
+                className="wallet-list--wallet--image"
+              />
               <span>{name}</span>
             </div>
           </Button>

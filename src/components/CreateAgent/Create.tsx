@@ -20,26 +20,24 @@ import Knowledge from "./Knowledge";
 // } from "hooks/reactQuery/useAgentsApi";
 import { CREATE_BOT_MODAL_VALIDATION_SCHEMA } from "./constants";
 
-
 function Create() {
   const [isPolling, setIsPolling] = useState(false);
   const [currentNav, setCurrentNav] = useState("persona");
 
   const { t } = useTranslation();
   const { uuid: wizardId } = useParams();
-  const [urlSearchParams,_] = useSearchParams();
+  const [urlSearchParams, _] = useSearchParams();
   const navigate = useNavigate();
   const isLoading = false;
 
   const getWizard = async (wizardId: string | undefined) => {
-    if(wizardId === undefined) return;
+    if (wizardId === undefined) return;
 
     const wizard = await wizardDetails.getWizard(wizardId);
     return wizard;
-
   };
 
-  const agent =  wizardId && getWizard(wizardId);
+  const agent = wizardId && getWizard(wizardId);
   // const { data: agent, isLoading } = useShowUserAgent({
   //   agentId,
   // });
@@ -72,7 +70,10 @@ function Create() {
   return (
     <>
       <Formik
-        initialValues={{ name: agent?.name || urlSearchParams.get("name"), isNameEdit: false }}
+        initialValues={{
+          name: agent?.name || urlSearchParams.get("name"),
+          isNameEdit: false,
+        }}
         validationSchema={CREATE_BOT_MODAL_VALIDATION_SCHEMA}
         onSubmit={values => console.log(values)}
       >
@@ -155,7 +156,7 @@ function Create() {
 
         <div>
           <Button
-          // || isPublishing
+            // || isPublishing
             disabled={!agent?.is_active || agent?.is_published}
             onClick={handlePublish}
           >
@@ -166,7 +167,10 @@ function Create() {
       </div>
       <hr className="mt-0" />
       {currentNav === "persona" ? (
-        <Persona name={urlSearchParams.get("name")} {...{ agent, setCurrentNav }} />
+        <Persona
+          name={urlSearchParams.get("name")}
+          {...{ agent, setCurrentNav }}
+        />
       ) : (
         <Knowledge
           agentId={agent?.id}

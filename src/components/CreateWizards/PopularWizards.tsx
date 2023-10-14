@@ -15,19 +15,21 @@ function PopularWizards() {
   const { t } = useTranslation();
 
   const getPopularWizards = async () => {
-   try{
-    setIsPopularWizardsLoading(true);
-     const data = await wizardDetails.getWizards();
-     console.log(data);
-     setPopularWizards(data);
-     setIsPopularWizardsLoading(false);
-   }catch(e){
+    try {
+      setIsPopularWizardsLoading(true);
+      const data = await wizardDetails.getWizards();
+      console.log(data);
+      setPopularWizards(data);
+      setIsPopularWizardsLoading(false);
+    } catch (e) {
       toast.error("Something went wrong!");
       console.error(e);
-   }
+    }
   };
 
-  useEffect(() => { getPopularWizards(); },[]);
+  useEffect(() => {
+    getPopularWizards();
+  }, []);
 
   return (
     <>
@@ -61,9 +63,9 @@ function PopularWizards() {
           <Spinner className="m-auto" />
         ) : (
           popularWizards?.map(({ biography, uuid, name, avatar, userId }) => {
-            const imgUrl = AVATAR_DUMMY_IMAGE.find(
-              dummy => dummy.id === uuid
-            )?.imgUrl || AVATAR_DUMMY_IMAGE[0].imgUrl;
+            const imgUrl =
+              AVATAR_DUMMY_IMAGE.find(dummy => dummy.id === uuid)?.imgUrl ||
+              AVATAR_DUMMY_IMAGE[0].imgUrl;
             return (
               <Card
                 {...{ name }}

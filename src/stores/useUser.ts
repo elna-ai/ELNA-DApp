@@ -3,7 +3,6 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 import { UserState } from "../types";
 
-
 export const useUserStore = create<UserState>()(
   persist(
     set => ({

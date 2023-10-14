@@ -17,4 +17,4 @@ const useArtemis = () => {
   return artemis;
 };
 
-export const useWallet = singletonHook(undefined, useArtemis,{});
+export const useWallet = singletonHook(undefined, useArtemis, {});

@@ -28,25 +28,28 @@ function View() {
   const wallet = useWallet();
 
   const handleCreate = async () => {
-    if(wallet === undefined || !wallet?.principalId) {
-      setIsNoPermission(true)
+    if (wallet === undefined || !wallet?.principalId) {
+      setIsNoPermission(true);
       return;
     }
 
     const isWhiteListed = await backend.isUserWhitelisted(wallet.principalId);
     isWhiteListed ? setIsCreate(true) : setIsNoPermission(true);
-  }
+  };
 
-  const handleSubmit = async ({ name }: {name: string}) => {
-    if(wallet === undefined) return;
+  const handleSubmit = async ({ name }: { name: string }) => {
+    if (wallet === undefined) return;
 
-    const isNameValid: boolean = await wizardDetails.isWizardNameValid(wallet.principalId,name);
-    if(!isNameValid) {
+    const isNameValid: boolean = await wizardDetails.isWizardNameValid(
+      wallet.principalId,
+      name
+    );
+    if (!isNameValid) {
       toast.error("Wizard name exist for user");
       return;
     }
 
-    navigate({pathname:"/create-agent/edit", search:`?name=${name}`});
+    navigate({ pathname: "/create-agent/edit", search: `?name=${name}` });
   };
 
   return (

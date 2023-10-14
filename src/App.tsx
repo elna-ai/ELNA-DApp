@@ -22,7 +22,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
     !!localStorage.getItem("dfinityWallet")
   );
-  const [isExpanded, setIsExpanded] = useState(true)
+  const [isExpanded, setIsExpanded] = useState(true);
 
   return (
     <ErrorBoundary>
