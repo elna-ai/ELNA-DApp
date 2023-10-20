@@ -28,7 +28,7 @@ function App() {
     <ErrorBoundary>
       <BrowserRouter>
         <div
-          className={classNames("hk-wrapper", {
+          className={classNames("hk-wrapper full-width", {
             default: isExpanded,
             collapsed: !isExpanded,
           })}
@@ -37,7 +37,7 @@ function App() {
           <Header {...{ isLoggedIn, setIsLoggedIn }} />
           <div className="container-fluid p-0">
             <div className="hk-pg-wrapper">
-              <div className="w-full">
+              <div className="w-100">
                 <div className="mx-4 pt-2">
                   <Routes>
                     <Route path="/chat/:id?" element={<Chat />} />

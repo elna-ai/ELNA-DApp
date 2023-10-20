@@ -1,11 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import useWebSocket, { ReadyState } from "react-use-websocket";
 import { useParams } from "react-router-dom";
 
 import PageLoader from "components/common/PageLoader";
 import Bubble from "./Bubble";
-import { AVATAR_DUMMY_IMAGE, BASE_URL, DEFAULT_USER } from "./constants";
+import { AVATAR_DUMMY_IMAGE, DEFAULT_USER } from "./constants";
 import NoHistory from "./NoHistory";
 import { Button } from "react-bootstrap";
 
@@ -16,12 +15,9 @@ function Chat() {
   const [isResponseLoading, setIsResponseLoading] = useState(false);
 
   const { id } = useParams();
-  const [socketUrl, setSocketUrl] = useState(`${BASE_URL}/chat?uuid=${id}`);
 
   const inputRef = useRef(null);
   const lastBubbleRef = useRef(null);
-  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
-  // const { data: agent, isLoading } = useShowUserAgent({ agentId: id });
   const agent = {};
   const isLoading = false;
 
@@ -33,14 +29,14 @@ function Chat() {
     }
   }, [isLoading]);
 
-  useEffect(() => {
-    if (lastMessage !== null) {
-      setIsResponseLoading(false);
-      const newMessage = { user: DEFAULT_USER, message: lastMessage.data };
-      setMessages(prev => [...prev, newMessage]);
-      // lastBubbleRef.current = newMessage;
-    }
-  }, [lastMessage, setMessages]);
+  // useEffect(() => {
+  //   if (lastMessage !== null) {
+  //     setIsResponseLoading(false);
+  //     const newMessage = { user: DEFAULT_USER, message: lastMessage.data };
+  //     setMessages(prev => [...prev, newMessage]);
+  //     // lastBubbleRef.current = newMessage;
+  //   }
+  // }, [lastMessage, setMessages]);
 
   useEffect(() => {
     if (lastBubbleRef.current) {
@@ -52,20 +48,12 @@ function Chat() {
     }
   }, [messages]);
 
-  const handleClickSendMessage = useCallback(
-    message => sendMessage(message),
-    []
-  );
+  // const handleClickSendMessage = useCallback(
+  //   message => sendMessage(message),
+  //   []
+  // );
 
   const imgUrl = AVATAR_DUMMY_IMAGE.find(dummy => dummy.id === id)?.imgUrl;
-
-  // const connectionStatus = {
-  //   [ReadyState.CONNECTING]: "Connecting",
-  //   [ReadyState.OPEN]: "Open",
-  //   [ReadyState.CLOSING]: "Closing",
-  //   [ReadyState.CLOSED]: "Closed",
-  //   [ReadyState.UNINSTANTIATED]: "Uninstantiated",
-  // }[readyState];
 
   const { t } = useTranslation();
 
@@ -75,18 +63,13 @@ function Chat() {
       { user: { name: "User" }, message: messageInput.trim() },
     ]);
     setIsResponseLoading(true);
-    handleClickSendMessage(messageInput.trim());
+    // handleClickSendMessage(messageInput.trim());
     setMessageInput("");
   };
 
   const handleKeyDown = event => {
     // make it command + Enter
-    if (
-      event.key === "Enter" &&
-      messageInput.trim() &&
-      readyState === ReadyState.OPEN &&
-      !isResponseLoading
-    ) {
+    if (event.key === "Enter" && messageInput.trim() && !isResponseLoading) {
       handleSubmit();
     }
   };
@@ -101,7 +84,7 @@ function Chat() {
         <div>
           <header className="text-left">
             <div className="d-flex align-items-center">
-              <div className="flex-shrink-0">
+              <div className="chat-header__avatar">
                 <div className="avatar">
                   {imgUrl && (
                     <img src={imgUrl} alt="user" className="avatar-img" />
@@ -116,8 +99,9 @@ function Chat() {
             <hr className="mt-2" />
           </header>
         </div>
-        <div className="w-100 mt-28 mb-[120px]">
-          <div className="sm:mx-2 mx-8">
+        <div className="chat-body">
+          {/* TODO: media query to be converted to scss */}
+          <div className="sm:mx-2 chat-body--wrapper">
             {messages.length > 0 ? (
               <>
                 {messages.map(({ user, message }, index) => (
@@ -157,7 +141,6 @@ function Chat() {
                 className="absolute right-2 bottom-1.5"
                 disabled={
                   !messageInput.trim() ||
-                  readyState !== ReadyState.OPEN ||
                   isResponseLoading
                 }
               >
