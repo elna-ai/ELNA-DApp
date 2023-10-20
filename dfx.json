@@ -9,6 +9,11 @@
       "type": "motoko",
       "main": "wizard_details/Main.mo"
     },
+    "elnaAi_backend": {
+      "type": "rust",
+      "candid": "../elnaAi/src/elnaAi_backend/elnaAi_backend.did",
+      "package": "elnaAi_backend"
+    },
     "frontend": {
       "dependencies": ["backend"],
       "type": "assets",

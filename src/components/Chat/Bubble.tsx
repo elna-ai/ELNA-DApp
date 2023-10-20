@@ -3,44 +3,44 @@ import DOMPurify from "dompurify";
 import { useTranslation } from "react-i18next";
 
 interface BubbleProps {
-  message: string;
-  user: { name: string };
+  message?: string;
+  user: {
+    name: string;
+    isBot?: boolean;
+  };
   isLoading: boolean;
 }
 
 function Bubble({ user, message, isLoading = false }: BubbleProps) {
   const { t } = useTranslation();
 
-  const isUserElan = () => user?.name?.toLowerCase() === "elna";
+  const isUserBot = user?.isBot ?? false;
   const sanitize = DOMPurify.sanitize;
 
   return (
     <div
       className={classNames({
-        "flex-row-reverse self-end": !isUserElan(),
+        "chat-bubble__wrapper--user": !isUserBot,
       })}
     >
       <div
-        className={classNames("mt-2 sm:mt-6 flex w-full gap-2", {
-          "flex-row-reverse": !isUserElan(),
+        className={classNames("sm:mt-6 chat-bubble", {
+          "chat-bubble--user": !isUserBot,
         })}
       >
         <div
-          className={classNames(
-            "flex items-center justify-center text-white w-8 bg-primary h-8 rounded bg-purple-600 p-1 aspect-square",
-            {
-              "bg-green-600": isUserElan(),
-            }
-          )}
+          className={classNames("chat-bubble__name", {
+            "chat-bubble__name--bot": isUserBot,
+          })}
         >
           {user?.name[0]?.toUpperCase()}
         </div>
         <div>
           <div
-            className={classNames("min-w-full  max-w-sm p-3", {
-              "text-white rounded-l-lg rounded-br-lg bg-primary": !isUserElan(),
+            className={classNames("chat-bubble__message--wrapper", {
+              "chat-bubble__message--wrapper--user": !isUserBot,
 
-              "bg-white rounded-bl-lg ": isUserElan(),
+              "chat-bubble__message--wrapper--bot": isUserBot,
             })}
           >
             {isLoading ? (
@@ -51,7 +51,7 @@ function Bubble({ user, message, isLoading = false }: BubbleProps) {
               </div>
             ) : (
               <div
-                className="whitespace-pre-line"
+                className="chat-bubble__message"
                 dangerouslySetInnerHTML={{
                   __html: sanitize(message),
                 }}

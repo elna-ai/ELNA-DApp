@@ -1,46 +1,59 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import useWebSocket, { ReadyState } from "react-use-websocket";
 import { useParams } from "react-router-dom";
-
-import PageLoader from "components/common/PageLoader";
-import Bubble from "./Bubble";
-import { AVATAR_DUMMY_IMAGE, BASE_URL, DEFAULT_USER } from "./constants";
-import NoHistory from "./NoHistory";
 import { Button } from "react-bootstrap";
 
-// TODO: convert from ws to webassembly
+import PageLoader from "components/common/PageLoader";
+import { WizardDetails } from "types";
+
+import Bubble from "./Bubble";
+import { AVATAR_DUMMY_IMAGE } from "./constants";
+import NoHistory from "./NoHistory";
+import { wizard_details as wizardDetails } from "declarations/wizard_details";
+import { elnaAi_backend as chatCanister } from "../../../../elnaAi/src/declarations/elnaAi_backend";
+import { toast } from "react-toastify";
+
+type Message = {
+  user: {
+    name: string;
+    isBot?: boolean;
+  };
+  message: string;
+};
+
 function Chat() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [messageInput, setMessageInput] = useState("");
   const [isResponseLoading, setIsResponseLoading] = useState(false);
+  const [wizard, setWizard] = useState<WizardDetails>();
+  const [isLoading, setIsLoading] = useState(true);
 
   const { id } = useParams();
-  const [socketUrl, setSocketUrl] = useState(`${BASE_URL}/chat?uuid=${id}`);
 
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLTextAreaElement>();
   const lastBubbleRef = useRef(null);
-  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
-  // const { data: agent, isLoading } = useShowUserAgent({ agentId: id });
-  const agent = {};
-  const isLoading = false;
 
   useEffect(() => {
-    if (isLoading === false) {
-      // message: agent.greeting
-      const newMessage = { user: DEFAULT_USER };
-      setMessages(prev => [...prev, newMessage]);
-    }
-  }, [isLoading]);
+    const getWizard = async () => {
+      setIsLoading(true);
+      try {
+        const wizard = await wizardDetails.getWizard(id);
+        setWizard(wizard[0]);
+        const initialMessage = {
+          user: { name: wizard[0].name, isBot: true },
+          message: wizard[0].greeting,
+        };
+        setMessages(prev => [...prev, initialMessage]);
+      } catch (e) {
+        console.error(e);
+        toast.error("Something went wrong");
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  useEffect(() => {
-    if (lastMessage !== null) {
-      setIsResponseLoading(false);
-      const newMessage = { user: DEFAULT_USER, message: lastMessage.data };
-      setMessages(prev => [...prev, newMessage]);
-      // lastBubbleRef.current = newMessage;
-    }
-  }, [lastMessage, setMessages]);
+    getWizard();
+  }, []);
 
   useEffect(() => {
     if (lastBubbleRef.current) {
@@ -52,48 +65,50 @@ function Chat() {
     }
   }, [messages]);
 
-  const handleClickSendMessage = useCallback(
-    message => sendMessage(message),
-    []
-  );
+  // const handleClickSendMessage = useCallback(
+  //   message => sendMessage(message),
+  //   []
+  // );
 
   const imgUrl = AVATAR_DUMMY_IMAGE.find(dummy => dummy.id === id)?.imgUrl;
 
-  // const connectionStatus = {
-  //   [ReadyState.CONNECTING]: "Connecting",
-  //   [ReadyState.OPEN]: "Open",
-  //   [ReadyState.CLOSING]: "Closing",
-  //   [ReadyState.CLOSED]: "Closed",
-  //   [ReadyState.UNINSTANTIATED]: "Uninstantiated",
-  // }[readyState];
-
   const { t } = useTranslation();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setMessages(prev => [
       ...prev,
       { user: { name: "User" }, message: messageInput.trim() },
     ]);
-    setIsResponseLoading(true);
-    handleClickSendMessage(messageInput.trim());
     setMessageInput("");
+    setIsResponseLoading(true);
+    try {
+      const response = await chatCanister.send_http_post_request(
+        messageInput.trim()
+      );
+      setIsResponseLoading(false);
+      setMessages(prev => [
+        ...prev,
+        {
+          user: { name: wizard.name, isBot: true },
+          message: response,
+        },
+      ]);
+    } catch (e) {
+      console.error(e);
+      toast.error("Something went worng");
+    }
   };
 
   const handleKeyDown = event => {
     // make it command + Enter
-    if (
-      event.key === "Enter" &&
-      messageInput.trim() &&
-      readyState === ReadyState.OPEN &&
-      !isResponseLoading
-    ) {
+    if (event.key === "Enter" && messageInput.trim() && !isResponseLoading) {
       handleSubmit();
     }
   };
 
-  useEffect(() => inputRef?.current?.focus(), [agent]);
+  useEffect(() => inputRef?.current?.focus(), [wizard]);
 
-  if (isLoading) return <PageLoader />;
+  if (isLoading || wizard === undefined) return <PageLoader />;
 
   return (
     <div className="row chatapp-single-chat">
@@ -101,7 +116,7 @@ function Chat() {
         <div>
           <header className="text-left">
             <div className="d-flex align-items-center">
-              <div className="flex-shrink-0">
+              <div className="chat-header__avatar">
                 <div className="avatar">
                   {imgUrl && (
                     <img src={imgUrl} alt="user" className="avatar-img" />
@@ -109,15 +124,16 @@ function Chat() {
                 </div>
               </div>
               <div className="flex-grow-1 ms-3">
-                <h3 className="text-lg mt-2">{agent?.name}</h3>
-                <p className="text-muted fs-8">{agent.biography}</p>
+                <h3 className="text-lg mt-2">{wizard.name}</h3>
+                <p className="text-muted fs-8">{wizard.biography}</p>
               </div>
             </div>
             <hr className="mt-2" />
           </header>
         </div>
-        <div className="w-100 mt-28 mb-[120px]">
-          <div className="sm:mx-2 mx-8">
+        <div className="chat-body">
+          {/* TODO: media query to be converted to scss */}
+          <div className="sm:mx-2 chat-body--wrapper">
             {messages.length > 0 ? (
               <>
                 {messages.map(({ user, message }, index) => (
@@ -131,7 +147,7 @@ function Chat() {
                 {isResponseLoading && (
                   <Bubble
                     key={crypto.randomUUID()}
-                    user={DEFAULT_USER}
+                    user={{ name: wizard.name, isBot: true }}
                     isLoading
                   />
                 )}
@@ -155,11 +171,7 @@ function Chat() {
               <Button
                 onClick={handleSubmit}
                 className="absolute right-2 bottom-1.5"
-                disabled={
-                  !messageInput.trim() ||
-                  readyState !== ReadyState.OPEN ||
-                  isResponseLoading
-                }
+                disabled={!messageInput.trim() || isResponseLoading}
               >
                 {t("common.send")}
               </Button>

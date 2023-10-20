@@ -59,12 +59,12 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
                 />
               )}
               {SIDEBAR_LINK.map(
-                ({ to, label, Icon, isComingSoon = false, otherParams }) => (
+                ({ to, label, Icon, isComingSoon = false, otherParams,key }) => (
                   <li
                     className={classNames("nav-item", {
                       active: location.pathname === to,
                     })}
-                    key={label}
+                    key={key}
                   >
                     <Link
                       className="nav-link"
@@ -76,7 +76,7 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
                           <Icon />
                         </span>
                       </span>
-                      <span className="nav-link-text">{label}</span>
+                      <span className="nav-link-text">{t(`sidebar.${key}`)}</span>
                       {isComingSoon && (
                         <span className="badge badge-sm badge-soft-pink ms-auto">
                           {t("common.commingSoon")}
