@@ -50,7 +50,7 @@ function WalletList({ isOpen, onClose, setIsLoggedIn }: WalletListProps) {
         {WALLET_LIST.map(({ name, icon, id }) => (
           <Button
             variant="link"
-            key={name}
+            key={id}
             className="wallet-list--wallet--button"
             onClick={() => handleConnection(id)}
             disabled={isLoading}
@@ -61,7 +61,7 @@ function WalletList({ isOpen, onClose, setIsLoggedIn }: WalletListProps) {
                 alt={name}
                 className="wallet-list--wallet--image"
               />
-              <span>{name}</span>
+              <span>{t(`signIn.walletList.${id}`)}</span>
             </div>
           </Button>
         ))}
