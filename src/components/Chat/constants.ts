@@ -6,7 +6,6 @@ import quantumcomputingimg from "images/avatar/05.png";
 import sathoshiimg from "images/avatar/06.png";
 import sonicimg from "images/avatar/07.png";
 
-export const DEFAULT_USER = { name: "elna" };
 
 
 export const DEFAULT_AGENT_ID = "2";

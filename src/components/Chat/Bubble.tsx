@@ -4,44 +4,43 @@ import { useTranslation } from "react-i18next";
 
 interface BubbleProps {
   message?: string;
-  user: { name: string };
+  user: {
+    name: string;
+    isBot?: boolean;
+  };
   isLoading: boolean;
 }
 
 function Bubble({ user, message, isLoading = false }: BubbleProps) {
   const { t } = useTranslation();
 
-  // TODO: make this function general to all bots
-  const isUserElan = () => user?.name?.toLowerCase() === "elna";
+  const isUserBot = user?.isBot ?? false;
   const sanitize = DOMPurify.sanitize;
 
   return (
     <div
       className={classNames({
-        "chat-bubble__wrapper--user":!isUserElan()
+        "chat-bubble__wrapper--user": !isUserBot,
       })}
     >
       <div
-        className={classNames("mt-2 sm:mt-6 flex w-full gap-2 chat-bubble", {
-          "flex-row-reverse chat-bubble--user": !isUserElan(),
+        className={classNames("sm:mt-6 chat-bubble", {
+          "chat-bubble--user": !isUserBot,
         })}
       >
         <div
-          className={classNames(
-            "chat-bubble__name",
-            {
-              "chat-bubble__name--bot": isUserElan(),
-            }
-          )}
+          className={classNames("chat-bubble__name", {
+            "chat-bubble__name--bot": isUserBot,
+          })}
         >
           {user?.name[0]?.toUpperCase()}
         </div>
         <div>
           <div
             className={classNames("chat-bubble__message--wrapper", {
-              "chat-bubble__message--wrapper--user": !isUserElan(),
+              "chat-bubble__message--wrapper--user": !isUserBot,
 
-              "chat-bubble__message--wrapper--bot": isUserElan(),
+              "chat-bubble__message--wrapper--bot": isUserBot,
             })}
           >
             {isLoading ? (
