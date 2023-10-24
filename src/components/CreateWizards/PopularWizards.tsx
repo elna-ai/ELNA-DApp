@@ -5,12 +5,15 @@ import { toast } from "react-toastify";
 
 import { AVATAR_DUMMY_IMAGE } from "components/Chat/constants";
 import { wizard_details as wizardDetails } from "declarations/wizard_details";
+import { WizardDetailsBasic } from "declarations/wizard_details/wizard_details.did";
 
 import Card from "./Card";
 
 function PopularWizards() {
   const [isPopularWizardsLoading, setIsPopularWizardsLoading] = useState(true);
-  const [popularWizards, setPopularWizards] = useState([]);
+  const [popularWizards, setPopularWizards] = useState<WizardDetailsBasic[]>(
+    []
+  );
 
   const { t } = useTranslation();
 
@@ -18,7 +21,6 @@ function PopularWizards() {
     try {
       setIsPopularWizardsLoading(true);
       const data = await wizardDetails.getWizards();
-      console.log(data);
       setPopularWizards(data);
       setIsPopularWizardsLoading(false);
     } catch (e) {
@@ -62,7 +64,8 @@ function PopularWizards() {
         {isPopularWizardsLoading ? (
           <Spinner className="m-auto" />
         ) : (
-          popularWizards?.map(({ biography, id, name, avatar, userId }) => {
+          // avatar
+          popularWizards?.map(({ biography, id, name, userId }) => {
             const imgUrl =
               AVATAR_DUMMY_IMAGE.find(dummy => dummy.id === id)?.imgUrl ||
               AVATAR_DUMMY_IMAGE[0].imgUrl;

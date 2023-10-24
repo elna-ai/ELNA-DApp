@@ -15,7 +15,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["vite/client", "@testing-library/jest-dom"],
+    "types": ["vite/client", "@testing-library/jest-dom","vite-plugin-svgr/client"],
     "paths": {
       "apis/*": ["./src/apis/*"],
       "components/*": ["./src/components/*"],
@@ -25,9 +25,9 @@
       "elna-ui/*": ["./src/components/elna-ui/*"],
       "hooks/*": ["./src/hooks/*"],
       "images/*": ["./src/images"],
-      "stores/*": ["./src/stores"],
+      "stores/*": ["./src/stores/*"],
       "types": ["./src/types.ts"],
-      "declarations": ["./src/declarations"],
+      "declarations/*": ["./src/declarations/*"],
     }
   },
   "include": ["src"]

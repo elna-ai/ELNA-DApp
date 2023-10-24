@@ -1,24 +1,27 @@
+import { useRef } from "react";
 import classNames from "classnames";
 import DOMPurify from "dompurify";
 import { useTranslation } from "react-i18next";
 
-interface BubbleProps {
+type BubbleProps = {
   message?: string;
   user: {
     name: string;
     isBot?: boolean;
   };
-  isLoading: boolean;
-}
+  isLoading?: boolean;
+} & React.HTMLProps<HTMLDivElement>;
 
 function Bubble({ user, message, isLoading = false }: BubbleProps) {
   const { t } = useTranslation();
+  const bubbleRef = useRef<HTMLDivElement | null>(null);
 
   const isUserBot = user?.isBot ?? false;
   const sanitize = DOMPurify.sanitize;
 
   return (
     <div
+      ref={bubbleRef}
       className={classNames({
         "chat-bubble__wrapper--user": !isUserBot,
       })}
@@ -53,7 +56,7 @@ function Bubble({ user, message, isLoading = false }: BubbleProps) {
               <div
                 className="chat-bubble__message"
                 dangerouslySetInnerHTML={{
-                  __html: sanitize(message),
+                  __html: sanitize(message || ""),
                 }}
               />
             )}

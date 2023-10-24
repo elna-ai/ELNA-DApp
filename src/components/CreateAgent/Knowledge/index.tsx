@@ -7,9 +7,9 @@ import Card from "./Card";
 import UploadFile from "./UploadFile";
 
 interface KnowledgeProps {
-  agentId: string;
+  wizardId: string;
   setIsPolling: React.Dispatch<React.SetStateAction<boolean>>;
-  document: {
+  document?: {
     uuid: string;
     summary: string;
     file_name: string;
@@ -17,7 +17,7 @@ interface KnowledgeProps {
   };
 }
 
-function Knowledge({ agentId, setIsPolling, document }: KnowledgeProps) {
+function Knowledge({ wizardId, setIsPolling, document }: KnowledgeProps) {
   const [isAddDocument, setIsAddDocument] = useState(false);
 
   const { t } = useTranslation();
@@ -79,7 +79,7 @@ function Knowledge({ agentId, setIsPolling, document }: KnowledgeProps) {
       <UploadFile
         isOpen={isAddDocument}
         onClose={() => setIsAddDocument(false)}
-        agentId={agentId}
+        agentId={wizardId}
         setIsPolling={setIsPolling}
       />
     </div>

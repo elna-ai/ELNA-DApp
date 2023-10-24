@@ -6,7 +6,7 @@ function Footer() {
   const location = useLocation();
   const isChatPage = location.pathname === "/chat";
 
-  if (isChatPage) return;
+  if (isChatPage) return <></>;
 
   return (
     <div className="hk-footer">

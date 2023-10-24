@@ -1,17 +1,18 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
+import { toast } from "react-toastify";
+import crypto from "crypto";
 
 import PageLoader from "components/common/PageLoader";
-import { WizardDetails } from "types";
+import { wizard_details as wizardDetails } from "declarations/wizard_details";
+import { WizardDetails } from "declarations/wizard_details/wizard_details.did";
 
 import Bubble from "./Bubble";
 import { AVATAR_DUMMY_IMAGE } from "./constants";
 import NoHistory from "./NoHistory";
-import { wizard_details as wizardDetails } from "declarations/wizard_details";
 import { elnaAi_backend as chatCanister } from "../../../../elnaAi/src/declarations/elnaAi_backend";
-import { toast } from "react-toastify";
 
 type Message = {
   user: {
@@ -30,14 +31,24 @@ function Chat() {
 
   const { id } = useParams();
 
-  const inputRef = useRef<HTMLTextAreaElement>();
-  const lastBubbleRef = useRef(null);
+  const inputRef = useRef<HTMLTextAreaElement | null>(null);
+  const lastBubbleRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const getWizard = async () => {
       setIsLoading(true);
+      if (id === undefined) {
+        toast.error("Unable to find wizard");
+        return;
+      }
+
       try {
         const wizard = await wizardDetails.getWizard(id);
+        if (wizard[0] === undefined) {
+          toast.error("Unable to find wizard");
+          return;
+        }
+
         setWizard(wizard[0]);
         const initialMessage = {
           user: { name: wizard[0].name, isBot: true },
@@ -89,7 +100,7 @@ function Chat() {
       setMessages(prev => [
         ...prev,
         {
-          user: { name: wizard.name, isBot: true },
+          user: { name: wizard!.name, isBot: true },
           message: response,
         },
       ]);
@@ -99,7 +110,7 @@ function Chat() {
     }
   };
 
-  const handleKeyDown = event => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // make it command + Enter
     if (event.key === "Enter" && messageInput.trim() && !isResponseLoading) {
       handleSubmit();

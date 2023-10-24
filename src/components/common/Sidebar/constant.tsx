@@ -80,19 +80,28 @@ const docsIcons = () => (
 
 // TODO: Figure out why directly declaring an array is causing t() to not work
 export const SIDEBAR_LINK = [
-  { to: "/", label: t("sidebar.home"), Icon: homeIcon, key: "home" },
+  {
+    to: "/",
+    Icon: homeIcon,
+    key: "home",
+    isComingSoon: false,
+  },
   {
     to: "/create-agent",
-    label: t("sidebar.create"),
     Icon: createIcon,
     key: "create",
+    isComingSoon: false,
   },
-  { label: t("sidebar.feedback"), Icon: feedbackIcon, key: "feedback" },
   {
-    label: t("sidebar.docs"),
+    Icon: feedbackIcon,
+    key: "feedback",
+    isComingSoon: false,
+  },
+  {
     Icon: docsIcons,
     to: "https://docs.elna.live/",
     otherParams: { target: "_blank", rel: "noopener noreferrer" },
     key: "docs",
+    isComingSoon: false,
   },
 ];

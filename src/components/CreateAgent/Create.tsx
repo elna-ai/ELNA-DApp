@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Formik } from "formik";
 import Button from "react-bootstrap/Button";
@@ -9,59 +9,43 @@ import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import PageLoader from "components/common/PageLoader";
+import { WizardDetails } from "declarations/wizard_details/wizard_details.did";
 import { wizard_details as wizardDetails } from "declarations/wizard_details";
 
 import Persona from "./Persona";
 import Knowledge from "./Knowledge";
-// import {
-//   usePublishAgent,
-//   useShowUserAgent,
-//   useShowUserAgentPolling,
-// } from "hooks/reactQuery/useAgentsApi";
+
 import { CREATE_BOT_MODAL_VALIDATION_SCHEMA } from "./constants";
 
 function Create() {
   const [isPolling, setIsPolling] = useState(false);
-  const [currentNav, setCurrentNav] = useState("persona");
+  const [currentNav, setCurrentNav] = useState<string | null>("persona");
+  const [isLoading, setIsLoading] = useState(true);
+  const [wizard, setWizard] = useState<WizardDetails>();
 
   const { t } = useTranslation();
   const { uuid: wizardId } = useParams();
   const [urlSearchParams, _] = useSearchParams();
   const navigate = useNavigate();
-  const isLoading = false;
 
   const getWizard = async (wizardId: string | undefined) => {
     if (wizardId === undefined) return;
-
-    const wizard = await wizardDetails.getWizard(wizardId);
-    return wizard;
+    try {
+      setIsLoading(false);
+      const wizard = await wizardDetails.getWizard(wizardId);
+      setWizard(wizard[0]);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const agent = wizardId && getWizard(wizardId);
-  // const { data: agent, isLoading } = useShowUserAgent({
-  //   agentId,
-  // });
+  const handlePublish = () => {};
 
-  // const { data: document } = useShowUserAgentPolling({
-  //   agentId,
-  //   enabled: !!agentId && isPolling,
-  // });
-
-  // const { mutate: publishAgent, isLoading: isPublishing } =
-  //   usePublishAgent(agentId);
-
-  const handlePublish = () => {
-    // publishAgent(
-    //   {
-    //     payload: { is_published: true },
-    //     visibility: agent.visibility.toLowerCase(),
-    //     uuid: agentId,
-    //   },
-    //   {
-    //     onSuccess: () => navigate("/"),
-    //   }
-    // );
-  };
+  useEffect(() => {
+    getWizard(wizardId);
+  }, []);
 
   if (isLoading) {
     return <PageLoader />;
@@ -71,7 +55,7 @@ function Create() {
     <>
       <Formik
         initialValues={{
-          name: agent?.name || urlSearchParams.get("name"),
+          name: wizard?.name || urlSearchParams.get("name"),
           isNameEdit: false,
         }}
         validationSchema={CREATE_BOT_MODAL_VALIDATION_SCHEMA}
@@ -94,7 +78,7 @@ function Create() {
                           border: "none",
                           boxShadow: "none",
                         }}
-                        value={values.name}
+                        value={values.name || ""}
                         onChange={handleChange}
                       />
                     </Form.Group>
@@ -119,7 +103,7 @@ function Create() {
                     </svg>
                   </span>
                 </div>
-                <Form.Control.Feedback type="name">
+                <Form.Control.Feedback type="invalid">
                   {errors.name}
                 </Form.Control.Feedback>
               </div>
@@ -135,7 +119,7 @@ function Create() {
       <div className="flex items-center justify-between">
         <Nav
           variant="pills"
-          defaultActiveKey={currentNav}
+          defaultActiveKey={currentNav || "persona"}
           onSelect={eventKey => setCurrentNav(eventKey)}
         >
           <Nav.Item>
@@ -147,7 +131,7 @@ function Create() {
             <Nav.Link
               className="btn nav-pill-chat"
               eventKey="knowledge"
-              disabled={!agent?.biography || !agent?.greeting}
+              disabled={!wizard?.biography || !wizard?.greeting}
             >
               {t("createAgent.knowledge.knowledge")}
             </Nav.Link>
@@ -157,7 +141,7 @@ function Create() {
         <div>
           <Button
             // || isPublishing
-            disabled={!agent?.is_active || agent?.is_published}
+            // disabled={!wizard?.is_active || wizard?.is_published}
             onClick={handlePublish}
           >
             <span className="mr-2">{t("common.publish")}</span>
@@ -169,13 +153,13 @@ function Create() {
       {currentNav === "persona" ? (
         <Persona
           name={urlSearchParams.get("name")}
-          {...{ agent, setCurrentNav }}
+          {...{ wizard, setCurrentNav }}
         />
       ) : (
         <Knowledge
-          agentId={agent?.id}
+          wizardId={wizard?.id || ""}
           setIsPolling={setIsPolling}
-          document={document}
+          // document={document}
         />
       )}
     </>
