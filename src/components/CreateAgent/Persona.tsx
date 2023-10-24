@@ -1,4 +1,5 @@
 import Button from "react-bootstrap/Button";
+import crypto from "crypto";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { Formik } from "formik";
@@ -8,38 +9,40 @@ import { useNavigate } from "react-router-dom";
 
 import { useWallet } from "hooks/useWallet";
 import { wizard_details as wizardDetails } from "declarations/wizard_details";
-
-import { PERSONA_VALIDATION_SCHEMA } from "./constants";
 import {
   WizardDetails,
   WizardVisibility,
-  WizardVisibilityBackend,
-} from "types";
+} from "declarations/wizard_details/wizard_details.did";
+
+import { PERSONA_VALIDATION_SCHEMA } from "./constants";
 
 function Persona({
-  agent,
+  wizard,
   setCurrentNav,
   name,
 }: {
-  agent: any;
-  setCurrentNav: React.Dispatch<React.SetStateAction<string>>;
+  wizard: any;
+  setCurrentNav: React.Dispatch<React.SetStateAction<string | null>>;
   name: string | null;
 }) {
   const { t } = useTranslation();
   const wallet = useWallet();
   const navigate = useNavigate();
-  // const { mutate: updateAgent } = useUpdateAgent(agent?.uuid);
+  // const { mutate: updatewizard } = useUpdatewizard(wizard?.uuid);
 
   type PersonaValues = {
     biography: string;
     greeting: string;
-    visibility: WizardVisibility;
+    visibility: "public" | "private" | "unlisted";
   };
   const handleSubmit = async (values: PersonaValues) => {
     const userId = wallet?.principalId;
-    const visibility: WizardVisibilityBackend = {};
+    const visibility = {
+      [`${values.visibility}Visibility`]: null,
+    } as WizardVisibility;
+    if (userId === undefined) return;
+    if (name === null) return;
 
-    visibility[`${values.visibility}Visibility`] = null;
     const payload: WizardDetails = {
       ...values,
       id: crypto.randomUUID(),
@@ -65,9 +68,9 @@ function Persona({
   return (
     <Formik
       initialValues={{
-        biography: agent?.biography || "",
-        greeting: agent?.greeting || "",
-        visibility: agent?.visibility?.toLowerCase() || "public",
+        biography: wizard?.biography || "",
+        greeting: wizard?.greeting || "",
+        visibility: wizard?.visibility?.toLowerCase() || "public",
       }}
       validationSchema={PERSONA_VALIDATION_SCHEMA}
       onSubmit={handleSubmit}
@@ -111,7 +114,7 @@ function Persona({
                 value={values.biography}
                 onChange={handleChange}
               />
-              <Form.Control.Feedback type="biography">
+              <Form.Control.Feedback type="invalid">
                 {errors.biography}
               </Form.Control.Feedback>
             </Form.Group>
@@ -150,7 +153,7 @@ function Persona({
                 value={values.greeting}
                 onChange={handleChange}
               />
-              <Form.Control.Feedback type="greeting">
+              <Form.Control.Feedback type="invalid">
                 {errors.greeting}
               </Form.Control.Feedback>
             </Form.Group>
@@ -226,7 +229,7 @@ function Persona({
                   />
                 </InputGroup.Text>
               </InputGroup>
-              <Form.Control.Feedback type="visibility">
+              <Form.Control.Feedback type="invalid">
                 {errors.visibility}
               </Form.Control.Feedback>
             </Form.Group>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
 
 import { Form, Spinner } from "react-bootstrap";
 import { Button } from "react-bootstrap";
@@ -7,8 +7,20 @@ import PropTypes from "prop-types";
 // import { useUploadDocument } from "hooks/reactQuery/useAgentsApi";
 import { Trans, useTranslation } from "react-i18next";
 
-function UploadFile({ isOpen, onClose, agentId, setIsPolling }) {
-  const [selectedFiles, setSelectedFiles] = useState([]);
+type UploadFileProps = {
+  isOpen: boolean;
+  agentId: string;
+  onClose: () => void;
+  setIsPolling?: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+function UploadFile({
+  isOpen,
+  onClose,
+  agentId,
+  setIsPolling,
+}: UploadFileProps) {
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [validationMessage, setValidationMessage] = useState("");
   const [isUploading, setIsUploading] = useState(false);
 
@@ -39,9 +51,11 @@ function UploadFile({ isOpen, onClose, agentId, setIsPolling }) {
     // );
   };
 
-  const handleFileChange = event => {
-    const newFiles = Array.from(event.target.files);
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const inputFiles = event.target.files;
+    if (inputFiles === null) return;
 
+    const newFiles = Array.from(inputFiles);
     const validFiles = newFiles.filter(file => {
       const isPDF = file.type === "application/pdf";
       const isSizeValid = file.size <= 5 * 1024 * 1024; // 5MB in bytes

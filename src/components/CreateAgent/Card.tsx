@@ -1,6 +1,13 @@
 import { useTranslation } from "react-i18next";
 
-function Card({ bot }) {
+type BotProps = {
+  id: string;
+  name: string;
+  description: string;
+  imageUrl: string;
+};
+
+function Card({ bot }: { bot: BotProps }) {
   const { t } = useTranslation();
 
   return (

@@ -4,13 +4,14 @@ import { Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 import NoChatBotImg from "images/no-chatbot.png";
 import { wizard_details as wizardDetails } from "declarations/wizard_details";
+import { WizardDetailsBasic } from "declarations/wizard_details/wizard_details.did";
 import { useWallet } from "hooks/useWallet";
 
 import Card from "./Card";
 
 function MyWizards() {
   const [isUserWizardsLoading, setIsUserWizardsLoading] = useState(true);
-  const [userWizards, setUserWizards] = useState([]);
+  const [userWizards, setUserWizards] = useState<WizardDetailsBasic[]>([]);
 
   const { t } = useTranslation();
   const wallet = useWallet();

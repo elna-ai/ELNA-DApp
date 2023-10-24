@@ -1,7 +1,13 @@
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
-function Card({ title, description, isLearning }) {
+type CardProps = {
+  title: string;
+  description: string;
+  isLearning: boolean;
+};
+
+function Card({ title, description, isLearning }: CardProps) {
   const { t } = useTranslation();
 
   return (

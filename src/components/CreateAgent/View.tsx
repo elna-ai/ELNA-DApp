@@ -143,7 +143,7 @@ function View() {
                     placeholder={t("createAgent.form.placeholder.name")}
                     required
                   />
-                  <Form.Control.Feedback type="name">
+                  <Form.Control.Feedback type="invalid">
                     {errors.name}
                   </Form.Control.Feedback>
                 </Form.Group>
