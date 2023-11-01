@@ -1,13 +1,13 @@
 {
   "canisters": {
     "backend": {
-      "dependencies": ["wizard_details"],
       "type": "motoko",
       "main": "backend/Backend.mo"
     },
     "wizard_details": {
       "type": "motoko",
-      "main": "wizard_details/Main.mo"
+      "main": "wizard_details/Main.mo",
+      "dependencies": ["backend"]
     },
     "frontend": {
       "dependencies": ["backend"],
@@ -15,6 +15,7 @@
       "source": ["dist/"]
     }
   },
+
   "defaults": {
     "build": {
       "packtool": "npm run --silent sources"

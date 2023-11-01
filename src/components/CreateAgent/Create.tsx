@@ -20,7 +20,7 @@ import { CREATE_BOT_MODAL_VALIDATION_SCHEMA } from "./constants";
 function Create() {
   const [isPolling, setIsPolling] = useState(false);
   const [currentNav, setCurrentNav] = useState<string | null>("persona");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [wizard, setWizard] = useState<WizardDetails>();
 
   const { t } = useTranslation();
@@ -31,7 +31,7 @@ function Create() {
   const getWizard = async (wizardId: string | undefined) => {
     if (wizardId === undefined) return;
     try {
-      setIsLoading(false);
+      setIsLoading(true);
       const wizard = await wizardDetails.getWizard(wizardId);
       setWizard(wizard[0]);
     } catch (e) {
