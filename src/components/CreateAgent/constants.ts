@@ -1,6 +1,6 @@
-import crypto from "crypto";
 import { t } from "i18next";
 import * as yup from "yup";
+import { v4 as uuidv4 } from "uuid";
 
 import morgan from "images/morgan.png";
 import musk from "images/musk.png";
@@ -9,7 +9,7 @@ import hacker from "images/hacker.png";
 
 export const TEMPLATE_BOTS = [
   {
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     name: "Morgan Freeman",
     description:
       "Create a professional AI agent in minutes. Simply upload related documents or web links, and it will become an expert in your field.",
@@ -17,7 +17,7 @@ export const TEMPLATE_BOTS = [
     // tag: "Knowledge-base Genius",
   },
   {
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     name: "Albert Einstein",
     description:
       "Create a professional AI agent in minutes. Simply upload related documents or web links, and it will become an expert in your field.",
@@ -25,7 +25,7 @@ export const TEMPLATE_BOTS = [
     // tag: "Scientist",
   },
   {
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     name: "Elon Musk",
     description:
       "Create a professional AI agent in minutes. Simply upload related documents or web links, and it will become an expert in your field.",
@@ -33,7 +33,7 @@ export const TEMPLATE_BOTS = [
     // tag: "CEO",
   },
   {
-    id: crypto.randomUUID(),
+    id: uuidv4(),
     name: "Huma Therman Freeman",
     description:
       "Create a professional AI agent in minutes. Simply upload related documents or web links, and it will become an expert in your field.",

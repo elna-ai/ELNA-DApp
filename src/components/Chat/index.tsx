@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
-import crypto from "crypto";
+import { v4 as uuidv4 } from "uuid";
 
 import PageLoader from "components/common/PageLoader";
 import { wizard_details as wizardDetails } from "declarations/wizard_details";
@@ -149,7 +149,7 @@ function Chat() {
               <>
                 {messages.map(({ user, message }, index) => (
                   <Bubble
-                    key={crypto.randomUUID()}
+                    key={uuidv4()}
                     user={user}
                     message={message}
                     ref={index === messages.length - 1 ? lastBubbleRef : null}
@@ -157,7 +157,7 @@ function Chat() {
                 ))}
                 {isResponseLoading && (
                   <Bubble
-                    key={crypto.randomUUID()}
+                    key={uuidv4()}
                     user={{ name: wizard.name, isBot: true }}
                     isLoading
                   />

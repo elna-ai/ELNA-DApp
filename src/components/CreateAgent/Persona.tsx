@@ -1,5 +1,5 @@
 import Button from "react-bootstrap/Button";
-import crypto from "crypto";
+import { v4 as uuidv4 } from "uuid";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { Formik } from "formik";
@@ -45,7 +45,7 @@ function Persona({
 
     const payload: WizardDetails = {
       ...values,
-      id: crypto.randomUUID(),
+      id: uuidv4(),
       userId,
       name,
       visibility,

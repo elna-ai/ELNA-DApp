@@ -3,7 +3,6 @@ import Nat "mo:base/Nat";
 import D "mo:base/Debug";
 import Map "mo:motoko-hash-map/Map";
 import { thash } "mo:motoko-hash-map/Map";
-// import WizardDetails "canister:wizard_details";
 import Bool "mo:base/Bool";
 import Buffer "mo:base/Buffer";
 import Principal "mo:base/Principal";
@@ -18,8 +17,9 @@ actor class Backend(_owner : Principal) {
   stable var userDetails = Map.new<Types.UserAddress, Types.UserDetails>();
   var whitelistedUsers = Buffer.Buffer<Principal>(5);
 
-  public query func isUserWhitelisted(userId : Principal) : async Bool {
-    Utils.isUserWhitelisted(whitelistedUsers, userId);
+  public query func isUserWhitelisted(userId : Text) : async Bool {
+    let principal = Principal.fromText(userId);
+    Utils.isUserWhitelisted(whitelistedUsers, principal);
   };
 
   public shared (message) func whitelistUser(userId : Principal) : async Text {

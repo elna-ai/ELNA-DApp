@@ -31,6 +31,8 @@ function MyWizards() {
   };
 
   useEffect(() => {
+    if (wallet?.principalId === undefined) return;
+
     getUserWizards(wallet?.principalId);
   }, []);
 
