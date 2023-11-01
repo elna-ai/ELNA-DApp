@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
@@ -12,7 +13,6 @@ import { WizardDetails } from "declarations/wizard_details/wizard_details.did";
 import Bubble from "./Bubble";
 import { AVATAR_DUMMY_IMAGE } from "./constants";
 import NoHistory from "./NoHistory";
-import { elnaAi_backend as chatCanister } from "../../../../elnaAi/src/declarations/elnaAi_backend";
 
 type Message = {
   user: {
@@ -92,27 +92,33 @@ function Chat() {
     ]);
     setMessageInput("");
     setIsResponseLoading(true);
+    if (import.meta.env.VITE_CHAT_API === undefined) {
+      toast.error("Something went wrong");
+      throw new Error("chat api not defined");
+    }
+
     try {
-      const response = await chatCanister.send_http_post_request(
-        messageInput.trim()
-      );
+      const response = await axios.post(import.meta.env.VITE_CHAT_API, {
+        input_prompt: messageInput.trim(),
+      });
       setIsResponseLoading(false);
       setMessages(prev => [
         ...prev,
         {
           user: { name: wizard!.name, isBot: true },
-          message: response,
+          message: response.data.body.response,
         },
       ]);
     } catch (e) {
       console.error(e);
-      toast.error("Something went worng");
+      toast.error("Something went wrong");
     }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     // make it command + Enter
     if (event.key === "Enter" && messageInput.trim() && !isResponseLoading) {
+      event.preventDefault();
       handleSubmit();
     }
   };
