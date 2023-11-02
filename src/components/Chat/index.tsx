@@ -100,6 +100,7 @@ function Chat() {
     try {
       const response = await axios.post(import.meta.env.VITE_CHAT_API, {
         input_prompt: messageInput.trim(),
+        biography: wizard?.biography,
       });
       setIsResponseLoading(false);
       setMessages(prev => [
