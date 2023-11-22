@@ -3,7 +3,7 @@ import Text "mo:base/Text";
 import Bool "mo:base/Bool";
 import Debug "mo:base/Debug";
 import Principal "mo:base/Principal";
-import Vec "mo:vector";
+import Buffer "mo:base/Buffer";
 import Backend "canister:backend";
 
 import Types "./Types";
@@ -14,12 +14,13 @@ import {
 } "./Utils";
 
 actor class Main() {
-  stable var wizards = Vec.new<Types.WizardDetails>();
+  private stable var _wizards : [Types.WizardDetails] = [];
+  var wizards = Buffer.Buffer<Types.WizardDetails>(10);
 
   public query func getWizards() : async [Types.WizardDetailsBasic] {
 
     let publicWizards = Array.filter(
-      Vec.toArray(wizards),
+      Buffer.toArray(wizards),
       func(wizard : Types.WizardDetails) : Bool {
         wizard.visibility == #publicVisibility;
       },
@@ -36,7 +37,7 @@ actor class Main() {
 
   public query func getWizard(id : Text) : async ?Types.WizardDetails {
     Array.find(
-      Vec.toArray(wizards),
+      Buffer.toArray(wizards),
       func(wizard : Types.WizardDetails) : Bool {
         wizard.id == id;
       },
@@ -57,10 +58,18 @@ actor class Main() {
     let isNewWizardName = isWizardNameTakenByUser(wizards, userId, wizard.name);
 
     if (isNewWizardName) {
-      Vec.add(wizards, wizard);
+      wizards.add(wizard);
       return { status = 200; message = "Created wizrad" };
     } else {
       return { status = 422; message = "Wizard named already exist" };
     };
+  };
+
+  system func preupgrade() {
+    _wizards := Buffer.toArray(wizards);
+  };
+
+  system func postupgrade() {
+    wizards := Buffer.fromArray(_wizards);
   };
 };

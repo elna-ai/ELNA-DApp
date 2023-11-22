@@ -1,18 +1,18 @@
 import Array "mo:base/Array";
 import Text "mo:base/Text";
-import Vec "mo:vector";
+import Buffer "mo:base/Buffer";
 
 import Types "./Types";
 
 module {
 
   public func getWizardsByUser(
-    wizards : Vec.Vector<Types.WizardDetails>,
+    wizards : Buffer.Buffer<Types.WizardDetails>,
     // TODO: make principal?
     userId : Text,
   ) : [Types.WizardDetails] {
     Array.filter(
-      Vec.toArray(wizards),
+      Buffer.toArray(wizards),
       func(wizard : Types.WizardDetails) : Bool {
         wizard.userId == userId;
       },
@@ -20,7 +20,7 @@ module {
   };
 
   public func isWizardNameTakenByUser(
-    wizards : Vec.Vector<Types.WizardDetails>,
+    wizards : Buffer.Buffer<Types.WizardDetails>,
     // TODO: make principal?
     userId : Text,
     wizardName : Text,
