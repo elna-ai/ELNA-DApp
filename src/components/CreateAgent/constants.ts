@@ -63,6 +63,10 @@ export const PERSONA_VALIDATION_SCHEMA = yup.object().shape({
     .trim()
     .required()
     .min(20, t("createAgent.form.validations.greeting")),
+  description: yup
+    .string()
+    .trim()
+    .required(),
   visibility: yup
     .string()
     .oneOf(

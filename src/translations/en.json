@@ -45,6 +45,8 @@
     "biographyDesc": "A snapshot of your wizard, including their backstory, personality, and interest",
     "greeting": "Greeting",
     "greetingDesc": "Create a greeting for your wizard that will introduce them to the user and set the tone for the conversation",
+    "description": "Description",
+    "descriptionDesc": "Create a description for your wizard which will get an idea to the users",
     "visibility": {
       "title": "Visibility",
       "public": "Public <span>Anyone can chat</span>",

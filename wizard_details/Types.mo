@@ -17,6 +17,7 @@ module {
     // TODO: Make Principal
     userId : Text;
     biography : Text;
+    description : Text;
   };
 
   public type WizardDetails = WizardDetailsBasic and {

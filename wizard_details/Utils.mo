@@ -43,6 +43,7 @@ module {
           name = wizard.name;
           userId = wizard.userId;
           biography = wizard.biography;
+          description = wizard.description;
         };
       },
     );
