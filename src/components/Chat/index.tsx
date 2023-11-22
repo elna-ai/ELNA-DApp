@@ -143,7 +143,6 @@ function Chat() {
               </div>
               <div className="flex-grow-1 ms-3">
                 <h3 className="text-lg mt-2">{wizard.name}</h3>
-                <p className="text-muted fs-8">{wizard.biography}</p>
               </div>
             </div>
             <hr className="mt-2" />

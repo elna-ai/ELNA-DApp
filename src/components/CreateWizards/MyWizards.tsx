@@ -61,7 +61,7 @@ function MyWizards() {
         <div className="row gx-3 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
           {userWizards?.map(({ id, name, biography }) => (
             <div key={id} className="col">
-              <Card name={name} description={biography} id={id} />
+              <Card name={name} description={""} id={id} />
             </div>
           ))}
         </div>

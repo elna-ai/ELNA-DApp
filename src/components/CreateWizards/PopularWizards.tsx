@@ -65,7 +65,7 @@ function PopularWizards() {
           <Spinner className="m-auto" />
         ) : (
           // avatar
-          popularWizards?.map(({ biography, id, name, userId }) => {
+          popularWizards?.map(({ id, name, userId }) => {
             const imgUrl =
               AVATAR_DUMMY_IMAGE.find(dummy => dummy.id === id)?.imgUrl ||
               AVATAR_DUMMY_IMAGE[0].imgUrl;
@@ -73,7 +73,7 @@ function PopularWizards() {
               <Card
                 {...{ name }}
                 id={id}
-                description={biography}
+                description={""}
                 key={id}
                 imageUrl={imgUrl}
                 userId={userId}
