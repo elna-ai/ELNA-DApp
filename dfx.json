@@ -10,7 +10,7 @@
       "dependencies": ["backend"]
     },
     "frontend": {
-      "dependencies": ["backend"],
+      "dependencies": ["backend", "wizard_details"],
       "type": "assets",
       "source": ["dist/"]
     }

@@ -33,6 +33,7 @@ function Persona({
   type PersonaValues = {
     biography: string;
     greeting: string;
+    description: string;
     visibility: "public" | "private" | "unlisted";
   };
   const handleSubmit = async (values: PersonaValues) => {
@@ -71,6 +72,7 @@ function Persona({
         biography: wizard?.biography || "",
         greeting: wizard?.greeting || "",
         visibility: wizard?.visibility?.toLowerCase() || "public",
+        description: wizard?.description || "",
       }}
       validationSchema={PERSONA_VALIDATION_SCHEMA}
       onSubmit={handleSubmit}
@@ -155,6 +157,23 @@ function Persona({
               />
               <Form.Control.Feedback type="invalid">
                 {errors.greeting}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <h3 className="sub-title-bot">{t("createAgent.description")}</h3>
+            <Form.Group>
+              <Form.Label className="fs-7">
+                {t("createAgent.descriptionDesc")}
+              </Form.Label>
+              <Form.Control
+                className="form-control"
+                as="textarea"
+                name="description"
+                rows={3}
+                value={values.description}
+                onChange={handleChange}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.description}
               </Form.Control.Feedback>
             </Form.Group>
             <h3 className="sub-title-bot">

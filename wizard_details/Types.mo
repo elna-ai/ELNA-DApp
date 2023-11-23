@@ -11,13 +11,13 @@ module {
 
   public type UserAddress = Principal;
 
-  // TODO: check if something like Omit exist for types
   public type WizardDetailsBasic = {
     id : Text;
     name : Text;
-    // Make Principal
+    // TODO: Make Principal
     userId : Text;
     biography : Text;
+    description : Text;
   };
 
   public type WizardDetails = WizardDetailsBasic and {
