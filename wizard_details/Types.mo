@@ -18,10 +18,10 @@ module {
     userId : Text;
     biography : Text;
     description : Text;
+    avatar : Text;
   };
 
   public type WizardDetails = WizardDetailsBasic and {
-    avatar : ?Text;
     greeting : Text;
     summary : ?Text;
     visibility : WizardVisibility;

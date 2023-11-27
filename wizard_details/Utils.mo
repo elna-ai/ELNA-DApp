@@ -44,6 +44,7 @@ module {
           userId = wizard.userId;
           biography = wizard.biography;
           description = wizard.description;
+          avatar = wizard.avatar;
         };
       },
     );
