@@ -7,11 +7,11 @@ import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
 import PageLoader from "components/common/PageLoader";
+import { getAvatar } from "src/utils";
 import { wizard_details as wizardDetails } from "declarations/wizard_details";
 import { WizardDetails } from "declarations/wizard_details/wizard_details.did";
 
 import Bubble from "./Bubble";
-import { AVATAR_DUMMY_IMAGE } from "./constants";
 import NoHistory from "./NoHistory";
 
 type Message = {
@@ -81,8 +81,6 @@ function Chat() {
   //   []
   // );
 
-  const imgUrl = AVATAR_DUMMY_IMAGE.find(dummy => dummy.id === id)?.imgUrl;
-
   const { t } = useTranslation();
 
   const handleSubmit = async () => {
@@ -136,9 +134,11 @@ function Chat() {
             <div className="d-flex align-items-center">
               <div className="chat-header__avatar">
                 <div className="avatar">
-                  {imgUrl && (
-                    <img src={imgUrl} alt="user" className="avatar-img" />
-                  )}
+                  <img
+                    src={getAvatar(wizard.avatar)?.image}
+                    alt="user"
+                    className="avatar-img"
+                  />
                 </div>
               </div>
               <div className="flex-grow-1 ms-3">

@@ -1,0 +1,15 @@
+.persona {
+  &__avatar {
+    display: flex;
+    gap: 23px;
+
+    &__image {
+      &-wrapper {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-y: auto;
+        gap: 18px;
+      }
+    }
+  }
+}

@@ -3,9 +3,9 @@ import { useTranslation } from "react-i18next";
 import { Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 
-import { AVATAR_DUMMY_IMAGE } from "components/Chat/constants";
 import { wizard_details as wizardDetails } from "declarations/wizard_details";
 import { WizardDetailsBasic } from "declarations/wizard_details/wizard_details.did";
+import { getAvatar } from "src/utils";
 
 import Card from "./Card";
 
@@ -64,21 +64,15 @@ function PopularWizards() {
         {isPopularWizardsLoading ? (
           <Spinner className="m-auto" />
         ) : (
-          // avatar
-          popularWizards?.map(({ id, name, userId, description }) => {
-            const imgUrl =
-              AVATAR_DUMMY_IMAGE.find(dummy => dummy.id === id)?.imgUrl ||
-              AVATAR_DUMMY_IMAGE[0].imgUrl;
-            return (
-              <Card
-                {...{ name, description }}
-                id={id}
-                key={id}
-                imageUrl={imgUrl}
-                userId={userId}
-              />
-            );
-          })
+          popularWizards?.map(({ id, name, userId, description, avatar }) => (
+            <Card
+              {...{ name, description }}
+              id={id}
+              key={id}
+              imageUrl={getAvatar(avatar)?.image}
+              userId={userId}
+            />
+          ))
         )}
       </div>
     </>

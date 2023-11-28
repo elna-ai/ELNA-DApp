@@ -14,26 +14,26 @@ import {
   WizardVisibility,
 } from "declarations/wizard_details/wizard_details.did";
 
-import { PERSONA_VALIDATION_SCHEMA } from "./constants";
+import { PERSONA_VALIDATION_SCHEMA } from "../constants";
+import AvatarImage from "./AvatarImage";
+import { getAvatar } from "src/utils";
+import { AVATAR_IMAGES } from "src/constants";
 
-function Persona({
-  wizard,
-  setCurrentNav,
-  name,
-}: {
+type PersonaProps = {
   wizard: any;
   setCurrentNav: React.Dispatch<React.SetStateAction<string | null>>;
   name: string | null;
-}) {
+};
+function Persona({ wizard, setCurrentNav, name }: PersonaProps) {
   const { t } = useTranslation();
   const wallet = useWallet();
   const navigate = useNavigate();
-  // const { mutate: updatewizard } = useUpdatewizard(wizard?.uuid);
 
   type PersonaValues = {
     biography: string;
     greeting: string;
     description: string;
+    avatar: string;
     visibility: "public" | "private" | "unlisted";
   };
   const handleSubmit = async (values: PersonaValues) => {
@@ -51,7 +51,6 @@ function Persona({
       name,
       visibility,
       summary: [],
-      avatar: [],
     };
 
     const result = await wizardDetails.addWizard(userId, payload);
@@ -69,6 +68,7 @@ function Persona({
   return (
     <Formik
       initialValues={{
+        avatar: wizard?.avatar || AVATAR_IMAGES[0].id,
         biography: wizard?.biography || "",
         greeting: wizard?.greeting || "",
         visibility: wizard?.visibility?.toLowerCase() || "public",
@@ -80,6 +80,39 @@ function Persona({
       {({ dirty, errors, values, handleSubmit, handleChange }) => (
         <Form onSubmit={handleSubmit} noValidate>
           <div>
+            <h3 className="sub-title-bot">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10C20 15.5228 15.5228 20 10 20ZM10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18ZM5 10H7C7 11.6569 8.3431 13 10 13C11.6569 13 13 11.6569 13 10H15C15 12.7614 12.7614 15 10 15C7.23858 15 5 12.7614 5 10Z"
+                  fill="#007D88"
+                />
+              </svg>
+              {t("createAgent.avatar")}
+            </h3>
+            <div className="persona__avatar">
+              <AvatarImage
+                key={getAvatar(values.avatar)!.id}
+                image={getAvatar(values.avatar)!.image}
+                selected={false}
+                preview={true}
+              />
+              <InputGroup className="persona__avatar__image-wrapper">
+                {AVATAR_IMAGES.map(avatar => (
+                  <AvatarImage
+                    key={avatar.id}
+                    image={avatar.image}
+                    selected={values.avatar === avatar.id}
+                    onClick={() => handleChange("avatar")(avatar.id)}
+                  />
+                ))}
+              </InputGroup>
+            </div>
             <h3 className="sub-title-bot">
               <span>
                 <svg
