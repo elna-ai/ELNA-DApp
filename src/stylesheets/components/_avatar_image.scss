@@ -1,0 +1,34 @@
+.avatar-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 999px;
+
+  &-wrapper {
+    border-radius: 999px !important;
+    width: 75px;
+    height: 75x;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    position: relative;
+  }
+
+  &--selected {
+    border: 4px solid #8ecb58;
+  }
+
+  &--preview {
+    width: 90px;
+    height: 90px;
+  }
+
+  &__tick {
+    position: absolute;
+    right: -5px;
+    bottom: 6px;
+    width: 16px;
+    height: 16px;
+    background-color: white;
+    border-radius: 999px;
+  }
+}
