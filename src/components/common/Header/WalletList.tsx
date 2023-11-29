@@ -68,7 +68,7 @@ function WalletList({ isOpen, onClose, setIsLoggedIn }: WalletListProps) {
       </Modal.Body>
       <Modal.Footer>
         {isLoading && (
-          <div className="flex mx-auto gap-2 items-center ">
+          <div className="d-flex mx-auto gap-2 align-items-center ">
             <Spinner className="mx-auto" />
             <span>{t("signIn.connectingWallet")}</span>
           </div>

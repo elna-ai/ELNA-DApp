@@ -41,7 +41,7 @@ function Create() {
     }
   };
 
-  const handlePublish = () => {};
+  const handlePublish = () => { };
 
   useEffect(() => {
     getWizard(wizardId);
@@ -63,9 +63,9 @@ function Create() {
       >
         {({ errors, values, handleSubmit, setFieldValue, handleChange }) => (
           <Form onSubmit={handleSubmit} noValidate>
-            <div className="mt-3 flex items-center justify-between">
+            <div className="mt-3 d-flex align-items-center justify-content-between">
               <div>
-                <div className="d-flex gap-3 items-center">
+                <div className="d-flex gap-3 align-items-center">
                   {values.isNameEdit ? (
                     <Form.Group>
                       <Form.Control
@@ -107,16 +107,16 @@ function Create() {
                   {errors.name}
                 </Form.Control.Feedback>
               </div>
-              <div className="text-right">
+              <div className="text-end">
                 <span className="text-xs">{t("common.template")}</span>
-                <div className="font-bold">{t("common.scratch")}</div>
+                <div className="fw-bold">{t("common.scratch")}</div>
               </div>
             </div>
             <hr className="mb-0" />
           </Form>
         )}
       </Formik>
-      <div className="flex items-center justify-between">
+      <div className="d-flex align-items-center justify-content-between">
         <Nav
           variant="pills"
           defaultActiveKey={currentNav || "persona"}
@@ -159,7 +159,7 @@ function Create() {
         <Knowledge
           wizardId={wizard?.id || ""}
           setIsPolling={setIsPolling}
-          // document={document}
+        // document={document}
         />
       )}
     </>

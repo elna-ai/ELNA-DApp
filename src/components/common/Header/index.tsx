@@ -53,7 +53,7 @@ function Header({ isLoggedIn, setIsLoggedIn }: HeaderProps) {
     <>
       <header className="d-flex p-2 h-12">
         <nav className="hk-navbar navbar navbar-expand-xl navbar-light fixed-top">
-          <div className="container-fluid">
+          <div className="container-fluid justify-content-end">
             {isLoggedIn ? (
               <Dropdown className="ml-auto d-flex">
                 <Dropdown.Toggle
@@ -62,7 +62,7 @@ function Header({ isLoggedIn, setIsLoggedIn }: HeaderProps) {
                 >
                   <span>
                     <img
-                      className="rounded-circle d-inline mr-2"
+                      className="rounded-circle d-inline me-2"
                       src={AvatarImg}
                       alt="profile-avatar"
                       width={40}
@@ -98,7 +98,7 @@ function Header({ isLoggedIn, setIsLoggedIn }: HeaderProps) {
                 onClick={handleClick}
                 disabled={isLoggingOut}
               >
-                <div className="mr-1">
+                <div className="me-1">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
