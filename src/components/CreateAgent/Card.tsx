@@ -16,7 +16,7 @@ function Card({ bot }: { bot: BotProps }) {
         <span>{bot.tag}</span>
       </div> */}
       <div className="card-img-overlay d-flex justify-content-center align-items-center coming-soon">
-        <h5 className="card-title">{t("common.Coming Soon")}</h5>
+        <h5 className="card-title">{t("common.comingSoon")}</h5>
       </div>
       <div className="card-body text-center mt-4">
         <div className="avatar  position-relative">

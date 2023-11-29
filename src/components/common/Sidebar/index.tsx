@@ -81,7 +81,7 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
                       </span>
                       {isComingSoon && (
                         <span className="badge badge-sm badge-soft-pink ms-auto">
-                          {t("common.commingSoon")}
+                          {t("common.comingSoon")}
                         </span>
                       )}
                     </Link>
@@ -97,12 +97,12 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
               </h5>
               <p className="p-sm card-text">{t("sidebar.plusDescription")}</p>
               <a
-                href="https://nubra-ui.elna.live/"
+                href="#"
                 target="_blank"
                 className="btn btn-primary btn-block"
                 rel="noreferrer"
               >
-                {t("common.commingSoon")}
+                {t("common.comingSoon")}
               </a>
             </div>
           </div>
