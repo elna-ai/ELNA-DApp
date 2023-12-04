@@ -105,6 +105,7 @@
   white-space: nowrap;
 }
 .hk-wrapper .hk-menu .menu-header {
+  position: relative;
   padding: 0.5rem 1.1875rem;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -114,7 +115,6 @@
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  overflow: hidden;
 }
 .hk-wrapper .hk-menu .menu-header > span {
   display: -webkit-box;
@@ -159,4 +159,12 @@
   height: auto;
   width: auto;
   visibility: visible;
+}
+
+.hk-menu {
+  .sidebar-button--collapsed {
+    position: absolute;
+    left: 85%;
+    rotate: 180deg;
+  }
 }
