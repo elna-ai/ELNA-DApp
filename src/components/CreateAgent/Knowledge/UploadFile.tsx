@@ -1,11 +1,19 @@
 import { useState, ChangeEvent } from "react";
 
-import { Form, Spinner } from "react-bootstrap";
-import { Button } from "react-bootstrap";
-import { Modal } from "react-bootstrap";
-import PropTypes from "prop-types";
-// import { useUploadDocument } from "hooks/reactQuery/useAgentsApi";
+import { Document } from "langchain/document";
+import Form from "react-bootstrap/Form";
+import Spinner from "react-bootstrap/Spinner";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 import { Trans, useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+import {
+  getChunks,
+  extractDocumentsFromPDF,
+  mergeHyphenatedWords,
+  fixNewlines,
+  removeMultipleNewlines,
+} from "src/utils";
 
 type UploadFileProps = {
   isOpen: boolean;
@@ -25,7 +33,6 @@ function UploadFile({
   const [isUploading, setIsUploading] = useState(false);
 
   const { t } = useTranslation();
-  // const { mutate: uploadDocument } = useUploadDocument();
 
   const handleClose = () => {
     setSelectedFiles([]);
@@ -34,26 +41,33 @@ function UploadFile({
     onClose();
   };
 
-  const handleUpload = () => {
-    const formData = new FormData();
-    formData.append("file", selectedFiles[0], selectedFiles[0].name);
-    setIsUploading(true);
-    // uploadDocument(
-    //   { agentId, payload: formData },
-    //   {
-    //     onSuccess: data => {
-    //       handleClose();
-    //       if (data.data.status === "success") {
-    //         !data.data.data.agent.is_active && setIsPolling(true);
-    //       }
-    //     },
-    //   }
-    // );
+  const handleUpload = async () => {
+    const documents = await extractDocumentsFromPDF(selectedFiles[0]);
+    if (documents === undefined) {
+      console.error("unable to extract text from pdf");
+      toast.error("unable to extract text from pdf");
+      return;
+    }
+
+    const cleanedDocuments = documents.map(document => {
+      const mergeHyphenated = mergeHyphenatedWords(document.pageContent);
+      const newlineFix = fixNewlines(mergeHyphenated);
+      const cleanedText = removeMultipleNewlines(newlineFix);
+      return new Document({
+        metadata: document.metadata,
+        pageContent: cleanedText,
+      });
+    });
+
+    const chunks = await getChunks(cleanedDocuments);
+    // TODO: send this to canister
+    chunks.forEach(chunk => console.log(chunk.pageContent));
   };
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const inputFiles = event.target.files;
     if (inputFiles === null) return;
+    if (!event.target.files) return;
 
     const newFiles = Array.from(inputFiles);
     const validFiles = newFiles.filter(file => {
@@ -185,10 +199,5 @@ function UploadFile({
     </Modal>
   );
 }
-
-UploadFile.propTypes = {
-  isOpen: PropTypes.bool,
-  onClose: PropTypes.func,
-};
 
 export default UploadFile;

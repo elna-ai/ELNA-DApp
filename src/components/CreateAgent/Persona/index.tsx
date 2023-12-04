@@ -13,11 +13,11 @@ import {
   WizardDetails,
   WizardVisibility,
 } from "declarations/wizard_details/wizard_details.did";
+import { getAvatar } from "src/utils";
+import { AVATAR_IMAGES } from "src/constants";
 
 import { PERSONA_VALIDATION_SCHEMA } from "../constants";
 import AvatarImage from "./AvatarImage";
-import { getAvatar } from "src/utils";
-import { AVATAR_IMAGES } from "src/constants";
 
 type PersonaProps = {
   wizard: any;
@@ -54,15 +54,12 @@ function Persona({ wizard, setCurrentNav, name }: PersonaProps) {
     };
 
     const result = await wizardDetails.addWizard(userId, payload);
-    console.log(result.status);
-    console.log(typeof result.status);
     if (result.status === 422n) {
       toast.error(result.message);
       throw new Error(result.message);
     } else {
       toast.success(result.message);
-      //       setCurrentNav("knowledge");
-      navigate("/");
+      setCurrentNav("knowledge");
     }
   };
   return (
