@@ -7,7 +7,7 @@ import { useUserStore } from "stores/useUser";
 
 import WalletList from "./WalletList";
 import AvatarImg from "images/avatar.png";
-import { UserState } from "types";
+import { UserState } from "../../../types";
 import { useWallet } from "hooks/useWallet";
 
 interface HeaderProps {
