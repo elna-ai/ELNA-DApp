@@ -45,19 +45,18 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
             <ElanLogo className="brand-img img-fluid" />
           </Link>
         </span>
-        <ExpandButton {...{ handleExpand }} />
+        <ExpandButton
+          {...{ handleExpand }}
+          className={classNames("sidebar-button", {
+            "sidebar-button--collapsed": !isExpanded,
+          })}
+        />
       </div>
       {/* /Brand */}
       <div>
         <div className="menu-content-wrap">
           <div className="menu-group">
             <ul className="navbar-nav flex-column">
-              {!isExpanded && (
-                <ExpandButton
-                  className="rotate-180 p-0 mb-3"
-                  {...{ handleExpand }}
-                />
-              )}
               {SIDEBAR_LINK.map(
                 ({ to, Icon, isComingSoon, otherParams, key }) => (
                   <li
