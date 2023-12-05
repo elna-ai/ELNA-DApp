@@ -47,7 +47,7 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
         </span>
         <ExpandButton
           {...{ handleExpand }}
-          className={classNames({
+          className={classNames("sidebar-button", {
             "sidebar-button--collapsed": !isExpanded,
           })}
         />

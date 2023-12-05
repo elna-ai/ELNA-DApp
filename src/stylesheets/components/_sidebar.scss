@@ -162,9 +162,13 @@
 }
 
 .hk-menu {
-  .sidebar-button--collapsed {
+  .sidebar-button {
     position: absolute;
-    left: 85%;
-    rotate: 180deg;
+    left: 100%;
+
+    &--collapsed {
+      rotate: 180deg;
+      left: 85%;
+    }
   }
 }
