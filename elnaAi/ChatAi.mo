@@ -10,9 +10,45 @@ import Types "Types";
 
 actor {
 
+
+ //function to transform the response
+  public query func transform(raw : Types.TransformArgs) : async Types.CanisterHttpResponsePayload {
+      let transformed : Types.CanisterHttpResponsePayload = {
+          status = raw.response.status;
+          body = raw.response.body;
+          headers = [
+              {
+                  name = "Content-Security-Policy";
+                  value = "default-src 'self'";
+              },
+              { 
+                name = "Referrer-Policy"; 
+                value = "strict-origin" 
+              },
+              { 
+                name = "Permissions-Policy"; 
+                value = "geolocation=(self)" },
+              {
+                  name = "Strict-Transport-Security";
+                  value = "max-age=63072000";
+              },
+              { 
+                name = "X-Frame-Options"; 
+                value = "DENY" 
+              },
+              { 
+                name = "X-Content-Type-Options"; 
+                value = "nosniff" 
+              },
+          ];
+      };
+      transformed;
+  };
+
+
 //PUBLIC METHOD
 //This method sends a POST request to a URL with a free API you can test.
-  public func send_http_post_request(biography:Text,input_prompt:Text) : async Text {
+  public func send_http_post_request(biography:Text,input_prompt:Text,uuid:Text) : async Text {
 
     //1. DECLARE IC MANAGEMENT CANISTER
     //You need this so you can use it to make the HTTP request
@@ -22,12 +58,12 @@ actor {
 
     // 2.1 Setup the URL and its query parameters
     //This URL is used because it allows you to inspect the HTTP request sent from the canister
-    let url = "https://d2f0h5wk28c4fc.cloudfront.net/chat"; //HTTP that accepts IPV6
+    let url = "https://dsnxpqm0m8fcy.cloudfront.net/chat"; //HTTP that accepts IPV6
 
     // 2.2 prepare headers for the system http_request call
 
     //idempotency keys should be unique so create a function that generates them.
-    let idempotency_key: Text = generateUUID();
+    let idempotency_key: Text = generateUUID(uuid);
     let request_headers = [
         { name = "User-Agent"; value = "http_post_sample" },
         { name= "Content-Type"; value = "application/json" },
@@ -40,9 +76,19 @@ actor {
     // 3. Convert the Blob into an array [Nat8]
 
     let request_body_json :Text = "{\"biography\":\""#biography#"\", \"input_prompt\":\""#input_prompt#"\"}";
-    // let request_body_json: Text = "{ \"biography\" : \"large language model trained by OpenAI\", \"input_prompt\" : \"say hi to me\" }";
+
+    // let request_body_json: Text = "{ \"biography\" : \"#biography#\", \"input_prompt\" : \"##\" }";
+
     let request_body_as_Blob: Blob = Text.encodeUtf8(request_body_json); 
     let request_body_as_nat8: [Nat8] = Blob.toArray(request_body_as_Blob); // e.g [34, 34,12, 0]
+
+    // 2.2.1 Transform context
+    let transform_context : Types.TransformContext = {
+      function = transform;
+      context = Blob.fromArray([]);
+    };
+
+
 
     // 2.3 The HTTP request
     let http_request : Types.HttpRequestArgs = {
@@ -52,8 +98,8 @@ actor {
         //note: type of `body` is ?[Nat8] so it is passed here as "?request_body_as_nat8" instead of "request_body_as_nat8"
         body = ?request_body_as_nat8; 
         method = #post;
-        // transform = ?transform_context;
-        transform = null; //optional for request
+        transform = ?transform_context;
+        // transform = null; //optional for request
     };
 
     //3. ADD CYCLES TO PAY FOR HTTP REQUEST
@@ -85,7 +131,6 @@ actor {
     //  1. Convert the [Nat8] into a Blob
     //  2. Use Blob.decodeUtf8() method to convert the Blob to a ?Text optional 
     //  3. Use Motoko syntax "Let... else" to unwrap what is returned from Text.decodeUtf8()
-
     let response_body: Blob = Blob.fromArray(http_response.body);
     let decoded_text: Text = switch (Text.decodeUtf8(response_body)) {
         case (null) { "No value returned" };
@@ -93,15 +138,14 @@ actor {
     };
 
     //6. RETURN RESPONSE OF THE BODY
-    let result: Text = decoded_text # ". See more info of the request sent at at: " # url # "/inspect";
-    result
+    decoded_text
   };
 
   //PRIVATE HELPER FUNCTION
   //Helper method that generates a Universally Unique Identifier
   //this method is used for the Idempotency Key used in the request headers of the POST request.
   //For the purposes of this exercise, it returns a constant, but in practice it should return unique identifiers
-  func generateUUID() : Text {
-    "UUID-123456789";
+  func generateUUID(uuid:Text) : Text {
+    "UUID-"#uuid#"";
   }
 };
