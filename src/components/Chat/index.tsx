@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
@@ -13,6 +12,7 @@ import { WizardDetails } from "declarations/wizard_details/wizard_details.did";
 
 import Bubble from "./Bubble";
 import NoHistory from "./NoHistory";
+import { elna_ai as elnaAi } from "declarations/elna_ai";
 
 type Message = {
   user: {
@@ -90,22 +90,21 @@ function Chat() {
     ]);
     setMessageInput("");
     setIsResponseLoading(true);
-    if (import.meta.env.VITE_CHAT_API === undefined) {
-      toast.error("Something went wrong");
-      throw new Error("chat api not defined");
-    }
-
     try {
-      const response = await axios.post(import.meta.env.VITE_CHAT_API, {
-        input_prompt: messageInput.trim(),
-        biography: wizard?.biography,
-      });
+      const rawResponse = await elnaAi.send_http_post_request(
+        wizard!.biography,
+        messageInput.trim(),
+        uuidv4()
+      );
+      const response = JSON.parse(rawResponse);
+      // TODO: error response for this
+
       setIsResponseLoading(false);
       setMessages(prev => [
         ...prev,
         {
           user: { name: wizard!.name, isBot: true },
-          message: response.data.body.response,
+          message: response.body.response,
         },
       ]);
     } catch (e) {
