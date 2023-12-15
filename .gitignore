@@ -29,6 +29,7 @@ dist-ssr
 .dfx
 .vessel
 .mops
+canister_ids.json
 
 # Environment variables
 .env

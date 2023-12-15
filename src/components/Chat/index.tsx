@@ -97,9 +97,13 @@ function Chat() {
         uuidv4()
       );
       const response = JSON.parse(rawResponse);
-      // TODO: error response for this
 
       setIsResponseLoading(false);
+      if (response.message) {
+        toast.error(response.message);
+        return;
+      }
+
       setMessages(prev => [
         ...prev,
         {
