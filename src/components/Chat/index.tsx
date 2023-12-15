@@ -92,8 +92,10 @@ function Chat() {
     setIsResponseLoading(true);
     try {
       const rawResponse = await elnaAi.send_http_post_request(
-        wizard!.biography,
-        messageInput.trim(),
+        JSON.stringify({
+          biography: wizard!.biography,
+          input_prompt: messageInput.trim(),
+        }),
         uuidv4()
       );
       const response = JSON.parse(rawResponse);
