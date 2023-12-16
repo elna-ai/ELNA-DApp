@@ -1,28 +1,42 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import Spinner from "react-bootstrap/Spinner";
 import { useTranslation } from "react-i18next";
-import { useUserStore } from "stores/useUser";
 
 import WalletList from "./WalletList";
 import AvatarImg from "images/avatar.png";
-import { UserState } from "../../../types";
 import { useWallet } from "hooks/useWallet";
 
 interface HeaderProps {
   isLoggedIn: boolean;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function Header({ isLoggedIn, setIsLoggedIn }: HeaderProps) {
+function Header({ isLoggedIn, setIsLoggedIn, setIsLoading }: HeaderProps) {
   const [isWalletModelOpen, setIsWalletModelOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const { t } = useTranslation();
   const wallet = useWallet();
-  const setUser = useUserStore((state: UserState) => state.setUser);
-  const user = useUserStore((state: UserState) => state.user);
+  const [address, setAddress] = useState(displayAddress());
+
+  useEffect(() => {
+    const autoLogin = async () => {
+      setIsLoading(true);
+      if (wallet === undefined) {
+        console.error("wallet is not available");
+        setIsLoading(false);
+        return;
+      }
+      await wallet.autoConnect();
+      setAddress(displayAddress());
+      setIsLoading(false);
+    };
+
+    autoLogin();
+  }, [wallet]);
 
   const handleClick = async () => {
     if (isLoggedIn) {
@@ -30,7 +44,6 @@ function Header({ isLoggedIn, setIsLoggedIn }: HeaderProps) {
       localStorage.removeItem("dfinityWallet");
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
-      setUser({});
       setIsLoggedIn(!!localStorage.getItem("dfinityWallet"));
       //   await wallet.disconnect();
       setIsLoggingOut(false);
@@ -39,15 +52,15 @@ function Header({ isLoggedIn, setIsLoggedIn }: HeaderProps) {
     }
   };
 
-  const displayAddress = () => {
-    if (!wallet?.principalId) return "user";
+  function displayAddress() {
+    if (!wallet?.principalId) return "";
 
     const firstPart = wallet?.principalId?.substring(0, 6);
     const lastPart = wallet?.principalId?.substring(
       wallet.principalId.length - 6
     );
     return `${firstPart}...${lastPart}`;
-  };
+  }
 
   return (
     <>
@@ -68,7 +81,7 @@ function Header({ isLoggedIn, setIsLoggedIn }: HeaderProps) {
                       width={40}
                     />
                   </span>
-                  <span>{displayAddress()}</span>
+                  <span>{address}</span>
                   {isLoggingOut && <Spinner animation="border" size="sm" />}
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="profile-dropdown">
