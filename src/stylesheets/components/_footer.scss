@@ -3,16 +3,19 @@
   left: 0;
   right: 0;
   bottom: 0;
-  border-top: 1px solid #eaeaea;
-  background: #fff;
+  border-top: 1px solid var(--background-base-border);
+  background-color: var(--background-base);
 }
+
 .hk-footer .footer .footer-text a {
   color: #007d88;
 }
+
 .hk-footer .footer .footer-text {
   font-size: 0.75rem;
 }
-.hk-footer .footer > .row {
+
+.hk-footer .footer>.row {
   height: 60px;
   align-items: center;
   justify-content: center;

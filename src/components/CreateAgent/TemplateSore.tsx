@@ -29,9 +29,11 @@ function TemplateStore() {
           </h5>
           <p>{t("createAgent.templateStore.description")}</p>
         </div>
-        <a href="#" className="fs-7 flex-shrink-0">
-          <u>{t("common.viewAll")}</u>
-        </a>
+        <div>
+          <a href="#" className="el-btn-secondary">
+            {t("common.viewAll")}
+          </a>
+        </div>
       </div>
       <div className="row gx-3 row-cols-xxl-4 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
         {TEMPLATE_BOTS.map(bot => (

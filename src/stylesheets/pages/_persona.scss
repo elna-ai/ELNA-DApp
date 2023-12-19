@@ -23,7 +23,7 @@
 
 .persona__avatar__image-wrapper::-webkit-scrollbar-track {
 
-  background-color: rgb(226, 226, 226);
+  background-color: rgba(226, 226, 226, 0.2);
   border-radius: 10px;
 }
 
@@ -34,4 +34,20 @@
 
 .persona__avatar__image-wrapper {
   scrollbar-width: thin;
+}
+
+.personaCreate {
+  max-width: 50rem;
+
+  textarea {
+    color: var(--title-color);
+
+    &::placeholder {
+      color: var(--placeholder-text-w) !important;
+    }
+
+    &:focus {
+      border-color: var(--elna-primary-color) !important;
+    }
+  }
 }

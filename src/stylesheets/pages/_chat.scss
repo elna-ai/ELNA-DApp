@@ -1,14 +1,19 @@
+.chatapp-single-chat {
+  margin: 0 auto;
+  max-width: 50rem;
+}
+
 .chat-bubble {
-  margin-top: 0.5rem;
+  margin-top: var(--size-4);
   display: flex;
   width: 100%;
-  gap: 0.5rem;
+  gap: var(--size-3);
 
   &--user {
     flex-direction: row-reverse;
   }
 
-  &__wrapper--user{
+  &__wrapper--user {
     flex-direction: row-reverse;
     align-self: flex-end;
   }
@@ -17,36 +22,40 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: var(--title-color-dark);
     width: 2rem;
     height: 2rem;
     background-color: var(--primary-color);
-    border-radius: 0.25rem;
-    padding: 0.25rem;
+    border-radius: 1rem;
+    padding: 1rem;
 
     &--bot {
-      background-color: var(--green-600);
+      background-color: #1E2329;
+      color: var(--title-sub-color);
     }
   }
 
   &__message {
     white-space: pre-line;
 
-    &--wrapper{
+    &--wrapper {
       min-width: 100%;
-      max-width: 24rem;
-      padding: 0.75rem;
+      max-width: 30rem;
+      padding: var(--size-3);
 
       &--bot {
-        background-color: white;
-        border-bottom-left-radius: 0.5rem;
+        background-color: var(--background-elevated-base);
+        // border-bottom-right-radius: var(--size-3);
+        border-radius: var(--size-3);
+        color: var(--title-sub-color);
       }
 
       &--user {
-        color: white;
-        border-top-left-radius: 0.5rem;
-        border-bottom-left-radius: 0.5rem;
-        border-bottom-right-radius: 0.5rem;
+        color: var(--title-color-dark);
+        border-radius: var(--size-3);
+        // border-top-left-radius: var(--size-3);
+        // border-bottom-left-radius: var(--size-3);
+        // border-bottom-right-radius: var(--size-3);
         background-color: var(--primary-color);
       }
     }
@@ -64,7 +73,7 @@
 
 .chat-body {
   width: 100%;
-  margin-top: 7rem;
+  margin-top: 4rem;
   margin-bottom: 120px;
 
   &--wrapper {
@@ -72,3 +81,12 @@
   }
 }
 
+.text-desc {
+  color: var(--title-sub-color);
+  max-width: 30rem;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  text-overflow: ellipsis;
+  margin: 0;
+}

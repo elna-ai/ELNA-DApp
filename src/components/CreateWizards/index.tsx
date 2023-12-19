@@ -4,7 +4,7 @@ import PopularWizards from "./PopularWizards";
 
 function CreateWizards({ isLoggedIn }: { isLoggedIn: boolean }) {
   return (
-    <div className="h-full">
+    <div className="w-100">
       {isLoggedIn && <MyWizards />}
       <PopularWizards />
     </div>

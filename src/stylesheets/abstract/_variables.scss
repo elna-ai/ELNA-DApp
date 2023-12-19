@@ -2,7 +2,7 @@
   --header-height: 3rem;
   --scrollable-height: calc(100% - var(--header-height));
   --bs-body-font-family: "DM Sans", sans-serif;
-  --primary-color: #007d88;
+  --primary-color: #55E6A5;
   --primary-hover-color: #00717a;
   --primary-success: #00d67f;
 
@@ -10,4 +10,66 @@
   --gray-100: rgb(243 244 246);
   --gray-700: rgb(55 65 81);
   --green-600: rgb(22 163 74);
+
+  // New Color Theme //
+
+  //Brand Color //
+  --elna-primary-color: #55E6A5;
+  --elna-primary-text-color: #000;
+
+  // Backgrounds //
+  --background: #020202;
+  --background-base: #121212;
+  --background-elevated-base: #181818;
+  --background-elevated-base-hover: #242424;
+  --background-btn-secondary: #474d57;
+
+  --background-base-border: #1e1e1e;
+  --background-form-border: #484848;
+  --background-form-border-hover: #24714f;
+  --background-active-color: #282828;
+
+  --color-bg1: #181A20;
+  --color-line: #2B3139;
+
+  // Backgrounds -bin //
+  // --background: #181A20;
+  --el-color-popup-bg: #1E2329;
+  --el-color-popup-text: var(--body-color);
+  --el-bg-danger: #c03344;
+
+  // #f6475d;
+
+
+
+  // Text Color //
+  --title-color: #fff;
+  --title-sub-color: rgba(255, 255, 255, 0.85);
+  --body-color: #848E9C;
+  --description-color-40: rgba(187, 187, 187, 0.40);
+  --description-color-60: rgba(187, 187, 187, 0.60);
+  --info-text-color: rgba(85, 230, 165, 0.75);
+
+  --title-color-dark: var(--background);
+
+  --placeholder-text-w: rgba(210, 210, 210, 0.2);
+
+  // Opacity //
+  --text-opacity-100: 1;
+  --text-opacity-50: .5;
+  --text-opacity-10: .1;
+
+
+  //Button //
+  --el-btn-bg-secondary: rgb(71, 77, 87);
+  --el-btn-bg-secondary-hover: rgb(43, 49, 57);
+
+
+  // Sizing //
+  --size-1: 0.25rem; // 4px//
+  --size-2: 0.5rem; // 8px//
+  --size-3: 0.75rem; // 12px//
+  --size-4: 1rem; // 16px//
+  --size-5: 1.25rem; // 20px//
+  --size-6: 1.5rem; // 24px//
 }

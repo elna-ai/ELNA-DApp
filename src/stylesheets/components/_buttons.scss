@@ -1,0 +1,54 @@
+.el-btn-secondary {
+    margin: 0px;
+    appearance: none;
+    user-select: none;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    box-sizing: border-box;
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    padding: 6px 12px;
+    line-height: 20px;
+    word-break: keep-all;
+    color: rgb(234, 236, 239);
+    border-radius: 4px;
+    min-height: 24px;
+    border: none;
+    background-color: var(--el-btn-bg-secondary);
+    background-image: none;
+    min-width: 80px;
+}
+
+.el-btn-secondary:hover:not(:disabled):not(:active):not(.inactive) {
+    box-shadow: none;
+    background-image: none;
+    background-color: var(--el-btn-bg-secondary-hover);
+}
+
+.btn-modal-cancel.btn-link {
+    text-decoration: none;
+    background-color: var(--el-btn-bg-secondary);
+    color: var(--title-sub-color);
+    width: 100px;
+}
+
+
+.btn-modal-cancel.btn-link:hover {
+    text-decoration: none;
+    background-color: var(--el-btn-bg-secondary-hover);
+}
+
+.btn-modal-ok {
+    width: 100px;
+}

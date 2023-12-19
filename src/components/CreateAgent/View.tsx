@@ -78,7 +78,7 @@ function View() {
       </div>
       <div className="row gx-3 row-cols-xxl-4 row-cols-xl-2 row-cols-lg-2 row-cols-md-2 row-cols-1 mb-5">
         <div className="col">
-          <div className="card card-border contact-card elna-card">
+          <div className="card card-border contact-card elna-card agent-create">
             <div className="card-body text-center">
               <div className="d-inline-flex ic-agent-create p-2">
                 <svg
@@ -90,7 +90,7 @@ function View() {
                   <path fill="none" d="M0 0h24v24H0z"></path>
                   <path
                     d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM11 11H7V13H11V17H13V13H17V11H13V7H11V11Z"
-                    fill="rgba(234,113,46,1)"
+                    fill="#00d67f"
                   ></path>
                 </svg>
               </div>
@@ -192,7 +192,7 @@ function View() {
             <Trans
               i18nKey="createAgent.noPermission.askAccess"
               components={{
-                a: <a href="#" className="text-underline" />,
+                a: <a href="#" className="elna-link text-underline" />,
                 u: <u />,
                 strong: <strong />,
               }}
