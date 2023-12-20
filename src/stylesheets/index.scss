@@ -73,7 +73,6 @@ a.elna-link {
   min-height: 100vh;
 }
 
-
 .hk-wrapper .hk-navbar {
   border-bottom: 1px solid var(--background-base-border);
   height: 65px;
@@ -138,7 +137,6 @@ header {
   margin-top: var(--size-2);
 }
 
-
 .hk-pg-body {
   padding: 2rem 0;
 }
@@ -186,7 +184,7 @@ header {
   vertical-align: middle;
 }
 
-.badge-icon>svg {
+.badge-icon > svg {
   position: absolute;
   left: 0;
   top: 0;
@@ -246,6 +244,7 @@ textarea.chat-input-area {
   padding: var(--size-4) var(--size-6);
   background-color: var(--background-base);
   border-radius: var(--size-5);
+  resize: none;
 }
 
 .hk-wrapper.default .hk-footer.chatfooter {
@@ -312,18 +311,18 @@ textarea.chat-input-area:focus-visible {
   align-items: center;
 }
 
-.media-body .msg-box>div {
+.media-body .msg-box > div {
   padding: 0.625rem 1rem;
   border-radius: 1.25rem;
   display: inline-block;
   position: relative;
 }
 
-.media-body .msg-box>div {
+.media-body .msg-box > div {
   background: #f2f2f2;
 }
 
-.media-body .msg-box:first-child>div {
+.media-body .msg-box:first-child > div {
   border-top-left-radius: 0;
 }
 
@@ -411,8 +410,6 @@ textarea.chat-input-area:focus-visible {
   margin-left: 32px;
 }
 
-
-
 .bot-name-modal .modal-footer {
   border-top: none;
 }
@@ -438,7 +435,6 @@ textarea.chat-input-area:focus-visible {
 .el-danger {
   background-color: var(--el-bg-danger) !important;
 }
-
 
 .bg-elavate {
   background-color: #333840;
@@ -596,7 +592,6 @@ textarea.chat-input-area:focus-visible {
     }
   }
 }
-
 
 .btn_icon {
   width: 40px;

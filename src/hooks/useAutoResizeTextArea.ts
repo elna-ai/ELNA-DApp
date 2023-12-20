@@ -1,6 +1,6 @@
 import { useLayoutEffect } from "react";
 
-const MIN_TEXT_AREA_HEIGHT = 88;
+const MIN_TEXT_AREA_HEIGHT = 64;
 const MAX_TEXT_AREA_HEIGHT = 200;
 
 const useAutoSizeTextArea = (
@@ -12,7 +12,6 @@ const useAutoSizeTextArea = (
 
 
     textAreaRef.style.height = `inherit`;
-    console.log(textAreaRef.scrollHeight);
     const newHeight = Math.min(
       Math.max(textAreaRef.scrollHeight, MIN_TEXT_AREA_HEIGHT),
       MAX_TEXT_AREA_HEIGHT
