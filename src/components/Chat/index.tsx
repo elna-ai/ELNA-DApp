@@ -15,7 +15,6 @@ import NoHistory from "./NoHistory";
 import { elna_ai as elnaAi } from "declarations/elna_ai";
 import useAutoSizeTextArea from "hooks/useAutoResizeTextArea";
 
-
 type Message = {
   user: {
     name: string;
@@ -36,7 +35,7 @@ function Chat() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const lastBubbleRef = useRef<HTMLDivElement>(null);
 
-  useAutoSizeTextArea(inputRef.current, messageInput)
+  useAutoSizeTextArea(inputRef.current, messageInput);
   useEffect(() => {
     const getWizard = async () => {
       setIsLoading(true);
@@ -135,7 +134,6 @@ function Chat() {
   if (isLoading || wizard === undefined) return <PageLoader />;
 
   return (
-
     <div className="row chatapp-single-chat">
       <div className="container-fluid">
         <div>
@@ -189,11 +187,12 @@ function Chat() {
             <div className="input-position-set">
               <textarea
                 placeholder={t("chat.inputPlaceholder")}
-                className="chat-input-area resize-none"
+                className="chat-input-area"
                 value={messageInput}
                 ref={inputRef}
                 onKeyDown={handleKeyDown}
                 onChange={event => setMessageInput(event.target.value)}
+                rows={1}
               ></textarea>
               <Button
                 onClick={handleSubmit}
