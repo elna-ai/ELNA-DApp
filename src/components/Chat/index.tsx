@@ -13,6 +13,8 @@ import { WizardDetails } from "declarations/wizard_details/wizard_details.did";
 import Bubble from "./Bubble";
 import NoHistory from "./NoHistory";
 import { elna_ai as elnaAi } from "declarations/elna_ai";
+import useAutoSizeTextArea from "hooks/useAutoResizeTextArea";
+
 
 type Message = {
   user: {
@@ -31,9 +33,10 @@ function Chat() {
 
   const { id } = useParams();
 
-  const inputRef = useRef<HTMLTextAreaElement | null>(null);
-  const lastBubbleRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const lastBubbleRef = useRef<HTMLDivElement>(null);
 
+  useAutoSizeTextArea(inputRef.current, messageInput)
   useEffect(() => {
     const getWizard = async () => {
       setIsLoading(true);
@@ -132,6 +135,7 @@ function Chat() {
   if (isLoading || wizard === undefined) return <PageLoader />;
 
   return (
+
     <div className="row chatapp-single-chat">
       <div className="container-fluid">
         <div>
@@ -148,7 +152,7 @@ function Chat() {
               </div>
               <div className="flex-grow-1 ms-3">
                 <h3 className="text-lg mt-2">{wizard.name}</h3>
-                <p className="text-muted fs-8">{wizard.description}</p>
+                <p className="text-desc fs-8">{wizard.description}</p>
               </div>
             </div>
             <hr className="mt-2" />
@@ -181,11 +185,11 @@ function Chat() {
           </div>
         </div>
         <div className="hk-footer chatfooter">
-          <div className="chatfooter-bg shadow rounded">
+          <div className="chatfooter-bg">
             <div className="input-position-set">
               <textarea
                 placeholder={t("chat.inputPlaceholder")}
-                className="rounded-3 chat-input-area resize-none"
+                className="chat-input-area resize-none"
                 value={messageInput}
                 ref={inputRef}
                 onKeyDown={handleKeyDown}
@@ -199,7 +203,7 @@ function Chat() {
                 {t("common.send")}
               </Button>
             </div>
-            <p className="text-muted fs-8 text-center">{t("chat.warning")}</p>
+            <p className="fs-8 text-center">{t("chat.warning")}</p>
           </div>
         </div>
       </div>

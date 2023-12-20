@@ -35,6 +35,7 @@ function PopularWizards() {
 
   return (
     <>
+
       <div className="d-flex align-items-top justify-content-between mt-4 mb-2">
         <div>
           <h5 className="flex gap-2">
@@ -56,9 +57,11 @@ function PopularWizards() {
           </h5>
           <p>{t("wizards.popularWizardsDesc")}</p>
         </div>
-        <a href="#" className="fs-7 flex-shrink-0">
-          <u>{t("common.viewAll")}</u>
-        </a>
+        <div>
+          <a href="#" className="el-btn-secondary">
+            {t("common.viewAll")}
+          </a>
+        </div>
       </div>
       <div className="row gx-3 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
         {isPopularWizardsLoading ? (

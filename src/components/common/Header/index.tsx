@@ -65,12 +65,12 @@ function Header({ isLoggedIn, setIsLoggedIn, setIsLoading }: HeaderProps) {
   return (
     <>
       <header className="d-flex p-2 h-12">
-        <nav className="hk-navbar navbar navbar-expand-xl navbar-light fixed-top">
+        <nav className="hk-navbar navbar navbar-expand-xl fixed-top">
           <div className="container-fluid justify-content-end">
             {isLoggedIn ? (
               <Dropdown className="ml-auto d-flex">
                 <Dropdown.Toggle
-                  variant="light"
+                  variant="dark"
                   className="flex gap-2 items-center"
                 >
                   <span>
@@ -78,7 +78,7 @@ function Header({ isLoggedIn, setIsLoggedIn, setIsLoading }: HeaderProps) {
                       className="rounded-circle d-inline me-2"
                       src={AvatarImg}
                       alt="profile-avatar"
-                      width={40}
+                      width={32}
                     />
                   </span>
                   <span>{address}</span>
@@ -108,10 +108,11 @@ function Header({ isLoggedIn, setIsLoggedIn, setIsLoading }: HeaderProps) {
             ) : (
               <Button
                 className="ml-auto d-flex"
+                style={{ marginRight: "0.75rem" }}
                 onClick={handleClick}
                 disabled={isLoggingOut}
               >
-                <div className="me-1">
+                <div className="me-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -121,7 +122,7 @@ function Header({ isLoggedIn, setIsLoggedIn, setIsLoading }: HeaderProps) {
                     <path fill="none" d="M0 0h24v24H0z"></path>
                     <path
                       d="M22.0049 7H23.0049V17H22.0049V20C22.0049 20.5523 21.5572 21 21.0049 21H3.00488C2.4526 21 2.00488 20.5523 2.00488 20V4C2.00488 3.44772 2.4526 3 3.00488 3H21.0049C21.5572 3 22.0049 3.44772 22.0049 4V7ZM20.0049 17H14.0049C11.2435 17 9.00488 14.7614 9.00488 12C9.00488 9.23858 11.2435 7 14.0049 7H20.0049V5H4.00488V19H20.0049V17ZM21.0049 15V9H14.0049C12.348 9 11.0049 10.3431 11.0049 12C11.0049 13.6569 12.348 15 14.0049 15H21.0049ZM14.0049 11H17.0049V13H14.0049V11Z"
-                      fill="rgba(255,255,255,1)"
+                      fill="var(--elna-primary-text-color)"
                     ></path>
                   </svg>
                 </div>

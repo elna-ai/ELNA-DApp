@@ -75,6 +75,7 @@ function Create() {
                           fontSize: "2rem",
                           fontWeight: "bold",
                           backgroundColor: "transparent",
+                          color: "#fff",
                           border: "none",
                           boxShadow: "none",
                         }}

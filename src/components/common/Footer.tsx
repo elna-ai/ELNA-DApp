@@ -18,7 +18,7 @@ function Footer() {
               <a href="#" className="" target="_blank">
                 {t("footer.privacyPolicy")}
               </a>
-              <span className="footer-link-sep">|</span>
+              <span className="footer-link-sep mx-2">|</span>
               <a href="#" target="_blank">
                 {t("footer.t&c")}
               </a>

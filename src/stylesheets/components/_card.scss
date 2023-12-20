@@ -1,6 +1,8 @@
 .contact-card.elna-card {
-  box-shadow: 0 10px 28px -7px rgba(153, 161, 170, 0.15);
-  border-color: transparent;
+  // box-shadow: 0 10px 28px -7px rgba(153, 161, 170, 0.15);
+  // border-color: transparent;
+  background-color: var(--background-elevated-base);
+  border: 1px solid var(--background-base-border);
 }
 
 .card .card-body {
@@ -11,8 +13,14 @@
 .contact-card.elna-card .user-name,
 .contact-card.elna-card .user-name a {
   font-weight: 700;
-  color: #007d88;
+  color: var(--title-sub-color);
   text-decoration: none !important;
+  text-transform: capitalize;
+}
+
+.elna-card.agent-create {
+  background-color: var(--background-btn-secondary);
+  min-height: 140px;
 }
 
 .card {
@@ -20,30 +28,68 @@
   border-radius: 0.5rem;
 }
 
-.card.contact-card.elna-card .card-footer > a {
-  justify-content: center;
-  width: 100%;
-  color: #6f6f6f;
-  font-size: 13px;
+.card.contact-card.elna-card .card-footer {
+  text-align: center;
 }
 
-.card.contact-card.elna-card .card-footer > a {
+.card.contact-card.elna-card .card-footer>a {
+  justify-content: center;
+  width: 100%;
+  font-size: 13px;
+  color: var(--description-color-40);
+}
+
+.card.contact-card.elna-card .card-footer>a {
   text-decoration: none;
 }
 
 .contact-card.elna-card .user-desg {
   font-size: 13px;
+  color: var(--description-color-60);
 }
 
 .card .card-footer {
-  border-color: #eaeaea;
-  background-color: #fff;
+  border-color: var(--background-base-border);
+}
+
+.card .card-footer {
+  // background-color: var(--el-color-popup-bg);
 }
 
 .contact-card.elna-card:hover {
-  box-shadow: 0 20px 48px -14px rgba(153, 161, 170, 0.45);
-  border-color: transparent;
+  box-shadow: 0 20px 48px -14px rgb(4 4 4 / 67%);
+  background-color: var(--el-color-popup-bg);
+  border: var(--background-base-border);
 }
+
+.contact-card.elna-card svg {
+  transform: scale(1);
+  -webkit-transition: all 0.25s ease;
+  -moz-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+}
+
+.contact-card.elna-card:hover svg {
+  transform: scale(1.25);
+  -webkit-transition: all 0.25s ease;
+  -moz-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+}
+
+.contact-card.elna-card img {
+  transform: scale(1);
+  -webkit-transition: all 0.25s ease;
+  -moz-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+}
+
+.contact-card.elna-card:hover img {
+  transform: scale(.85);
+  -webkit-transition: all 0.25s ease;
+  -moz-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+}
+
 
 /*Avatar*/
 .avatar {
@@ -60,12 +106,12 @@
 
 /*Avatar Intial*/
 
-.avatar.avatar-soft-primary > .initial-wrap {
+.avatar.avatar-soft-primary>.initial-wrap {
   background-color: #ebf5f5 !important;
   color: #007d88;
 }
 
-.avatar.avatar-xl > .initial-wrap {
+.avatar.avatar-xl>.initial-wrap {
   font-size: 1.75rem;
 }
 
@@ -74,7 +120,7 @@
   border-radius: 50%;
 }
 
-.avatar > .initial-wrap {
+.avatar>.initial-wrap {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -112,6 +158,10 @@
   display: none;
 }
 
+.contact-card.elna-card:hover .card-img-overlay.coming-soon {
+  border: 1px solid var(--background-base-border);
+}
+
 .card-img-overlay.coming-soon:hover {
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(5px);
@@ -120,6 +170,8 @@
   z-index: 5;
   cursor: pointer;
   text-align: center;
+  border-radius: 8px;
+  // border-color: var(--background-base-border);
 }
 
 .card-img-overlay.coming-soon:hover h5 {

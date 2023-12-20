@@ -76,7 +76,7 @@ function Persona({ wizard, setCurrentNav, name }: PersonaProps) {
     >
       {({ dirty, errors, values, handleSubmit, handleChange }) => (
         <Form onSubmit={handleSubmit} noValidate>
-          <div>
+          <div className="personaCreate">
             <h3 className="sub-title-bot">
               <svg
                 width="20"
@@ -141,6 +141,7 @@ function Persona({ wizard, setCurrentNav, name }: PersonaProps) {
               <Form.Control
                 className="form-control"
                 as="textarea"
+                placeholder="Enter Agent Biography"
                 name="biography"
                 rows={3}
                 value={values.biography}
@@ -181,6 +182,7 @@ function Persona({ wizard, setCurrentNav, name }: PersonaProps) {
               <Form.Control
                 as="textarea"
                 name="greeting"
+                placeholder="Enter Agent Greetings"
                 rows={3}
                 value={values.greeting}
                 onChange={handleChange}
@@ -206,6 +208,7 @@ function Persona({ wizard, setCurrentNav, name }: PersonaProps) {
               </Form.Label>
               <Form.Control
                 className="form-control"
+                placeholder="Enter Agent Description"
                 as="textarea"
                 name="description"
                 rows={3}
@@ -252,7 +255,7 @@ function Persona({ wizard, setCurrentNav, name }: PersonaProps) {
                 <InputGroup.Text>
                   <Trans
                     i18nKey="createAgent.visibility.public"
-                    components={{ span: <span className="font-light ml-2" /> }}
+                    components={{ span: <span className="fw-light ms-2" /> }}
                   />
                 </InputGroup.Text>
               </InputGroup>
@@ -268,7 +271,7 @@ function Persona({ wizard, setCurrentNav, name }: PersonaProps) {
                 <InputGroup.Text>
                   <Trans
                     i18nKey="createAgent.visibility.unlisted"
-                    components={{ span: <span className="font-light ml-2" /> }}
+                    components={{ span: <span className="fw-light ms-2" /> }}
                   />
                 </InputGroup.Text>
               </InputGroup>
@@ -284,7 +287,7 @@ function Persona({ wizard, setCurrentNav, name }: PersonaProps) {
                 <InputGroup.Text>
                   <Trans
                     i18nKey="createAgent.visibility.private"
-                    components={{ span: <span className="font-light ml-2" /> }}
+                    components={{ span: <span className="fw-light ms-2" /> }}
                   />
                 </InputGroup.Text>
               </InputGroup>
@@ -292,8 +295,8 @@ function Persona({ wizard, setCurrentNav, name }: PersonaProps) {
                 {errors.visibility}
               </Form.Control.Feedback>
             </Form.Group>
-            <div className="flex">
-              <Button className="ml-auto" type="submit" disabled={!dirty}>
+            <div className="d-flex justify-content-end">
+              <Button className="ml-auto px-5" type="submit" disabled={!dirty}>
                 {t("common.next")}
               </Button>
             </div>

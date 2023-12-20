@@ -1,12 +1,15 @@
 .wallet-list {
   &-modal-header {
     align-items: flex-start;
+    border-color: var(--background-base-border);
 
     &--title {
       font-weight: 400;
-      color: var(--gray-700);
-      font-size: 0.875rem; /* 14px */
-      line-height: 1.25rem; /* 20px */
+      color: var(--el-color-popup-text);
+      font-size: 0.875rem;
+      /* 14px */
+      line-height: 1.25rem;
+      /* 20px */
     }
   }
 
@@ -20,15 +23,21 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.5rem;
+    padding: 0.75rem 1rem;
 
     &:hover {
-      background-color: var(--gray-100);
+      background-color: var(--background-elevated-base-hover);
+      border-radius: .5rem;
     }
 
     &--button {
       border-radius: 0.125rem;
       text-decoration-line: none;
+      color: var(--title-sub-color);
+
+      &:hover {
+        color: var(--title-color);
+      }
     }
 
     &--image {
@@ -36,5 +45,14 @@
       height: 2rem;
       object-fit: cover;
     }
+  }
+
+}
+
+.modal-footer {
+  border-color: var(--background-base-border);
+
+  &.button {
+    margin: 0px 8px;
   }
 }

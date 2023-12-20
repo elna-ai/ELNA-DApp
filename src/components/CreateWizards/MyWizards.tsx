@@ -72,11 +72,13 @@ function MyWizards() {
           ))}
         </div>
       ) : (
-        <div className="w-100 bg-light py-5 text-center rounded-3">
+        <div className="w-100 bg-elavate py-5 text-center rounded-3">
           <img className="d-inline" src={NoChatBotImg} alt="no wizard" />
           <p>{t("wizards.noWizards")}</p>
         </div>
+
       )}
+      <hr />
     </>
   );
 }

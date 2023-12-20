@@ -9,6 +9,7 @@
 @import "components/wallet_list";
 @import "components/avatar_image";
 @import "components/page_loader";
+@import "components/buttons";
 
 @import "pages/chat";
 @import "pages/persona";
@@ -18,15 +19,14 @@
 
 :root {
   --bs-body-font-family: "DM Sans", sans-serif;
-  --primary-color: #007d88;
   --primary-hover-color: #00717a;
   --primary-success: #00d67f;
   --bs-body-font-color: #6f6f6f;
-  --title-color: #4b4e53;
+  // --title-color: #4b4e53;
 }
 
 body {
-  color: #6f6f6f;
+  color: var(--body-color);
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
   overflow-x: hidden;
@@ -47,9 +47,25 @@ h1,
   color: var(--title-color);
 }
 
+a {
+  color: var(--elna-primary-color);
+}
+
+a.elna-link {
+  color: var(--elna-primary-color);
+
+  &:hover {
+    color: var(--title-sub-color);
+  }
+}
+
+.text-muted {
+  color: var(--text-opacity);
+}
+
 .hk-wrapper {
   position: relative;
-  background-color: #eff5fd;
+  background-color: var(--background-base);
 }
 
 .hk-pg-wrapper {
@@ -57,9 +73,14 @@ h1,
   min-height: 100vh;
 }
 
+
 .hk-wrapper .hk-navbar {
-  border-bottom: 1px solid #eaeaea;
+  border-bottom: 1px solid var(--background-base-border);
   height: 65px;
+}
+
+.hk-navbar.navbar * .dropdown {
+  margin-right: 0.75rem;
 }
 
 a {
@@ -68,8 +89,10 @@ a {
 }
 
 .btn-primary {
-  background-color: var(--primary-color) !important;
-  border: var(--primary-color) !important;
+  background-color: var(--elna-primary-color) !important;
+  border: var(--elna-primary-color) !important;
+  color: var(--elna-primary-text-color) !important;
+  font-weight: 500;
 }
 
 .btn-primary:hover {
@@ -78,7 +101,7 @@ a {
 }
 
 .btn-success {
-  color: #fff;
+  color: var(--elna-primary-text-color);
   background-color: var(--primary-success);
   border-color: var(--primary-success);
 }
@@ -102,6 +125,19 @@ p.p-sm {
 header {
   height: 65px !important;
 }
+
+.el-bg-danger {
+  background-color: var(--el-bg-danger) !important;
+}
+
+.mt-1 {
+  margin-top: var(--size-1);
+}
+
+.mt-2 {
+  margin-top: var(--size-2);
+}
+
 
 .hk-pg-body {
   padding: 2rem 0;
@@ -150,7 +186,7 @@ header {
   vertical-align: middle;
 }
 
-.badge-icon > svg {
+.badge-icon>svg {
   position: absolute;
   left: 0;
   top: 0;
@@ -204,14 +240,19 @@ header {
 textarea.chat-input-area {
   width: 100%;
   max-height: 200px;
-  height: 60px;
+  height: 64px;
   overflow-y: hidden;
-  border: 2px solid #d6eaec;
-  padding: 20px;
+  border: 2px solid var(--background-form-border);
+  padding: var(--size-4) var(--size-6);
+  background-color: var(--background-base);
+  border-radius: var(--size-5);
 }
 
 .hk-wrapper.default .hk-footer.chatfooter {
   margin-left: 270px;
+  backdrop-filter: blur(4px);
+  background: var(--background-base);
+  border: transparent;
 }
 
 .hk-wrapper.collapsed .hk-footer.chatfooter {
@@ -221,18 +262,19 @@ textarea.chat-input-area {
 .hk-footer.chatfooter {
   z-index: 1030 !important;
   position: fixed;
-  border-color: #eff5fd;
+  border-color: var(--background-form-border);
 }
 
 .hk-footer.chatfooter .chatfooter-bg p {
-  color: #ccc !important;
+  color: var(--body-color);
   padding-top: 10px;
   margin-bottom: 10px;
 }
 
 .chatfooter-bg {
-  padding: 30px;
-  background-color: #eff5fd;
+  padding: 10px 20px;
+  margin: 0 auto;
+  max-width: 50rem;
 }
 
 .chatfooter-bg button {
@@ -248,8 +290,8 @@ textarea.chat-input-area {
 
 textarea.chat-input-area:focus,
 textarea.chat-input-area:focus-visible {
-  border: 2px solid #e0eff0;
-  outline: #e0eff0;
+  border: 2px solid var(--background-form-border-hover);
+  outline: var(--background-form-border-hover);
 }
 
 .no-history {
@@ -270,18 +312,18 @@ textarea.chat-input-area:focus-visible {
   align-items: center;
 }
 
-.media-body .msg-box > div {
+.media-body .msg-box>div {
   padding: 0.625rem 1rem;
   border-radius: 1.25rem;
   display: inline-block;
   position: relative;
 }
 
-.media-body .msg-box > div {
+.media-body .msg-box>div {
   background: #f2f2f2;
 }
 
-.media-body .msg-box:first-child > div {
+.media-body .msg-box:first-child>div {
   border-top-left-radius: 0;
 }
 
@@ -340,11 +382,12 @@ textarea.chat-input-area:focus-visible {
 }
 
 .text-decoration-none.btn-link:hover {
-  color: #007d88;
+  color: var(--title-sub-color);
 }
 
 .btn-link.stretched-link {
   cursor: pointer;
+  color: var(--title-color);
 }
 
 .sub-title-bot {
@@ -353,8 +396,8 @@ textarea.chat-input-area:focus-visible {
   gap: 6px;
   font-size: 20px;
   font-weight: 600;
-  margin-top: 16px;
-  margin-bottom: 8px;
+  margin-top: 20px;
+  margin-bottom: 4px;
 }
 
 .sub-title {
@@ -368,32 +411,46 @@ textarea.chat-input-area:focus-visible {
   margin-left: 32px;
 }
 
-.btn-modal-cancel.btn-link {
-  text-decoration: none;
-  background-color: #f4f4f4;
-  color: #6f6f6f;
-  width: 100px;
-}
 
-.btn-modal-cancel.btn-link:hover {
-  text-decoration: none;
-  background-color: #ebebeb;
-}
-
-.btn-modal-ok {
-  width: 100px;
-}
 
 .bot-name-modal .modal-footer {
   border-top: none;
 }
 
+.modal-backdrop {
+  opacity: 0.75 !important;
+}
+
 .bot-name-modal .modal-header {
-  background-color: #eaeaea;
+  // background-color: var(--background-base-border);
+}
+
+.bot-name-modal .modal-content * .form-control {
+  // background-color: var(--background-base-border);
+  // border-color: var(--background-form-border);
+  color: var(--title-color);
+
+  &::placeholder {
+    color: var(--placeholder-text-w);
+  }
+}
+
+.el-danger {
+  background-color: var(--el-bg-danger) !important;
+}
+
+
+.bg-elavate {
+  background-color: #333840;
+  border-radius: var(--size-1);
+}
+
+.btn-modal-cancel {
+  margin-left: var(--size-2);
 }
 
 .bot-name-modal .btn-close {
-  background-color: #cecece;
+  background-color: var(--el-btn-bg-secondary);
 }
 
 .badge.badge-soft-pink {
@@ -437,19 +494,21 @@ textarea.chat-input-area:focus-visible {
 }
 
 .visibility-radio span.input-group-text {
-  font-weight: bold;
-  color: var(--bs-body-font-color);
+  color: var(--title-sub-color);
   padding-left: 0px;
+  font-weight: bold;
 }
 
 .form-check-input {
-  background-color: #d8d8d8;
-  border-color: #d8d8d8;
+  background-color: var(--background-elevated-base);
+  border-color: var(--background-form-border);
+  margin-bottom: 0.25rem;
 }
 
 .form-check-input:checked {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
+  background-color: var(--elna-primary-color);
+  border-color: var(--elna-primary-color);
+  background: var(--elna-primary-color);
 }
 
 .btn-knowledge {
@@ -525,7 +584,19 @@ textarea.chat-input-area:focus-visible {
   border-color: transparent;
   margin-top: 5px;
   width: 100%;
+  background-color: var(--background-elevated-base);
+  color: var(--title-sub-color);
+
+  a {
+    color: var(--title-sub-color);
+
+    &:hover {
+      background-color: var(--background-elevated-base);
+      color: var(--title-color);
+    }
+  }
 }
+
 
 .btn_icon {
   width: 40px;
@@ -533,4 +604,78 @@ textarea.chat-input-area:focus-visible {
   display: grid;
   place-items: center;
   padding: 0px;
+  border: none;
+}
+
+.h-full {
+  background-color: var(--background-base);
+  padding: 16px;
+  border-radius: 16px;
+  margin-top: 16px;
+  border: 1px solid var(--background-base-border);
+}
+
+.modal-content {
+  background-color: var(--el-color-popup-bg);
+  border: 1px solid var(--background-base-border);
+}
+
+.modal-header {
+  border-color: var(--background-base-border);
+
+  .btn-close {
+    background-color: var(--el-btn-bg-secondary);
+    padding: 1rem;
+    margin: 0px;
+  }
+}
+
+.hk-pg-wrapper * a.elna-link {
+  font-weight: 500;
+  color: var(--elna-primary-color) !important;
+  text-decoration: none;
+}
+
+textarea.form-control {
+  background-color: var(--background-elevated-base);
+  border-color: var(--background-form-border);
+  color: var(--title-color);
+
+  &:focus {
+    background-color: var(--background-elevated-base);
+    border-color: var(--title-sub-color);
+    color: var(--title-color);
+    outline: none;
+    box-shadow: none;
+  }
+
+  &:hover {
+    border-color: #24714f;
+  }
+
+  &::placeholder {
+    color: var(--title-sub-color);
+  }
+}
+
+.info-text {
+  color: var(--info-text-color) !important;
+}
+
+.form-control {
+  &:hover {
+    border-color: var(--background-form-border);
+  }
+
+  &:focus {
+    border-color: var(--background-form-border-hover);
+    outline: none;
+    background: var(--color-bg1);
+    box-shadow: none;
+  }
+}
+
+.form-control {
+  background: var(--color-bg1);
+  border-color: var(--color-line);
 }

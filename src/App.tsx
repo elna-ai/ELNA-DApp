@@ -39,8 +39,8 @@ function App() {
           <Header {...{ isLoggedIn, setIsLoggedIn, setIsLoading }} />
           <div className="container-fluid p-0">
             <div className="hk-pg-wrapper">
-              <div className="w-100">
-                <div className="mx-4 pt-2">
+              <div className="mx-4 pt-2">
+                <div className="w-100 mt-2">
                   {isLoading ? (
                     <PageLoader />
                   ) : (
