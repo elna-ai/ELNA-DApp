@@ -97,6 +97,7 @@ function Chat() {
         JSON.stringify({
           biography: wizard!.biography,
           input_prompt: messageInput.trim(),
+          time_stamp: new Date().toISOString(),
         }),
         uuidv4()
       );
