@@ -11,6 +11,7 @@ import ElanLogo from "images/logoElna.svg?react";
 import { SIDEBAR_LINK } from "./constant";
 import { useLocation } from "react-router-dom";
 import ExpandButton from "./ExpandButton";
+import { Modal } from "react-bootstrap";
 
 interface SidebarProps {
   isExpanded: boolean;
@@ -27,6 +28,66 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
   }, [isMobile]);
 
   const handleExpand = () => setIsExpanded(prev => !prev);
+
+  if (isMobile) {
+    return (
+      <div
+        className="menu-header"
+        style={{
+          height: "65px",
+          width: "72px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+          zIndex: "999999",
+        }}
+        onClick={handleExpand}
+      >
+        {isExpanded ? (
+          <Modal show={true} fullscreen="xxl-down">
+            <Modal.Header closeButton />
+            <Modal.Body>
+              <ul className="navbar-nav flex-column">
+                {SIDEBAR_LINK.map(
+                  ({ to, Icon, isComingSoon, otherParams, key }) => (
+                    <li
+                      className={classNames("nav-item", {
+                        active: location.pathname === to,
+                      })}
+                      key={key}
+                    >
+                      <Link
+                        className="nav-link"
+                        to={(!isComingSoon ? to : "") ?? ""}
+                        {...otherParams}
+                      >
+                        <span className="nav-icon-wrap">
+                          <span className="svg-icon">
+                            <Icon />
+                          </span>
+                        </span>
+                        <span className="nav-link-text">
+                          {t(`sidebar.${key}`)}
+                        </span>
+                        {isComingSoon && (
+                          <span className="badge badge-sm badge-soft-pink ms-auto">
+                            {t("common.comingSoon")}
+                          </span>
+                        )}
+                      </Link>
+                    </li>
+                  )
+                )}
+              </ul>
+            </Modal.Body>
+          </Modal>
+        ) : (
+          <BrandSm className="brand-img img-fluid" />
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="hk-menu">
