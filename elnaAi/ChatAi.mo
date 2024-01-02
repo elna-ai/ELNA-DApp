@@ -57,7 +57,7 @@ actor {
 
     // 2.1 Setup the URL and its query parameters
     //This URL is used because it allows you to inspect the HTTP request sent from the canister
-    let url = "https://dsnxpqm0m8fcy.cloudfront.net/chat"; //HTTP that accepts IPV6
+    let url = "https://d1xe9p25bvt6qh.cloudfront.net/chat"; //HTTP that accepts IPV6
 
     // 2.2 prepare headers for the system http_request call
 
