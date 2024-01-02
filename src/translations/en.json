@@ -1,7 +1,7 @@
 {
   "chat": {
     "inputPlaceholder": "Send a message",
-    "warning": "Ai Wizards may display inaccurate or offensive information about people, places and facts that doesn't represent Team Elna's views"
+    "warning": "Ai agents may display inaccurate or offensive information about people, places and facts that doesn't represent Team Elna's views"
   },
   "footer": {
     "name": "ELNA © 2023 All rights reserved.",
@@ -19,10 +19,10 @@
     "docs": "Docs"
   },
   "wizards": {
-    "myWizards": "My Wizards",
-    "noWizards": "You don't have any created wizards",
-    "popularWizards": "Popular Ai Wizard's",
-    "popularWizardsDesc": "Adored by users around the globe, winning their hearts and earning their smiles."
+    "myWizards": "My Agents",
+    "noWizards": "You don't have any created agents",
+    "popularWizards": "Specialized AI agents ",
+    "popularWizardsDesc": "Each skilled in their own field - a Travel Guide, a Fitness Coach, a Masterful Storyteller, et al."
   },
   "signIn": {
     "connectWallet": "Connect your wallet",
@@ -82,7 +82,7 @@
       }
     },
     "noPermission": {
-      "title": "Oops! It seems you don't have permission to create Wizards.",
+      "title": "Oops! It seems you don't have permission to create agents.",
       "gainAccess": "To gain access, simply join our whitelist.",
       "askAccess": "Click the link to fill out the form and <a><strong><u>Get started!</u></strong></a>"
     },
