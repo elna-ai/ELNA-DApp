@@ -4,6 +4,7 @@ import Bool "mo:base/Bool";
 import Debug "mo:base/Debug";
 import Principal "mo:base/Principal";
 import Buffer "mo:base/Buffer";
+import None "mo:base/None";
 import Backend "canister:backend";
 
 import Types "./Types";
@@ -13,9 +14,14 @@ import {
   getWizardsBasicDetails;
 } "./Utils";
 
-actor class Main() {
+actor class Main(_owner : Principal) {
   private stable var _wizards : [Types.WizardDetails] = [];
+  private stable var owner : Principal = _owner;
   var wizards = Buffer.Buffer<Types.WizardDetails>(10);
+
+  func isOwner(callerId : Principal) : Bool {
+    callerId == owner;
+  };
 
   public query func getWizards() : async [Types.WizardDetailsBasic] {
 
@@ -62,6 +68,47 @@ actor class Main() {
       return { status = 200; message = "Created wizrad" };
     } else {
       return { status = 422; message = "Wizard named already exist" };
+    };
+  };
+
+  public shared (message) func deleteWizard(wizardId : Text) : async Types.Response {
+
+    let wizard = Array.find(
+      Buffer.toArray(wizards),
+      func(wizard : Types.WizardDetails) : Bool {
+        wizard.id == wizardId;
+      },
+    );
+    switch (wizard) {
+      case null { return { status = 422; message = "Wizard does not exist" } };
+      case (?value) {
+        if (not isOwner(message.caller)) {
+          return {
+            status = 403;
+            message = "Wizard does not belong to user and is not admin";
+          };
+        };
+        let wizardIndex = Buffer.indexOf(
+          value,
+          wizards,
+          func(wizard1 : Types.WizardDetails, wizard2 : Types.WizardDetails) : Bool {
+            return wizard1.id == wizard2.id;
+          },
+        );
+        switch (wizardIndex) {
+          case null {
+            return { status = 422; message = "Wizard does not exist" };
+          };
+          case (?index) {
+            let _ = wizards.remove(index);
+            return {
+              status = 200;
+              message = "Wizard deleted";
+            };
+          };
+        };
+
+      };
     };
   };
 
