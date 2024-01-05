@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Spinner } from "react-bootstrap";
+import Spinner from "react-bootstrap/Spinner";
 import { toast } from "react-toastify";
 import NoChatBotImg from "images/no-chatbot.png";
 import { wizard_details as wizardDetails } from "declarations/wizard_details";
