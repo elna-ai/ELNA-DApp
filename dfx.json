@@ -20,6 +20,16 @@
       "main": "elnaAi/ChatAi.mo"
     }
   },
+  "networks": {
+    "production": {
+      "providers": ["https://icp0.io"],
+      "type": "persistent"
+    },
+    "staging": {
+      "providers": ["https://icp0.io"],
+      "type": "persistent"
+    }
+  },
 
   "defaults": {
     "build": {
