@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import Spinner from "react-bootstrap/Spinner";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 import WalletList from "./WalletList";
 import AvatarImg from "images/avatar.png";
@@ -38,7 +39,7 @@ function Header({ isLoggedIn, setIsLoggedIn, setIsLoading }: HeaderProps) {
     autoLogin();
   }, [wallet]);
 
-  const handleClick = async () => {
+  const handleLoginLogout = async () => {
     if (isLoggedIn) {
       setIsLoggingOut(true);
       localStorage.removeItem("dfinityWallet");
@@ -52,12 +53,26 @@ function Header({ isLoggedIn, setIsLoggedIn, setIsLoading }: HeaderProps) {
     }
   };
 
+  const copyToClipBoard = async () => {
+    try {
+      if (wallet === undefined) {
+        toast.error("Failed to copy Principal Id");
+        return;
+      }
+
+      await navigator.clipboard.writeText(wallet?.principalId);
+      toast.success("Principal Id copied");
+    } catch (err) {
+      toast.error("Failed to copy Principal Id");
+    }
+  };
+
   function displayAddress() {
     if (!wallet?.principalId) return "";
 
-    const firstPart = wallet?.principalId?.substring(0, 6);
+    const firstPart = wallet?.principalId?.substring(0, 5);
     const lastPart = wallet?.principalId?.substring(
-      wallet.principalId.length - 6
+      wallet.principalId.length - 3
     );
     return `${firstPart}...${lastPart}`;
   }
@@ -85,7 +100,17 @@ function Header({ isLoggedIn, setIsLoggedIn, setIsLoading }: HeaderProps) {
                   {isLoggingOut && <Spinner animation="border" size="sm" />}
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="profile-dropdown">
-                  <Dropdown.Item onClick={handleClick}>
+                  <Dropdown.Item
+                    onClick={copyToClipBoard}
+                    className="dropdown-menu__item"
+                  >
+                    <i className="ri-file-copy-line"></i>
+                    Principal Id {displayAddress()}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={handleLoginLogout}
+                    className="dropdown-menu__item"
+                  >
                     <span className="mr-2">
                       <svg
                         className="d-inline"
@@ -97,7 +122,7 @@ function Header({ isLoggedIn, setIsLoggedIn, setIsLoading }: HeaderProps) {
                         <path fill="none" d="M0 0h24v24H0z"></path>
                         <path
                           d="M5 22C4.44772 22 4 21.5523 4 21V3C4 2.44772 4.44772 2 5 2H19C19.5523 2 20 2.44772 20 3V6H18V4H6V20H18V18H20V21C20 21.5523 19.5523 22 19 22H5ZM18 16V13H11V11H18V8L23 12L18 16Z"
-                          fill="rgba(0,125,136,1)"
+                          fill="currentColor"
                         ></path>
                       </svg>
                     </span>
@@ -109,7 +134,7 @@ function Header({ isLoggedIn, setIsLoggedIn, setIsLoading }: HeaderProps) {
               <Button
                 className="ml-auto d-flex"
                 style={{ marginRight: "0.75rem" }}
-                onClick={handleClick}
+                onClick={handleLoginLogout}
                 disabled={isLoggingOut}
               >
                 <div className="me-2">

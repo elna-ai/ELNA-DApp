@@ -580,17 +580,28 @@ textarea.chat-input-area:focus-visible {
   box-shadow: 0 10px 28px -7px rgba(153, 161, 170, 0.15);
   border-color: transparent;
   margin-top: 5px;
-  width: 100%;
   background-color: var(--background-elevated-base);
   color: var(--title-sub-color);
 
   a {
     color: var(--title-sub-color);
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
 
     &:hover {
       background-color: var(--background-elevated-base);
       color: var(--title-color);
     }
+  }
+
+  i,
+  svg {
+    color: rgba(0, 125, 136, 1);
+  }
+
+  i {
+    font-size: 24px;
   }
 }
 
