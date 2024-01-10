@@ -1,5 +1,6 @@
 import { useState, ChangeEvent } from "react";
 
+import axios from "axios";
 import { Document } from "langchain/document";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
@@ -60,8 +61,24 @@ function UploadFile({
     });
 
     const chunks = await getChunks(cleanedDocuments);
-    // TODO: send this to canister
-    chunks.forEach(chunk => console.log(chunk.pageContent));
+    try {
+      console.log({ agentId });
+      const data = await axios.get("https://dkfbwoj9t05dn.cloudfront.net/info");
+
+      console.log(data);
+
+      // "https://xweu5adnna.execute-api.eu-north-1.amazonaws.com/prod/info"
+      // console.log(data);
+
+      await axios.post("https://dkfbwoj9t05dn.cloudfront.net/create-index", {
+        documents: chunks,
+        index_name: agentId,
+      });
+      toast.success("Uploaded successfully");
+    } catch (e) {
+      console.error(e);
+      // toast.error(e);
+    }
   };
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
