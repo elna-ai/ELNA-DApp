@@ -4,18 +4,28 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Spinner from "react-bootstrap/Spinner";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 import WalletList from "./WalletList";
 import AvatarImg from "images/avatar.png";
 import { useWallet } from "hooks/useWallet";
+import { isUserAdmin } from "src/utils";
 
 interface HeaderProps {
   isLoggedIn: boolean;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  isAdmin: boolean;
+  setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function Header({ isLoggedIn, setIsLoggedIn, setIsLoading }: HeaderProps) {
+function Header({
+  isLoggedIn,
+  setIsLoggedIn,
+  setIsLoading,
+  isAdmin,
+  setIsAdmin,
+}: HeaderProps) {
   const [isWalletModelOpen, setIsWalletModelOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -32,6 +42,7 @@ function Header({ isLoggedIn, setIsLoggedIn, setIsLoading }: HeaderProps) {
         return;
       }
       await wallet.autoConnect();
+      setIsAdmin(await isUserAdmin(wallet.principalId));
       setAddress(displayAddress());
       setIsLoading(false);
     };
@@ -107,6 +118,11 @@ function Header({ isLoggedIn, setIsLoggedIn, setIsLoading }: HeaderProps) {
                     <i className="ri-file-copy-line"></i>
                     Principal Id {displayAddress()}
                   </Dropdown.Item>
+                  {isAdmin && (
+                    <Dropdown.Item>
+                      <Link to="/admin">Admin dashboard</Link>
+                    </Dropdown.Item>
+                  )}
                   <Dropdown.Item
                     onClick={handleLoginLogout}
                     className="dropdown-menu__item"

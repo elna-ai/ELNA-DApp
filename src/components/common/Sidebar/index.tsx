@@ -8,16 +8,17 @@ import useIsMobileScreen from "../../../hooks/useIsMobileScreen";
 
 import BrandSm from "images/brandSm.svg?react";
 import ElanLogo from "images/logoElna.svg?react";
-import { SIDEBAR_LINK } from "./constant";
+import { ADMIN_SIDEBAR_LINKS, SIDEBAR_LINK } from "./constant";
 import { useLocation } from "react-router-dom";
 import ExpandButton from "./ExpandButton";
 
 interface SidebarProps {
   isExpanded: boolean;
   setIsExpanded: React.Dispatch<React.SetStateAction<boolean>>;
+  isAdmin: boolean;
 }
 
-function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
+function Sidebar({ isExpanded, setIsExpanded, isAdmin }: SidebarProps) {
   const location = useLocation();
   const isMobile = useIsMobileScreen();
   const { t } = useTranslation();
@@ -27,6 +28,11 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
   }, [isMobile]);
 
   const handleExpand = () => setIsExpanded(prev => !prev);
+
+  const sideBarLink =
+    isAdmin && location.pathname.includes("/admin")
+      ? ADMIN_SIDEBAR_LINKS
+      : SIDEBAR_LINK;
 
   return (
     <div className="hk-menu">
@@ -57,7 +63,7 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
         <div className="menu-content-wrap">
           <div className="menu-group">
             <ul className="navbar-nav flex-column">
-              {SIDEBAR_LINK.map(
+              {sideBarLink.map(
                 ({ to, Icon, isComingSoon, otherParams, key }) => (
                   <li
                     className={classNames("nav-item", {

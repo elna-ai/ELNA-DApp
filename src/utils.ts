@@ -3,6 +3,8 @@ import { CharacterTextSplitter } from "langchain/text_splitter";
 import { WebPDFLoader } from "langchain/document_loaders/web/pdf";
 import * as pdfJs from "pdfjs-dist";
 import pdfJsWorker from "pdfjs-dist/build/pdf.worker";
+import { backend } from "declarations/backend";
+import { toast } from "react-toastify";
 
 import { AVATAR_IMAGES } from "./constants";
 
@@ -51,3 +53,15 @@ export const fixNewlines = (text: string): string => text.replace(/(?<!\n)\n(?!\
  * Reduce multiple newline characters in the text to a single newline.
 */
 export const removeMultipleNewlines = (text: string): string => text.replace(/\n{2,}/g, '\n');
+
+export const isUserAdmin = async (principalId: string): Promise<boolean> => {
+  try{
+    const result = await backend.isUserAdmin(principalId);
+    return result
+
+  } catch(e){
+    toast.error("something went wrong");
+    console.error(e);
+    return false;
+  }
+}

@@ -105,3 +105,19 @@ export const SIDEBAR_LINK = [
     isComingSoon: false,
   },
 ];
+
+export const ADMIN_SIDEBAR_LINKS = [
+  {
+    Icon: homeIcon,
+    to: "/admin",
+    key: "admin.dashboard",
+    otherParams: {},
+    isComingSoon: false,
+  },
+  {
+    Icon: homeIcon,
+    to: "/admin/whitelist",
+    key: "admin.whitelist",
+    isComingSoon: false,
+  },
+];
