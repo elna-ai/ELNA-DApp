@@ -10,4 +10,12 @@ module {
       func(a : Principal, b : Principal) : Bool { a == b },
     );
   };
+
+  public func isUserAdmin(adminUsers : Buffer.Buffer<Principal>, userId : Principal) : Bool {
+    Buffer.contains(
+      adminUsers,
+      userId,
+      func(a : Principal, b : Principal) : Bool { a == b },
+    );
+  };
 };
