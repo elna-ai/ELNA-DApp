@@ -16,7 +16,11 @@
     "home": "Home",
     "create": "Create",
     "feedback": "Feedback",
-    "docs": "Docs"
+    "docs": "Docs",
+    "admin": {
+      "dashboard": "Admin dashboard",
+      "whitelist": "Whitelist Users"
+    }
   },
   "wizards": {
     "myWizards": "My Agents",
