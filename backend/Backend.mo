@@ -24,6 +24,19 @@ actor class Backend(_owner : Principal) {
     Utils.isUserWhitelisted(whitelistedUsers, principal);
   };
 
+  public func getWhitelistedUser(userId : Text) : async [Principal] {
+    let principal = Principal.fromText(userId);
+
+    switch (Utils.isUserAdmin(adminUsers, principal)) {
+      case false {
+        return [];
+      };
+      case true {
+        return Buffer.toArray(whitelistedUsers);
+      };
+    };
+  };
+
   public shared (message) func whitelistUser(userId : Principal) : async Text {
     if (not isOwner(message.caller)) {
       return "User not authorized for this action";
