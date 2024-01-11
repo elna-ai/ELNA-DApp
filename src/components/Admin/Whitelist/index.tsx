@@ -50,7 +50,6 @@ function WhitelistUsers() {
           Principal.fromText(wallet.principalId),
           principal
         );
-        console.log(data);
         toast.success(data);
         getWhitelistedUsers();
       } catch (e) {
@@ -65,6 +64,25 @@ function WhitelistUsers() {
     }
   };
 
+  const handleRemoveWhitelist = async (principalId: Principal) => {
+    if (wallet === undefined) {
+      toast.error("user not logged in");
+      return;
+    }
+
+    try {
+      const data = await backend.removeWhitelistedUserFromUi(
+        Principal.fromText(wallet?.principalId),
+        principalId
+      );
+      toast.success(data);
+      getWhitelistedUsers();
+    } catch (e) {
+      console.error(e);
+      toast.error("Something went wrong");
+    }
+  };
+
   if (isLoading) return <PageLoader />;
 
   return (
@@ -74,9 +92,14 @@ function WhitelistUsers() {
       </div>
       <div className="admin__whitelist__wrapper">
         {whitelistedUsers.map(principal => (
-          <div className="admin__whitelist__item">
+          <div className="admin__whitelist__item" key={principal.toText()}>
             <span>{principal.toText()}</span>
-            <Button variant="danger">Delete</Button>
+            <Button
+              variant="danger"
+              onClick={() => handleRemoveWhitelist(principal)}
+            >
+              Delete
+            </Button>
           </div>
         ))}
       </div>

@@ -94,6 +94,27 @@ actor class Backend(_owner : Principal) {
     };
   };
 
+  public func removeWhitelistedUserFromUi(userId : Principal, userIdToAdd : Principal) : async Text {
+    if (not Utils.isUserAdmin(adminUsers, userId)) {
+      return "User not authorized for this action";
+    };
+
+    let userIndex : ?Nat = Buffer.indexOf(
+      userIdToAdd,
+      whitelistedUsers,
+      func(a : Principal, b : Principal) : Bool { a == b },
+    );
+    switch (userIndex) {
+      case null {
+        return "User not found";
+      };
+      case (?index) {
+        let x = whitelistedUsers.remove(index);
+        return "User removed from whitelist";
+      };
+    };
+  };
+
   public query func isUserAdmin(userId : Text) : async Bool {
     let principal = Principal.fromText(userId);
     Utils.isUserAdmin(adminUsers, principal);
