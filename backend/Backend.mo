@@ -43,9 +43,28 @@ actor class Backend(_owner : Principal) {
     };
 
     let isAlreadyWhitelisted : Bool = Utils.isUserWhitelisted(whitelistedUsers, userId);
+
     switch (isAlreadyWhitelisted) {
       case false {
         whitelistedUsers.add(userId);
+        return "User whitelisted";
+      };
+      case true {
+        return "User already whitelisted";
+      };
+    };
+  };
+
+  public func whitelistUserFromUi(userId : Principal, userIdToAdd : Principal) : async Text {
+    if (not Utils.isUserAdmin(adminUsers, userId)) {
+      return "User not authorized for this action";
+    };
+
+    let isAlreadyWhitelisted : Bool = Utils.isUserWhitelisted(whitelistedUsers, userIdToAdd);
+
+    switch (isAlreadyWhitelisted) {
+      case false {
+        whitelistedUsers.add(userIdToAdd);
         return "User whitelisted";
       };
       case true {
