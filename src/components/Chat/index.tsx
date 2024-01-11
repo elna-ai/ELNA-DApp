@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
 
 import PageLoader from "components/common/PageLoader";
 import { getAvatar } from "src/utils";
@@ -93,27 +94,23 @@ function Chat() {
     setMessageInput("");
     setIsResponseLoading(true);
     try {
-      const rawResponse = await elnaAi.send_http_post_request(
-        JSON.stringify({
+      const response: any = await axios.post(
+        "https://dkfbwoj9t05dn.cloudfront.net/chat",
+        {
           biography: wizard!.biography,
-          input_prompt: messageInput.trim(),
-          time_stamp: new Date().toISOString(),
-        }),
-        uuidv4()
+          query_text: messageInput.trim(),
+          greeting: wizard!.greeting,
+          index_name: wizard!.id,
+        }
       );
-      const response = JSON.parse(rawResponse);
 
       setIsResponseLoading(false);
-      if (response.message) {
-        toast.error(response.message);
-        return;
-      }
 
       setMessages(prev => [
         ...prev,
         {
           user: { name: wizard!.name, isBot: true },
-          message: response.body.response,
+          message: response.data.body.response,
         },
       ]);
     } catch (e) {

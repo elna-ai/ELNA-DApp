@@ -65,7 +65,7 @@ actor class Main(_owner : Principal) {
 
     if (isNewWizardName) {
       wizards.add(wizard);
-      return { status = 200; message = "Created wizrad" };
+      return { status = 200; message = "Created wizard" };
     } else {
       return { status = 422; message = "Wizard named already exist" };
     };
