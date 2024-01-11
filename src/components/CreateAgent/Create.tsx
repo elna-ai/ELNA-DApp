@@ -22,9 +22,9 @@ function Create() {
   const [currentNav, setCurrentNav] = useState<string | null>("persona");
   const [isLoading, setIsLoading] = useState(false);
   const [wizard, setWizard] = useState<WizardDetails>();
+  const [wizardId, setWizardId] = useState("");
 
   const { t } = useTranslation();
-  const { uuid: wizardId } = useParams();
   const [urlSearchParams, _] = useSearchParams();
   const navigate = useNavigate();
 
@@ -41,11 +41,7 @@ function Create() {
     }
   };
 
-  const handlePublish = () => { };
-
-  useEffect(() => {
-    getWizard(wizardId);
-  }, []);
+  const handlePublish = () => {};
 
   if (isLoading) {
     return <PageLoader />;
@@ -154,13 +150,13 @@ function Create() {
       {currentNav === "persona" ? (
         <Persona
           name={urlSearchParams.get("name")}
-          {...{ wizard, setCurrentNav }}
+          {...{ wizard, setCurrentNav, setWizardId }}
         />
       ) : (
         <Knowledge
-          wizardId={wizard?.id || ""}
+          wizardId={wizardId}
           setIsPolling={setIsPolling}
-        // document={document}
+          // document={document}
         />
       )}
     </>

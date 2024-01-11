@@ -63,12 +63,6 @@ function UploadFile({
     const chunks = await getChunks(cleanedDocuments);
     try {
       console.log({ agentId });
-      const data = await axios.get("https://dkfbwoj9t05dn.cloudfront.net/info");
-
-      console.log(data);
-
-      // "https://xweu5adnna.execute-api.eu-north-1.amazonaws.com/prod/info"
-      // console.log(data);
 
       await axios.post("https://dkfbwoj9t05dn.cloudfront.net/create-index", {
         documents: chunks,
