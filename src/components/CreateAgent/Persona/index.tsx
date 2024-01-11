@@ -23,8 +23,9 @@ type PersonaProps = {
   wizard: any;
   setCurrentNav: React.Dispatch<React.SetStateAction<string | null>>;
   name: string | null;
+  setWizardId: React.Dispatch<React.SetStateAction<string>>;
 };
-function Persona({ wizard, setCurrentNav, name }: PersonaProps) {
+function Persona({ wizard, setCurrentNav, name, setWizardId }: PersonaProps) {
   const { t } = useTranslation();
   const wallet = useWallet();
   const navigate = useNavigate();
@@ -58,6 +59,7 @@ function Persona({ wizard, setCurrentNav, name }: PersonaProps) {
       toast.error(result.message);
       throw new Error(result.message);
     } else {
+      setWizardId(payload.id);
       toast.success(result.message);
       setCurrentNav("knowledge");
     }

@@ -1,5 +1,6 @@
 import { useState, ChangeEvent } from "react";
 
+import axios from "axios";
 import { Document } from "langchain/document";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
@@ -14,6 +15,7 @@ import {
   fixNewlines,
   removeMultipleNewlines,
 } from "src/utils";
+import { useNavigate } from "react-router-dom";
 
 type UploadFileProps = {
   isOpen: boolean;
@@ -33,6 +35,7 @@ function UploadFile({
   const [isUploading, setIsUploading] = useState(false);
 
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const handleClose = () => {
     setSelectedFiles([]);
@@ -60,8 +63,21 @@ function UploadFile({
     });
 
     const chunks = await getChunks(cleanedDocuments);
-    // TODO: send this to canister
-    chunks.forEach(chunk => console.log(chunk.pageContent));
+    try {
+      console.log({ agentId });
+
+      await axios.post("https://dkfbwoj9t05dn.cloudfront.net/create-index", {
+        documents: chunks,
+        index_name: agentId,
+      });
+      toast.success("Uploaded successfully");
+      toast.success("Agent published successfully");
+      onClose();
+      navigate("/");
+    } catch (e) {
+      console.error(e);
+      // toast.error(e);
+    }
   };
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
