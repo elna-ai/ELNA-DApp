@@ -15,6 +15,7 @@ import {
   fixNewlines,
   removeMultipleNewlines,
 } from "src/utils";
+import { useNavigate } from "react-router-dom";
 
 type UploadFileProps = {
   isOpen: boolean;
@@ -34,6 +35,7 @@ function UploadFile({
   const [isUploading, setIsUploading] = useState(false);
 
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const handleClose = () => {
     setSelectedFiles([]);
@@ -69,6 +71,9 @@ function UploadFile({
         index_name: agentId,
       });
       toast.success("Uploaded successfully");
+      toast.success("Agent published successfully");
+      onClose();
+      navigate("/");
     } catch (e) {
       console.error(e);
       // toast.error(e);

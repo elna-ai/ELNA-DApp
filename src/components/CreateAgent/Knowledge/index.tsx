@@ -65,7 +65,7 @@ function Knowledge({ wizardId, setIsPolling, document }: KnowledgeProps) {
           {t("createAgent.knowledge.addDocuments")}
         </Button>
       </div>
-      <span className="mt-2 text-center fs-7">{t("common.commingSoon")}</span>
+      <span className="mt-2 text-center fs-7">{t("common.comingSoon")}</span>
       <div className="mt-4 row gx-3 row-cols-xxl-4 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
         {document?.file_name && (
           <Card

@@ -136,14 +136,14 @@ function Create() {
         </Nav>
 
         <div>
-          <Button
+          {/* <Button
             // || isPublishing
             // disabled={!wizard?.is_active || wizard?.is_published}
             onClick={handlePublish}
           >
             <span className="mr-2">{t("common.publish")}</span>
-            {/* {isPublishing && <Spinner animation="border" size="sm" />} */}
-          </Button>
+            // {/* {isPublishing && <Spinner animation="border" size="sm" />}
+          </Button> */}
         </div>
       </div>
       <hr className="mt-0" />
