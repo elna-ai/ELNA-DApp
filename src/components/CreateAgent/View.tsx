@@ -192,7 +192,14 @@ function View() {
             <Trans
               i18nKey="createAgent.noPermission.askAccess"
               components={{
-                a: <a href="#" className="elna-link text-underline" />,
+                a: (
+                  <a
+                    href="https://forms.gle/9ikyydFgUV6vEdZ58"
+                    className="elna-link text-underline"
+                    target="_blank"
+                    rel= "noopener noreferrer"
+                  />
+                ),
                 u: <u />,
                 strong: <strong />,
               }}
