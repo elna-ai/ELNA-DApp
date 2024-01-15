@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
 import PageLoader from "components/common/PageLoader";
-import { getAvatar } from "src/utils";
+import { getAvatar, transformHistory } from "src/utils";
 import { wizard_details as wizardDetails } from "declarations/wizard_details";
 import { WizardDetails } from "declarations/wizard_details/wizard_details.did";
 
@@ -15,14 +15,7 @@ import Bubble from "./Bubble";
 import NoHistory from "./NoHistory";
 import { elna_ai as elnaAi } from "declarations/elna_ai";
 import useAutoSizeTextArea from "hooks/useAutoResizeTextArea";
-
-type Message = {
-  user: {
-    name: string;
-    isBot?: boolean;
-  };
-  message: string;
-};
+import { Message } from "src/types";
 
 function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -87,10 +80,9 @@ function Chat() {
   const { t } = useTranslation();
 
   const handleSubmit = async () => {
-    setMessages(prev => [
-      ...prev,
-      { user: { name: "User" }, message: messageInput.trim() },
-    ]);
+    const message = messageInput.trim();
+    const history = transformHistory(messages);
+    setMessages(prev => [...prev, { user: { name: "User" }, message }]);
     setMessageInput("");
     setIsResponseLoading(true);
     try {
@@ -98,14 +90,14 @@ function Chat() {
         "https://dkfbwoj9t05dn.cloudfront.net/chat",
         {
           biography: wizard!.biography,
-          query_text: messageInput.trim(),
+          query_text: message,
           greeting: wizard!.greeting,
           index_name: wizard!.id,
+          history,
         }
       );
 
       setIsResponseLoading(false);
-
       setMessages(prev => [
         ...prev,
         {
