@@ -7,6 +7,7 @@ import { backend } from "declarations/backend";
 import { toast } from "react-toastify";
 
 import { AVATAR_IMAGES } from "./constants";
+import { Message } from "./types";
 
 export const getAvatar = (id: string) => AVATAR_IMAGES.find(avatar => avatar.id === id);
 
@@ -65,3 +66,9 @@ export const isUserAdmin = async (principalId: string): Promise<boolean> => {
     return false;
   }
 }
+
+export const transformHistory = (messages: Message[]) => {
+  return messages.map(({user,message}) =>
+    user.isBot ? {role:"assistant", content: message}: {role:"user", content: message}
+  )
+};
