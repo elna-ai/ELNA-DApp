@@ -3,7 +3,11 @@ import { useTranslation } from "react-i18next";
 import Spinner from "react-bootstrap/Spinner";
 import { toast } from "react-toastify";
 import NoChatBotImg from "images/no-chatbot.png";
-import { wizard_details as wizardDetails } from "declarations/wizard_details";
+import {
+  wizard_details as wizardDetails,
+  idlFactory as wizardDetailsIdl,
+  canisterId as wizardDetailsId,
+} from "declarations/wizard_details";
 import { WizardDetailsBasic } from "declarations/wizard_details/wizard_details.did";
 import { useWallet } from "hooks/useWallet";
 import { getAvatar } from "src/utils";
@@ -28,6 +32,38 @@ function MyWizards() {
     } catch (e) {
       toast.error("Something went wrong!");
       console.error(e);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      if (wallet === undefined) {
+        console.error("wallet not defined");
+        return;
+      }
+
+      const wizardDetails = await wallet.getCanisterActor(
+        wizardDetailsId,
+        wizardDetailsIdl,
+        false
+      );
+
+      try {
+        const response = await wizardDetails.deleteWizard(id);
+        if (response.status !== 200n) {
+          toast.error(response.message);
+          return;
+        }
+
+        toast.success(response.message);
+        getUserWizards(wallet?.principalId);
+      } catch (e) {
+        toast.error("unable to delete agent");
+        console.error(e);
+      }
+    } catch (e) {
+      console.error(e);
+      toast.error("unable to delete agent");
     }
   };
 
@@ -67,6 +103,7 @@ function MyWizards() {
                 description={description}
                 id={id}
                 imageUrl={getAvatar(avatar)!.image}
+                handleDelete={handleDelete}
               />
             </div>
           ))}
@@ -76,7 +113,6 @@ function MyWizards() {
           <img className="d-inline" src={NoChatBotImg} alt="no wizard" />
           <p>{t("wizards.noWizards")}</p>
         </div>
-
       )}
       <hr />
     </>

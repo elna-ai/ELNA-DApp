@@ -88,7 +88,7 @@ actor class Main(_owner : Principal) {
         if (not canUserDelete) {
           return {
             status = 403;
-            message = "Wizard does not belong to user and is not admin";
+            message = "Wizard does not belong to user";
           };
         };
         let wizardIndex = Buffer.indexOf(

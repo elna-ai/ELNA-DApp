@@ -197,7 +197,7 @@ function View() {
                     href="https://forms.gle/9ikyydFgUV6vEdZ58"
                     className="elna-link text-underline"
                     target="_blank"
-                    rel= "noopener noreferrer"
+                    rel="noopener noreferrer"
                   />
                 ),
                 u: <u />,

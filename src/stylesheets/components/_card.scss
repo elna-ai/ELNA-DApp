@@ -10,6 +10,21 @@
   min-height: 1px;
 }
 
+.card .card-body .card-body-menu {
+  width: min-content;
+  margin-left: auto;
+  z-index: 10;
+}
+
+.card-body .card-body-menu .card-dropdown-delete {
+  color: var(--el-bg-danger);
+}
+.card .card-body .card-body-menu-button {
+  &::after {
+    content: none;
+  }
+}
+
 .contact-card.elna-card .user-name,
 .contact-card.elna-card .user-name a {
   font-weight: 700;
@@ -32,14 +47,14 @@
   text-align: center;
 }
 
-.card.contact-card.elna-card .card-footer>a {
+.card.contact-card.elna-card .card-footer > a {
   justify-content: center;
   width: 100%;
   font-size: 13px;
   color: var(--description-color-40);
 }
 
-.card.contact-card.elna-card .card-footer>a {
+.card.contact-card.elna-card .card-footer > a {
   text-decoration: none;
 }
 
@@ -84,12 +99,11 @@
 }
 
 .contact-card.elna-card:hover img {
-  transform: scale(.85);
+  transform: scale(0.85);
   -webkit-transition: all 0.25s ease;
   -moz-transition: all 0.25s ease;
   transition: all 0.25s ease;
 }
-
 
 /*Avatar*/
 .avatar {
@@ -106,12 +120,12 @@
 
 /*Avatar Intial*/
 
-.avatar.avatar-soft-primary>.initial-wrap {
+.avatar.avatar-soft-primary > .initial-wrap {
   background-color: #ebf5f5 !important;
   color: #007d88;
 }
 
-.avatar.avatar-xl>.initial-wrap {
+.avatar.avatar-xl > .initial-wrap {
   font-size: 1.75rem;
 }
 
@@ -120,7 +134,7 @@
   border-radius: 50%;
 }
 
-.avatar>.initial-wrap {
+.avatar > .initial-wrap {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

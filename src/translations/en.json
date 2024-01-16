@@ -124,6 +124,7 @@
     "backToHome": "Back to home",
     "learning": "Learning",
     "learned": "Learned",
-    "uploading": "Uploading..."
+    "uploading": "Uploading...",
+    "delete": "Delete {{entity}}"
   }
 }

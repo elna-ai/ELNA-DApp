@@ -1,3 +1,5 @@
+import { Dropdown } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 interface CardProps {
@@ -6,9 +8,19 @@ interface CardProps {
   imageUrl?: string;
   userId?: string;
   id: string;
+  handleDelete?: (id: string) => void;
 }
 
-function Card({ name, description, imageUrl, userId, id }: CardProps) {
+function Card({
+  name,
+  description,
+  imageUrl,
+  userId,
+  id,
+  handleDelete,
+}: CardProps) {
+  const { t } = useTranslation();
+
   const Avatar = ({ name }: { name: string }) => (
     <div className="avatar avatar-xl avatar-soft-primary avatar-rounded bg-gray-300 text-green-700">
       <span className="initial-wrap">{name[0].toUpperCase()}</span>
@@ -19,6 +31,21 @@ function Card({ name, description, imageUrl, userId, id }: CardProps) {
     <div className="col">
       <div className="card card-border contact-card elna-card">
         <div className="card-body text-center">
+          {!!handleDelete && (
+            <Dropdown className="card-body-menu">
+              <Dropdown.Toggle variant="dark" className="card-body-menu-button">
+                <i className="ri-more-line" />
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  onClick={() => handleDelete(id)}
+                  className="card-dropdown-delete"
+                >
+                  {t("common.delete", { entity: "agent" })}
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          )}
           <div className="avatar avatar-xl avatar-rounded">
             {imageUrl ? (
               <img src={imageUrl} alt="user" className="avatar-img" />
