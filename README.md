@@ -1,9 +1,9 @@
-# ELNA DApp Frontend
+# ELNA DApp  
 
-Welcome to the ELNA DApp Frontend repository. This repository houses the user interface for ELNA, a revolutionary platform for creating customizable AI assistants powered by niche data supplied by users. Our mission is to make advanced conversational AI accessible for personalized use cases while leveraging the decentralized attributes of the Internet Computer.
+Welcome to the ELNA DApp repository. This repository houses the user interface for ELNA, a revolutionary platform for creating customizable AI assistants powered by niche data supplied by users. Our mission is to make advanced conversational AI accessible for personalized use cases while leveraging the decentralized attributes of the Internet Computer.
 
 ## Table of Contents
-- [ELNA DApp Frontend](#elna-dapp-frontend)
+- [ELNA DApp  ](#elna-dapp )
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
   - [Getting Started](#getting-started)
@@ -11,21 +11,21 @@ Welcome to the ELNA DApp Frontend repository. This repository houses the user in
 
 ## Overview
 
-ELNA DApp Frontend is a critical component of the ELNA platform. It provides users with an intuitive and visually engaging interface to:
+ELNA DApp   is a critical component of the ELNA platform. It provides users with an intuitive and visually engaging interface to:
 
 - Upload and manage data for custom chatbot creation.
 - Configure and customize AI chatbots based on specific needs.
 - Interact with chatbots seamlessly, using conversational prompts.
 
-The DApp Frontend connects with various backend components, orchestrating the AI interactions, and ensuring a user-friendly experience.
+The DApp   connects with various backend components, orchestrating the AI interactions, and ensuring a user-friendly experience.
 
 ## Getting Started
 
-To get started with the ELNA DApp Frontend, follow these steps:
+To get started with the ELNA DApp  , follow these steps:
 
 1. **Clone the Repository**:
 ```sh
-git clone git@github.com:elna-live/ELNA-DApp-Frontend.git
+git clone git@github.com:elna-live/ELNA-DApp- .git
 ```
 
 2. Setup project
