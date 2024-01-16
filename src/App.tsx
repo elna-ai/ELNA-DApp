@@ -2,6 +2,9 @@ import { useState } from "react";
 
 import classNames from "classnames";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import AdminDashboard from "components/Admin";
 import Chat from "components/Chat";
@@ -14,7 +17,7 @@ import PageLoader from "components/common/PageLoader";
 import PrivateRoute from "components/common/PrivateRoute";
 import CreateAgent from "components/CreateAgent";
 import Page404 from "common/Page404";
-import { ToastContainer } from "react-toastify";
+import queryClient from "utils/queryClient";
 import "common/i18n";
 
 import "stylesheets/index.scss";
@@ -31,57 +34,63 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <BrowserRouter>
-        <div
-          className={classNames("hk-wrapper full-width", {
-            default: isExpanded,
-            collapsed: !isExpanded,
-          })}
-        >
-          <Sidebar {...{ isExpanded, setIsExpanded, isAdmin }} />
-          <Header
-            {...{
-              isLoggedIn,
-              setIsLoggedIn,
-              setIsLoading,
-              isAdmin,
-              setIsAdmin,
-            }}
-          />
-          <div className="container-fluid p-0">
-            <div className="hk-pg-wrapper">
-              <div className="mx-4 pt-2">
-                <div className="w-100 mt-2">
-                  {isLoading ? (
-                    <PageLoader />
-                  ) : (
-                    <Routes>
-                      <Route path="/chat/:id?" element={<Chat />} />
-                      <Route
-                        path="/"
-                        element={<CreateWizards isLoggedIn={isLoggedIn} />}
-                      />
-                      <Route path="/create-agent/*" element={<CreateAgent />} />
-                      <Route
-                        path="/admin/*"
-                        element={
-                          <PrivateRoute
-                            component={AdminDashboard}
-                            isAdmin={isAdmin}
-                          />
-                        }
-                      />
-                      <Route path="*" element={<Page404 />} />
-                    </Routes>
-                  )}
-                  <Footer />
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <div
+            className={classNames("hk-wrapper full-width", {
+              default: isExpanded,
+              collapsed: !isExpanded,
+            })}
+          >
+            <Sidebar {...{ isExpanded, setIsExpanded, isAdmin }} />
+            <Header
+              {...{
+                isLoggedIn,
+                setIsLoggedIn,
+                setIsLoading,
+                isAdmin,
+                setIsAdmin,
+              }}
+            />
+            <div className="container-fluid p-0">
+              <div className="hk-pg-wrapper">
+                <div className="mx-4 pt-2">
+                  <div className="w-100 mt-2">
+                    {isLoading ? (
+                      <PageLoader />
+                    ) : (
+                      <Routes>
+                        <Route path="/chat/:id?" element={<Chat />} />
+                        <Route
+                          path="/"
+                          element={<CreateWizards isLoggedIn={isLoggedIn} />}
+                        />
+                        <Route
+                          path="/create-agent/*"
+                          element={<CreateAgent />}
+                        />
+                        <Route
+                          path="/admin/*"
+                          element={
+                            <PrivateRoute
+                              component={AdminDashboard}
+                              isAdmin={isAdmin}
+                            />
+                          }
+                        />
+                        <Route path="*" element={<Page404 />} />
+                      </Routes>
+                    )}
+                    <Footer />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </BrowserRouter>
-      <ToastContainer />
+        </BrowserRouter>
+        <ToastContainer />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </ErrorBoundary>
   );
 }

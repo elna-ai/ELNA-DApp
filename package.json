@@ -17,6 +17,8 @@
     "postinstall": "mops install"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.17.12",
+    "@tanstack/react-query-devtools": "^5.17.12",
     "artemis-web3-adapter": "^0.4.7",
     "axios": "^1.6.5",
     "bootstrap": "^5.3.2",
@@ -45,6 +47,7 @@
     "@dfinity/agent": "^0.18.1",
     "@dfinity/candid": "^0.18.1",
     "@dfinity/principal": "^0.18.1",
+    "@tanstack/eslint-plugin-query": "^5.17.7",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@types/dompurify": "^3.0.3",

@@ -6,8 +6,8 @@ import pdfJsWorker from "pdfjs-dist/build/pdf.worker";
 import { backend } from "declarations/backend";
 import { toast } from "react-toastify";
 
-import { AVATAR_IMAGES } from "./constants";
-import { Message } from "./types";
+import { AVATAR_IMAGES } from "../constants";
+import { Message } from "../types";
 
 export const getAvatar = (id: string) => AVATAR_IMAGES.find(avatar => avatar.id === id);
 
@@ -72,3 +72,5 @@ export const transformHistory = (messages: Message[]) => {
     user.isBot ? {role:"assistant", content: message}: {role:"user", content: message}
   )
 };
+
+
