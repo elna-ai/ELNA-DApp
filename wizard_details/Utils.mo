@@ -1,6 +1,8 @@
 import Array "mo:base/Array";
 import Text "mo:base/Text";
 import Buffer "mo:base/Buffer";
+import Bool "mo:base/Bool";
+import Principal "mo:base/Principal";
 
 import Types "./Types";
 
@@ -48,5 +50,9 @@ module {
         };
       },
     );
+  };
+
+  public func isUserBotCreator(userId : Principal, wizard : Types.WizardDetails) : Bool {
+    wizard.userId == Principal.toText(userId);
   };
 };
