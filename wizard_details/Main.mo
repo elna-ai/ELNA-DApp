@@ -12,6 +12,7 @@ import {
   getWizardsByUser;
   isWizardNameTakenByUser;
   getWizardsBasicDetails;
+  isUserBotCreator;
 } "./Utils";
 
 actor class Main(_owner : Principal) {
@@ -82,7 +83,9 @@ actor class Main(_owner : Principal) {
     switch (wizard) {
       case null { return { status = 422; message = "Wizard does not exist" } };
       case (?value) {
-        if (not isOwner(message.caller)) {
+        let canUserDelete = isOwner(message.caller) or isUserBotCreator(message.caller, value);
+
+        if (not canUserDelete) {
           return {
             status = 403;
             message = "Wizard does not belong to user and is not admin";
