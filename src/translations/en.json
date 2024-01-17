@@ -125,6 +125,7 @@
     "learning": "Learning",
     "learned": "Learned",
     "uploading": "Uploading...",
-    "delete": "Delete {{entity}}"
+    "delete": "Delete {{entity}}",
+    "deleteConfirmation": "Are you sure you want to delete <bold>{{entity}}</bold>"
   }
 }

@@ -56,6 +56,8 @@ export const fixNewlines = (text: string): string => text.replace(/(?<!\n)\n(?!\
 export const removeMultipleNewlines = (text: string): string => text.replace(/\n{2,}/g, '\n');
 
 export const isUserAdmin = async (principalId: string): Promise<boolean> => {
+  if(!principalId){ return false;}
+
   try{
     const result = await backend.isUserAdmin(principalId);
     return result

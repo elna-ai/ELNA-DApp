@@ -1,77 +1,61 @@
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import Spinner from "react-bootstrap/Spinner";
 import { toast } from "react-toastify";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 import NoChatBotImg from "images/no-chatbot.png";
-import {
-  wizard_details as wizardDetails,
-  idlFactory as wizardDetailsIdl,
-  canisterId as wizardDetailsId,
-} from "declarations/wizard_details";
-import { WizardDetailsBasic } from "declarations/wizard_details/wizard_details.did";
 import { useWallet } from "hooks/useWallet";
+import {
+  useDeleteMyWizard,
+  useFetchMyWizards,
+} from "hooks/reactQuery/wizards/useMyWizards";
 import { getAvatar } from "src/utils";
 
 import Card from "./Card";
 
 function MyWizards() {
-  const [isUserWizardsLoading, setIsUserWizardsLoading] = useState(true);
-  const [userWizards, setUserWizards] = useState<WizardDetailsBasic[]>([]);
+  const [isDeleteWizard, setIsDeleteWizard] = useState(false);
+  const [wizardToDelete, setWizardIdToDelete] = useState<{
+    id: string;
+    name: string;
+  }>();
 
   const { t } = useTranslation();
   const wallet = useWallet();
 
-  const getUserWizards = async (userId?: string) => {
-    if (userId === undefined) return;
-
-    try {
-      setIsUserWizardsLoading(true);
-      const data = await wizardDetails.getUserWizards(userId);
-      setUserWizards(data);
-      setIsUserWizardsLoading(false);
-    } catch (e) {
-      toast.error("Something went wrong!");
-      console.error(e);
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    try {
-      if (wallet === undefined) {
-        console.error("wallet not defined");
-        return;
-      }
-
-      const wizardDetails = await wallet.getCanisterActor(
-        wizardDetailsId,
-        wizardDetailsIdl,
-        false
-      );
-
-      try {
-        const response = await wizardDetails.deleteWizard(id);
-        if (response.status !== 200n) {
-          toast.error(response.message);
-          return;
-        }
-
-        toast.success(response.message);
-        getUserWizards(wallet?.principalId);
-      } catch (e) {
-        toast.error("unable to delete agent");
-        console.error(e);
-      }
-    } catch (e) {
-      console.error(e);
-      toast.error("unable to delete agent");
-    }
-  };
+  const {
+    data: userWizards,
+    isFetching: isUserWizardsLoading,
+    isError,
+    error,
+  } = useFetchMyWizards({
+    userId: wallet?.principalId,
+  });
+  const { mutate: deleteMyWizard, isPending: isDeletePending } =
+    useDeleteMyWizard();
 
   useEffect(() => {
-    if (wallet?.principalId === undefined) return;
+    if (!isError) return;
 
-    getUserWizards(wallet?.principalId);
-  }, []);
+    toast.error(error.message);
+  }, [isError]);
+
+  const handleDelete = async (id: string) => {
+    deleteMyWizard(
+      { wizardId: id },
+      {
+        onError: e => {
+          toast.error("Unable to delete agent");
+          console.error(e);
+        },
+        onSettled: () => {
+          setWizardIdToDelete(undefined);
+          setIsDeleteWizard(false);
+        },
+      }
+    );
+  };
 
   return (
     <>
@@ -94,7 +78,7 @@ function MyWizards() {
       </h5>
       {isUserWizardsLoading ? (
         <Spinner className="!flex mx-auto" />
-      ) : userWizards?.length > 0 ? (
+      ) : (userWizards?.length || 0) > 0 ? (
         <div className="row gx-3 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
           {userWizards?.map(({ id, name, description, avatar }) => (
             <div key={id} className="col">
@@ -103,7 +87,10 @@ function MyWizards() {
                 description={description}
                 id={id}
                 imageUrl={getAvatar(avatar)!.image}
-                handleDelete={handleDelete}
+                handleDelete={id => {
+                  setIsDeleteWizard(true);
+                  setWizardIdToDelete({ id, name });
+                }}
               />
             </div>
           ))}
@@ -115,6 +102,56 @@ function MyWizards() {
         </div>
       )}
       <hr />
+      <Modal
+        show={isDeleteWizard}
+        onHide={() => {
+          if (isDeletePending) return;
+
+          setIsDeleteWizard(false);
+        }}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>{t("common.delete", { entity: "agent" })}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div>
+            <Trans
+              i18nKey="common.deleteConfirmation"
+              components={{
+                bold: <span className="fw-bold" />,
+              }}
+              values={{
+                entity: wizardToDelete?.name,
+              }}
+            />
+          </div>
+          <div className="mt-2 d-flex gap-2">
+            <Button
+              className="ml-auto px-5 d-flex gap-1 align-items-center"
+              variant="danger"
+              onClick={() => handleDelete(wizardToDelete!.id)}
+              disabled={isDeletePending}
+            >
+              {t("common.delete", { entity: "agent" })}
+              {isDeletePending && <Spinner size="sm" />}
+            </Button>
+            <Button
+              type="reset"
+              variant="link"
+              disabled={isDeletePending}
+              onClick={() => {
+                if (isDeletePending) return;
+
+                setWizardIdToDelete(undefined);
+                setIsDeleteWizard(false);
+              }}
+            >
+              {t("common.cancel")}
+            </Button>
+          </div>
+        </Modal.Body>
+      </Modal>
     </>
   );
 }
