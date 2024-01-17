@@ -1,11 +1,14 @@
 import Text "mo:base/Text";
 import Nat "mo:base/Nat";
-import D "mo:base/Debug";
 import Map "mo:motoko-hash-map/Map";
 import { thash } "mo:motoko-hash-map/Map";
 import Bool "mo:base/Bool";
 import Buffer "mo:base/Buffer";
 import Principal "mo:base/Principal";
+import HashMap "mo:base/HashMap";
+import Time "mo:base/Time";
+import Error "mo:base/Error";
+import Iter "mo:base/Iter";
 
 import Types "./Types";
 import Utils "./Utils";
@@ -16,8 +19,11 @@ actor class Backend(_owner : Principal) {
   private stable var _whitelistedUsers : [Principal] = [];
   private stable var _adminUsers : [Principal] = [];
   stable var userDetails = Map.new<Types.UserAddress, Types.UserDetails>();
+  stable var _userTokens : [(Principal, Types.UserToken)] = [];
+
   var whitelistedUsers = Buffer.Buffer<Principal>(5);
   var adminUsers = Buffer.Buffer<Principal>(5);
+  var userTokens = HashMap.HashMap<Principal, Types.UserToken>(5, Principal.equal, Principal.hash);
 
   public query func isUserWhitelisted(userId : Text) : async Bool {
     let principal = Principal.fromText(userId);
@@ -158,6 +164,41 @@ actor class Backend(_owner : Principal) {
     };
   };
 
+  public shared (message) func generateUserToken() : async Text {
+    switch (userTokens.get(message.caller)) {
+      case null {
+        let tokenDetails = await Utils.createUserToken();
+        userTokens.put(message.caller, tokenDetails);
+
+        return tokenDetails.token;
+      };
+      case (?tokenDetails) {
+        if (tokenDetails.expireyTime < Time.now()) {
+          ignore userTokens.remove(message.caller);
+          let newTokenDetails = await Utils.createUserToken();
+          userTokens.put(message.caller, newTokenDetails);
+
+          return newTokenDetails.token;
+        };
+        return tokenDetails.token;
+      };
+    };
+  };
+
+  public func getUserToken(principalId : Principal) : async Text {
+    switch (userTokens.get(principalId)) {
+      case (?tokenDetails) {
+        if (tokenDetails.expireyTime < Time.now()) {
+          throw Error.reject("User token exipred");
+        };
+        return tokenDetails.token;
+      };
+      case (_) {
+        throw Error.reject("User not found");
+      };
+    };
+  };
+
   func isOwner(callerId : Principal) : Bool {
     callerId == owner;
   };
@@ -165,11 +206,13 @@ actor class Backend(_owner : Principal) {
   system func preupgrade() {
     _whitelistedUsers := Buffer.toArray(whitelistedUsers);
     _adminUsers := Buffer.toArray(adminUsers);
+    _userTokens := Iter.toArray(userTokens.entries());
 
   };
 
   system func postupgrade() {
     whitelistedUsers := Buffer.fromArray(_whitelistedUsers);
     adminUsers := Buffer.fromArray(_adminUsers);
+    userTokens := HashMap.fromIter<Principal, Types.UserToken>(_userTokens.vals(), 5, Principal.equal, Principal.hash);
   };
 };
