@@ -64,8 +64,6 @@ function UploadFile({
 
     const chunks = await getChunks(cleanedDocuments);
     try {
-      console.log({ agentId });
-
       await axios.post("https://dkfbwoj9t05dn.cloudfront.net/create-index", {
         documents: chunks,
         index_name: agentId,

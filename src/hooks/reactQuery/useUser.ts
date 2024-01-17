@@ -20,7 +20,6 @@ export const useGenerateUserToken = () => {
       return token;
     },
     onSuccess:(token:string) => {
-      console.log({token});
       saveUserToken(token);
 
     },
