@@ -1,41 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 
-import { wizard_details as wizardDetails } from "declarations/wizard_details";
-import { WizardDetailsBasic } from "declarations/wizard_details/wizard_details.did";
 import { getAvatar } from "src/utils";
 
 import Card from "./Card";
+import { useFetchPopularWizards } from "hooks/reactQuery/wizards/usePopularWizards";
 
 function PopularWizards() {
-  const [isPopularWizardsLoading, setIsPopularWizardsLoading] = useState(true);
-  const [popularWizards, setPopularWizards] = useState<WizardDetailsBasic[]>(
-    []
-  );
-
   const { t } = useTranslation();
-
-  const getPopularWizards = async () => {
-    try {
-      setIsPopularWizardsLoading(true);
-      const data = await wizardDetails.getWizards();
-      setPopularWizards(data);
-      setIsPopularWizardsLoading(false);
-    } catch (e) {
-      toast.error("Something went wrong!");
-      console.error(e);
-    }
-  };
+  const {
+    data: popularWizards,
+    isFetching: isLoadingPopularWizards,
+    isError,
+    error,
+  } = useFetchPopularWizards();
 
   useEffect(() => {
-    getPopularWizards();
-  }, []);
+    if (!isError) return;
+
+    console.error(error);
+    toast.error(error.message);
+  }, [isError]);
 
   return (
     <>
-
       <div className="d-flex align-items-top justify-content-between mt-4 mb-2">
         <div>
           <h5 className="flex gap-2">
@@ -64,7 +54,7 @@ function PopularWizards() {
         </div>
       </div>
       <div className="row gx-3 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
-        {isPopularWizardsLoading ? (
+        {isLoadingPopularWizards ? (
           <Spinner className="m-auto" />
         ) : (
           popularWizards?.map(({ id, name, userId, description, avatar }) => (

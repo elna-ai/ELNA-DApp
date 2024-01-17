@@ -49,6 +49,7 @@ export default defineConfig({
       stores: path.resolve("./src/stores"),
       types: path.resolve("./src/types.ts"),
       declarations: path.resolve("./src/declarations"),
+      utils: path.resolve("./src/utils"),
       src: path.resolve("./src/"),
     },
   },
