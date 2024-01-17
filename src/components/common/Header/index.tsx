@@ -10,6 +10,7 @@ import WalletList from "./WalletList";
 import AvatarImg from "images/avatar.png";
 import { useWallet } from "hooks/useWallet";
 import { isUserAdmin } from "src/utils";
+import { useUserStore } from "stores/useUser";
 
 interface HeaderProps {
   isLoggedIn: boolean;
@@ -28,10 +29,11 @@ function Header({
 }: HeaderProps) {
   const [isWalletModelOpen, setIsWalletModelOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [address, setAddress] = useState(displayAddress());
 
   const { t } = useTranslation();
   const wallet = useWallet();
-  const [address, setAddress] = useState(displayAddress());
+  const resetUserToken = useUserStore(state => state.resetToken);
 
   useEffect(() => {
     const autoLogin = async () => {
@@ -54,8 +56,7 @@ function Header({
     if (isLoggedIn) {
       setIsLoggingOut(true);
       localStorage.removeItem("dfinityWallet");
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
+      resetUserToken();
       setIsLoggedIn(!!localStorage.getItem("dfinityWallet"));
       //   await wallet.disconnect();
       setIsLoggingOut(false);
