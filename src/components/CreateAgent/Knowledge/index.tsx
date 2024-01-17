@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
+import { useGenerateUserToken } from "hooks/reactQuery/useUser";
 
 import Card from "./Card";
 import UploadFile from "./UploadFile";
+import { useUserStore } from "stores/useUser";
 
 interface KnowledgeProps {
   wizardId: string;
@@ -21,6 +23,12 @@ function Knowledge({ wizardId, setIsPolling, document }: KnowledgeProps) {
   const [isAddDocument, setIsAddDocument] = useState(false);
 
   const { t } = useTranslation();
+  const userToken = useUserStore(state => state.userToken);
+  const { mutate: generateUserToken } = useGenerateUserToken();
+
+  useEffect(() => {
+    !userToken && generateUserToken();
+  }, [userToken]);
 
   return (
     <div>
