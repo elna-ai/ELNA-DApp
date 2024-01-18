@@ -11,6 +11,7 @@ import {
   useFetchMyWizards,
 } from "hooks/reactQuery/wizards/useMyWizards";
 import { getAvatar } from "src/utils";
+import LoadingButton from "components/common/LoadingButton";
 
 import Card from "./Card";
 
@@ -127,15 +128,13 @@ function MyWizards() {
             />
           </div>
           <div className="mt-2 d-flex gap-2">
-            <Button
-              className="ml-auto px-5 d-flex gap-1 align-items-center"
+            <LoadingButton
+              label={t("common.delete", { entity: "agent" })}
+              isDisabled={isDeletePending}
+              isLoading={isDeletePending}
               variant="danger"
               onClick={() => handleDelete(wizardToDelete!.id)}
-              disabled={isDeletePending}
-            >
-              {t("common.delete", { entity: "agent" })}
-              {isDeletePending && <Spinner size="sm" />}
-            </Button>
+            />
             <Button
               type="reset"
               variant="link"

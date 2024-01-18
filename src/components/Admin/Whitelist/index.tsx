@@ -1,86 +1,58 @@
 import { useEffect, useState } from "react";
 
 import { Principal } from "@dfinity/principal";
-import { backend } from "declarations/backend";
 import { Formik } from "formik";
-import { useWallet } from "hooks/useWallet";
 import { toast } from "react-toastify";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-
+import LoadingButton from "components/common/LoadingButton";
+import {
+  useAddWhitelistedUser,
+  useGetWhitelistedUsers,
+} from "hooks/reactQuery/useUser";
 import PageLoader from "components/common/PageLoader";
+
 import { WHITElIST_USER_VALIDATION_SCHEMA } from "./constants";
+import RemoveWhitelistModal from "./RemoveWhitelistModal";
+import { useTranslation } from "react-i18next";
 
 function WhitelistUsers() {
-  const [whitelistedUsers, setWhitelistedUsers] = useState<Principal[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [isShowWhitelistModal, setIsShowWhitelistModal] = useState(false);
+  const [isShowRemoveWhitelistModal, setIsShowRemoveWhitelistModal] =
+    useState(false);
+  const [whitelistedUserToDelete, setWhitelistedUserToDelete] =
+    useState<Principal>();
 
-  const wallet = useWallet();
-
-  const getWhitelistedUsers = async () => {
-    if (wallet === undefined) return;
-
-    try {
-      setIsLoading(true);
-      const data = await backend.getWhitelistedUser(wallet?.principalId);
-      setWhitelistedUsers(data);
-    } catch (e) {
-      console.error(e);
-      toast.error("Couldn't fetch whitelisted users");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { t } = useTranslation();
+  const {
+    data: whitelistedUsers,
+    error,
+    isError,
+    isFetching: isLoading,
+  } = useGetWhitelistedUsers();
+  const { mutate: whitelistUser, isPending: isWhitelistingUser } =
+    useAddWhitelistedUser();
 
   useEffect(() => {
-    getWhitelistedUsers();
-  }, [wallet?.principalId]);
+    if (!isError) return;
+    toast.error(error.message);
+  }, [isError]);
 
   const handleWhitList = async (values: { principleId: string }) => {
-    if (wallet === undefined) {
-      toast.error("user not logged in");
-      return;
-    }
     try {
-      const principal = Principal.fromText(values.principleId);
-      try {
-        const data = await backend.whitelistUserFromUi(
-          Principal.fromText(wallet.principalId),
-          principal
-        );
-        toast.success(data);
-        getWhitelistedUsers();
-      } catch (e) {
-        toast.error("something went wrong");
-        console.error(e);
-      } finally {
-        setIsShowWhitelistModal(false);
-      }
+      const principalId = Principal.fromText(values.principleId.trim());
+      whitelistUser(principalId, {
+        onSuccess: () => setIsShowWhitelistModal(false),
+      });
     } catch (e) {
       toast.error("Invalid principal Id");
-      console.error(e);
     }
   };
 
-  const handleRemoveWhitelist = async (principalId: Principal) => {
-    if (wallet === undefined) {
-      toast.error("user not logged in");
-      return;
-    }
-
-    try {
-      const data = await backend.removeWhitelistedUserFromUi(
-        Principal.fromText(wallet?.principalId),
-        principalId
-      );
-      toast.success(data);
-      getWhitelistedUsers();
-    } catch (e) {
-      console.error(e);
-      toast.error("Something went wrong");
-    }
+  const handleRemoveWhitelist = (principalId: Principal) => {
+    setWhitelistedUserToDelete(principalId);
+    setIsShowRemoveWhitelistModal(true);
   };
 
   if (isLoading) return <PageLoader />;
@@ -88,17 +60,19 @@ function WhitelistUsers() {
   return (
     <>
       <div>
-        <Button onClick={() => setIsShowWhitelistModal(true)}>Add user</Button>
+        <Button onClick={() => setIsShowWhitelistModal(true)}>
+          {t("common.add", { entity: "user" })}
+        </Button>
       </div>
       <div className="admin__whitelist__wrapper">
-        {whitelistedUsers.map(principal => (
+        {(whitelistedUsers ?? []).map(principal => (
           <div className="admin__whitelist__item" key={principal.toText()}>
             <span>{principal.toText()}</span>
             <Button
               variant="danger"
               onClick={() => handleRemoveWhitelist(principal)}
             >
-              Delete
+              {t("common.delete")}
             </Button>
           </div>
         ))}
@@ -109,7 +83,7 @@ function WhitelistUsers() {
         centered
       >
         <Modal.Header closeButton>
-          <Modal.Title>Add User</Modal.Title>
+          <Modal.Title>{t("common.add", { entity: "user" })}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Formik
@@ -121,7 +95,9 @@ function WhitelistUsers() {
             {({ dirty, values, handleChange, handleReset }) => (
               <Form>
                 <Form.Group>
-                  <Form.Label className="fs-7">Principal id</Form.Label>
+                  <Form.Label className="fs-7">
+                    {t("whitelistUser.form.principalId")}
+                  </Form.Label>
                   <Form.Control
                     name="principleId"
                     as="input"
@@ -132,16 +108,15 @@ function WhitelistUsers() {
                     onChange={handleChange}
                   />
                 </Form.Group>
-                <div className="mt-2">
-                  <Button
-                    className="ml-auto px-5"
+                <div className="mt-2 d-flex gap-2">
+                  <LoadingButton
+                    label={t("common.add", { entity: "user" })}
+                    isDisabled={!dirty}
+                    isLoading={isWhitelistingUser}
                     onClick={() => handleWhitList(values)}
-                    disabled={!dirty}
-                  >
-                    Add user
-                  </Button>
+                  />
                   <Button type="reset" variant="link" onClick={handleReset}>
-                    Cancel
+                    {t("common.cancel")}
                   </Button>
                 </div>
               </Form>
@@ -149,6 +124,14 @@ function WhitelistUsers() {
           </Formik>
         </Modal.Body>
       </Modal>
+      <RemoveWhitelistModal
+        isOpen={isShowRemoveWhitelistModal}
+        onClose={() => {
+          setWhitelistedUserToDelete(undefined);
+          setIsShowRemoveWhitelistModal(false);
+        }}
+        principalId={whitelistedUserToDelete}
+      />
     </>
   );
 }

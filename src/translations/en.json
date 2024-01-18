@@ -105,6 +105,11 @@
     "title": "{{appName}}, we have a problem...",
     "description": "<h3>404 Not Found</h3> <p>We couldn't find the page you're looking for.</p>"
   },
+  "whitelistUser":{
+    "from":{
+      "principalId":"Principal id"
+    }
+  },
   "common": {
     "elna": "Elna",
     "eywa": "Eywa",
@@ -126,6 +131,7 @@
     "learned": "Learned",
     "uploading": "Uploading...",
     "delete": "Delete {{entity}}",
-    "deleteConfirmation": "Are you sure you want to delete <bold>{{entity}}</bold>"
+    "deleteConfirmation": "Are you sure you want to delete <bold>{{entity}}</bold>",
+    "add": "Add {{entity}}"
   }
 }
