@@ -55,7 +55,8 @@ actor class Main(_owner : Principal) {
     isWizardNameTakenByUser(wizards, userId, wizardName);
   };
 
-  public func addWizard(userId : Text, wizard : Types.WizardDetails) : async Types.Response {
+  public shared (message) func addWizard(wizard : Types.WizardDetails) : async Types.Response {
+    let userId = Principal.toText(message.caller);
     let isUserWhitelisted = await Backend.isUserWhitelisted(userId);
 
     if (not isUserWhitelisted) {

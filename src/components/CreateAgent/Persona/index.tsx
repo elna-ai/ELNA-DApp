@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import { v4 as uuidv4 } from "uuid";
 import Form from "react-bootstrap/Form";
@@ -5,30 +6,36 @@ import InputGroup from "react-bootstrap/InputGroup";
 import { Formik } from "formik";
 import { Trans, useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 import { useWallet } from "hooks/useWallet";
-import { wizard_details as wizardDetails } from "declarations/wizard_details";
 import {
   WizardDetails,
   WizardVisibility,
 } from "declarations/wizard_details/wizard_details.did";
+import { useAddWizard } from "hooks/reactQuery/wizards/useMyWizards";
 import { getAvatar } from "src/utils";
 import { AVATAR_IMAGES } from "src/constants";
+import LoadingButton from "components/common/LoadingButton";
 
 import { PERSONA_VALIDATION_SCHEMA } from "../constants";
 import AvatarImage from "./AvatarImage";
-
 type PersonaProps = {
   wizard: any;
   setCurrentNav: React.Dispatch<React.SetStateAction<string | null>>;
   name: string | null;
   setWizardId: React.Dispatch<React.SetStateAction<string>>;
 };
+
 function Persona({ wizard, setCurrentNav, name, setWizardId }: PersonaProps) {
   const { t } = useTranslation();
   const wallet = useWallet();
-  const navigate = useNavigate();
+
+  const {
+    mutate: addWizard,
+    isPending: isAddingWizard,
+    error,
+    isError,
+  } = useAddWizard();
 
   type PersonaValues = {
     biography: string;
@@ -53,17 +60,20 @@ function Persona({ wizard, setCurrentNav, name, setWizardId }: PersonaProps) {
       visibility,
       summary: [],
     };
-
-    const result = await wizardDetails.addWizard(userId, payload);
-    if (result.status === 422n) {
-      toast.error(result.message);
-      throw new Error(result.message);
-    } else {
-      setWizardId(payload.id);
-      toast.success(result.message);
-      setCurrentNav("knowledge");
-    }
+    addWizard(payload, {
+      onSuccess: () => {
+        setWizardId(payload.id);
+        setCurrentNav("knowledge");
+      },
+    });
   };
+
+  useEffect(() => {
+    if (!isError) return;
+
+    toast.error(error.message);
+  }, [isError]);
+
   return (
     <Formik
       initialValues={{
@@ -308,6 +318,13 @@ function Persona({ wizard, setCurrentNav, name, setWizardId }: PersonaProps) {
               <Button className="ml-auto px-5" type="submit" disabled={!dirty}>
                 {t("common.next")}
               </Button>
+              <LoadingButton
+                label={t("common.next")}
+                className="ml-auto px-5"
+                isDisabled={!dirty}
+                isLoading={isAddingWizard}
+                type="submit"
+              />
             </div>
           </div>
         </Form>
