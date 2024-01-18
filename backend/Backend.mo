@@ -30,12 +30,11 @@ actor class Backend(_owner : Principal) {
     Utils.isUserWhitelisted(whitelistedUsers, principal);
   };
 
-  public func getWhitelistedUser(userId : Text) : async [Principal] {
-    let principal = Principal.fromText(userId);
+  public shared (message) func getWhitelistedUser() : async [Principal] {
 
-    switch (Utils.isUserAdmin(adminUsers, principal)) {
+    switch (Utils.isUserAdmin(adminUsers, message.caller)) {
       case false {
-        return [];
+        throw Error.reject("User is not admin");
       };
       case true {
         return Buffer.toArray(whitelistedUsers);
@@ -44,8 +43,9 @@ actor class Backend(_owner : Principal) {
   };
 
   public shared (message) func whitelistUser(userId : Principal) : async Text {
-    if (not isOwner(message.caller)) {
-      return "User not authorized for this action";
+    let canUserWhitelist = isOwner(message.caller) or Utils.isUserAdmin(adminUsers, message.caller);
+    if (not canUserWhitelist) {
+      throw Error.reject("User not authorized for this action");
     };
 
     let isAlreadyWhitelisted : Bool = Utils.isUserWhitelisted(whitelistedUsers, userId);
@@ -56,31 +56,14 @@ actor class Backend(_owner : Principal) {
         return "User whitelisted";
       };
       case true {
-        return "User already whitelisted";
-      };
-    };
-  };
-
-  public func whitelistUserFromUi(userId : Principal, userIdToAdd : Principal) : async Text {
-    if (not Utils.isUserAdmin(adminUsers, userId)) {
-      return "User not authorized for this action";
-    };
-
-    let isAlreadyWhitelisted : Bool = Utils.isUserWhitelisted(whitelistedUsers, userIdToAdd);
-
-    switch (isAlreadyWhitelisted) {
-      case false {
-        whitelistedUsers.add(userIdToAdd);
-        return "User whitelisted";
-      };
-      case true {
-        return "User already whitelisted";
+        throw Error.reject("User already whitelisted");
       };
     };
   };
 
   public shared (message) func removeWhitelistedUser(userId : Principal) : async Text {
-    if (not isOwner(message.caller)) {
+    let canUserDelete = isOwner(message.caller) or Utils.isUserAdmin(adminUsers, message.caller);
+    if (not canUserDelete) {
       return "User not authorized for this action";
     };
 
@@ -91,28 +74,7 @@ actor class Backend(_owner : Principal) {
     );
     switch (userIndex) {
       case null {
-        return "User not found";
-      };
-      case (?index) {
-        let x = whitelistedUsers.remove(index);
-        return "User removed from whitelist";
-      };
-    };
-  };
-
-  public func removeWhitelistedUserFromUi(userId : Principal, userIdToAdd : Principal) : async Text {
-    if (not Utils.isUserAdmin(adminUsers, userId)) {
-      return "User not authorized for this action";
-    };
-
-    let userIndex : ?Nat = Buffer.indexOf(
-      userIdToAdd,
-      whitelistedUsers,
-      func(a : Principal, b : Principal) : Bool { a == b },
-    );
-    switch (userIndex) {
-      case null {
-        return "User not found";
+        throw Error.reject("User not found");
       };
       case (?index) {
         let x = whitelistedUsers.remove(index);

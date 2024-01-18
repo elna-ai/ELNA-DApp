@@ -29,11 +29,11 @@ function Header({
 }: HeaderProps) {
   const [isWalletModelOpen, setIsWalletModelOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [address, setAddress] = useState(displayAddress());
 
   const { t } = useTranslation();
-  const wallet = useWallet();
   const resetUserToken = useUserStore(state => state.resetToken);
+  const wallet = useWallet();
+  const [address, setAddress] = useState(displayAddress());
 
   useEffect(() => {
     const autoLogin = async () => {
