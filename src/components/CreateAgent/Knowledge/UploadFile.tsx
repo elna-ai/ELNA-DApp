@@ -16,6 +16,8 @@ import {
   removeMultipleNewlines,
 } from "src/utils";
 import { useNavigate } from "react-router-dom";
+import { useWallet } from "hooks/useWallet";
+import { useUserStore } from "stores/useUser";
 
 type UploadFileProps = {
   isOpen: boolean;
@@ -36,6 +38,8 @@ function UploadFile({
 
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const wallet = useWallet();
+  const userToken = useUserStore(state => state.userToken);
 
   const handleClose = () => {
     setSelectedFiles([]);
@@ -67,6 +71,10 @@ function UploadFile({
       await axios.post("https://dkfbwoj9t05dn.cloudfront.net/create-index", {
         documents: chunks,
         index_name: agentId,
+        userDetails: {
+          principalId: wallet?.principalId,
+          token: userToken,
+        },
       });
       toast.success("Uploaded successfully");
       toast.success("Agent published successfully");
