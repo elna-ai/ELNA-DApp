@@ -105,9 +105,9 @@
     "title": "{{appName}}, we have a problem...",
     "description": "<h3>404 Not Found</h3> <p>We couldn't find the page you're looking for.</p>"
   },
-  "whitelistUser":{
-    "from":{
-      "principalId":"Principal id"
+  "whitelistUser": {
+    "form": {
+      "principalId": "Principal id"
     }
   },
   "common": {

@@ -72,7 +72,7 @@ function WhitelistUsers() {
               variant="danger"
               onClick={() => handleRemoveWhitelist(principal)}
             >
-              {t("common.delete")}
+              {t("common.delete", { entity: "" })}
             </Button>
           </div>
         ))}
