@@ -8,59 +8,46 @@ import axios from "axios";
 
 import PageLoader from "components/common/PageLoader";
 import { getAvatar, transformHistory } from "src/utils";
-import { wizard_details as wizardDetails } from "declarations/wizard_details";
-import { WizardDetails } from "declarations/wizard_details/wizard_details.did";
 
 import Bubble from "./Bubble";
 import NoHistory from "./NoHistory";
 import { elna_ai as elnaAi } from "declarations/elna_ai";
 import useAutoSizeTextArea from "hooks/useAutoResizeTextArea";
 import { Message } from "src/types";
+import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
 
 function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [messageInput, setMessageInput] = useState("");
   const [isResponseLoading, setIsResponseLoading] = useState(false);
-  const [wizard, setWizard] = useState<WizardDetails>();
-  const [isLoading, setIsLoading] = useState(true);
 
   const { id } = useParams();
-
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const lastBubbleRef = useRef<HTMLDivElement>(null);
-
+  const { t } = useTranslation();
+  const {
+    data: wizard,
+    isFetching: isLoadingWizard,
+    error,
+    isError,
+  } = useShowWizard(id);
   useAutoSizeTextArea(inputRef.current, messageInput);
+
   useEffect(() => {
-    const getWizard = async () => {
-      setIsLoading(true);
-      if (id === undefined) {
-        toast.error("Unable to find wizard");
-        return;
-      }
+    if (!isError) return;
+    toast.error(error.message);
+  }, [isError]);
 
-      try {
-        const wizard = await wizardDetails.getWizard(id);
-        if (wizard[0] === undefined) {
-          toast.error("Unable to find wizard");
-          return;
-        }
+  useEffect(() => {
+    if (wizard?.greeting === undefined) return;
+    if (messages.length > 0) return;
 
-        setWizard(wizard[0]);
-        const initialMessage = {
-          user: { name: wizard[0].name, isBot: true },
-          message: wizard[0].greeting,
-        };
-        setMessages(prev => [...prev, initialMessage]);
-      } catch (e) {
-        console.error(e);
-        toast.error("Something went wrong");
-      } finally {
-        setIsLoading(false);
-      }
+    const initialMessage = {
+      user: { name: wizard.name, isBot: true },
+      message: wizard.greeting,
     };
-
-    getWizard();
-  }, []);
+    setMessages(prev => [...prev, initialMessage]);
+  }, [wizard]);
 
   useEffect(() => {
     if (lastBubbleRef.current) {
@@ -71,13 +58,6 @@ function Chat() {
       });
     }
   }, [messages]);
-
-  // const handleClickSendMessage = useCallback(
-  //   message => sendMessage(message),
-  //   []
-  // );
-
-  const { t } = useTranslation();
 
   const handleSubmit = async () => {
     const message = messageInput.trim();
@@ -121,7 +101,7 @@ function Chat() {
 
   useEffect(() => inputRef?.current?.focus(), [wizard]);
 
-  if (isLoading || wizard === undefined) return <PageLoader />;
+  if (isLoadingWizard || wizard === undefined) return <PageLoader />;
 
   return (
     <div className="row chatapp-single-chat">
