@@ -5,7 +5,7 @@ import { ButtonVariant } from "react-bootstrap/esm/types";
 
 type LoadingButtonProps = {
   isDisabled?: boolean;
-  isLoading?: boolean;
+  isLoading: boolean;
   label: string;
   className?: string;
   variant?: ButtonVariant;
@@ -14,7 +14,7 @@ type LoadingButtonProps = {
 
 function LoadingButton({
   isDisabled = false,
-  isLoading = false,
+  isLoading,
   label,
   className,
   variant,

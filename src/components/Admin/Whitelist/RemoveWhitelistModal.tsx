@@ -23,16 +23,7 @@ function RemoveWhitelistModal({
   } = useDeleteWhitelistedUser();
 
   return (
-    <Modal
-      show={isOpen}
-      // onHide={() => {
-      //   if (isDeletePending) return;
-
-      //   setIsDeleteWizard(false);
-      // }}
-      onHide={onClose}
-      centered
-    >
+    <Modal show={isOpen} onHide={onClose} centered>
       <Modal.Header closeButton>
         <Modal.Title>{t("common.delete", { entity: "agent" })}</Modal.Title>
       </Modal.Header>
