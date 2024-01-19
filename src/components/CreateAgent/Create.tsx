@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import { Formik } from "formik";
-import Button from "react-bootstrap/Button";
 import Nav from "react-bootstrap/Nav";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
@@ -10,7 +9,6 @@ import { useTranslation } from "react-i18next";
 
 import PageLoader from "components/common/PageLoader";
 import { WizardDetails } from "declarations/wizard_details/wizard_details.did";
-import { wizard_details as wizardDetails } from "declarations/wizard_details";
 
 import Persona from "./Persona";
 import Knowledge from "./Knowledge";
@@ -27,19 +25,6 @@ function Create() {
   const { t } = useTranslation();
   const [urlSearchParams, _] = useSearchParams();
   const navigate = useNavigate();
-
-  const getWizard = async (wizardId: string | undefined) => {
-    if (wizardId === undefined) return;
-    try {
-      setIsLoading(true);
-      const wizard = await wizardDetails.getWizard(wizardId);
-      setWizard(wizard[0]);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handlePublish = () => {};
 

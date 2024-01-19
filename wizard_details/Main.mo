@@ -51,11 +51,12 @@ actor class Main(_owner : Principal) {
     );
   };
 
-  public query func isWizardNameValid(userId : Text, wizardName : Text) : async Bool {
-    isWizardNameTakenByUser(wizards, userId, wizardName);
+  public shared query (message) func isWizardNameValid(wizardName : Text) : async Bool {
+    isWizardNameTakenByUser(wizards, Principal.toText(message.caller), wizardName);
   };
 
-  public func addWizard(userId : Text, wizard : Types.WizardDetails) : async Types.Response {
+  public shared (message) func addWizard(wizard : Types.WizardDetails) : async Types.Response {
+    let userId = Principal.toText(message.caller);
     let isUserWhitelisted = await Backend.isUserWhitelisted(userId);
 
     if (not isUserWhitelisted) {

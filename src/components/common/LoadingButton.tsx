@@ -9,8 +9,8 @@ type LoadingButtonProps = {
   label: string;
   className?: string;
   variant?: ButtonVariant;
-  onClick: (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-};
+  onClick?: (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "label" | "onClick">;
 
 function LoadingButton({
   isDisabled = false,
@@ -18,7 +18,8 @@ function LoadingButton({
   label,
   className,
   variant,
-  onClick,
+  onClick = () => {},
+  ...otherProps
 }: LoadingButtonProps) {
   return (
     <Button
@@ -29,6 +30,7 @@ function LoadingButton({
       variant={variant}
       onClick={onClick}
       disabled={isDisabled}
+      {...otherProps}
     >
       {label}
       {isLoading && <Spinner size="sm" />}
