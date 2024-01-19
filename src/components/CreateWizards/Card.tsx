@@ -1,6 +1,6 @@
 import { Dropdown } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface CardProps {
   name: string;
@@ -20,6 +20,7 @@ function Card({
   handleDelete,
 }: CardProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const Avatar = ({ name }: { name: string }) => (
     <div className="avatar avatar-xl avatar-soft-primary avatar-rounded bg-gray-300 text-green-700">
@@ -36,7 +37,13 @@ function Card({
               <Dropdown.Toggle variant="dark" className="card-body-menu-button">
                 <i className="ri-more-line" />
               </Dropdown.Toggle>
-              <Dropdown.Menu>
+              <Dropdown.Menu className="dropdown-menu-right">
+                <Dropdown.Item
+                  onClick={() => navigate(`/create-agent/integrations/${id}`)}
+                  className="card-dropdown-integrations"
+                >
+                  {t("wizards.integrations")}
+                </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => handleDelete(id)}
                   className="card-dropdown-delete"

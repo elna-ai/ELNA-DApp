@@ -26,7 +26,8 @@
     "myWizards": "My Agents",
     "noWizards": "You don't have any created agents",
     "popularWizards": "Specialized AI agents ",
-    "popularWizardsDesc": "Each skilled in their own field - a Travel Guide, a Fitness Coach, a Masterful Storyteller, et al."
+    "popularWizardsDesc": "Each skilled in their own field - a Travel Guide, a Fitness Coach, a Masterful Storyteller, et al.",
+    "integrations":"Integrations"
   },
   "signIn": {
     "connectWallet": "Connect your wallet",
