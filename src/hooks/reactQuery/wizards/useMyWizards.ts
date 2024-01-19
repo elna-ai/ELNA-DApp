@@ -106,3 +106,24 @@ export const useAddWizard = () => {
     },
   });
 };
+
+export const useIsWizardNameValid = () => {
+  const wallet = useWallet();
+
+  return useMutation({
+    mutationFn: async (name: string) => {
+      if (wallet === undefined) {
+        throw Error("User not logged in");
+      }
+
+      const wizardDetails: Main = await wallet.getCanisterActor(
+        canisterId,
+        idlFactory,
+        false
+      );
+
+      const response = await wizardDetails.isWizardNameValid(name);
+      return response;
+    },
+  });
+};

@@ -8,9 +8,8 @@ import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
 import { t } from "i18next";
 import { Trans } from "react-i18next";
-
-import { wizard_details as wizardDetails } from "declarations/wizard_details";
 import { useWallet } from "hooks/useWallet";
+import { useIsWizardNameValid } from "hooks/reactQuery/wizards/useMyWizards";
 
 import TemplateStore from "./TemplateSore";
 import {
@@ -19,6 +18,7 @@ import {
 } from "./constants";
 import NoAccessImg from "../../images/no-access.png";
 import { backend } from "declarations/backend";
+import LoadingButton from "components/common/LoadingButton";
 
 function View() {
   const [isCreate, setIsCreate] = useState(false);
@@ -26,6 +26,8 @@ function View() {
 
   const navigate = useNavigate();
   const wallet = useWallet();
+  const { mutate: checkIsWizardNameValid, isPending: isCheckingName } =
+    useIsWizardNameValid();
 
   const handleCreate = async () => {
     if (wallet === undefined || !wallet?.principalId) {
@@ -37,19 +39,17 @@ function View() {
     isWhiteListed ? setIsCreate(true) : setIsNoPermission(true);
   };
 
-  const handleSubmit = async ({ name }: { name: string }) => {
-    if (wallet === undefined) return;
-
-    const isNameValid: boolean = await wizardDetails.isWizardNameValid(
-      wallet.principalId,
-      name
-    );
-    if (!isNameValid) {
-      toast.error("Wizard name exist for user");
-      return;
-    }
-
-    navigate({ pathname: "/create-agent/edit", search: `?name=${name}` });
+  const handleSubmit = ({ name }: { name: string }) => {
+    checkIsWizardNameValid(name, {
+      onError: () => toast.error("Wizard name exist for user"),
+      onSuccess: response => {
+        if (!response) {
+          toast.error("Wizard name exist for user");
+          return;
+        }
+        navigate({ pathname: "/create-agent/edit", search: `?name=${name}` });
+      },
+    });
   };
 
   return (
@@ -154,12 +154,16 @@ function View() {
                   variant="link"
                   type="reset"
                   onClick={() => setIsCreate(false)}
+                  disabled={isCheckingName}
                 >
                   {t("common.cancel")}
                 </Button>
-                <Button className="btn-modal-ok" type="submit">
-                  {t("common.ok")}
-                </Button>
+                <LoadingButton
+                  type="submit"
+                  label={t("common.ok")}
+                  isLoading={isCheckingName}
+                  isDisabled={isCheckingName}
+                />
               </Modal.Footer>
             </Form>
           )}

@@ -315,9 +315,6 @@ function Persona({ wizard, setCurrentNav, name, setWizardId }: PersonaProps) {
               </Form.Control.Feedback>
             </Form.Group>
             <div className="d-flex justify-content-end">
-              <Button className="ml-auto px-5" type="submit" disabled={!dirty}>
-                {t("common.next")}
-              </Button>
               <LoadingButton
                 label={t("common.next")}
                 className="ml-auto px-5"

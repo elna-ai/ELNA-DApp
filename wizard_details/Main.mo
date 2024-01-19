@@ -51,8 +51,8 @@ actor class Main(_owner : Principal) {
     );
   };
 
-  public query func isWizardNameValid(userId : Text, wizardName : Text) : async Bool {
-    isWizardNameTakenByUser(wizards, userId, wizardName);
+  public shared query (message) func isWizardNameValid(wizardName : Text) : async Bool {
+    isWizardNameTakenByUser(wizards, Principal.toText(message.caller), wizardName);
   };
 
   public shared (message) func addWizard(wizard : Types.WizardDetails) : async Types.Response {
