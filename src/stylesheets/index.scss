@@ -696,3 +696,15 @@ textarea.form-control {
 .int-app-img .int-icon svg {
   width: 24px;
 }
+
+.card-body-menu .dropdown-menu-right {
+  background-color: var(--background-base-border);
+
+  a {
+    color: var(--body-color);
+    &:hover {
+      background-color: var(--background-base-border);
+      cursor: pointer;
+    }
+  }
+}

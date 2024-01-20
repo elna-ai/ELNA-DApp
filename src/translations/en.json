@@ -74,7 +74,13 @@
     },
     "form": {
       "label": {
-        "name": "Name"
+        "name": "Name",
+        "bearerToken": "Bearer Token",
+        "consumerKey": "Consumer Key",
+        "consumerSecret": "Consumer Secret",
+        "accessToken": "Access Token",
+        "accessTokenSecret": "Access Token Secret",
+        "targetUserid": "Twitter Handle"
       },
       "placeholder": {
         "name": "Enter Bot name"
