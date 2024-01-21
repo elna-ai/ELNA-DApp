@@ -4,6 +4,7 @@ import Modal from "react-bootstrap/Modal";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import LoadingButton from "components/common/LoadingButton";
+import avatar01 from "images/avatar/01.png";
 
 const sampleData = [
   {
@@ -155,11 +156,7 @@ function integrations() {
             <div className="d-flex align-items-center">
               <div className="chat-header__avatar">
                 <div className="avatar">
-                  <img
-                    src="http://localhost:3000/images/avatar/01.png"
-                    alt="user"
-                    className="avatar-img"
-                  />
+                  <img src={avatar01} alt="user" className="avatar-img" />
                 </div>
               </div>
               <div className="flex-grow-1 ms-3">
