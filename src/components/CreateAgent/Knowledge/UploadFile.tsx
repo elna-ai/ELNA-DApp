@@ -1,6 +1,5 @@
 import { useState, ChangeEvent } from "react";
 
-import axios from "axios";
 import { Document } from "langchain/document";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
@@ -16,8 +15,8 @@ import {
   removeMultipleNewlines,
 } from "src/utils";
 import { useNavigate } from "react-router-dom";
-import { useWallet } from "hooks/useWallet";
-import { useUserStore } from "stores/useUser";
+import { useCreateIndex } from "hooks/reactQuery/useExternalService";
+import LoadingButton from "components/common/LoadingButton";
 
 type UploadFileProps = {
   isOpen: boolean;
@@ -38,8 +37,7 @@ function UploadFile({
 
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const wallet = useWallet();
-  const userToken = useUserStore(state => state.userToken);
+  const { mutate: createIndex, isPending: isCreatingIndex } = useCreateIndex();
 
   const handleClose = () => {
     setSelectedFiles([]);
@@ -67,23 +65,17 @@ function UploadFile({
     });
 
     const chunks = await getChunks(cleanedDocuments);
-    try {
-      await axios.post("https://dkfbwoj9t05dn.cloudfront.net/create-index", {
-        documents: chunks,
-        index_name: agentId,
-        userDetails: {
-          principalId: wallet?.principalId,
-          token: userToken,
+    createIndex(
+      { documents: chunks, index_name: agentId },
+      {
+        onSuccess: () => {
+          toast.success("Uploaded successfully");
+          toast.success("Agent published successfully");
+          onClose();
+          navigate("/");
         },
-      });
-      toast.success("Uploaded successfully");
-      toast.success("Agent published successfully");
-      onClose();
-      navigate("/");
-    } catch (e) {
-      console.error(e);
-      // toast.error(e);
-    }
+      }
+    );
   };
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -208,14 +200,13 @@ function UploadFile({
         )}
       </Modal.Body>
       <Modal.Footer>
-        <div className="flex ml-auto gap-2">
-          <Button
-            className="btn-modal-ok"
+        <div className="d-flex ml-auto gap-2">
+          <LoadingButton
             onClick={handleUpload}
-            disabled={isUploading}
-          >
-            {t("common.ok")}
-          </Button>
+            label={t("common.ok")}
+            isLoading={isCreatingIndex}
+            isDisabled={isUploading || isCreatingIndex}
+          />
           <Button
             className="btn-light btn-modal-cancel"
             variant="link"

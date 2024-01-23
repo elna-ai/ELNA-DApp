@@ -10,7 +10,7 @@ import WalletList from "./WalletList";
 import AvatarImg from "images/avatar.png";
 import { useWallet } from "hooks/useWallet";
 import { useUserStore } from "stores/useUser";
-import { useIsUserAdmin } from "hooks/reactQuery/useUser";
+import { useIsUserAdmin, useIsUserWhiteListed } from "hooks/reactQuery/useUser";
 import useGetDisplayAddress from "hooks/useGetDisplayAddress";
 
 interface HeaderProps {
@@ -28,6 +28,7 @@ function Header({ isLoggedIn, setIsLoggedIn, setIsLoading }: HeaderProps) {
   const wallet = useWallet();
   const displayAddress = useGetDisplayAddress();
   const { data: isAdmin } = useIsUserAdmin();
+  useIsUserWhiteListed();
 
   useEffect(() => {
     const autoLogin = async () => {
