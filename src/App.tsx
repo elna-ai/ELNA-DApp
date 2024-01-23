@@ -30,7 +30,6 @@ function App() {
   );
   const [isExpanded, setIsExpanded] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
 
   return (
     <ErrorBoundary>
@@ -42,14 +41,12 @@ function App() {
               collapsed: !isExpanded,
             })}
           >
-            <Sidebar {...{ isExpanded, setIsExpanded, isAdmin }} />
+            <Sidebar {...{ isExpanded, setIsExpanded }} />
             <Header
               {...{
                 isLoggedIn,
                 setIsLoggedIn,
                 setIsLoading,
-                isAdmin,
-                setIsAdmin,
               }}
             />
             <div className="container-fluid p-0">
@@ -71,12 +68,7 @@ function App() {
                         />
                         <Route
                           path="/admin/*"
-                          element={
-                            <PrivateRoute
-                              component={AdminDashboard}
-                              isAdmin={isAdmin}
-                            />
-                          }
+                          element={<PrivateRoute component={AdminDashboard} />}
                         />
                         <Route path="*" element={<Page404 />} />
                       </Routes>

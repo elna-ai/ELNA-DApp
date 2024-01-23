@@ -9,31 +9,25 @@ import { Link } from "react-router-dom";
 import WalletList from "./WalletList";
 import AvatarImg from "images/avatar.png";
 import { useWallet } from "hooks/useWallet";
-import { isUserAdmin } from "src/utils";
 import { useUserStore } from "stores/useUser";
+import { useIsUserAdmin } from "hooks/reactQuery/useUser";
+import useGetDisplayAddress from "hooks/useGetDisplayAddress";
 
 interface HeaderProps {
   isLoggedIn: boolean;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  isAdmin: boolean;
-  setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function Header({
-  isLoggedIn,
-  setIsLoggedIn,
-  setIsLoading,
-  isAdmin,
-  setIsAdmin,
-}: HeaderProps) {
+function Header({ isLoggedIn, setIsLoggedIn, setIsLoading }: HeaderProps) {
   const [isWalletModelOpen, setIsWalletModelOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const { t } = useTranslation();
   const resetUserToken = useUserStore(state => state.resetToken);
   const wallet = useWallet();
-  const [address, setAddress] = useState(displayAddress());
+  const displayAddress = useGetDisplayAddress();
+  const { data: isAdmin } = useIsUserAdmin();
 
   useEffect(() => {
     const autoLogin = async () => {
@@ -44,8 +38,6 @@ function Header({
         return;
       }
       await wallet.autoConnect();
-      setIsAdmin(await isUserAdmin(wallet.principalId));
-      setAddress(displayAddress());
       setIsLoading(false);
     };
 
@@ -79,16 +71,6 @@ function Header({
     }
   };
 
-  function displayAddress() {
-    if (!wallet?.principalId) return "";
-
-    const firstPart = wallet?.principalId?.substring(0, 5);
-    const lastPart = wallet?.principalId?.substring(
-      wallet.principalId.length - 3
-    );
-    return `${firstPart}...${lastPart}`;
-  }
-
   return (
     <>
       <header className="d-flex p-2 h-12">
@@ -108,7 +90,7 @@ function Header({
                       width={32}
                     />
                   </span>
-                  <span>{address}</span>
+                  <span>{displayAddress}</span>
                   {isLoggingOut && <Spinner animation="border" size="sm" />}
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="profile-dropdown">
@@ -117,7 +99,7 @@ function Header({
                     className="dropdown-menu__item"
                   >
                     <i className="ri-file-copy-line"></i>
-                    Principal Id {displayAddress()}
+                    Principal Id {displayAddress}
                   </Dropdown.Item>
                   {isAdmin && (
                     <Dropdown.Item>

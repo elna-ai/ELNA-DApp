@@ -11,17 +11,18 @@ import ElanLogo from "images/logoElna.svg?react";
 import { ADMIN_SIDEBAR_LINKS, SIDEBAR_LINK } from "./constant";
 import { useLocation } from "react-router-dom";
 import ExpandButton from "./ExpandButton";
+import { useIsUserAdmin } from "hooks/reactQuery/useUser";
 
 interface SidebarProps {
   isExpanded: boolean;
   setIsExpanded: React.Dispatch<React.SetStateAction<boolean>>;
-  isAdmin: boolean;
 }
 
-function Sidebar({ isExpanded, setIsExpanded, isAdmin }: SidebarProps) {
+function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
   const location = useLocation();
   const isMobile = useIsMobileScreen();
   const { t } = useTranslation();
+  const { data: isAdmin } = useIsUserAdmin();
 
   useEffect(() => {
     setIsExpanded(!isMobile);

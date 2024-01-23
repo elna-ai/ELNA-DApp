@@ -10,6 +10,8 @@ import { t } from "i18next";
 import { Trans } from "react-i18next";
 import { useWallet } from "hooks/useWallet";
 import { useIsWizardNameValid } from "hooks/reactQuery/wizards/useMyWizards";
+import LoadingButton from "components/common/LoadingButton";
+import { useIsUserWhiteListed } from "hooks/reactQuery/useUser";
 
 import TemplateStore from "./TemplateSore";
 import {
@@ -17,8 +19,6 @@ import {
   CREATE_BOT_MODAL_VALIDATION_SCHEMA,
 } from "./constants";
 import NoAccessImg from "../../images/no-access.png";
-import { backend } from "declarations/backend";
-import LoadingButton from "components/common/LoadingButton";
 
 function View() {
   const [isCreate, setIsCreate] = useState(false);
@@ -28,6 +28,7 @@ function View() {
   const wallet = useWallet();
   const { mutate: checkIsWizardNameValid, isPending: isCheckingName } =
     useIsWizardNameValid();
+  const { data: isUserWhitelisted } = useIsUserWhiteListed();
 
   const handleCreate = async () => {
     if (wallet === undefined || !wallet?.principalId) {
@@ -35,8 +36,7 @@ function View() {
       return;
     }
 
-    const isWhiteListed = await backend.isUserWhitelisted(wallet.principalId);
-    isWhiteListed ? setIsCreate(true) : setIsNoPermission(true);
+    isUserWhitelisted ? setIsCreate(true) : setIsNoPermission(true);
   };
 
   const handleSubmit = ({ name }: { name: string }) => {

@@ -56,14 +56,13 @@ actor class Main(_owner : Principal) {
   };
 
   public shared (message) func addWizard(wizard : Types.WizardDetails) : async Types.Response {
-    let userId = Principal.toText(message.caller);
-    let isUserWhitelisted = await Backend.isUserWhitelisted(userId);
+    let isUserWhitelisted = await Backend.isUserWhitelisted(?message.caller);
 
     if (not isUserWhitelisted) {
       return { status = 422; message = "User dosen't have permission" };
     };
 
-    let isNewWizardName = isWizardNameTakenByUser(wizards, userId, wizard.name);
+    let isNewWizardName = isWizardNameTakenByUser(wizards, Principal.toText(message.caller), wizard.name);
 
     if (isNewWizardName) {
       wizards.add(wizard);
