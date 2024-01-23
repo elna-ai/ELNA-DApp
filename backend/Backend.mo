@@ -89,9 +89,8 @@ actor class Backend(_owner : Principal) {
     };
   };
 
-  public query func isUserAdmin(userId : Text) : async Bool {
-    let principal = Principal.fromText(userId);
-    Utils.isUserAdmin(adminUsers, principal);
+  public shared query (message) func isUserAdmin() : async Bool {
+    Utils.isUserAdmin(adminUsers, message.caller);
   };
 
   public shared (message) func addAdmin(userId : Principal) : async Text {

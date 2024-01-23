@@ -128,3 +128,23 @@ export const useIsUserWhiteListed = () => {
     enabled: !!wallet?.principalId,
   });
 };
+
+export const useIsUserAdmin = () => {
+  const wallet = useWallet();
+
+  return useQuery({
+    queryFn: async () => {
+      if (wallet === undefined) throw Error("user not logged in");
+
+      const backend: Backend = await wallet.getCanisterActor(
+        backendId,
+        backendFactory,
+        false
+      );
+      const response = await backend.isUserAdmin();
+      return response;
+    },
+    queryKey: [wallet?.principalId, QUERY_KEYS.IS_USER_ADMIN],
+    enabled: !!wallet?.principalId,
+  });
+};
