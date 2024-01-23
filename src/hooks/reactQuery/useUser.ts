@@ -108,3 +108,23 @@ export const useAddWhitelistedUser = () => {
     },
   });
 };
+
+export const useIsUserWhiteListed = () => {
+  const wallet = useWallet();
+
+  return useQuery({
+    queryFn: async () => {
+      if (wallet === undefined) throw Error("user not logged in");
+
+      const backend: Backend = await wallet.getCanisterActor(
+        backendId,
+        backendFactory,
+        false
+      );
+      const response = await backend.isUserWhitelisted([]);
+      return response;
+    },
+    queryKey: [QUERY_KEYS.WHITELISTED_USERS, wallet?.principalId],
+    enabled: !!wallet?.principalId,
+  });
+};

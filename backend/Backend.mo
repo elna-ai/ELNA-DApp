@@ -25,9 +25,15 @@ actor class Backend(_owner : Principal) {
   var adminUsers = Buffer.Buffer<Principal>(5);
   var userTokens = HashMap.HashMap<Principal, Types.UserToken>(5, Principal.equal, Principal.hash);
 
-  public query func isUserWhitelisted(userId : Text) : async Bool {
-    let principal = Principal.fromText(userId);
-    Utils.isUserWhitelisted(whitelistedUsers, principal);
+  public shared query (message) func isUserWhitelisted(principalId : ?Principal) : async Bool {
+    switch (principalId) {
+      case null {
+        return Utils.isUserWhitelisted(whitelistedUsers, message.caller);
+      };
+      case (?id) {
+        Utils.isUserWhitelisted(whitelistedUsers, id);
+      };
+    };
   };
 
   public shared (message) func getWhitelistedUser() : async [Principal] {
