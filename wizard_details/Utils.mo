@@ -113,8 +113,12 @@ module {
             return { status = 404; message = "Agent not found" };
           };
           case (?index) {
-            wizards.put(index, updatePublishState(wizard, true));
-            return { status = 200; message = "Agent published" };
+            wizards.put(index, updatePublishState(wizard, isPublish));
+            let status = if (isPublish) "published" else "unpublished";
+            return {
+              status = 200;
+              message = "Agent " # status;
+            };
           };
         };
       };

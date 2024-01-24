@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import Button from "react-bootstrap/Button";
 import { v4 as uuidv4 } from "uuid";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
@@ -59,6 +58,7 @@ function Persona({ wizard, setCurrentNav, name, setWizardId }: PersonaProps) {
       name,
       visibility,
       summary: [],
+      isPublished: false,
     };
     addWizard(payload, {
       onSuccess: () => {
