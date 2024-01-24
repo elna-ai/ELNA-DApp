@@ -47,6 +47,7 @@ module {
           biography = wizard.biography;
           description = wizard.description;
           avatar = wizard.avatar;
+          isPublished = wizard.isPublished;
         };
       },
     );

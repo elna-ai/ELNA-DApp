@@ -16,7 +16,25 @@ import {
 } "./Utils";
 
 actor class Main(_owner : Principal) {
-  private stable var _wizards : [Types.WizardDetails] = [];
+  private stable var _wizards : [Types.OLD_WizardDetails] = [];
+  private stable var _wizardsNew : [Types.WizardDetails] = Array.map<Types.OLD_WizardDetails, Types.WizardDetails>(
+    _wizards,
+    func(wizard) {
+      {
+        isPublished = true;
+        avatar = wizard.avatar;
+        biography = wizard.biography;
+        description = wizard.description;
+        greeting = wizard.greeting;
+        id = wizard.id;
+        name = wizard.name;
+        summary = wizard.summary;
+        userId = wizard.userId;
+        visibility = wizard.visibility;
+
+      };
+    },
+  );
   private stable var owner : Principal = _owner;
   var wizards = Buffer.Buffer<Types.WizardDetails>(10);
 
@@ -116,10 +134,11 @@ actor class Main(_owner : Principal) {
   };
 
   system func preupgrade() {
-    _wizards := Buffer.toArray(wizards);
+
+    _wizardsNew := Buffer.toArray(wizards);
   };
 
   system func postupgrade() {
-    wizards := Buffer.fromArray(_wizards);
+    wizards := Buffer.fromArray(_wizardsNew);
   };
 };
