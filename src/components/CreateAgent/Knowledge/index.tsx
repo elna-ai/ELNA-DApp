@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 
+import Cookies from "js-cookie";
 import { Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useGenerateUserToken } from "hooks/reactQuery/useUser";
+import { useUserStore } from "stores/useUser";
+import { useLogin } from "hooks/reactQuery/useExternalService";
+import { useWallet } from "hooks/useWallet";
 
 import Card from "./Card";
 import UploadFile from "./UploadFile";
-import { useUserStore } from "stores/useUser";
 
 interface KnowledgeProps {
   wizardId: string;
@@ -23,12 +26,22 @@ function Knowledge({ wizardId, setIsPolling, document }: KnowledgeProps) {
   const [isAddDocument, setIsAddDocument] = useState(false);
 
   const { t } = useTranslation();
+  const wallet = useWallet();
   const userToken = useUserStore(state => state.userToken);
   const { mutate: generateUserToken } = useGenerateUserToken();
+  const { mutate: loginExternalService } = useLogin();
 
   useEffect(() => {
     !userToken && generateUserToken();
   }, [userToken]);
+
+  useEffect(() => {
+    if (Cookies.get("external_token")) return;
+    if (!userToken) return;
+    if (!wallet?.principalId) return;
+
+    loginExternalService({ token: userToken, principalId: wallet.principalId });
+  }, [userToken, wallet?.principalId]);
 
   return (
     <div>

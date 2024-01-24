@@ -36,4 +36,5 @@ canister_ids.json
 .env.local
 .env.development
 .env.test
+.env.staging
 .env.production
