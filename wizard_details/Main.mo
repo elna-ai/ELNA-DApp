@@ -16,7 +16,6 @@ import {
 } "./Utils";
 
 actor class Main(_owner : Principal) {
-  private stable var _wizards : Any = [];
   private stable var _wizardsNew : [Types.WizardDetails] = [];
   private stable var owner : Principal = _owner;
   var wizards = Buffer.Buffer<Types.WizardDetails>(10);
