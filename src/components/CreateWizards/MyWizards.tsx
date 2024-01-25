@@ -15,6 +15,7 @@ import { getAvatar } from "src/utils";
 import LoadingButton from "components/common/LoadingButton";
 
 import Card from "./Card";
+import { useDeleteIndex } from "hooks/reactQuery/useExternalService";
 
 function MyWizards() {
   const [isDeleteWizard, setIsDeleteWizard] = useState(false);
@@ -37,6 +38,7 @@ function MyWizards() {
   const { mutate: deleteMyWizard, isPending: isDeletePending } =
     useDeleteMyWizard();
   const { mutate: publishUnpublishWizard } = usePublishUnpublishWizard();
+  const { mutate: deleteIndex } = useDeleteIndex();
 
   const handleDeletePopup = (id: string, name: string) => {
     setIsDeleteWizard(true);
@@ -53,12 +55,6 @@ function MyWizards() {
     );
   };
 
-  useEffect(() => {
-    if (!isError) return;
-
-    toast.error(error.message);
-  }, [isError]);
-
   const handleDelete = async (id: string) => {
     deleteMyWizard(
       { wizardId: id },
@@ -71,9 +67,18 @@ function MyWizards() {
           setWizardIdToDelete(undefined);
           setIsDeleteWizard(false);
         },
+        onSuccess: () => {
+          deleteIndex(id);
+        },
       }
     );
   };
+
+  useEffect(() => {
+    if (!isError) return;
+
+    toast.error(error.message);
+  }, [isError]);
 
   return (
     <>

@@ -42,3 +42,22 @@ export const useCreateIndex = () =>
       console.error(error);
     },
   });
+
+export const useDeleteIndex = () =>
+  useMutation({
+    mutationFn: (wizardId: string) =>
+      axios.post(
+        `${import.meta.env.VITE_EXTERNAL_SERVICE_BASE}/delete-index`,
+        {
+          index_name: wizardId,
+        },
+        { headers: { Authorization: `jwt ${Cookies.get("external_token")}` } }
+      ),
+    onError: error => {
+      toast.error(error.message);
+      console.error(error);
+    },
+    onSuccess: response => {
+      console.log(response);
+    },
+  });
