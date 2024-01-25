@@ -158,6 +158,7 @@ function Persona({ wizard, setCurrentNav, name, setWizardId }: PersonaProps) {
                 rows={3}
                 value={values.biography}
                 onChange={handleChange}
+                isInvalid={!!errors.biography}
               />
               <Form.Control.Feedback type="invalid">
                 {errors.biography}
@@ -198,6 +199,7 @@ function Persona({ wizard, setCurrentNav, name, setWizardId }: PersonaProps) {
                 rows={3}
                 value={values.greeting}
                 onChange={handleChange}
+                isInvalid={!!errors.greeting}
               />
               <Form.Control.Feedback type="invalid">
                 {errors.greeting}
@@ -233,6 +235,7 @@ function Persona({ wizard, setCurrentNav, name, setWizardId }: PersonaProps) {
                 rows={3}
                 value={values.description}
                 onChange={handleChange}
+                isInvalid={!!errors.description}
               />
               <Form.Control.Feedback type="invalid">
                 {errors.description}
@@ -270,6 +273,7 @@ function Persona({ wizard, setCurrentNav, name, setWizardId }: PersonaProps) {
                   name="visibility"
                   checked={values.visibility === "public"}
                   onChange={handleChange}
+                  isInvalid={!!errors.visibility}
                 />
                 <InputGroup.Text>
                   <Trans
