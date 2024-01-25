@@ -1,3 +1,4 @@
+import useGetDisplayAddress from "hooks/useGetDisplayAddress";
 import { Dropdown } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -24,6 +25,12 @@ function Card({
   handlePublish,
 }: CardProps) {
   const { t } = useTranslation();
+
+  const displayAddress = (principal: string) => {
+    const firstPart = principal.substring(0, 5);
+    const lastPart = principal.substring(principal.length - 3);
+    return `${firstPart}...${lastPart}`;
+  };
 
   const Avatar = ({ name }: { name: string }) => (
     <div className="avatar avatar-xl avatar-soft-primary avatar-rounded bg-gray-300 text-green-700">
@@ -74,7 +81,7 @@ function Card({
         {userId && (
           <div className="card-footer text-muted position-relative">
             <a href="#" className="d-flex align-items-center p-0">
-              <span className="fs-7 lh-1">{userId}</span>
+              <span className="fs-7 lh-1">{displayAddress(userId)}</span>
             </a>
           </div>
         )}
