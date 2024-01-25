@@ -8,7 +8,9 @@ interface CardProps {
   imageUrl?: string;
   userId?: string;
   id: string;
-  handleDelete?: (id: string) => void;
+  isPublished?: boolean;
+  handleDelete?: (id: string, name: string) => void;
+  handlePublish?: (id: string, isPublished: boolean) => void;
 }
 
 function Card({
@@ -17,7 +19,9 @@ function Card({
   imageUrl,
   userId,
   id,
+  isPublished,
   handleDelete,
+  handlePublish,
 }: CardProps) {
   const { t } = useTranslation();
 
@@ -38,11 +42,18 @@ function Card({
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <Dropdown.Item
-                  onClick={() => handleDelete(id)}
+                  onClick={() => handleDelete(id, name)}
                   className="card-dropdown-delete"
                 >
                   {t("common.delete", { entity: "agent" })}
                 </Dropdown.Item>
+                {handlePublish && (
+                  <Dropdown.Item
+                    onClick={() => handlePublish(id, !isPublished)}
+                  >
+                    {isPublished ? "Unpublish agent" : "Publish agent"}
+                  </Dropdown.Item>
+                )}
               </Dropdown.Menu>
             </Dropdown>
           )}

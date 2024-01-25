@@ -1,10 +1,8 @@
 import Array "mo:base/Array";
 import Text "mo:base/Text";
 import Bool "mo:base/Bool";
-import Debug "mo:base/Debug";
 import Principal "mo:base/Principal";
 import Buffer "mo:base/Buffer";
-import None "mo:base/None";
 import Backend "canister:backend";
 
 import Types "./Types";
@@ -13,10 +11,13 @@ import {
   isWizardNameTakenByUser;
   getWizardsBasicDetails;
   isUserBotCreator;
+  publishUnpublishWizard;
+  findWizardById;
+  findWizardIndex;
 } "./Utils";
 
 actor class Main(_owner : Principal) {
-  private stable var _wizards : [Types.WizardDetails] = [];
+  private stable var _wizardsNew : [Types.WizardDetails] = [];
   private stable var owner : Principal = _owner;
   var wizards = Buffer.Buffer<Types.WizardDetails>(10);
 
@@ -29,7 +30,7 @@ actor class Main(_owner : Principal) {
     let publicWizards = Array.filter(
       Buffer.toArray(wizards),
       func(wizard : Types.WizardDetails) : Bool {
-        wizard.visibility == #publicVisibility;
+        wizard.visibility == #publicVisibility and wizard.isPublished;
       },
     );
 
@@ -43,12 +44,7 @@ actor class Main(_owner : Principal) {
   };
 
   public query func getWizard(id : Text) : async ?Types.WizardDetails {
-    Array.find(
-      Buffer.toArray(wizards),
-      func(wizard : Types.WizardDetails) : Bool {
-        wizard.id == id;
-      },
-    );
+    findWizardById(id, wizards);
   };
 
   public shared query (message) func isWizardNameValid(wizardName : Text) : async Bool {
@@ -74,16 +70,10 @@ actor class Main(_owner : Principal) {
 
   public shared (message) func deleteWizard(wizardId : Text) : async Types.Response {
 
-    let wizard = Array.find(
-      Buffer.toArray(wizards),
-      func(wizard : Types.WizardDetails) : Bool {
-        wizard.id == wizardId;
-      },
-    );
-    switch (wizard) {
+    switch (findWizardById(wizardId, wizards)) {
       case null { return { status = 422; message = "Wizard does not exist" } };
-      case (?value) {
-        let canUserDelete = isOwner(message.caller) or isUserBotCreator(message.caller, value);
+      case (?wizard) {
+        let canUserDelete = isOwner(message.caller) or isUserBotCreator(message.caller, wizard);
 
         if (not canUserDelete) {
           return {
@@ -91,23 +81,14 @@ actor class Main(_owner : Principal) {
             message = "Wizard does not belong to user";
           };
         };
-        let wizardIndex = Buffer.indexOf(
-          value,
-          wizards,
-          func(wizard1 : Types.WizardDetails, wizard2 : Types.WizardDetails) : Bool {
-            return wizard1.id == wizard2.id;
-          },
-        );
-        switch (wizardIndex) {
+        switch (findWizardIndex(wizard, wizards)) {
           case null {
             return { status = 422; message = "Wizard does not exist" };
           };
           case (?index) {
-            let _ = wizards.remove(index);
-            return {
-              status = 200;
-              message = "Wizard deleted";
-            };
+            ignore wizards.remove(index);
+
+            return { status = 200; message = "Wizard deleted" };
           };
         };
 
@@ -115,11 +96,20 @@ actor class Main(_owner : Principal) {
     };
   };
 
+  public shared ({ caller }) func publishWizard(wizardId : Text) : async Types.Response {
+    publishUnpublishWizard({ caller; wizardId; wizards; isPublish = true });
+  };
+
+  public shared ({ caller }) func unpublishWizard(wizardId : Text) : async Types.Response {
+    publishUnpublishWizard({ caller; wizardId; wizards; isPublish = false });
+  };
+
   system func preupgrade() {
-    _wizards := Buffer.toArray(wizards);
+
+    _wizardsNew := Buffer.toArray(wizards);
   };
 
   system func postupgrade() {
-    wizards := Buffer.fromArray(_wizards);
+    wizards := Buffer.fromArray(_wizardsNew);
   };
 };

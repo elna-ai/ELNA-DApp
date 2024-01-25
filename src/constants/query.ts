@@ -3,6 +3,7 @@ export const QUERY_KEYS = {
   MY_WIZARDS_LIST: "my-wizards-list",
   WHITELISTED_USERS: "whitelisted-users-list",
   IS_USER_ADMIN: "is-user-admin",
+  WIZARD_FILE_NAMES: "wizard-file-names",
 };
 
 export const DEFAULT_STALE_TIME = 3_600_000; // 1 hour

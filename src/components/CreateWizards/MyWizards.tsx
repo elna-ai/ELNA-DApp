@@ -9,11 +9,13 @@ import { useWallet } from "hooks/useWallet";
 import {
   useDeleteMyWizard,
   useFetchMyWizards,
+  usePublishUnpublishWizard,
 } from "hooks/reactQuery/wizards/useMyWizards";
 import { getAvatar } from "src/utils";
 import LoadingButton from "components/common/LoadingButton";
 
 import Card from "./Card";
+import { useDeleteIndex } from "hooks/reactQuery/useExternalService";
 
 function MyWizards() {
   const [isDeleteWizard, setIsDeleteWizard] = useState(false);
@@ -35,12 +37,13 @@ function MyWizards() {
   });
   const { mutate: deleteMyWizard, isPending: isDeletePending } =
     useDeleteMyWizard();
+  const { mutate: publishUnpublishWizard } = usePublishUnpublishWizard();
+  const { mutate: deleteIndex } = useDeleteIndex();
 
-  useEffect(() => {
-    if (!isError) return;
-
-    toast.error(error.message);
-  }, [isError]);
+  const handleDeletePopup = (id: string, name: string) => {
+    setIsDeleteWizard(true);
+    setWizardIdToDelete({ id, name });
+  };
 
   const handleDelete = async (id: string) => {
     deleteMyWizard(
@@ -54,9 +57,18 @@ function MyWizards() {
           setWizardIdToDelete(undefined);
           setIsDeleteWizard(false);
         },
+        onSuccess: () => {
+          deleteIndex(id);
+        },
       }
     );
   };
+
+  useEffect(() => {
+    if (!isError) return;
+
+    toast.error(error.message);
+  }, [isError]);
 
   return (
     <>
@@ -81,20 +93,23 @@ function MyWizards() {
         <Spinner className="!flex mx-auto" />
       ) : (userWizards?.length || 0) > 0 ? (
         <div className="row gx-3 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
-          {userWizards?.map(({ id, name, description, avatar }) => (
-            <div key={id} className="col">
-              <Card
-                name={name}
-                description={description}
-                id={id}
-                imageUrl={getAvatar(avatar)!.image}
-                handleDelete={id => {
-                  setIsDeleteWizard(true);
-                  setWizardIdToDelete({ id, name });
-                }}
-              />
-            </div>
-          ))}
+          {userWizards?.map(
+            ({ id, name, description, avatar, isPublished }) => (
+              <div key={id} className="col">
+                <Card
+                  name={name}
+                  description={description}
+                  id={id}
+                  isPublished={isPublished}
+                  handlePublish={(id, shouldPublish) =>
+                    publishUnpublishWizard({ wizardId: id, shouldPublish })
+                  }
+                  imageUrl={getAvatar(avatar)!.image}
+                  handleDelete={handleDeletePopup}
+                />
+              </div>
+            )
+          )}
         </div>
       ) : (
         <div className="w-100 bg-elavate py-5 text-center rounded-3">

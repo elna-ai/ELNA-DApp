@@ -22,6 +22,11 @@ type useDeleteMyWizardsProps = {
   wizardId: string;
 };
 
+type usePublishUnpublishWizardMutationProps = {
+  wizardId: string;
+  shouldPublish: boolean;
+};
+
 export const useFetchMyWizards = ({ userId }: useFetchMyWizardsProps) =>
   useQuery({
     queryKey: [QUERY_KEYS.MY_WIZARDS_LIST, userId],
@@ -125,5 +130,40 @@ export const useIsWizardNameValid = () => {
       const response = await wizardDetails.isWizardNameValid(name);
       return response;
     },
+  });
+};
+
+export const usePublishUnpublishWizard = () => {
+  const wallet = useWallet();
+  return useMutation({
+    mutationFn: async ({
+      wizardId,
+      shouldPublish,
+    }: usePublishUnpublishWizardMutationProps) => {
+      if (wallet === undefined) {
+        throw Error("User not logged in");
+      }
+
+      const wizardDetails: Main = await wallet.getCanisterActor(
+        canisterId,
+        idlFactory,
+        false
+      );
+      const response = shouldPublish
+        ? await wizardDetails.publishWizard(wizardId)
+        : await wizardDetails.unpublishWizard(wizardId);
+      if (response.status !== 200n) {
+        throw Error(response.message);
+      }
+      return response;
+    },
+    onSuccess: response => {
+      toast.success(response.message);
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.POPULAR_WIZARDS_LIST],
+      });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MY_WIZARDS_LIST] });
+    },
+    onError: error => toast.error(error.message),
   });
 };

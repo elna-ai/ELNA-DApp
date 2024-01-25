@@ -3,11 +3,10 @@ import { useTranslation } from "react-i18next";
 
 type CardProps = {
   title: string;
-  description: string;
   isLearning: boolean;
 };
 
-function Card({ title, description, isLearning }: CardProps) {
+function Card({ title, isLearning }: CardProps) {
   const { t } = useTranslation();
 
   return (
@@ -27,7 +26,6 @@ function Card({ title, description, isLearning }: CardProps) {
           </svg>
           <span className="text-truncate">{title}</span>
         </h3>
-        <span className="fs-7 mb-1 overflow-y-auto">{description}</span>
         <hr className="mt-1 mb-1" />
         {isLearning ? (
           <div className="flex mt-2 gap-1 align-items-center">

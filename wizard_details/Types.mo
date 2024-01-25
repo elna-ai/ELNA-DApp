@@ -1,6 +1,7 @@
 import Text "mo:base/Text";
 import Nat "mo:base/Nat";
 import Principal "mo:base/Principal";
+import Bool "mo:base/Bool";
 
 module {
   public type WizardVisibility = {
@@ -19,6 +20,7 @@ module {
     biography : Text;
     description : Text;
     avatar : Text;
+    isPublished : Bool;
   };
 
   public type WizardDetails = WizardDetailsBasic and {

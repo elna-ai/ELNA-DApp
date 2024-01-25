@@ -1,8 +1,9 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Document } from "langchain/document";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+import { QUERY_KEYS } from "src/constants/query";
 
 type useLoginMutationProps = {
   token: string;
@@ -40,5 +41,34 @@ export const useCreateIndex = () =>
     onError: error => {
       toast.error(error.message);
       console.error(error);
+    },
+  });
+
+export const useDeleteIndex = () =>
+  useMutation({
+    mutationFn: (wizardId: string) =>
+      axios.post(
+        `${import.meta.env.VITE_EXTERNAL_SERVICE_BASE}/delete-index`,
+        {
+          index_name: wizardId,
+        },
+        { headers: { Authorization: `jwt ${Cookies.get("external_token")}` } }
+      ),
+    onError: error => {
+      toast.error(error.message);
+      console.error(error);
+    },
+  });
+
+export const useWizardGetFileNames = (wizardId: string) =>
+  useQuery({
+    queryKey: [QUERY_KEYS.WIZARD_FILE_NAMES, wizardId],
+    queryFn: () =>
+      axios.get(`${import.meta.env.VITE_EXTERNAL_SERVICE_BASE}/get-filenames`, {
+        params: { index: wizardId },
+      }),
+    enabled: !!wizardId,
+    select: data => {
+      return data?.data?.body?.data;
     },
   });

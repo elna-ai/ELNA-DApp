@@ -17,20 +17,16 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useCreateIndex } from "hooks/reactQuery/useExternalService";
 import LoadingButton from "components/common/LoadingButton";
+import queryClient from "utils/queryClient";
+import { QUERY_KEYS } from "src/constants/query";
 
 type UploadFileProps = {
   isOpen: boolean;
   agentId: string;
   onClose: () => void;
-  setIsPolling?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function UploadFile({
-  isOpen,
-  onClose,
-  agentId,
-  setIsPolling,
-}: UploadFileProps) {
+function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [validationMessage, setValidationMessage] = useState("");
   const [isUploading, setIsUploading] = useState(false);
@@ -70,9 +66,10 @@ function UploadFile({
       {
         onSuccess: () => {
           toast.success("Uploaded successfully");
-          toast.success("Agent published successfully");
+          queryClient.invalidateQueries({
+            queryKey: [QUERY_KEYS.WIZARD_FILE_NAMES],
+          });
           onClose();
-          navigate("/");
         },
       }
     );
