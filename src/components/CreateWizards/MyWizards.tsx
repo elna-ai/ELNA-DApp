@@ -45,16 +45,6 @@ function MyWizards() {
     setWizardIdToDelete({ id, name });
   };
 
-  const handlePublish = (id: string, shouldPublish: boolean) => {
-    publishUnpublishWizard(
-      { wizardId: id, shouldPublish },
-      {
-        onSuccess: response => toast.success(response.message),
-        onError: error => toast.error(error.message),
-      }
-    );
-  };
-
   const handleDelete = async (id: string) => {
     deleteMyWizard(
       { wizardId: id },
@@ -111,7 +101,9 @@ function MyWizards() {
                   description={description}
                   id={id}
                   isPublished={isPublished}
-                  handlePublish={handlePublish}
+                  handlePublish={(id, shouldPublish) =>
+                    publishUnpublishWizard({ wizardId: id, shouldPublish })
+                  }
                   imageUrl={getAvatar(avatar)!.image}
                   handleDelete={handleDeletePopup}
                 />

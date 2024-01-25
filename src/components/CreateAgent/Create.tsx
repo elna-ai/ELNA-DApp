@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Formik } from "formik";
 import Nav from "react-bootstrap/Nav";
 import Form from "react-bootstrap/Form";
-import Spinner from "react-bootstrap/Spinner";
-import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-
-import PageLoader from "components/common/PageLoader";
-import { WizardDetails } from "declarations/wizard_details/wizard_details.did";
+import LoadingButton from "components/common/LoadingButton";
+import { useWizardGetFileNames } from "hooks/reactQuery/useExternalService";
+import { usePublishUnpublishWizard } from "hooks/reactQuery/wizards/useMyWizards";
+import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
 
 import Persona from "./Persona";
 import Knowledge from "./Knowledge";
@@ -16,21 +16,29 @@ import Knowledge from "./Knowledge";
 import { CREATE_BOT_MODAL_VALIDATION_SCHEMA } from "./constants";
 
 function Create() {
-  const [isPolling, setIsPolling] = useState(false);
   const [currentNav, setCurrentNav] = useState<string | null>("persona");
-  const [isLoading, setIsLoading] = useState(false);
-  const [wizard, setWizard] = useState<WizardDetails>();
   const [wizardId, setWizardId] = useState("");
 
   const { t } = useTranslation();
   const [urlSearchParams, _] = useSearchParams();
   const navigate = useNavigate();
+  const { data: documents } = useWizardGetFileNames(wizardId);
+  const { mutate: publishWizard, isPending: isPublishingWizard } =
+    usePublishUnpublishWizard();
+  const { data: wizard } = useShowWizard(wizardId);
 
-  const handlePublish = () => {};
+  const handlePublish = () => {
+    publishWizard(
+      { wizardId, shouldPublish: true },
+      {
+        onSuccess: () => navigate("/"),
+      }
+    );
+  };
 
-  if (isLoading) {
-    return <PageLoader />;
-  }
+  // if (isLoading) {
+  //   return <PageLoader />;
+  // }
 
   return (
     <>
@@ -121,14 +129,14 @@ function Create() {
         </Nav>
 
         <div>
-          {/* <Button
-            // || isPublishing
-            // disabled={!wizard?.is_active || wizard?.is_published}
+          <LoadingButton
+            label={t("common.publish")}
+            isDisabled={
+              !documents?.length || isPublishingWizard || wizard?.isPublished
+            }
+            isLoading={isPublishingWizard}
             onClick={handlePublish}
-          >
-            <span className="mr-2">{t("common.publish")}</span>
-            // {/* {isPublishing && <Spinner animation="border" size="sm" />}
-          </Button> */}
+          />
         </div>
       </div>
       <hr className="mt-0" />
@@ -138,11 +146,7 @@ function Create() {
           {...{ wizard, setCurrentNav, setWizardId }}
         />
       ) : (
-        <Knowledge
-          wizardId={wizardId}
-          setIsPolling={setIsPolling}
-          // document={document}
-        />
+        <Knowledge wizardId={wizardId} />
       )}
     </>
   );

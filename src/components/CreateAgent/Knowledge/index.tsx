@@ -5,24 +5,19 @@ import { Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useGenerateUserToken } from "hooks/reactQuery/useUser";
 import { useUserStore } from "stores/useUser";
-import { useLogin } from "hooks/reactQuery/useExternalService";
+import {
+  useWizardGetFileNames,
+  useLogin,
+} from "hooks/reactQuery/useExternalService";
 import { useWallet } from "hooks/useWallet";
+import { v4 as uuidv4 } from "uuid";
 
 import Card from "./Card";
 import UploadFile from "./UploadFile";
 
-interface KnowledgeProps {
-  wizardId: string;
-  setIsPolling: React.Dispatch<React.SetStateAction<boolean>>;
-  document?: {
-    uuid: string;
-    summary: string;
-    file_name: string;
-    is_active: boolean;
-  };
-}
+type KnowledgeProps = { wizardId: string };
 
-function Knowledge({ wizardId, setIsPolling, document }: KnowledgeProps) {
+function Knowledge({ wizardId }: KnowledgeProps) {
   const [isAddDocument, setIsAddDocument] = useState(false);
 
   const { t } = useTranslation();
@@ -30,6 +25,7 @@ function Knowledge({ wizardId, setIsPolling, document }: KnowledgeProps) {
   const userToken = useUserStore(state => state.userToken);
   const { mutate: generateUserToken } = useGenerateUserToken();
   const { mutate: loginExternalService } = useLogin();
+  const { data: documents } = useWizardGetFileNames(wizardId);
 
   useEffect(() => {
     !userToken && generateUserToken();
@@ -69,6 +65,7 @@ function Knowledge({ wizardId, setIsPolling, document }: KnowledgeProps) {
         <Button
           className="btn-knowledge"
           onClick={() => setIsAddDocument(true)}
+          disabled={documents?.length}
         >
           <span className="mr-2">
             <svg
@@ -88,20 +85,15 @@ function Knowledge({ wizardId, setIsPolling, document }: KnowledgeProps) {
       </div>
       <span className="mt-2 text-center fs-7">{t("common.comingSoon")}</span>
       <div className="mt-4 row gx-3 row-cols-xxl-4 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
-        {document?.file_name && (
-          <Card
-            key={document.uuid}
-            title={document.file_name}
-            description={document.summary}
-            isLearning={!document.is_active}
-          />
-        )}
+        {documents?.length > 0 &&
+          documents.map((document: string) => (
+            <Card key={uuidv4()} title={document} isLearning={false} />
+          ))}
       </div>
       <UploadFile
         isOpen={isAddDocument}
         onClose={() => setIsAddDocument(false)}
         agentId={wizardId}
-        setIsPolling={setIsPolling}
       />
     </div>
   );

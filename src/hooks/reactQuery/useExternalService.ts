@@ -1,8 +1,9 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Document } from "langchain/document";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+import { QUERY_KEYS } from "src/constants/query";
 
 type useLoginMutationProps = {
   token: string;
@@ -57,7 +58,17 @@ export const useDeleteIndex = () =>
       toast.error(error.message);
       console.error(error);
     },
-    onSuccess: response => {
-      console.log(response);
+  });
+
+export const useWizardGetFileNames = (wizardId: string) =>
+  useQuery({
+    queryKey: [QUERY_KEYS.WIZARD_FILE_NAMES, wizardId],
+    queryFn: () =>
+      axios.get(`${import.meta.env.VITE_EXTERNAL_SERVICE_BASE}/get-filenames`, {
+        params: { index: wizardId },
+      }),
+    enabled: !!wizardId,
+    select: data => {
+      return data?.data?.body?.data;
     },
   });

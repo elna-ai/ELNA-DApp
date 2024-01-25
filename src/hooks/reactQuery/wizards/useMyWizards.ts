@@ -157,11 +157,13 @@ export const usePublishUnpublishWizard = () => {
       }
       return response;
     },
-    onSuccess: () => {
+    onSuccess: response => {
+      toast.success(response.message);
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.POPULAR_WIZARDS_LIST],
       });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MY_WIZARDS_LIST] });
     },
+    onError: error => toast.error(error.message),
   });
 };
