@@ -67,7 +67,7 @@ function Chat() {
     setIsResponseLoading(true);
     try {
       const response: any = await axios.post(
-        "https://dkfbwoj9t05dn.cloudfront.net/chat",
+        `${import.meta.env.VITE_EXTERNAL_SERVICE_BASE}/chat`,
         {
           biography: wizard!.biography,
           query_text: message,
