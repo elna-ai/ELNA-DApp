@@ -19,6 +19,7 @@ import {
   CREATE_BOT_MODAL_VALIDATION_SCHEMA,
 } from "./constants";
 import NoAccessImg from "../../images/no-access.png";
+import { useCreateWizardStore } from "stores/useCreateWizard";
 
 function View() {
   const [isCreate, setIsCreate] = useState(false);
@@ -26,6 +27,7 @@ function View() {
 
   const navigate = useNavigate();
   const wallet = useWallet();
+  const setWizardName = useCreateWizardStore(state => state.setWizardName);
   const { mutate: checkIsWizardNameValid, isPending: isCheckingName } =
     useIsWizardNameValid();
   const { data: isUserWhitelisted } = useIsUserWhiteListed();
@@ -47,6 +49,8 @@ function View() {
           toast.error("Wizard name exist for user");
           return;
         }
+
+        setWizardName(name);
         navigate({ pathname: "/create-agent/edit", search: `?name=${name}` });
       },
     });
