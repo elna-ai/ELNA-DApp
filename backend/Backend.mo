@@ -93,6 +93,11 @@ actor class Backend(_owner : Principal) {
     Utils.isUserAdmin(adminUsers, message.caller);
   };
 
+  // Should be used only by other canisters
+  public query func isPrincipalAdmin(principalId : Principal) : async Bool {
+    Utils.isUserAdmin(adminUsers, principalId);
+  };
+
   public shared (message) func addAdmin(userId : Principal) : async Text {
     if (not isOwner(message.caller)) {
       return "User not authorized for this action";

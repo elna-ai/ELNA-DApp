@@ -19,7 +19,8 @@
     "docs": "Docs",
     "admin": {
       "dashboard": "Admin dashboard",
-      "whitelist": "Whitelist Users"
+      "whitelist": "Whitelist Users",
+      "agents": "All agents"
     }
   },
   "wizards": {
