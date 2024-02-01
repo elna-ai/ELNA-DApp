@@ -18,16 +18,18 @@ import LoadingButton from "components/common/LoadingButton";
 
 import { PERSONA_VALIDATION_SCHEMA } from "../constants";
 import AvatarImage from "./AvatarImage";
+import { useCreateWizardStore } from "stores/useCreateWizard";
+
 type PersonaProps = {
   wizard: any;
   setCurrentNav: React.Dispatch<React.SetStateAction<string | null>>;
-  name: string | null;
   setWizardId: React.Dispatch<React.SetStateAction<string>>;
 };
 
-function Persona({ wizard, setCurrentNav, name, setWizardId }: PersonaProps) {
+function Persona({ wizard, setCurrentNav, setWizardId }: PersonaProps) {
   const { t } = useTranslation();
   const wallet = useWallet();
+  const wizardName = useCreateWizardStore(state => state.name);
 
   const {
     mutate: addWizard,
@@ -49,13 +51,13 @@ function Persona({ wizard, setCurrentNav, name, setWizardId }: PersonaProps) {
       [`${values.visibility}Visibility`]: null,
     } as WizardVisibility;
     if (userId === undefined) return;
-    if (name === null) return;
+    if (wizardName === null) return;
 
     const payload: WizardDetails = {
       ...values,
       id: uuidv4(),
       userId,
-      name,
+      name: wizardName,
       visibility,
       summary: [],
       isPublished: false,

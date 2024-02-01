@@ -14,6 +14,7 @@ import Persona from "./Persona";
 import Knowledge from "./Knowledge";
 
 import { CREATE_BOT_MODAL_VALIDATION_SCHEMA } from "./constants";
+import { useCreateWizardStore } from "stores/useCreateWizard";
 
 function Create() {
   const [currentNav, setCurrentNav] = useState<string | null>("persona");
@@ -22,6 +23,9 @@ function Create() {
   const { t } = useTranslation();
   const [urlSearchParams, _] = useSearchParams();
   const navigate = useNavigate();
+  const wizardName = useCreateWizardStore(state => state.name);
+  const setWizardName = useCreateWizardStore(state => state.setWizardName);
+  const resetWizardName = useCreateWizardStore(state => state.resetWizardName);
   const { data: documents } = useWizardGetFileNames(wizardId);
   const { mutate: publishWizard, isPending: isPublishingWizard } =
     usePublishUnpublishWizard();
@@ -31,7 +35,10 @@ function Create() {
     publishWizard(
       { wizardId, shouldPublish: true },
       {
-        onSuccess: () => navigate("/"),
+        onSuccess: () => {
+          resetWizardName();
+          navigate("/");
+        },
       }
     );
   };
@@ -44,7 +51,7 @@ function Create() {
     <>
       <Formik
         initialValues={{
-          name: wizard?.name || urlSearchParams.get("name"),
+          name: wizard?.name || wizardName || urlSearchParams.get("name"),
           isNameEdit: false,
         }}
         validationSchema={CREATE_BOT_MODAL_VALIDATION_SCHEMA}
@@ -69,7 +76,10 @@ function Create() {
                           boxShadow: "none",
                         }}
                         value={values.name || ""}
-                        onChange={handleChange}
+                        onChange={e => {
+                          setWizardName(e.target.value);
+                          handleChange(e);
+                        }}
                       />
                     </Form.Group>
                   ) : (
@@ -141,10 +151,7 @@ function Create() {
       </div>
       <hr className="mt-0" />
       {currentNav === "persona" ? (
-        <Persona
-          name={urlSearchParams.get("name")}
-          {...{ wizard, setCurrentNav, setWizardId }}
-        />
+        <Persona {...{ wizard, setCurrentNav, setWizardId }} />
       ) : (
         <Knowledge wizardId={wizardId} />
       )}
