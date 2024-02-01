@@ -3,6 +3,7 @@ import Text "mo:base/Text";
 import Bool "mo:base/Bool";
 import Principal "mo:base/Principal";
 import Buffer "mo:base/Buffer";
+import Error "mo:base/Error";
 import Backend "canister:backend";
 
 import Types "./Types";
@@ -102,6 +103,18 @@ actor class Main(_owner : Principal) {
 
   public shared ({ caller }) func unpublishWizard(wizardId : Text) : async Types.Response {
     publishUnpublishWizard({ caller; wizardId; wizards; isPublish = false });
+  };
+
+  public shared ({ caller }) func getAllWizards() : async [Types.WizardDetails] {
+    let isUserAdmin = await Backend.isPrincipalAdmin(caller);
+    switch (isUserAdmin) {
+      case false {
+        throw Error.reject("User is not admin");
+      };
+      case true {
+        Buffer.toArray(wizards);
+      };
+    };
   };
 
   system func preupgrade() {

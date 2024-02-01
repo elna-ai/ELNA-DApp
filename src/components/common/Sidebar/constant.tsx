@@ -1,5 +1,3 @@
-import { t } from "i18next";
-
 const homeIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -118,6 +116,12 @@ export const ADMIN_SIDEBAR_LINKS = [
     Icon: homeIcon,
     to: "/admin/whitelist",
     key: "admin.whitelist",
+    isComingSoon: false,
+  },
+  {
+    Icon: homeIcon,
+    to: "/admin/agents",
+    key: "admin.agents",
     isComingSoon: false,
   },
 ];
