@@ -66,6 +66,7 @@ export const useWizardGetFileNames = (wizardId: string) =>
     queryFn: () =>
       axios.get(`${import.meta.env.VITE_EXTERNAL_SERVICE_BASE}/get-filenames`, {
         params: { index: wizardId },
+        headers: { Authorization: `jwt ${Cookies.get("external_token")}` },
       }),
     enabled: !!wizardId,
     select: data => {
