@@ -12,7 +12,7 @@ function Card({ title, isLearning }: CardProps) {
   return (
     <div className="col">
       <div className="card card-border contact-card elna-card p-4 max-h-80">
-        <h3 className="sub-title-bot mt-0 flex mt-2 gap-1 align-items-start">
+        <h3 className="sub-title-bot mt-0 d-flex mt-2 gap-1 align-items-start">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -28,16 +28,18 @@ function Card({ title, isLearning }: CardProps) {
         </h3>
         <hr className="mt-1 mb-1" />
         {isLearning ? (
-          <div className="flex mt-2 gap-1 align-items-center">
+          <div className="d-flex mt-2 gap-1 align-items-center">
             <div className="lds-elna">
               <div></div>
               <div></div>
               <div></div>
             </div>
-            <span className="text-xs">{t("common.learning")}</span>
+            <span className="text-xs sub-title-color">
+              {t("common.learning")}
+            </span>
           </div>
         ) : (
-          <div className="flex mt-2 gap-1 align-items-center">
+          <div className="d-flex mt-2 gap-1 align-items-center">
             <span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -51,7 +53,9 @@ function Card({ title, isLearning }: CardProps) {
                 ></path>
               </svg>
             </span>
-            <span className="text-xs">{t("common.learned")}</span>
+            <span className="text-xs sub-title-color">
+              {t("common.learned")}
+            </span>
           </div>
         )}
       </div>
