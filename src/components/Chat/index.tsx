@@ -7,7 +7,11 @@ import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
 import PageLoader from "components/common/PageLoader";
-import { getAvatar, transformHistory } from "src/utils";
+import {
+  generateTwitterShareLink,
+  getAvatar,
+  transformHistory,
+} from "src/utils";
 
 import Bubble from "./Bubble";
 import NoHistory from "./NoHistory";
@@ -15,6 +19,7 @@ import { elna_ai as elnaAi } from "declarations/elna_ai";
 import useAutoSizeTextArea from "hooks/useAutoResizeTextArea";
 import { Message } from "src/types";
 import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
+import { TWITTER_SHARE_CONTENT } from "./constants";
 
 function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -122,6 +127,17 @@ function Chat() {
                 <h3 className="text-lg mt-2">{wizard.name}</h3>
                 <p className="text-desc fs-8">{wizard.description}</p>
               </div>
+            </div>
+            <div>
+              <a
+                href={generateTwitterShareLink(
+                  `${TWITTER_SHARE_CONTENT}.${window.location.origin}/chat/${id}`
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Share X
+              </a>
             </div>
             <hr className="mt-2" />
           </header>

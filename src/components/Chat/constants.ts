@@ -6,8 +6,6 @@ import quantumcomputingimg from "images/avatar/05.png";
 import sathoshiimg from "images/avatar/06.png";
 import sonicimg from "images/avatar/07.png";
 
-
-
 export const DEFAULT_AGENT_ID = "2";
 
 export const AVATAR_DUMMY_IMAGE = [
@@ -19,3 +17,5 @@ export const AVATAR_DUMMY_IMAGE = [
   { id: "9447eaf7-6191-44e7-9b2e-9937526e2291", imgUrl: sathoshiimg },
   { id: "f934a40e-158c-4514-be53-2aca8a055995", imgUrl: sonicimg },
 ];
+
+export const TWITTER_SHARE_CONTENT = "Content goes here";
