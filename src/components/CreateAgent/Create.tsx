@@ -13,12 +13,19 @@ import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
 import Persona from "./Persona";
 import Knowledge from "./Knowledge";
 
-import { CREATE_BOT_MODAL_VALIDATION_SCHEMA } from "./constants";
+import {
+  CREATE_BOT_MODAL_VALIDATION_SCHEMA,
+  TWITTER_SHARE_CONTENT,
+} from "./constants";
 import { useCreateWizardStore } from "stores/useCreateWizard";
+import { Button, Modal, ModalBody } from "react-bootstrap";
+import { toast } from "react-toastify";
+import { generateTwitterShareLink } from "utils/index";
 
 function Create() {
   const [currentNav, setCurrentNav] = useState<string | null>("persona");
   const [wizardId, setWizardId] = useState("");
+  const [isPublishSuccessful, setIsPublishSuccessful] = useState(false);
 
   const { t } = useTranslation();
   const [urlSearchParams, _] = useSearchParams();
@@ -37,10 +44,22 @@ function Create() {
       {
         onSuccess: () => {
           resetWizardName();
-          navigate("/");
+          // navigate("/");
+          setIsPublishSuccessful(true);
         },
       }
     );
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(
+        `${window.location.origin}/chat/${wizardId}`
+      );
+      toast.success("Copied to clipboard");
+    } catch (err) {
+      toast.error("Failed to copy link");
+    }
   };
 
   // if (isLoading) {
@@ -155,6 +174,31 @@ function Create() {
       ) : (
         <Knowledge wizardId={wizardId} />
       )}
+      <Modal
+        show={isPublishSuccessful}
+        onHide={() => {
+          setIsPublishSuccessful(false);
+          navigate("/");
+        }}
+        centered
+      >
+        <ModalBody>
+          <h5>Yaaay...!!</h5>
+          <div>Your AI agent created Share agent Link</div>
+          <span>Share agent link</span>
+          <div>{`${window.location.origin}/chat/${wizardId}`}</div>
+          <Button onClick={handleCopyLink}> Copy link</Button>
+          <a
+            href={generateTwitterShareLink(
+              `${TWITTER_SHARE_CONTENT}.${window.location.origin}/chat/${wizardId}`
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Share X
+          </a>
+        </ModalBody>
+      </Modal>
     </>
   );
 }
