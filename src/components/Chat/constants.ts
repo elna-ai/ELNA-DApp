@@ -18,4 +18,12 @@ export const AVATAR_DUMMY_IMAGE = [
   { id: "f934a40e-158c-4514-be53-2aca8a055995", imgUrl: sonicimg },
 ];
 
-export const TWITTER_SHARE_CONTENT = "Content goes here";
+export const TWITTER_SHARE_CONTENT = (
+  wizardName: string,
+  url: string
+) => `Check this out! I'm talking to this DeAI agent ${wizardName} built by ELNA.ai
+
+${url}
+
+@elna_live is the world's 1st DeAI creation platform.\n\n
+`;

@@ -133,7 +133,10 @@ function Chat() {
                 <a
                   className="el-btn-secondary"
                   href={generateTwitterShareLink(
-                    `${TWITTER_SHARE_CONTENT}.${window.location.origin}/chat/${id}`
+                    `${TWITTER_SHARE_CONTENT(
+                      wizard.name,
+                      `${window.location.origin}/chat/${id}`
+                    )}`
                   )}
                   target="_blank"
                   rel="noopener noreferrer"
