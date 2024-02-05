@@ -62,3 +62,8 @@ export const transformHistory = (messages: Message[]) => {
       : { role: "user", content: message }
   );
 };
+
+export const generateTwitterShareLink = (content: string) =>
+  `https://twitter.com/intent/tweet?text=${encodeURI(
+    content
+  )}&hashtags=AIagentActivated,ELNAai,DecentralizedAl,GenerativeAl,ICP`;

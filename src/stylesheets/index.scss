@@ -670,6 +670,10 @@ textarea.form-control {
   color: var(--info-text-color) !important;
 }
 
+.sub-title-color {
+  color: var(--title-sub-color);
+}
+
 .form-control {
   &:hover {
     border-color: var(--background-form-border);
@@ -686,4 +690,19 @@ textarea.form-control {
 .form-control {
   background: var(--color-bg1);
   border-color: var(--color-line);
+}
+
+.square-btn {
+  width: 42px;
+  height: 42px;
+}
+.copy-sec {
+  margin-bottom: 16px;
+  border-radius: 6px;
+  padding: 8px;
+  background-color: var(--bs-border-color-translucent);
+}
+
+.text-xs {
+  font-size: 0.85rem;
 }

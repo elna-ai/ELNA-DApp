@@ -63,10 +63,7 @@ export const PERSONA_VALIDATION_SCHEMA = yup.object().shape({
     .trim()
     .required()
     .min(20, t("createAgent.form.validations.greeting")),
-  description: yup
-    .string()
-    .trim()
-    .required(),
+  description: yup.string().trim().required(),
   visibility: yup
     .string()
     .oneOf(
@@ -75,3 +72,12 @@ export const PERSONA_VALIDATION_SCHEMA = yup.object().shape({
     )
     .required(t("createAgent.form.validations.visibility")),
 });
+
+export const TWITTER_SHARE_CONTENT = (
+  wizardName: string,
+  url: string
+) => `Check this out! I've created a DeAI agent ${wizardName} using ELNA.ai
+
+${url}
+
+@elna_live is the world's 1st DeAI creation platform.\n\n`;
