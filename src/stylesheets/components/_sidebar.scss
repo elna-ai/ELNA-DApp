@@ -47,12 +47,24 @@
   transition: all 0.2s ease;
 }
 
-.hk-wrapper.collapsed .hk-menu .menu-content-wrap>.callout,
-.hk-wrapper.collapsed .hk-menu .menu-header>span .navbar-brand .brand-img:last-child {
+.hk-wrapper.collapsed .hk-menu .menu-content-wrap > .callout,
+.hk-wrapper.collapsed
+  .hk-menu
+  .menu-header
+  > span
+  .navbar-brand
+  .brand-img:last-child {
   display: none;
 }
 
-.hk-wrapper.collapsed .hk-menu .menu-content-wrap .menu-group .navbar-nav>.nav-item>.nav-link>*:not(.nav-icon-wrap) {
+.hk-wrapper.collapsed
+  .hk-menu
+  .menu-content-wrap
+  .menu-group
+  .navbar-nav
+  .nav-item
+  > .nav-link
+  > *:not(.nav-icon-wrap) {
   visibility: hidden;
   flex-shrink: 0;
 }
@@ -62,14 +74,27 @@
   position: relative;
 }
 
-.hk-wrapper .hk-menu .menu-content-wrap .menu-group .navbar-nav .nav-item .nav-link .nav-icon-wrap {
+.hk-wrapper
+  .hk-menu
+  .menu-content-wrap
+  .menu-group
+  .navbar-nav
+  .nav-item
+  .nav-link
+  .nav-icon-wrap {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   margin-right: 0.875rem;
 }
 
-.hk-wrapper .hk-menu .menu-content-wrap .menu-group .navbar-nav .nav-item .nav-link {
+.hk-wrapper
+  .hk-menu
+  .menu-content-wrap
+  .menu-group
+  .navbar-nav
+  .nav-item
+  .nav-link {
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -104,7 +129,7 @@
   align-items: center;
 }
 
-.hk-wrapper .hk-menu .menu-header>span {
+.hk-wrapper .hk-menu .menu-header > span {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -114,7 +139,13 @@
   justify-content: space-between;
 }
 
-.hk-wrapper .hk-menu .menu-content-wrap .menu-group .navbar-nav>.nav-item.active>.nav-link {
+.hk-wrapper
+  .hk-menu
+  .menu-content-wrap
+  .menu-group
+  .navbar-nav
+  > .nav-item.active
+  > .nav-link {
   background: rgba(0, 125, 136, 0.15);
   color: var(--elna-primary-color) !important;
   border-radius: 0.5rem;
@@ -123,7 +154,13 @@
 .callout.card {
   border: none;
   box-shadow: none;
-  background-image: -webkit-gradient(linear, left top, right top, fromvar(--elna-primary-color), to(#207c53));
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    fromvar(--elna-primary-color),
+    to(#207c53)
+  );
   background-image: linear-gradient(45deg, var(--elna-primary-color), #207c53);
 }
 
@@ -155,7 +192,6 @@
     -moz-transition: all 0.25s ease;
     transition: all 0.25s ease;
 
-
     &--collapsed {
       transform: rotate(180deg);
       left: 70px;
@@ -163,7 +199,6 @@
       -webkit-transition: all 0.25s ease;
       -moz-transition: all 0.25s ease;
       transition: all 0.25s ease;
-
     }
   }
 }
