@@ -2,22 +2,23 @@ import { useEffect } from "react";
 
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-// import useIsMobileScreen from "hooks/useIsMobileScreen";
+import { Link, useLocation } from "react-router-dom";
+import Modal from "react-bootstrap/Modal";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
+import { useIsUserAdmin } from "hooks/reactQuery/useUser";
 import useIsMobileScreen from "../../../hooks/useIsMobileScreen";
+// import useIsMobileScreen from "hooks/useIsMobileScreen";
 
 import BrandSm from "images/brandSm.svg?react";
 import ElanLogo from "images/logoElna.svg?react";
+import ExpandButton from "./ExpandButton";
+import SideBarLink from "./SideBarLink";
 import {
   ADMIN_SIDEBAR_LINKS,
   SIDEBAR_LINK,
   SidebarLinkProps,
 } from "./constant";
-import { useLocation } from "react-router-dom";
-import ExpandButton from "./ExpandButton";
-import { useIsUserAdmin } from "hooks/reactQuery/useUser";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import SideBarLink from "./SideBarLink";
 
 interface SidebarProps {
   isExpanded: boolean;
@@ -35,11 +36,61 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
   }, [isMobile]);
 
   const handleExpand = () => setIsExpanded(prev => !prev);
-
   const sideBarLink =
     isAdmin && location.pathname.includes("/admin")
       ? ADMIN_SIDEBAR_LINKS
       : SIDEBAR_LINK;
+
+  if (isMobile) {
+    return (
+      <div
+        className="menu-header"
+        style={{
+          height: "65px",
+          width: "72px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+          zIndex: "999999",
+        }}
+        onClick={handleExpand}
+      >
+        {isExpanded ? (
+          <Modal show={true} fullscreen="xxl-down">
+            <Modal.Header closeButton />
+            <Modal.Body>
+              <ul className="navbar-nav flex-column">
+                {sideBarLink.map(linkGroup => (
+                  <div style={{ marginBottom: "20px" }}>
+                    {linkGroup.map((link: SidebarLinkProps) => (
+                      <OverlayTrigger
+                        key={link.key}
+                        placement="right-end"
+                        overlay={
+                          link.isComingSoon ? (
+                            <Tooltip>{t("common.comingSoon")}</Tooltip>
+                          ) : (
+                            <span></span>
+                          )
+                        }
+                      >
+                        <div>
+                          <SideBarLink link={link} />
+                        </div>
+                      </OverlayTrigger>
+                    ))}
+                  </div>
+                ))}
+              </ul>
+            </Modal.Body>
+          </Modal>
+        ) : (
+          <BrandSm className="brand-img img-fluid" />
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="hk-menu">
