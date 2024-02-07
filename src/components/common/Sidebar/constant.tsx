@@ -76,52 +76,76 @@ const docsIcons = () => (
   </svg>
 );
 
+export type SidebarLinkProps = {
+  to?: string;
+  Icon: () => JSX.Element;
+  key: string;
+  isComingSoon: boolean;
+  otherParams?: object;
+  isBeta?: boolean;
+};
 // TODO: Figure out why directly declaring an array is causing t() to not work
-export const SIDEBAR_LINK = [
-  {
-    to: "/",
-    Icon: homeIcon,
-    key: "home",
-    isComingSoon: false,
-  },
-  {
-    to: "/create-agent",
-    Icon: createIcon,
-    key: "create",
-    isComingSoon: false,
-  },
-  {
-    Icon: feedbackIcon,
-    key: "feedback",
-    isComingSoon: false,
-  },
-  {
-    Icon: docsIcons,
-    to: "https://docs.elna.live/",
-    otherParams: { target: "_blank", rel: "noopener noreferrer" },
-    key: "docs",
-    isComingSoon: false,
-  },
+export const SIDEBAR_LINK: SidebarLinkProps[][] = [
+  [
+    {
+      to: "/",
+      Icon: homeIcon,
+      key: "home",
+      isComingSoon: false,
+    },
+    {
+      to: "/create-agent",
+      Icon: createIcon,
+      key: "create",
+      isComingSoon: false,
+    },
+    {
+      Icon: feedbackIcon,
+      key: "feedback",
+      isComingSoon: false,
+    },
+    {
+      Icon: docsIcons,
+      to: "https://docs.elna.live/",
+      otherParams: { target: "_blank", rel: "noopener noreferrer" },
+      key: "docs",
+      isComingSoon: false,
+    },
+  ],
+  [
+    {
+      Icon: docsIcons,
+      key: "manageSubscription",
+      isComingSoon: true,
+      isBeta: true,
+    },
+    {
+      Icon: docsIcons,
+      key: "customerSupport",
+      isComingSoon: true,
+    },
+  ],
 ];
 
-export const ADMIN_SIDEBAR_LINKS = [
-  {
-    Icon: homeIcon,
-    to: "/admin",
-    key: "admin.dashboard",
-    otherParams: {},
-    isComingSoon: false,
-  },
-  {
-    Icon: homeIcon,
-    to: "/admin/whitelist",
-    key: "admin.whitelist",
-    isComingSoon: false,
-  },
-  {
-    Icon: homeIcon,
-    to: "/admin/agents",
-    key: "admin.agents",
-    isComingSoon: false,
-  },
+export const ADMIN_SIDEBAR_LINKS: SidebarLinkProps[][] = [
+  [
+    {
+      Icon: homeIcon,
+      to: "/admin",
+      key: "admin.dashboard",
+      isComingSoon: false,
+    },
+    {
+      Icon: homeIcon,
+      to: "/admin/whitelist",
+      key: "admin.whitelist",
+      isComingSoon: false,
+    },
+    {
+      Icon: homeIcon,
+      to: "/admin/agents",
+      key: "admin.agents",
+      isComingSoon: false,
+    },
+  ],
 ];

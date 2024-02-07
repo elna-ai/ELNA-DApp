@@ -12,11 +12,15 @@
     "connectWallet": "Connect Wallet"
   },
   "sidebar": {
-    "plusDescription": "Supercharge your experience!",
+    "plusHeading": "Get more out of {{name}}+",
+    "plusDescription": "Craft magical AI Agents and let your AI think how you think",
+    "upgradePlan": "Upgrade Plan",
     "home": "Home",
     "create": "Create",
     "feedback": "Feedback",
     "docs": "Docs",
+    "manageSubscription": "Manage subscription",
+    "customerSupport": "Customer support",
     "admin": {
       "dashboard": "Admin dashboard",
       "whitelist": "Whitelist Users",
@@ -133,6 +137,8 @@
     "uploading": "Uploading...",
     "delete": "Delete {{entity}}",
     "deleteConfirmation": "Are you sure you want to delete <bold>{{entity}}</bold>",
-    "add": "Add {{entity}}"
+    "add": "Add {{entity}}",
+    "free": "Free",
+    "beta": "Beta"
   }
 }
