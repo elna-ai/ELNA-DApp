@@ -13,14 +13,12 @@ import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
 import Persona from "./Persona";
 import Knowledge from "./Knowledge";
 
-import {
-  CREATE_BOT_MODAL_VALIDATION_SCHEMA,
-  TWITTER_SHARE_CONTENT,
-} from "./constants";
+import { TWITTER_SHARE_CONTENT } from "./constants";
 import { useCreateWizardStore } from "stores/useCreateWizard";
 import { Button, CloseButton, Modal, ModalBody } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { generateTwitterShareLink } from "utils/index";
+import { CREATE_BOT_MODAL_VALIDATION_SCHEMA } from "components/common/CheckWizardNameCreate/constants";
 
 function Create() {
   const [currentNav, setCurrentNav] = useState<string | null>("persona");

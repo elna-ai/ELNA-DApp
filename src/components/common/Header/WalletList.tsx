@@ -7,25 +7,28 @@ import { Trans, useTranslation } from "react-i18next";
 import { useWallet } from "hooks/useWallet";
 
 import { WALLET_LIST } from "./constants";
+import { useUserStore } from "stores/useUser";
 
 interface WalletListProps {
   isOpen: boolean;
   onClose: () => void;
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  onSuccess?: () => void;
 }
 
-function WalletList({ isOpen, onClose, setIsLoggedIn }: WalletListProps) {
+function WalletList({ isOpen, onClose, onSuccess }: WalletListProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const { t } = useTranslation();
   const wallet = useWallet();
+  const resetLoginState = useUserStore(state => state.resetLoggedInState);
 
   const handleConnection = async (id: string) => {
     try {
       setIsLoading(true);
       if (wallet === undefined) return;
       await wallet.connect(id);
-      setIsLoggedIn(!!localStorage.getItem("dfinityWallet"));
+      resetLoginState();
+      onSuccess?.();
       onClose();
     } catch (error) {
       console.error(error);
