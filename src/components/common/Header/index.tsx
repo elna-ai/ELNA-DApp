@@ -14,17 +14,17 @@ import { useIsUserAdmin, useIsUserWhiteListed } from "hooks/reactQuery/useUser";
 import useGetDisplayAddress from "hooks/useGetDisplayAddress";
 
 interface HeaderProps {
-  isLoggedIn: boolean;
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function Header({ isLoggedIn, setIsLoggedIn, setIsLoading }: HeaderProps) {
+function Header({ setIsLoading }: HeaderProps) {
   const [isWalletModelOpen, setIsWalletModelOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const { t } = useTranslation();
   const resetUserToken = useUserStore(state => state.resetToken);
+  const isUserLoggedIn = useUserStore(state => state.isUserLoggedIn);
+  const resetLoggedInState = useUserStore(state => state.resetLoggedInState);
   const wallet = useWallet();
   const displayAddress = useGetDisplayAddress();
   const { data: isAdmin } = useIsUserAdmin();
@@ -46,11 +46,11 @@ function Header({ isLoggedIn, setIsLoggedIn, setIsLoading }: HeaderProps) {
   }, [wallet]);
 
   const handleLoginLogout = async () => {
-    if (isLoggedIn) {
+    if (isUserLoggedIn) {
       setIsLoggingOut(true);
       localStorage.removeItem("dfinityWallet");
       resetUserToken();
-      setIsLoggedIn(!!localStorage.getItem("dfinityWallet"));
+      resetLoggedInState();
       //   await wallet.disconnect();
       setIsLoggingOut(false);
     } else {
@@ -77,7 +77,7 @@ function Header({ isLoggedIn, setIsLoggedIn, setIsLoading }: HeaderProps) {
       <header className="d-flex p-2 h-12">
         <nav className="hk-navbar navbar navbar-expand-xl fixed-top">
           <div className="container-fluid justify-content-end">
-            {isLoggedIn ? (
+            {isUserLoggedIn ? (
               <Dropdown className="ml-auto d-flex">
                 <Dropdown.Toggle
                   variant="dark"
@@ -160,7 +160,6 @@ function Header({ isLoggedIn, setIsLoggedIn, setIsLoading }: HeaderProps) {
       <WalletList
         isOpen={isWalletModelOpen}
         onClose={() => setIsWalletModelOpen(false)}
-        setIsLoggedIn={setIsLoggedIn}
       />
     </>
   );

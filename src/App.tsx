@@ -25,9 +25,6 @@ import "remixicon/fonts/remixicon.css";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
-    !!localStorage.getItem("dfinityWallet")
-  );
   const [isExpanded, setIsExpanded] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -42,13 +39,7 @@ function App() {
             })}
           >
             <Sidebar {...{ isExpanded, setIsExpanded }} />
-            <Header
-              {...{
-                isLoggedIn,
-                setIsLoggedIn,
-                setIsLoading,
-              }}
-            />
+            <Header setIsLoading={setIsLoading} />
             <div className="container-fluid p-0">
               <div className="hk-pg-wrapper">
                 <div className="mx-4 pt-2">
@@ -58,10 +49,7 @@ function App() {
                     ) : (
                       <Routes>
                         <Route path="/chat/:id?" element={<Chat />} />
-                        <Route
-                          path="/"
-                          element={<CreateWizards isLoggedIn={isLoggedIn} />}
-                        />
+                        <Route path="/" element={<CreateWizards />} />
                         <Route
                           path="/create-agent/*"
                           element={<CreateAgent />}
