@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import { toast } from "react-toastify";
-import NoChatBotImg from "images/no-chatbot.png";
 import { useWallet } from "hooks/useWallet";
 import {
   useDeleteMyWizard,
@@ -11,10 +10,14 @@ import {
 } from "hooks/reactQuery/wizards/useMyWizards";
 import { getAvatar } from "src/utils";
 import { useDeleteIndex } from "hooks/reactQuery/useExternalService";
+import { useUserStore } from "stores/useUser";
+import CheckWizardNameCreateModal from "components/common/CheckWizardNameCreate";
 
 import DeleteWizardModal from "./DeleteWizardModal";
+import NoWizards from "./NoWizards";
+import Title from "./Title";
 import Card from "../Card";
-import { Button } from "react-bootstrap";
+import WizardNotLoggedIn from "./WizardNotLoggedIn";
 
 function MyWizards() {
   const [isDeleteWizard, setIsDeleteWizard] = useState(false);
@@ -23,8 +26,8 @@ function MyWizards() {
     name: string;
   }>();
 
-  const { t } = useTranslation();
   const wallet = useWallet();
+  const isUserLoggedIn = useUserStore(state => state.isUserLoggedIn);
 
   const {
     data: userWizards,
@@ -70,35 +73,22 @@ function MyWizards() {
     setIsDeleteWizard(false);
   };
 
-  useEffect(() => {
-    if (!isError) return;
+  const renderBody = () => {
+    if (isUserWizardsLoading) {
+      return <Spinner className="!flex mx-auto" />;
+    }
+    if (!isUserLoggedIn) {
+      return <WizardNotLoggedIn />;
+    }
 
-    toast.error(error.message);
-  }, [isError]);
+    if ((userWizards?.length || 0) === 0) {
+      return <NoWizards />;
+    }
 
-  return (
-    <div className="my-wizards__wrapper">
-      <h5 className="flex gap-2">
-        <span>
-          <svg
-            width="24"
-            height="24"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <path fill="none" d="M0 0h24v24H0z"></path>
-            <path
-              d="M17.0007 1.20801 18.3195 3.68083 20.7923 4.99968 18.3195 6.31852 17.0007 8.79134 15.6818 6.31852 13.209 4.99968 15.6818 3.68083 17.0007 1.20801ZM8.00065 4.33301 10.6673 9.33301 15.6673 11.9997 10.6673 14.6663 8.00065 19.6663 5.33398 14.6663.333984 11.9997 5.33398 9.33301 8.00065 4.33301ZM19.6673 16.333 18.0007 13.208 16.334 16.333 13.209 17.9997 16.334 19.6663 18.0007 22.7913 19.6673 19.6663 22.7923 17.9997 19.6673 16.333Z"
-              fill="#ffc107"
-            ></path>
-          </svg>
-        </span>
-        {t("wizards.myWizards")}
-      </h5>
-      {isUserWizardsLoading ? (
-        <Spinner className="!flex mx-auto" />
-      ) : (userWizards?.length || 0) > 0 ? (
-        <div className="row gx-3 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
+    return (
+      <>
+        <Title />
+        <div className="my-wizards__card-wrapper">
           {userWizards?.map(
             ({ id, name, description, avatar, isPublished }) => (
               <div key={id} className="col">
@@ -117,22 +107,29 @@ function MyWizards() {
             )
           )}
         </div>
-      ) : (
-        <div className="w-100 bg-elavate py-5 text-center rounded-3">
-          <img className="d-inline" src={NoChatBotImg} alt="no wizard" />
-          <p>{t("wizards.noWizards")}</p>
-        </div>
-      )}
-      <div className="my-wizards__create-wizard">
+      </>
+    );
+  };
+
+  useEffect(() => {
+    if (!isError) return;
+
+    toast.error(error.message);
+  }, [isError]);
+
+  return (
+    <div className="my-wizards__wrapper">
+      {renderBody()}
+      <div className="my-wizards__footer">
         <div>
-          <div className="my-wizards__create-wizard__title">
-            Create an Ai Agent
-          </div>
-          <div className="my-wizards__create-wizard__description">
+          <div className="my-wizards__footer__title">Create an Ai Agent</div>
+          <div className="my-wizards__footer__description">
             Craft and fine tune your agent
           </div>
         </div>
-        <Button>Create Agent</Button>
+        <CheckWizardNameCreateModal>
+          <Button>Create Agent</Button>
+        </CheckWizardNameCreateModal>
       </div>
       <DeleteWizardModal
         isDeleting={isDeletePending}
