@@ -21,19 +21,7 @@ function DeleteWizardModal({
   const { t } = useTranslation();
 
   return (
-    <Modal
-      show={isOpen}
-      onHide={
-        () => onHide()
-        //   () =>
-        //   {
-        //   if (isDeletePending) return;
-
-        //   setIsDeleteWizard(false);
-        // }
-      }
-      centered
-    >
+    <Modal show={isOpen} onHide={onHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>{t("common.delete", { entity: "agent" })}</Modal.Title>
       </Modal.Header>
@@ -52,27 +40,16 @@ function DeleteWizardModal({
         <div className="mt-2 d-flex gap-2">
           <LoadingButton
             label={t("common.delete", { entity: "agent" })}
-            // isDisabled={isDeletePending}
-            // isLoading={isDeletePending}
             isDisabled={isDeleting}
             isLoading={isDeleting}
             variant="danger"
-            // onClick={() => handleDelete(wizardToDelete!.id)}
-            onClick={() => handleDelete()}
+            onClick={handleDelete}
           />
           <Button
             type="reset"
             variant="link"
             disabled={isDeleting}
-            onClick={
-              () => onHide()
-              //   () => {
-              //   if (isDeletePending) return;
-
-              //   setWizardIdToDelete(undefined);
-              //   setIsDeleteWizard(false);
-              // }
-            }
+            onClick={() => onHide()}
           >
             {t("common.cancel")}
           </Button>

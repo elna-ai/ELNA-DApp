@@ -72,7 +72,7 @@ function MyWizards() {
     setWizardIdToDelete(undefined);
     setIsDeleteWizard(false);
   };
-
+  // TODO: Refactor
   const renderBody = () => {
     if (isUserWizardsLoading) {
       return <Spinner className="!flex mx-auto" />;
