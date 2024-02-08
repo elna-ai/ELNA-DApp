@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import Spinner from "react-bootstrap/Spinner";
 import { toast } from "react-toastify";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
 import NoChatBotImg from "images/no-chatbot.png";
 import { useWallet } from "hooks/useWallet";
 import {
@@ -12,10 +10,11 @@ import {
   usePublishUnpublishWizard,
 } from "hooks/reactQuery/wizards/useMyWizards";
 import { getAvatar } from "src/utils";
-import LoadingButton from "components/common/LoadingButton";
-
-import Card from "./Card";
 import { useDeleteIndex } from "hooks/reactQuery/useExternalService";
+
+import DeleteWizardModal from "./DeleteWizardModal";
+import Card from "../Card";
+import { Button } from "react-bootstrap";
 
 function MyWizards() {
   const [isDeleteWizard, setIsDeleteWizard] = useState(false);
@@ -64,6 +63,13 @@ function MyWizards() {
     );
   };
 
+  const handleOnHide = () => {
+    if (isDeletePending) return;
+
+    setWizardIdToDelete(undefined);
+    setIsDeleteWizard(false);
+  };
+
   useEffect(() => {
     if (!isError) return;
 
@@ -71,7 +77,7 @@ function MyWizards() {
   }, [isError]);
 
   return (
-    <>
+    <div className="my-wizards__wrapper">
       <h5 className="flex gap-2">
         <span>
           <svg
@@ -117,56 +123,25 @@ function MyWizards() {
           <p>{t("wizards.noWizards")}</p>
         </div>
       )}
-      <hr />
-      <Modal
-        show={isDeleteWizard}
-        onHide={() => {
-          if (isDeletePending) return;
-
-          setIsDeleteWizard(false);
-        }}
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>{t("common.delete", { entity: "agent" })}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div>
-            <Trans
-              i18nKey="common.deleteConfirmation"
-              components={{
-                bold: <span className="fw-bold" />,
-              }}
-              values={{
-                entity: wizardToDelete?.name,
-              }}
-            />
+      <div className="my-wizards__create-wizard">
+        <div>
+          <div className="my-wizards__create-wizard__title">
+            Create an Ai Agent
           </div>
-          <div className="mt-2 d-flex gap-2">
-            <LoadingButton
-              label={t("common.delete", { entity: "agent" })}
-              isDisabled={isDeletePending}
-              isLoading={isDeletePending}
-              variant="danger"
-              onClick={() => handleDelete(wizardToDelete!.id)}
-            />
-            <Button
-              type="reset"
-              variant="link"
-              disabled={isDeletePending}
-              onClick={() => {
-                if (isDeletePending) return;
-
-                setWizardIdToDelete(undefined);
-                setIsDeleteWizard(false);
-              }}
-            >
-              {t("common.cancel")}
-            </Button>
+          <div className="my-wizards__create-wizard__description">
+            Craft and fine tune your agent
           </div>
-        </Modal.Body>
-      </Modal>
-    </>
+        </div>
+        <Button>Create Agent</Button>
+      </div>
+      <DeleteWizardModal
+        isDeleting={isDeletePending}
+        isOpen={isDeleteWizard}
+        wizardName={wizardToDelete?.name}
+        onHide={handleOnHide}
+        handleDelete={() => handleDelete(wizardToDelete!.id)}
+      />
+    </div>
   );
 }
 
