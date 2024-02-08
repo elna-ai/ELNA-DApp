@@ -69,7 +69,9 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
                         placement="right-end"
                         overlay={
                           link.isComingSoon ? (
-                            <Tooltip>{t("common.comingSoon")}</Tooltip>
+                            <Tooltip className="tooltip-menu">
+                              {t("common.comingSoon")}
+                            </Tooltip>
                           ) : (
                             <span></span>
                           )
@@ -122,7 +124,7 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
           <div className="menu-group">
             <ul className="navbar-nav flex-column">
               {sideBarLink.map(linkGroup => (
-                <div style={{ marginBottom: "20px" }}>
+                <div className="menu-sidebar-card">
                   {linkGroup.map((link: SidebarLinkProps) => (
                     <OverlayTrigger
                       key={link.key}
@@ -146,10 +148,10 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
           </div>
           <div className="callout card card-flush bg-orange-light-5 text-center mt-5 w-220p mx-auto">
             <div className="card-body">
-              <div>
-                <span className="me-2 border-end p-2">
+              <div className="price-subcard">
+                <span className="me-2 p-2">
                   <span>40</span>
-                  <i className="ri-shining-fill"></i>
+                  <i className="px-1 border-end border-dark ri-shining-fill"></i>
                 </span>
                 <span>{t("common.free")}</span>
               </div>

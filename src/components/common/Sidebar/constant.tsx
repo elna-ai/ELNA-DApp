@@ -89,15 +89,27 @@ export const SIDEBAR_LINK: SidebarLinkProps[][] = [
   [
     {
       to: "/",
-      Icon: homeIcon,
+      Icon: () => <i className="ri-lg  ri-home-5-fill"></i>,
       key: "home",
       isComingSoon: false,
     },
     {
       to: "/create-agent",
-      Icon: createIcon,
-      key: "create",
+      Icon: () => <i className="ri-lg ri-robot-2-fill"></i>,
+      key: "myAgents",
       isComingSoon: false,
+    },
+    {
+      to: "/agent-marketplace",
+      Icon: () => <i className="ri-lg ri-store-3-fill"></i>,
+      key: "agentMarketplace",
+      isComingSoon: true,
+    },
+    {
+      to: "/developer-studio",
+      Icon: () => <i className="ri-lg ri-terminal-window-fill"></i>,
+      key: "developerStudio",
+      isComingSoon: true,
     },
     {
       Icon: feedbackIcon,
@@ -114,13 +126,13 @@ export const SIDEBAR_LINK: SidebarLinkProps[][] = [
   ],
   [
     {
-      Icon: docsIcons,
+      Icon: () => <i className="ri-lg ri-vip-crown-2-fill"></i>,
       key: "manageSubscription",
       isComingSoon: true,
       isBeta: true,
     },
     {
-      Icon: docsIcons,
+      Icon: () => <i className="ri-lg ri-customer-service-fill"></i>,
       key: "customerSupport",
       isComingSoon: true,
     },
