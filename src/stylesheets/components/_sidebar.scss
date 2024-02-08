@@ -19,7 +19,6 @@
   width: 270px;
   margin-left: 0;
   z-index: 1032;
-  // border-right: 1px solid var(--background-base-border);
   -webkit-transition: all 0.2s ease;
   -moz-transition: all 0.2s ease;
   transition: all 0.2s ease;
@@ -159,14 +158,6 @@
   border: none;
   box-shadow: none;
   background-color: var(--background-card-sidebar);
-  // background-image: -webkit-gradient(
-  //   linear,
-  //   left top,
-  //   right top,
-  //   fromvar(--elna-primary-color),
-  //   to(#207c53)
-  // );
-  // background-image: linear-gradient(45deg, var(--elna-primary-color), #207c53);
   color: var(--title-color);
   .price-subcard {
     display: inline-block;
