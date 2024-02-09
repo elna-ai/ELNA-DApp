@@ -6,6 +6,7 @@ import pdfJsWorker from "pdfjs-dist/build/pdf.worker";
 
 import { AVATAR_IMAGES } from "../constants";
 import { Message } from "../types";
+import { WizardVisibility } from "declarations/wizard_details/wizard_details.did";
 
 export const getAvatar = (id: string) =>
   AVATAR_IMAGES.find(avatar => avatar.id === id);
@@ -67,3 +68,24 @@ export const generateTwitterShareLink = (content: string) =>
   `https://twitter.com/intent/tweet?text=${encodeURI(
     content
   )}&hashtags=AIagentActivated,ELNAai,DecentralizedAl,GenerativeAl,ICP`;
+
+export const displayAddress = (principal: string) => {
+  const firstPart = principal.substring(0, 5);
+  const lastPart = principal.substring(principal.length - 3);
+  return `${firstPart}...${lastPart}`;
+};
+
+export const getVisibility = (
+  wizardVisibility: WizardVisibility
+): "public" | "private" | "unlisted" => {
+  switch (Object.keys(wizardVisibility)[0]) {
+    case "privateVisibility":
+      return "private";
+    case "publicVisibility":
+      return "public";
+    case "unlistedVisibility":
+      return "unlisted";
+    default:
+      throw new Error("unknown visibility type");
+  }
+};
