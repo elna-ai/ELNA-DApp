@@ -84,7 +84,8 @@
   .navbar-nav
   .nav-item
   .nav-link
-  .nav-icon-wrap {
+  .nav-icon-wrap,
+.menu-sidebar-card .nav-item .nav-link .nav-icon-wrap {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -97,7 +98,8 @@
   .menu-group
   .navbar-nav
   .nav-item
-  .nav-link {
+  .nav-link,
+.menu-sidebar-card .nav-item .nav-link {
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -225,4 +227,11 @@
   border-radius: 0.5rem;
   padding: 0.25rem 0.5rem;
   color: var(--elna-primary-color);
+}
+
+// X-Small devices (portrait phones, less than 576px)
+@media (max-width: 729px) {
+  .hk-wrapper.collapsed .hk-pg-wrapper {
+    margin-left: 0px !important;
+  }
 }

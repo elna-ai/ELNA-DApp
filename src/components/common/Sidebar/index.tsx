@@ -51,7 +51,7 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          position: "relative",
+          position: "fixed",
           zIndex: "999999",
         }}
         onClick={handleExpand}
@@ -62,7 +62,7 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
             <Modal.Body>
               <ul className="navbar-nav flex-column">
                 {sideBarLink.map(linkGroup => (
-                  <div style={{ marginBottom: "20px" }}>
+                  <div className="menu-sidebar-card">
                     {linkGroup.map((link: SidebarLinkProps) => (
                       <OverlayTrigger
                         key={link.key}

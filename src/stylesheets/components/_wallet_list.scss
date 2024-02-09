@@ -27,7 +27,7 @@
 
     &:hover {
       background-color: var(--background-elevated-base-hover);
-      border-radius: .5rem;
+      border-radius: 0.5rem;
     }
 
     &--button {
@@ -46,7 +46,6 @@
       object-fit: cover;
     }
   }
-
 }
 
 .modal-footer {
