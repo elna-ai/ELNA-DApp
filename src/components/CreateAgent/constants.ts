@@ -42,16 +42,6 @@ export const TEMPLATE_BOTS = [
   },
 ];
 
-export const CREATE_BOT_MODAL_INITIAL_VALUES = { name: "" };
-
-export const CREATE_BOT_MODAL_VALIDATION_SCHEMA = yup.object().shape({
-  name: yup
-    .string()
-    .trim()
-    .required()
-    .min(2, t("createAgent.form.validations.name")),
-});
-
 export const PERSONA_VALIDATION_SCHEMA = yup.object().shape({
   biography: yup
     .string()

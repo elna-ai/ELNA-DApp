@@ -1,61 +1,9 @@
-import { useState } from "react";
-
-import { Formik } from "formik";
-import { useNavigate } from "react-router-dom";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Modal from "react-bootstrap/Modal";
-import { toast } from "react-toastify";
 import { t } from "i18next";
-import { Trans } from "react-i18next";
-import { useWallet } from "hooks/useWallet";
-import { useIsWizardNameValid } from "hooks/reactQuery/wizards/useMyWizards";
-import LoadingButton from "components/common/LoadingButton";
-import { useIsUserWhiteListed } from "hooks/reactQuery/useUser";
+import CheckWizardNameCreateModal from "components/common/CheckWizardNameCreate";
 
 import TemplateStore from "./TemplateSore";
-import {
-  CREATE_BOT_MODAL_INITIAL_VALUES,
-  CREATE_BOT_MODAL_VALIDATION_SCHEMA,
-} from "./constants";
-import NoAccessImg from "../../images/no-access.png";
-import { useCreateWizardStore } from "stores/useCreateWizard";
 
 function View() {
-  const [isCreate, setIsCreate] = useState(false);
-  const [isNoPermission, setIsNoPermission] = useState(false);
-
-  const navigate = useNavigate();
-  const wallet = useWallet();
-  const setWizardName = useCreateWizardStore(state => state.setWizardName);
-  const { mutate: checkIsWizardNameValid, isPending: isCheckingName } =
-    useIsWizardNameValid();
-  const { data: isUserWhitelisted } = useIsUserWhiteListed();
-
-  const handleCreate = async () => {
-    if (wallet === undefined || !wallet?.principalId) {
-      setIsNoPermission(true);
-      return;
-    }
-
-    isUserWhitelisted ? setIsCreate(true) : setIsNoPermission(true);
-  };
-
-  const handleSubmit = ({ name }: { name: string }) => {
-    checkIsWizardNameValid(name, {
-      onError: () => toast.error("Wizard name exist for user"),
-      onSuccess: response => {
-        if (!response) {
-          toast.error("Wizard name exist for user");
-          return;
-        }
-
-        setWizardName(name);
-        navigate({ pathname: "/create-agent/edit", search: `?name=${name}` });
-      },
-    });
-  };
-
   return (
     <div className="w-100">
       <div className="d-flex align-items-top justify-content-between mt-4 mb-2">
@@ -99,12 +47,11 @@ function View() {
                 </svg>
               </div>
               <div className="user-name mt-1 mb-1">
-                <div
-                  className="btn-link stretched-link text-decoration-none"
-                  onClick={() => handleCreate()}
-                >
-                  {t("createAgent.fromStrach")}
-                </div>
+                <CheckWizardNameCreateModal>
+                  <div className="btn-link stretched-link text-decoration-none">
+                    {t("createAgent.fromStrach")}
+                  </div>
+                </CheckWizardNameCreateModal>
               </div>
             </div>
           </div>
@@ -112,109 +59,6 @@ function View() {
       </div>
       <hr />
       <TemplateStore />
-      <Modal
-        className="bot-name-modal"
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        show={isCreate}
-        onHide={() => setIsCreate(false)}
-      >
-        <Modal.Header closeButton className="d-flex align-items-center">
-          <Modal.Title>
-            <h5 className="mb-0">
-              <strong>{t("createAgent.nameAgent")}</strong>
-            </h5>
-          </Modal.Title>
-        </Modal.Header>
-        <Formik
-          initialValues={CREATE_BOT_MODAL_INITIAL_VALUES}
-          onSubmit={handleSubmit}
-          validationSchema={CREATE_BOT_MODAL_VALIDATION_SCHEMA}
-          onReset={() => setIsCreate(false)}
-        >
-          {({ handleSubmit, handleChange, values, touched, errors }) => (
-            <Form noValidate onSubmit={handleSubmit}>
-              <Modal.Body>
-                <Form.Group>
-                  <Form.Label>{t("createAgent.form.label.name")}</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="name"
-                    value={values.name}
-                    onChange={handleChange}
-                    isValid={touched.name && !errors.name}
-                    placeholder={t("createAgent.form.placeholder.name")}
-                    required
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.name}
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Modal.Body>
-              <Modal.Footer className="flex">
-                <Button
-                  className="btn-light btn-modal-cancel"
-                  variant="link"
-                  type="reset"
-                  onClick={() => setIsCreate(false)}
-                  disabled={isCheckingName}
-                >
-                  {t("common.cancel")}
-                </Button>
-                <LoadingButton
-                  type="submit"
-                  label={t("common.ok")}
-                  isLoading={isCheckingName}
-                  isDisabled={isCheckingName}
-                />
-              </Modal.Footer>
-            </Form>
-          )}
-        </Formik>
-      </Modal>
-      <Modal
-        size="lg"
-        centered
-        show={isNoPermission}
-        onHide={() => setIsNoPermission(false)}
-      >
-        <Modal.Header
-          closeButton
-          className="d-flex align-items-center justify-content-center"
-        >
-          <h3 className="w-100 sub-title text-center">
-            {t("common.noPermission")}
-          </h3>
-        </Modal.Header>
-        <Modal.Body className="text-center">
-          <img
-            className="mx-auto d-block"
-            src={NoAccessImg}
-            alt="No-permission-Elna"
-            width={180}
-          />
-          <p className="mb-0">{t("createAgent.noPermission.title")}</p>
-          <p>{t("createAgent.noPermission.gainAccess")}</p>
-          <p>
-            <Trans
-              i18nKey="createAgent.noPermission.askAccess"
-              components={{
-                a: (
-                  <a
-                    href="https://forms.gle/9ikyydFgUV6vEdZ58"
-                    className="elna-link text-underline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  />
-                ),
-                u: <u />,
-                strong: <strong />,
-              }}
-            />
-          </p>
-        </Modal.Body>
-      </Modal>
     </div>
   );
 }

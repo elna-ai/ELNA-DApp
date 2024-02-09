@@ -2,17 +2,13 @@ import PropTypes from "prop-types";
 import MyWizards from "./MyWizards";
 import PopularWizards from "./PopularWizards";
 
-function CreateWizards({ isLoggedIn }: { isLoggedIn: boolean }) {
+function CreateWizards() {
   return (
     <div className="w-100">
-      {isLoggedIn && <MyWizards />}
+      <MyWizards />
       <PopularWizards />
     </div>
   );
 }
-
-CreateWizards.propTypes = {
-  isLoggedIn: PropTypes.bool,
-};
 
 export default CreateWizards;
