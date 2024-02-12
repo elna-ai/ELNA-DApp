@@ -15,6 +15,7 @@
 @import "pages/chat";
 @import "pages/persona";
 @import "pages/admin_whitelist";
+@import "pages/wizard_modal";
 
 // TODO: download font locally
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap");
@@ -68,11 +69,14 @@ a.elna-link {
 .hk-wrapper {
   position: relative;
   background-color: var(--background-base);
+  height: 100vh;
+  overflow: hidden;
 }
 
 .hk-pg-wrapper {
   position: relative;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: auto;
 }
 
 .hk-wrapper .hk-navbar {

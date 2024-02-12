@@ -1,7 +1,7 @@
-import useGetDisplayAddress from "hooks/useGetDisplayAddress";
 import { Dropdown } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { displayAddress } from "utils/index";
 
 interface CardProps {
   name: string;
@@ -25,12 +25,6 @@ function Card({
   handlePublish,
 }: CardProps) {
   const { t } = useTranslation();
-
-  const displayAddress = (principal: string) => {
-    const firstPart = principal.substring(0, 5);
-    const lastPart = principal.substring(principal.length - 3);
-    return `${firstPart}...${lastPart}`;
-  };
 
   const Avatar = ({ name }: { name: string }) => (
     <div className="avatar avatar-xl avatar-soft-primary avatar-rounded bg-gray-300 text-green-700">

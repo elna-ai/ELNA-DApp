@@ -30,7 +30,7 @@
     padding: 1rem;
 
     &--bot {
-      background-color: #1E2329;
+      background-color: #1e2329;
       color: var(--title-sub-color);
     }
   }
@@ -67,7 +67,6 @@
 
   &__avatar {
     flex-shrink: 0;
-
   }
 }
 
@@ -75,6 +74,8 @@
   width: 100%;
   margin-top: 4rem;
   margin-bottom: 120px;
+  overflow-y: auto;
+  max-height: 60vh;
 
   &--wrapper {
     margin: 0 2rem;
