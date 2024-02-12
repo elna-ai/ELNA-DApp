@@ -69,4 +69,22 @@
       color: var(--primary-success);
     }
   }
+
+  &__persona {
+    &__share {
+      display: flex;
+      gap: 0.5rem;
+      background-color: #2c2d31;
+      border: 1px solid var(--color-line);
+      border-radius: 8px;
+      padding: 10px 7.65px 10px 14px;
+
+      &__copy {
+        cursor: pointer;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
 }

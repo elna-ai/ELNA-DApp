@@ -12,6 +12,7 @@ import { useWallet } from "hooks/useWallet";
 import { useUserStore } from "stores/useUser";
 import { useIsUserAdmin, useIsUserWhiteListed } from "hooks/reactQuery/useUser";
 import useGetDisplayAddress from "hooks/useGetDisplayAddress";
+import { copyToClipBoard } from "utils/index";
 
 interface HeaderProps {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -58,20 +59,6 @@ function Header({ setIsLoading }: HeaderProps) {
     }
   };
 
-  const copyToClipBoard = async () => {
-    try {
-      if (wallet === undefined) {
-        toast.error("Failed to copy Principal Id");
-        return;
-      }
-
-      await navigator.clipboard.writeText(wallet?.principalId);
-      toast.success("Principal Id copied");
-    } catch (err) {
-      toast.error("Failed to copy Principal Id");
-    }
-  };
-
   return (
     <>
       <header className="d-flex p-2 h-12">
@@ -96,7 +83,13 @@ function Header({ setIsLoading }: HeaderProps) {
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="profile-dropdown">
                   <Dropdown.Item
-                    onClick={copyToClipBoard}
+                    onClick={() =>
+                      copyToClipBoard({
+                        text: wallet?.principalId,
+                        successMsg: "Principal Id copied",
+                        errorMsg: "Failed to copy Principal Id",
+                      })
+                    }
                     className="dropdown-menu__item"
                   >
                     <i className="ri-file-copy-line"></i>

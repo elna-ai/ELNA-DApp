@@ -7,6 +7,7 @@ import pdfJsWorker from "pdfjs-dist/build/pdf.worker";
 import { AVATAR_IMAGES } from "../constants";
 import { Message } from "../types";
 import { WizardVisibility } from "declarations/wizard_details/wizard_details.did";
+import { toast } from "react-toastify";
 
 export const getAvatar = (id: string) =>
   AVATAR_IMAGES.find(avatar => avatar.id === id);
@@ -87,5 +88,28 @@ export const getVisibility = (
       return "unlisted";
     default:
       throw new Error("unknown visibility type");
+  }
+};
+
+type copyToClipBoardProps = {
+  text: string | undefined;
+  successMsg?: string;
+  errorMsg?: string;
+};
+export const copyToClipBoard = async ({
+  text,
+  successMsg,
+  errorMsg,
+}: copyToClipBoardProps) => {
+  const errorMessage = errorMsg || "Unable to copy to clipboard";
+  if (text === undefined) {
+    toast.error(errorMessage);
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(text);
+    toast.success(successMsg || "Copied to clipboard");
+  } catch (err) {
+    toast.error("errorMessage");
   }
 };

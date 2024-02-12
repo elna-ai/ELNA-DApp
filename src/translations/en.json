@@ -120,6 +120,18 @@
       "principalId": "Principal id"
     }
   },
+  "agentOverView": {
+    "title": "Agent Overview",
+    "model": "Model:",
+    "openLLM": "Open LLM",
+    "persona": "Persona",
+    "tools": "Tools",
+    "dataSet": "Data Set",
+    "personaTab": {
+      "directUrl": "Direct Url",
+      "urlDescription": "Share this link for people to use your agent."
+    }
+  },
   "common": {
     "elna": "ELNA",
     "eywa": "Eywa",
@@ -144,6 +156,10 @@
     "deleteConfirmation": "Are you sure you want to delete <bold>{{entity}}</bold>",
     "add": "Add {{entity}}",
     "free": "Free",
-    "beta": "Beta"
+    "beta": "Beta",
+    "createdBy": "Created by",
+    "report": "Report",
+    "copy": "Copy",
+    "share": "Share"
   }
 }

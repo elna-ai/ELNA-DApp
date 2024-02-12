@@ -1,8 +1,11 @@
-import Modal from "react-bootstrap/Modal";
+import { useState } from "react";
 
+import Modal from "react-bootstrap/Modal";
+import Nav from "react-bootstrap/Nav";
 import { WizardDetails } from "declarations/wizard_details/wizard_details.did";
 import { getVisibility, displayAddress, getAvatar } from "src/utils";
-import { Nav } from "react-bootstrap";
+import Persona from "./Persona";
+import { useTranslation } from "react-i18next";
 
 type AgentDetailsProps = {
   isOpen: boolean;
@@ -11,10 +14,16 @@ type AgentDetailsProps = {
 };
 
 function AgentDetails({ isOpen, onHide, wizard }: AgentDetailsProps) {
+  const [currentNav, setCurrentNav] = useState<"persona" | "tools" | "dataset">(
+    "persona"
+  );
+
+  const { t } = useTranslation();
+
   return (
     <Modal show={isOpen} onHide={onHide} size="xl">
       <Modal.Header closeButton>
-        <Modal.Title>Agent Overview</Modal.Title>
+        <Modal.Title>{t("agentOverView.title")}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="d-flex gap-3">
@@ -41,11 +50,11 @@ function AgentDetails({ isOpen, onHide, wizard }: AgentDetailsProps) {
               {wizard?.description}
             </div>
             <div className="wizard-modal__details">
-              Model:{" "}
+              {t("agentOverView.model")}:{" "}
               <span className="wizard-modal__details__modal-name">
-                Open LLM
+                {t("agentOverView.openLLM")}
               </span>
-              &bull; Created by{" "}
+              &bull; {t("common.createdBy")}{" "}
               <span className="wizard-modal__details__principal">
                 {displayAddress(wizard?.userId)}
               </span>
@@ -54,29 +63,43 @@ function AgentDetails({ isOpen, onHide, wizard }: AgentDetailsProps) {
               className="d-flex gap-3 align-items-center"
               style={{ marginBlockStart: "2rem" }}
             >
-              <div className="wizard-modal__details__tag">Free</div>
+              <div className="wizard-modal__details__tag">
+                {t("common.free")}
+              </div>
               <span>
                 <i className="ri-flag-line me-1"></i>
-                <span className="text-decoration-underline">Report</span>
+                <span className="text-decoration-underline">
+                  {t("common.report")}
+                </span>
               </span>
             </div>
           </div>
         </div>
-        <Nav variant="pill">
+        <Nav
+          variant="pill"
+          defaultActiveKey={currentNav}
+          // onSelect={eventKey => setCurrentNav(eventKey)}
+        >
           <Nav.Item>
-            <Nav.Link className="btn nav-pill-chat"> Persona</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link disabled className="btn nav-pill-chat">
-              Tools
+            <Nav.Link className="btn nav-pill-chat">
+              {" "}
+              {t("agentOverView.persona")}
             </Nav.Link>
           </Nav.Item>
           <Nav.Item>
             <Nav.Link disabled className="btn nav-pill-chat">
-              Data Set
+              {t("agentOverView.tools")}
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link disabled className="btn nav-pill-chat">
+              {t("agentOverView.dataSet")}
             </Nav.Link>
           </Nav.Item>
         </Nav>
+        {currentNav === "persona" && (
+          <Persona name={wizard.name} id={wizard.id} />
+        )}
       </Modal.Body>
     </Modal>
   );
