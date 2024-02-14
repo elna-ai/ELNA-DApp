@@ -4,6 +4,8 @@ import Bool "mo:base/Bool";
 import Principal "mo:base/Principal";
 import Buffer "mo:base/Buffer";
 import Error "mo:base/Error";
+import HashMap "mo:base/HashMap";
+import Iter "mo:base/Iter";
 import Backend "canister:backend";
 
 import Types "./Types";
@@ -19,11 +21,49 @@ import {
 
 actor class Main(_owner : Principal) {
   private stable var _wizardsNew : [Types.WizardDetails] = [];
+  private stable var _analytics : [(Text, Types.Analytics)] = [];
   private stable var owner : Principal = _owner;
   var wizards = Buffer.Buffer<Types.WizardDetails>(10);
+  var analytics = HashMap.HashMap<Text, Types.Analytics>(5, Text.equal, Text.hash);
 
   func isOwner(callerId : Principal) : Bool {
     callerId == owner;
+  };
+
+  public query func getAnalytics(wizardId : Text) : async Types.Analytics_V1 {
+    switch (analytics.get(wizardId)) {
+      case null {
+        throw Error.reject("wizard id not found");
+      };
+      case (?anlyticsVarints) {
+        switch (anlyticsVarints) {
+          case (#v1(data)) {
+            return data;
+          };
+        };
+      };
+    };
+  };
+
+  public func updateMessageAnalytics(wizardId : Text) : async () {
+    switch (analytics.get(wizardId)) {
+      case (?value) {
+        switch (value) {
+          case (#v1(data)) {
+            analytics.put(
+              wizardId,
+              #v1 {
+                messagesReplied = data.messagesReplied + 1;
+              },
+            );
+          };
+        };
+      };
+
+      case (null) {
+        analytics.put(wizardId, #v1 { messagesReplied = 1 });
+      };
+    };
   };
 
   public query func getWizards() : async [Types.WizardDetailsBasic] {
@@ -117,12 +157,26 @@ actor class Main(_owner : Principal) {
     };
   };
 
+  public shared ({ caller }) func getAllAnalytics() : async [(Text, Types.Analytics)] {
+    let isUserAdmin = await Backend.isPrincipalAdmin(caller);
+    switch (isUserAdmin) {
+      case false {
+        throw Error.reject("User is not admin");
+      };
+      case true {
+        Iter.toArray(analytics.entries());
+      };
+    };
+  };
+
   system func preupgrade() {
 
     _wizardsNew := Buffer.toArray(wizards);
+    _analytics := Iter.toArray(analytics.entries());
   };
 
   system func postupgrade() {
     wizards := Buffer.fromArray(_wizardsNew);
+    analytics := HashMap.fromIter<Text, Types.Analytics>(_analytics.vals(), 5, Text.equal, Text.hash);
   };
 };
