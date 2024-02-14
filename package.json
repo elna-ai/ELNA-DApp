@@ -8,7 +8,7 @@
     "start": "run-p frontend backend",
     "frontend": "vite --port 3000",
     "backend": "mo-dev --generate --deploy -y --argument \"(principal \\\"$(dfx identity get-principal)\\\")\"",
-    "build": "tsc && vite build --mode ${MODE:-production}",
+    "build": "tsc && vite build --mode ${MODE:-production} && ./create_wellknown.sh",
     "test": "run-s test:backend test:frontend",
     "test:frontend": "vitest run",
     "test:backend": "mo-test",
