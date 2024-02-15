@@ -13,6 +13,7 @@ type useLoginMutationProps = {
 type useCreateIndexProps = {
   documents: Document<Record<string, any>>[];
   index_name: string;
+  file_name: string;
 };
 
 export const useLogin = () => {

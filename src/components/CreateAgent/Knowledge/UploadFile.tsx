@@ -62,7 +62,11 @@ function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
 
     const chunks = await getChunks(cleanedDocuments);
     createIndex(
-      { documents: chunks, index_name: agentId },
+      {
+        documents: chunks,
+        index_name: agentId,
+        file_name: selectedFiles[0].name,
+      },
       {
         onSuccess: () => {
           toast.success("Uploaded successfully");
