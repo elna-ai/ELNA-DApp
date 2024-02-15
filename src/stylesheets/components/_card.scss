@@ -25,6 +25,11 @@
   }
 }
 
+.card-body__price {
+  color: var(--primary-success);
+  font-weight: 400;
+}
+
 .contact-card.elna-card .user-name,
 .contact-card.elna-card .user-name a {
   font-weight: 700;
@@ -41,17 +46,14 @@
 .card {
   margin-bottom: 0.875rem;
   border-radius: 0.5rem;
+  max-width: 300px;
 }
 
 .card.contact-card.elna-card .card-footer {
-  text-align: center;
-}
-
-.card.contact-card.elna-card .card-footer > a {
   justify-content: center;
   width: 100%;
   font-size: 13px;
-  color: var(--description-color-40);
+  color: var(--description-color-60);
 }
 
 .card.contact-card.elna-card .card-footer > a {
