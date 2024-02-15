@@ -22,7 +22,7 @@ import { useCreateWizardStore } from "stores/useCreateWizard";
 
 type PersonaProps = {
   wizard: any;
-  setCurrentNav: React.Dispatch<React.SetStateAction<string | null>>;
+  setCurrentNav: React.Dispatch<React.SetStateAction<string>>;
   setWizardId: React.Dispatch<React.SetStateAction<string>>;
 };
 
@@ -38,12 +38,13 @@ function Persona({ wizard, setCurrentNav, setWizardId }: PersonaProps) {
     isError,
   } = useAddWizard();
 
+  type Visibility = "public" | "private" | "unlisted";
   type PersonaValues = {
     biography: string;
     greeting: string;
     description: string;
     avatar: string;
-    visibility: "public" | "private" | "unlisted";
+    visibility: Visibility;
   };
   const handleSubmit = async (values: PersonaValues) => {
     const userId = wallet?.principalId;
@@ -82,7 +83,10 @@ function Persona({ wizard, setCurrentNav, setWizardId }: PersonaProps) {
         avatar: wizard?.avatar || AVATAR_IMAGES[0].id,
         biography: wizard?.biography || "",
         greeting: wizard?.greeting || "",
-        visibility: wizard?.visibility?.toLowerCase() || "public",
+        visibility:
+          (Object.keys(wizard?.visibility || {})
+            ?.join()
+            .replace(/Visibility/, "") as Visibility) || "public",
         description: wizard?.description || "",
       }}
       validationSchema={PERSONA_VALIDATION_SCHEMA}
