@@ -4,6 +4,7 @@ import { Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 import { getAvatar } from "src/utils";
+import { useGetAllAnalytics } from "hooks/reactQuery/wizards/useAnalytics";
 
 import Card from "./Card";
 import { useFetchPopularWizards } from "hooks/reactQuery/wizards/usePopularWizards";
@@ -16,6 +17,7 @@ function PopularWizards() {
     isError,
     error,
   } = useFetchPopularWizards();
+  const { data: analytics } = useGetAllAnalytics();
 
   useEffect(() => {
     if (!isError) return;
@@ -64,6 +66,7 @@ function PopularWizards() {
               key={id}
               imageUrl={getAvatar(avatar)?.image}
               userId={userId}
+              messagesReplied={analytics?.[id]?.messagesReplied || 0n}
             />
           ))
         )}

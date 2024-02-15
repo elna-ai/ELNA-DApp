@@ -34,4 +34,12 @@ module {
     message : Text;
   };
 
+  public type Analytics_V1 = {
+    messagesReplied : Nat;
+  };
+
+  public type Analytics = {
+    #v1 : Analytics_V1;
+  };
+
 };
