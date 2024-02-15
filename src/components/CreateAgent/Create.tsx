@@ -21,7 +21,7 @@ import { generateTwitterShareLink } from "utils/index";
 import { CREATE_BOT_MODAL_VALIDATION_SCHEMA } from "components/common/CheckWizardNameCreate/constants";
 
 function Create() {
-  const [currentNav, setCurrentNav] = useState<string | null>("persona");
+  const [currentNav, setCurrentNav] = useState<string>("persona");
   const [wizardId, setWizardId] = useState("");
   const [isPublishSuccessful, setIsPublishSuccessful] = useState(false);
 
@@ -140,8 +140,10 @@ function Create() {
       <div className="d-flex align-items-center justify-content-between">
         <Nav
           variant="pills"
-          defaultActiveKey={currentNav || "persona"}
-          onSelect={eventKey => setCurrentNav(eventKey)}
+          activeKey={currentNav}
+          onSelect={eventKey => {
+            setCurrentNav(eventKey || "persona");
+          }}
         >
           <Nav.Item>
             <Nav.Link className="btn nav-pill-chat" eventKey="persona">
