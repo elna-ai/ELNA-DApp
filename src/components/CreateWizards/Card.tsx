@@ -46,7 +46,9 @@ function Card({
       <div className="card card-border contact-card elna-card">
         <div className="card-body text-center">
           <div className="d-flex">
-            <div className="card-body__price">{!price ? "Free" : price}</div>
+            <div className="card-body__price">
+              {!price ? t("common.free") : price}
+            </div>
             {!!handleDelete && (
               <Dropdown className="card-body-menu">
                 <Dropdown.Toggle
