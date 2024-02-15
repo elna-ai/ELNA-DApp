@@ -5,6 +5,7 @@ export const QUERY_KEYS = {
   IS_USER_ADMIN: "is-user-admin",
   WIZARD_FILE_NAMES: "wizard-file-names",
   ALL_WIZARDS: "all-wizards",
+  ALL_ANALYTICS: "all-analytics",
 };
 
 export const DEFAULT_STALE_TIME = 3_600_000; // 1 hour

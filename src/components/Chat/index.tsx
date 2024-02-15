@@ -20,6 +20,7 @@ import useAutoSizeTextArea from "hooks/useAutoResizeTextArea";
 import { Message } from "src/types";
 import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
 import { TWITTER_SHARE_CONTENT } from "./constants";
+import { useUpdateMessagesReplied } from "hooks/reactQuery/wizards/useAnalytics";
 
 function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -36,6 +37,7 @@ function Chat() {
     error,
     isError,
   } = useShowWizard(id);
+  const { mutate: updateMessagesReplied } = useUpdateMessagesReplied();
   useAutoSizeTextArea(inputRef.current, messageInput);
 
   useEffect(() => {
@@ -81,6 +83,7 @@ function Chat() {
           history,
         }
       );
+      updateMessagesReplied(wizard?.id || "");
 
       setIsResponseLoading(false);
       setMessages(prev => [

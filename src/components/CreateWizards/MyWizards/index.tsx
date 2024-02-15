@@ -10,6 +10,7 @@ import {
 } from "hooks/reactQuery/wizards/useMyWizards";
 import { getAvatar } from "src/utils";
 import { useDeleteIndex } from "hooks/reactQuery/useExternalService";
+import { useGetAllAnalytics } from "hooks/reactQuery/wizards/useAnalytics";
 import { useUserStore } from "stores/useUser";
 import CheckWizardNameCreateModal from "components/common/CheckWizardNameCreate";
 
@@ -41,6 +42,7 @@ function MyWizards() {
     useDeleteMyWizard();
   const { mutate: publishUnpublishWizard } = usePublishUnpublishWizard();
   const { mutate: deleteIndex } = useDeleteIndex();
+  const { data: analytics } = useGetAllAnalytics();
 
   const handleDeletePopup = (id: string, name: string) => {
     setIsDeleteWizard(true);
@@ -102,6 +104,7 @@ function MyWizards() {
                   }
                   imageUrl={getAvatar(avatar)!.image}
                   handleDelete={handleDeletePopup}
+                  messagesReplied={analytics?.[id]?.messagesReplied || 0n}
                 />
               </div>
             )

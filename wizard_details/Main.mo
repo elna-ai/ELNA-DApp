@@ -157,16 +157,8 @@ actor class Main(_owner : Principal) {
     };
   };
 
-  public shared ({ caller }) func getAllAnalytics() : async [(Text, Types.Analytics)] {
-    let isUserAdmin = await Backend.isPrincipalAdmin(caller);
-    switch (isUserAdmin) {
-      case false {
-        throw Error.reject("User is not admin");
-      };
-      case true {
-        Iter.toArray(analytics.entries());
-      };
-    };
+  public query func getAllAnalytics() : async [(Text, Types.Analytics)] {
+    Iter.toArray(analytics.entries());
   };
 
   system func preupgrade() {

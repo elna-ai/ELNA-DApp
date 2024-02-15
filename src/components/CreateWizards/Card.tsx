@@ -10,6 +10,7 @@ interface CardProps {
   userId?: string;
   id: string;
   isPublished?: boolean;
+  messagesReplied: bigint;
   handleDelete?: (id: string, name: string) => void;
   handlePublish?: (id: string, isPublished: boolean) => void;
 }
@@ -21,6 +22,7 @@ function Card({
   userId,
   id,
   isPublished,
+  messagesReplied,
   handleDelete,
   handlePublish,
 }: CardProps) {
