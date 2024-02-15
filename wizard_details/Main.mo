@@ -128,7 +128,7 @@ actor class Main(_owner : Principal) {
           };
           case (?index) {
             ignore wizards.remove(index);
-
+            ignore analytics.remove(wizardId);
             return { status = 200; message = "Wizard deleted" };
           };
         };
