@@ -146,7 +146,7 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
               ))}
             </ul>
           </div>
-          <div className="callout card card-flush bg-orange-light-5 text-center mt-5 w-220p mx-auto">
+          <div className="callout card card-flush text-center mx-auto">
             <div className="card-body">
               <div className="price-subcard">
                 <span className="me-2 p-2">
