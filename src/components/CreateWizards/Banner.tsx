@@ -18,21 +18,28 @@ function Banner() {
           }
         ></i>
       </span>
-      <i className="ri-fire-fill ri-3x"></i>
-      <div>
-        <h3 className="banner__title">We are Going Live on SNS</h3>
-        {isExpanded && (
-          <div className="banner__description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-            scelerisque sem id sem auctor, id blandit felis tincidunt. Nulla
-            malesuada.
-          </div>
-        )}
+      <div className="d-flex gap-3 banner__inbox">
+        <div className="banner__sns-icon">
+          <i className="ri-fire-fill ri-2x"></i>
+        </div>
+        <div>
+          <h3 className="banner__title">We are Going Live on SNS</h3>
+          {isExpanded && (
+            <div className="banner__description">
+              Shape the revolution of community driven AI on chain. Your vote
+              fuels transparency and innovation.
+            </div>
+          )}
+        </div>
       </div>
       {isExpanded && (
-        <div className="d-flex gap-1">
-          <button>View SNS</button>
-          <button>Vote SNS</button>
+        <div className="d-flex gap-2">
+          <button>
+            <i className="ri-eye-fill"></i> View SNS
+          </button>
+          <button>
+            <i className="ri-thumb-up-fill"></i> Vote SNS
+          </button>
         </div>
       )}
     </div>
