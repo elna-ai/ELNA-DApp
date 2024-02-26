@@ -98,7 +98,7 @@ export const SIDEBAR_LINK: SidebarLinkProps[][] = [
     },
     {
       Icon: docsIcons,
-      to: "https://docs.elna.live/",
+      to: "https://docs.elna.ai/",
       otherParams: { target: "_blank", rel: "noopener noreferrer" },
       key: "docs",
       isComingSoon: false,

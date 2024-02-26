@@ -35,10 +35,22 @@ function Banner() {
       {isExpanded && (
         <div className="d-flex gap-2">
           <button>
-            <i className="ri-eye-fill"></i> View SNS
+            <a
+              href="https://nns.ic0.app/proposal/?u=qoctq-giaaa-aaaaa-aaaea-cai&proposal=128102"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i className="ri-eye-fill"></i> View SNS
+            </a>
           </button>
           <button>
-            <i className="ri-thumb-up-fill"></i> Vote SNS
+            <a
+              href="https://nns.ic0.app/proposal/?u=qoctq-giaaa-aaaaa-aaaea-cai&proposal=128102"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i className="ri-thumb-up-fill"></i> Vote SNS
+            </a>
           </button>
         </div>
       )}
