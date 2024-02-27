@@ -94,11 +94,13 @@ export const SIDEBAR_LINK: SidebarLinkProps[][] = [
     {
       Icon: feedbackIcon,
       key: "feedback",
+      to: "https://discord.gg/QxUZTh2kQb",
+      otherParams: { target: "_blank", rel: "noopener noreferrer" },
       isComingSoon: false,
     },
     {
       Icon: docsIcons,
-      to: "https://docs.elna.live/",
+      to: "https://docs.elna.ai/",
       otherParams: { target: "_blank", rel: "noopener noreferrer" },
       key: "docs",
       isComingSoon: false,
