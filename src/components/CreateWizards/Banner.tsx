@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import classNames from "classnames";
+
 function Banner() {
   const [isExpanded, setIsExpanded] = useState(true);
   return (
@@ -18,12 +20,16 @@ function Banner() {
           }
         ></i>
       </span>
-      <div className="d-flex gap-3 banner__inbox">
+      <div
+        className={classNames("d-flex gap-3 banner__inbox", {
+          "align-items-center": !isExpanded,
+        })}
+      >
         <div className="banner__sns-icon">
           <i className="ri-fire-fill ri-2x"></i>
         </div>
         <div>
-          <h3 className="banner__title">We are Going Live on SNS</h3>
+          <h3 className="banner__title">We are Live on SNS</h3>
           {isExpanded && (
             <div className="banner__description">
               Shape the revolution of community driven AI on chain. Your vote
