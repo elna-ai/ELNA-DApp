@@ -42,20 +42,11 @@ function Banner() {
         <div className="d-flex gap-2">
           <button>
             <a
-              href="https://nns.ic0.app/proposal/?u=qoctq-giaaa-aaaaa-aaaea-cai&proposal=128102"
+              href="https://nns.ic0.app/project/?project=gkoex-viaaa-aaaaq-aacmq-cai"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <i className="ri-eye-fill"></i> View SNS
-            </a>
-          </button>
-          <button>
-            <a
-              href="https://nns.ic0.app/proposal/?u=qoctq-giaaa-aaaaa-aaaea-cai&proposal=128102"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i className="ri-thumb-up-fill"></i> Vote SNS
+              <i className="ri-thumb-up-fill"></i> Participate in SNS
             </a>
           </button>
         </div>
