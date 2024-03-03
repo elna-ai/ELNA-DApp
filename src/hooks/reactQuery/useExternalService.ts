@@ -45,6 +45,16 @@ export const useCreateIndex = () =>
     },
   });
 
+export const useCreateElnaVectorDbIndex = () =>
+  useMutation({
+    mutationFn: (payload: useCreateIndexProps) =>
+      axios.post(
+        `${import.meta.env.VITE_EXTERNAL_SERVICE_BASE}/create-elna-index`,
+        payload,
+        { headers: { Authorization: `jwt ${Cookies.get("external_token")}` } }
+      ),
+  });
+
 export const useDeleteIndex = () =>
   useMutation({
     mutationFn: (wizardId: string) =>
@@ -73,4 +83,13 @@ export const useWizardGetFileNames = (wizardId: string) =>
     select: data => {
       return data?.data?.body?.data;
     },
+  });
+
+export const useCreatingQuestionEmbedding = () =>
+  useMutation({
+    mutationFn: (text: string) =>
+      axios.post(
+        `${import.meta.env.VITE_EXTERNAL_SERVICE_BASE}/create-embedding`,
+        { text }
+      ),
   });
