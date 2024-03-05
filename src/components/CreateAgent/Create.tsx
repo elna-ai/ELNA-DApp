@@ -6,7 +6,7 @@ import Form from "react-bootstrap/Form";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LoadingButton from "components/common/LoadingButton";
-import { useWizardGetFileNames } from "hooks/reactQuery/useExternalService";
+import { useGetFileNames } from "hooks/reactQuery/useRag";
 import { usePublishUnpublishWizard } from "hooks/reactQuery/wizards/useMyWizards";
 import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
 
@@ -31,7 +31,8 @@ function Create() {
   const wizardName = useCreateWizardStore(state => state.name);
   const setWizardName = useCreateWizardStore(state => state.setWizardName);
   const resetWizardName = useCreateWizardStore(state => state.resetWizardName);
-  const { data: documents } = useWizardGetFileNames(wizardId);
+  // const { data: documents } = useWizardGetFileNames(wizardId);
+  const { data: documents } = useGetFileNames(wizardId);
   const { mutate: publishWizard, isPending: isPublishingWizard } =
     usePublishUnpublishWizard();
   const { data: wizard } = useShowWizard(wizardId);

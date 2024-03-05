@@ -5,10 +5,8 @@ import { Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useGenerateUserToken } from "hooks/reactQuery/useUser";
 import { useUserStore } from "stores/useUser";
-import {
-  useWizardGetFileNames,
-  useLogin,
-} from "hooks/reactQuery/useExternalService";
+import { useGetFileNames } from "hooks/reactQuery/useRag";
+import { useLogin } from "hooks/reactQuery/useExternalService";
 import { useWallet } from "hooks/useWallet";
 import { v4 as uuidv4 } from "uuid";
 
@@ -25,7 +23,8 @@ function Knowledge({ wizardId }: KnowledgeProps) {
   const userToken = useUserStore(state => state.userToken);
   const { mutate: generateUserToken } = useGenerateUserToken();
   const { mutate: loginExternalService } = useLogin();
-  const { data: documents } = useWizardGetFileNames(wizardId);
+  // const { data: documents } = useWizardGetFileNames(wizardId);
+  const { data: documents } = useGetFileNames(wizardId);
 
   useEffect(() => {
     !userToken && generateUserToken();
@@ -65,7 +64,7 @@ function Knowledge({ wizardId }: KnowledgeProps) {
         <Button
           className="btn-knowledge"
           onClick={() => setIsAddDocument(true)}
-          disabled={documents?.length}
+          disabled={!!documents?.length}
         >
           <span className="mr-2">
             <svg
@@ -85,7 +84,8 @@ function Knowledge({ wizardId }: KnowledgeProps) {
       </div>
       <span className="mt-2 text-center fs-7">{t("common.comingSoon")}</span>
       <div className="mt-4 row gx-3 row-cols-xxl-4 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
-        {documents?.length > 0 &&
+        {documents !== undefined &&
+          documents?.length > 0 &&
           documents.map((document: string) => (
             <Card key={uuidv4()} title={document} isLearning={false} />
           ))}
