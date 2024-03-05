@@ -75,10 +75,9 @@ function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
       {
         onSuccess: () => {
           toast.success("Uploaded successfully");
-          // TOOD: add wizard_files_name for vector db
-          // queryClient.invalidateQueries({
-          //   queryKey: [QUERY_KEYS.WIZARD_FILE_NAMES],
-          // });
+          queryClient.invalidateQueries({
+            queryKey: [QUERY_KEYS.WIZARD_FILE_NAMES],
+          });
           onClose();
         },
       }
