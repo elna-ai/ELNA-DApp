@@ -8,7 +8,6 @@ import { useGetAllAnalytics } from "hooks/reactQuery/wizards/useAnalytics";
 
 import Card from "./Card";
 import { useFetchPopularWizards } from "hooks/reactQuery/wizards/usePopularWizards";
-import Banner from "./Banner";
 
 function PopularWizards() {
   const { t } = useTranslation();
@@ -72,7 +71,6 @@ function PopularWizards() {
           ))
         )}
       </div>
-      <Banner />
     </>
   );
 }
