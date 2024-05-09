@@ -102,6 +102,12 @@ function Header({ setIsLoading }: HeaderProps) {
                     <i className="ri-file-copy-line"></i>
                     Principal Id {displayAddress}
                   </Dropdown.Item>
+                  <Dropdown.Item>
+                    <Link to="/profile">
+                      <i className="ri-user-fill"></i>
+                      {t("header.userProfile")}
+                    </Link>
+                  </Dropdown.Item>
                   {isAdmin && (
                     <Dropdown.Item>
                       <Link to="/admin">Admin dashboard</Link>

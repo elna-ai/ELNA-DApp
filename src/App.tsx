@@ -23,6 +23,7 @@ import "common/i18n";
 import "stylesheets/index.scss";
 import "remixicon/fonts/remixicon.css";
 import "react-toastify/dist/ReactToastify.css";
+import Profile from "components/Profile";
 
 function App() {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -58,6 +59,7 @@ function App() {
                           path="/admin/*"
                           element={<PrivateRoute component={AdminDashboard} />}
                         />
+                        <Route path="/profile/*" element={<Profile />} />
                         <Route path="*" element={<Page404 />} />
                       </Routes>
                     )}

@@ -9,7 +9,8 @@
     "t&c": "T&C"
   },
   "header": {
-    "connectWallet": "Connect Wallet"
+    "connectWallet": "Connect Wallet",
+    "userProfile": "User Profile"
   },
   "sidebar": {
     "plusHeading": "Get more out of {{name}}+",
@@ -120,6 +121,21 @@
       "principalId": "Principal id"
     }
   },
+  "profile": {
+    "title": "My Profile",
+    "description": "Details about you",
+    "principal": "Principal:",
+    "roles": "Roles:",
+    "requestDevAccess": "Request for Developer access",
+    "devRequest": {
+      "form": {
+        "alias": "Alias",
+        "email": "Email",
+        "github": "Github",
+        "description": "Description"
+      }
+    }
+  },
   "common": {
     "elna": "ELNA",
     "eywa": "Eywa",
@@ -144,6 +160,8 @@
     "deleteConfirmation": "Are you sure you want to delete <bold>{{entity}}</bold>",
     "add": "Add {{entity}}",
     "free": "Free",
-    "beta": "Beta"
+    "beta": "Beta",
+    "chatter": "Chatter",
+    "developer": "Developer"
   }
 }
