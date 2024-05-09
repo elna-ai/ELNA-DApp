@@ -9,6 +9,8 @@ import HashMap "mo:base/HashMap";
 import Time "mo:base/Time";
 import Error "mo:base/Error";
 import Iter "mo:base/Iter";
+import Array "mo:base/Array";
+import Debug "mo:base/Debug";
 
 import Types "./Types";
 import Utils "./Utils";
@@ -18,12 +20,17 @@ actor class Backend(_owner : Principal) {
   private stable var owner : Principal = _owner;
   private stable var _whitelistedUsers : [Principal] = [];
   private stable var _adminUsers : [Principal] = [];
+  // TODO: check if userDetails requried?
   stable var userDetails = Map.new<Types.UserAddress, Types.UserDetails>();
   stable var _userTokens : [(Principal, Types.UserToken)] = [];
+  private stable var _developerUsers : [Types.Developer] = [];
+  private stable var _developerPendingApproval : [Types.DeveloperApproval] = [];
 
   var whitelistedUsers = Buffer.Buffer<Principal>(5);
   var adminUsers = Buffer.Buffer<Principal>(5);
   var userTokens = HashMap.HashMap<Principal, Types.UserToken>(5, Principal.equal, Principal.hash);
+  var developerUsers = Buffer.Buffer<Types.Developer>(10);
+  var developerPendingApproval = Buffer.Buffer<Types.DeveloperApproval>(10);
 
   public shared query (message) func isUserWhitelisted(principalId : ?Principal) : async Bool {
     switch (principalId) {
@@ -171,6 +178,32 @@ actor class Backend(_owner : Principal) {
     };
   };
 
+  public shared ({ caller }) func requestDeveloperAccess(details : Types.DeveloperApproval) : async Bool {
+    if (details.principal != caller) {
+      throw Error.reject("Principal does not match");
+    };
+
+    developerPendingApproval.add(details);
+    return true;
+  };
+
+  public shared ({ caller }) func isDeveloper() : async Bool {
+    let developer = Array.find(
+      Buffer.toArray(developerUsers),
+      func(developer : Types.Developer) : Bool {
+        developer.principal == caller;
+      },
+    );
+    switch (developer) {
+      case (?dev) { return true };
+      case null { return false };
+    };
+  };
+
+  public shared (message) func getPendingDevelopers() : async [Types.DeveloperApproval] {
+    return Buffer.toArray(developerPendingApproval);
+  };
+
   func isOwner(callerId : Principal) : Bool {
     callerId == owner;
   };
@@ -179,6 +212,8 @@ actor class Backend(_owner : Principal) {
     _whitelistedUsers := Buffer.toArray(whitelistedUsers);
     _adminUsers := Buffer.toArray(adminUsers);
     _userTokens := Iter.toArray(userTokens.entries());
+    _developerUsers := Buffer.toArray(developerUsers);
+    _developerPendingApproval := Buffer.toArray(developerPendingApproval);
 
   };
 
@@ -186,5 +221,7 @@ actor class Backend(_owner : Principal) {
     whitelistedUsers := Buffer.fromArray(_whitelistedUsers);
     adminUsers := Buffer.fromArray(_adminUsers);
     userTokens := HashMap.fromIter<Principal, Types.UserToken>(_userTokens.vals(), 5, Principal.equal, Principal.hash);
+    developerUsers := Buffer.fromArray(_developerUsers);
+    developerPendingApproval := Buffer.fromArray(_developerPendingApproval);
   };
 };
