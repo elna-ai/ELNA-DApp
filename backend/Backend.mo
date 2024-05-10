@@ -204,6 +204,113 @@ actor class Backend(_owner : Principal) {
     return Buffer.toArray(developerPendingApproval);
   };
 
+  public shared (message) func getDevelopers() : async [Types.Developer] {
+    return Buffer.toArray(developerUsers);
+  };
+
+  public shared ({ caller }) func approvePendingDeveloper(requestId : Text) : async Text {
+    let canUserApprove = isOwner(caller) or Utils.isUserAdmin(adminUsers, caller);
+    if (not canUserApprove) {
+      throw Error.reject("User not authorized for this action");
+    };
+    // TODO: check if already approved
+
+    let pendingRequest = Array.find(
+      Buffer.toArray(developerPendingApproval),
+      func(request : Types.DeveloperApproval) : Bool {
+        request.id == requestId;
+      },
+    );
+    switch (pendingRequest) {
+      case (?request) {
+        let approvedRequest = {
+          id = request.id;
+          alias = request.alias;
+          email = request.email;
+          github = request.github;
+          principal = request.principal;
+          status = #approved;
+        };
+        developerUsers.add(approvedRequest);
+        let index = Buffer.indexOf(
+          request,
+          developerPendingApproval,
+          func(request1 : Types.DeveloperApproval, request2 : Types.DeveloperApproval) : Bool {
+            request1.id == request2.id;
+          },
+        );
+        switch (index) {
+          case null {
+            return "Count't update pending approval,but request approved";
+          };
+          case (?index) {
+            let updatedDetails = {
+              id = request.id;
+              alias = request.alias;
+              email = request.email;
+              github = request.github;
+              principal = request.principal;
+              description = request.description;
+              status = #approved;
+            };
+            developerPendingApproval.put(index, updatedDetails);
+            return "Request approved";
+          };
+        };
+      };
+      case null {
+        throw Error.reject("Request not found");
+      };
+    };
+  };
+
+  public shared ({ caller }) func rejectPendingDeveloper(requestId : Text) : async Text {
+    let canUserApprove = isOwner(caller) or Utils.isUserAdmin(adminUsers, caller);
+    if (not canUserApprove) {
+      throw Error.reject("User not authorized for this action");
+    };
+    // TODO: check if already approved
+
+    let pendingRequest = Array.find(
+      Buffer.toArray(developerPendingApproval),
+      func(request : Types.DeveloperApproval) : Bool {
+        request.id == requestId;
+      },
+    );
+    switch (pendingRequest) {
+      case (?request) {
+        let index = Buffer.indexOf(
+          request,
+          developerPendingApproval,
+          func(request1 : Types.DeveloperApproval, request2 : Types.DeveloperApproval) : Bool {
+            request1.id == request2.id;
+          },
+        );
+        switch (index) {
+          case null {
+            return "Count't find pending approval";
+          };
+          case (?index) {
+            let updatedDetails = {
+              id = request.id;
+              alias = request.alias;
+              email = request.email;
+              github = request.github;
+              principal = request.principal;
+              description = request.description;
+              status = #rejected;
+            };
+            developerPendingApproval.put(index, updatedDetails);
+            return "Request rejected";
+          };
+        };
+      };
+      case null {
+        throw Error.reject("Request not found");
+      };
+    };
+  };
+
   func isOwner(callerId : Principal) : Bool {
     callerId == owner;
   };

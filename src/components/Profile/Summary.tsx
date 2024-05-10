@@ -12,7 +12,7 @@ function Summary() {
   const { data: isDeveloper, isFetching: isLoading } = useIsDeveloper();
 
   if (isLoading) {
-    <PageLoader />;
+    return <PageLoader />;
   }
 
   return (

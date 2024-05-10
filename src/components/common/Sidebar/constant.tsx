@@ -141,5 +141,17 @@ export const ADMIN_SIDEBAR_LINKS: SidebarLinkProps[][] = [
       key: "admin.agents",
       isComingSoon: false,
     },
+    {
+      Icon: homeIcon,
+      to: "/admin/pending-developer",
+      key: "admin.developerRequest",
+      isComingSoon: false,
+    },
+    {
+      Icon: homeIcon,
+      to: "/admin/developers",
+      key: "admin.developers",
+      isComingSoon: false,
+    },
   ],
 ];
