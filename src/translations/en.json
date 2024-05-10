@@ -29,7 +29,9 @@
     "admin": {
       "dashboard": "Admin dashboard",
       "whitelist": "Whitelist Users",
-      "agents": "All agents"
+      "agents": "All agents",
+      "developerRequest": "Developer request",
+      "developers": "developers"
     }
   },
   "wizards": {

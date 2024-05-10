@@ -16,8 +16,6 @@ module {
 
   public type DeveloperStatus = {
     #approved;
-    #pending;
-    #rejected;
     #disabled;
   };
 
