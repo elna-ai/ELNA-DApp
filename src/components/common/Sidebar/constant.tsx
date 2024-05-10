@@ -147,5 +147,11 @@ export const ADMIN_SIDEBAR_LINKS: SidebarLinkProps[][] = [
       key: "admin.developerRequest",
       isComingSoon: false,
     },
+    {
+      Icon: homeIcon,
+      to: "/admin/developers",
+      key: "admin.developers",
+      isComingSoon: false,
+    },
   ],
 ];

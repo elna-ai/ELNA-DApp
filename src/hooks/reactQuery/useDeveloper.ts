@@ -7,6 +7,7 @@ import {
   backend,
 } from "declarations/backend";
 import { QUERY_KEYS } from "src/constants/query";
+import queryClient from "utils/queryClient";
 
 export const useIsDeveloper = () => {
   const wallet = useWallet();
@@ -53,6 +54,7 @@ export const useGetPendingDeveloperRequest = () =>
     queryFn: () => backend.getPendingDevelopers(),
     queryKey: [QUERY_KEYS.PENDING_DEVELOPER_REQUEST],
   });
+
 export const useApproveDeveloper = () => {
   const wallet = useWallet();
   return useMutation({
@@ -97,3 +99,8 @@ export const useRejectDeveloper = () => {
   });
 };
 
+export const useGetDevelopers = () =>
+  useQuery({
+    queryFn: () => backend.getDevelopers(),
+    queryKey: [QUERY_KEYS.DEVELOPERS_LIST],
+  });
