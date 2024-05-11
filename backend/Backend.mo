@@ -25,12 +25,15 @@ actor class Backend(_owner : Principal) {
   stable var _userTokens : [(Principal, Types.UserToken)] = [];
   private stable var _developerUsers : [Types.Developer] = [];
   private stable var _developerPendingApproval : [Types.DeveloperApproval] = [];
+  // TODO: move tools to new canister
+  private stable var _developerTools : [Types.DeveloperTool] = [];
 
   var whitelistedUsers = Buffer.Buffer<Principal>(5);
   var adminUsers = Buffer.Buffer<Principal>(5);
   var userTokens = HashMap.HashMap<Principal, Types.UserToken>(5, Principal.equal, Principal.hash);
   var developerUsers = Buffer.Buffer<Types.Developer>(10);
   var developerPendingApproval = Buffer.Buffer<Types.DeveloperApproval>(10);
+  var developerTools = Buffer.Buffer<Types.DeveloperTool>(10);
 
   public shared query (message) func isUserWhitelisted(principalId : ?Principal) : async Bool {
     switch (principalId) {
@@ -319,6 +322,14 @@ actor class Backend(_owner : Principal) {
       },
     );
   };
+  public shared ({ caller }) func requestToolSubmission(tool : Types.DeveloperTool) : async Bool {
+    if (tool.principal != caller) {
+      throw Error.reject("Principal does not match");
+    };
+
+    developerTools.add(tool);
+    return true;
+  };
 
   func isOwner(callerId : Principal) : Bool {
     callerId == owner;
@@ -330,6 +341,7 @@ actor class Backend(_owner : Principal) {
     _userTokens := Iter.toArray(userTokens.entries());
     _developerUsers := Buffer.toArray(developerUsers);
     _developerPendingApproval := Buffer.toArray(developerPendingApproval);
+    _developerTools := Buffer.toArray(developerTools);
 
   };
 
@@ -339,5 +351,6 @@ actor class Backend(_owner : Principal) {
     userTokens := HashMap.fromIter<Principal, Types.UserToken>(_userTokens.vals(), 5, Principal.equal, Principal.hash);
     developerUsers := Buffer.fromArray(_developerUsers);
     developerPendingApproval := Buffer.fromArray(_developerPendingApproval);
+    developerTools := Buffer.fromArray(_developerTools);
   };
 };

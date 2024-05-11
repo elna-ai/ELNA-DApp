@@ -44,4 +44,21 @@ module {
     // TODO: IS this required?
     status : DeveloperApprovalStatus;
   };
+
+  public type DeveloperToolStatus = {
+    #approved;
+    #disabled;
+    #pending;
+    #rejected;
+  };
+
+  public type DeveloperTool = {
+    id : Text;
+    name : Text;
+    description : Text;
+    projectUrl : Text;
+    category : Text;
+    principal : Principal;
+    status : DeveloperToolStatus;
+  };
 };

@@ -24,6 +24,7 @@ import "stylesheets/index.scss";
 import "remixicon/fonts/remixicon.css";
 import "react-toastify/dist/ReactToastify.css";
 import Profile from "components/Profile";
+import DeveloperStudio from "components/DeveloperStudio";
 
 function App() {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -54,6 +55,10 @@ function App() {
                         <Route
                           path="/create-agent/*"
                           element={<CreateAgent />}
+                        />
+                        <Route
+                          path="/developer-studio/*"
+                          element={<DeveloperStudio />}
                         />
                         <Route
                           path="/admin/*"
