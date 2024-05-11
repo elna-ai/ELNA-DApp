@@ -89,7 +89,7 @@ export const SIDEBAR_LINK: SidebarLinkProps[][] = [
       to: "/developer-studio",
       Icon: () => <i className="ri-lg ri-terminal-window-fill"></i>,
       key: "developerStudio",
-      isComingSoon: true,
+      isComingSoon: false,
     },
     {
       Icon: feedbackIcon,
