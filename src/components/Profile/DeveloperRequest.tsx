@@ -4,13 +4,11 @@ import { v4 as uuidv4 } from "uuid";
 import { useTranslation } from "react-i18next";
 import { Principal } from "@dfinity/principal";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 import LoadingButton from "components/common/LoadingButton";
 import { useWallet } from "hooks/useWallet";
-import {
-  useGetPendingDeveloperRequest,
-  useRequestDeveloperAccess,
-} from "hooks/reactQuery/useDeveloper";
+import { useRequestDeveloperAccess } from "hooks/reactQuery/useDeveloper";
 
 import {
   DEVELOPER_REQUEST_FORM_INITIAL,
@@ -20,11 +18,9 @@ import {
 function DeveloperRequest() {
   const { t } = useTranslation();
   const wallet = useWallet();
+  const navigate = useNavigate();
   const { mutate: requestDeveloperAccess, isPending: isLoading } =
     useRequestDeveloperAccess();
-  // TODO: remove pendingDevs here
-  const { data: pendingDevs } = useGetPendingDeveloperRequest();
-  console.log({ pendingDevs });
 
   type DeveloperRequestFormValues = {
     alias: string;
@@ -41,7 +37,10 @@ function DeveloperRequest() {
       status: { pending: null },
     };
     requestDeveloperAccess(devDetails, {
-      onSuccess: () => toast.success("Request submitted"),
+      onSuccess: () => {
+        toast.success("Request submitted");
+        navigate("/admin/profile");
+      },
       onError: error => {
         console.error(error);
         toast.error(error.message);
