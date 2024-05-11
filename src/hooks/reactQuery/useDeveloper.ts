@@ -22,7 +22,6 @@ export const useIsDeveloper = () => {
         false
       );
       const result = await backend.isDeveloper();
-      console.log({ result });
       return result;
     },
     queryKey: [QUERY_KEYS.IS_USER_DEVELOPER, wallet?.principalId],
@@ -42,7 +41,6 @@ export const useRequestDeveloperAccess = () => {
         false
       );
       const result = await backend.requestDeveloperAccess(details);
-      console.log({ result });
       return result;
     },
   });
@@ -67,7 +65,6 @@ export const useApproveDeveloper = () => {
         false
       );
       const result = await backend.approvePendingDeveloper(requestId);
-      console.log({ result });
       return result;
     },
     onSuccess: () =>
@@ -89,7 +86,6 @@ export const useRejectDeveloper = () => {
         false
       );
       const result = await backend.rejectPendingDeveloper(requestId);
-      console.log({ result });
       return result;
     },
     onSuccess: () =>
@@ -104,3 +100,22 @@ export const useGetDevelopers = () =>
     queryFn: () => backend.getDevelopers(),
     queryKey: [QUERY_KEYS.DEVELOPERS_LIST],
   });
+
+export const useGetUserRequest = () => {
+  const wallet = useWallet();
+
+  return useQuery({
+    queryKey: [QUERY_KEYS.USER_PENDING_REQUEST],
+    queryFn: async () => {
+      if (wallet === undefined) throw Error("user not logged in");
+
+      const backend: Backend = await wallet.getCanisterActor(
+        backendId,
+        backendFactory,
+        false
+      );
+      const result = await backend.getUserRequests();
+      return result;
+    },
+  });
+};

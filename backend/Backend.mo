@@ -311,6 +311,15 @@ actor class Backend(_owner : Principal) {
     };
   };
 
+  public shared query ({ caller }) func getUserRequests() : async [Types.DeveloperApproval] {
+    Array.filter(
+      Buffer.toArray(developerPendingApproval),
+      func(request : Types.DeveloperApproval) : Bool {
+        request.principal == caller;
+      },
+    );
+  };
+
   func isOwner(callerId : Principal) : Bool {
     callerId == owner;
   };
