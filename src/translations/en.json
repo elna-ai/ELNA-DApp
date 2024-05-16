@@ -31,7 +31,8 @@
       "whitelist": "Whitelist Users",
       "agents": "All agents",
       "developerRequest": "Developer request",
-      "developers": "developers"
+      "developers": "developers",
+      "pendingTools": "Pending tools"
     }
   },
   "wizards": {
@@ -136,6 +137,17 @@
         "github": "Github",
         "description": "Description"
       }
+    }
+  },
+  "developerStudio": {
+    "toolsMarketplace": "Tools Marketplace",
+    "toolsMarketplaceDesc": "Get started on creating an engaging agent with a pre-made template.",
+    "myTools": "My Tools",
+    "noTools": "You have no Tools",
+    "createBanner": {
+      "title": "List your tools",
+      "description": "Discover amazing tools made by the community",
+      "listATool": "List A tool"
     }
   },
   "common": {

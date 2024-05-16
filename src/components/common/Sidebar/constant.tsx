@@ -153,5 +153,11 @@ export const ADMIN_SIDEBAR_LINKS: SidebarLinkProps[][] = [
       key: "admin.developers",
       isComingSoon: false,
     },
+    {
+      Icon: homeIcon,
+      to: "/admin/pending-tools",
+      key: "admin.pendingTools",
+      isComingSoon: false,
+    },
   ],
 ];
