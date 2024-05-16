@@ -61,4 +61,14 @@ module {
     principal : Principal;
     status : DeveloperToolStatus;
   };
+
+  public type DeveloperToolWithCreator = {
+    id : Text;
+    name : Text;
+    description : Text;
+    projectUrl : Text;
+    category : Text;
+    creator : Text;
+    status : DeveloperToolStatus;
+  };
 };
