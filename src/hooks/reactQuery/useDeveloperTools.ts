@@ -1,11 +1,14 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 import {
-  canisterId as backendId,
-  idlFactory as backendFactory,
-  backend,
-} from "declarations/backend";
-import { Backend, DeveloperTool } from "declarations/backend/backend.did";
+  canisterId as DeveloperStudioId,
+  idlFactory as developerStudioFactory,
+  developer_studio as developerStudio,
+} from "declarations/developer_studio";
+import {
+  DeveloperStudio,
+  DeveloperTool,
+} from "declarations/developer_studio/developer_studio.did";
 import { useWallet } from "hooks/useWallet";
 import { QUERY_KEYS } from "src/constants/query";
 import queryClient from "utils/queryClient";
@@ -13,7 +16,7 @@ import queryClient from "utils/queryClient";
 export const useGetApprovedTools = () =>
   useQuery({
     queryKey: [QUERY_KEYS.APPROVED_DEVELOPER_TOOLS],
-    queryFn: () => backend.getApprovedTools(),
+    queryFn: () => developerStudio.getApprovedTools(),
   });
 
 export const useGetDeveloperTools = () => {
@@ -24,12 +27,12 @@ export const useGetDeveloperTools = () => {
     queryFn: async () => {
       if (wallet === undefined) throw Error("user not logged in");
 
-      const backend: Backend = await wallet.getCanisterActor(
-        backendId,
-        backendFactory,
+      const developerStudio: DeveloperStudio = await wallet.getCanisterActor(
+        DeveloperStudioId,
+        developerStudioFactory,
         false
       );
-      const result = await backend.getTools();
+      const result = await developerStudio.getTools();
       return result;
     },
   });
@@ -42,12 +45,12 @@ export const useApproveTool = () => {
     mutationFn: async (id: string) => {
       if (wallet === undefined) throw Error("user not logged in");
 
-      const backend: Backend = await wallet.getCanisterActor(
-        backendId,
-        backendFactory,
+      const developerStudio: DeveloperStudio = await wallet.getCanisterActor(
+        DeveloperStudioId,
+        developerStudioFactory,
         false
       );
-      const result = await backend.approvePendingDeveloperTool(id);
+      const result = await developerStudio.approvePendingDeveloperTool(id);
       return result;
     },
     onSuccess: () =>
@@ -62,12 +65,12 @@ export const useRejectTool = () => {
     mutationFn: async (id: string) => {
       if (wallet === undefined) throw Error("user not logged in");
 
-      const backend: Backend = await wallet.getCanisterActor(
-        backendId,
-        backendFactory,
+      const developerStudio: DeveloperStudio = await wallet.getCanisterActor(
+        DeveloperStudioId,
+        developerStudioFactory,
         false
       );
-      const result = await backend.rejectDeveloperTool(id);
+      const result = await developerStudio.rejectDeveloperTool(id);
       return result;
     },
     onSuccess: () =>
@@ -83,12 +86,12 @@ export const useGetUserTools = () => {
     queryFn: async () => {
       if (wallet === undefined) throw Error("user not logged in");
 
-      const backend: Backend = await wallet.getCanisterActor(
-        backendId,
-        backendFactory,
+      const developerStudio: DeveloperStudio = await wallet.getCanisterActor(
+        DeveloperStudioId,
+        developerStudioFactory,
         false
       );
-      const result = await backend.getTools();
+      const result = await developerStudio.getTools();
       return result;
     },
     enabled: !!wallet?.principalId,
@@ -102,12 +105,12 @@ export const useRequestDeveloperTool = () => {
     mutationFn: async (toolDetails: DeveloperTool) => {
       if (wallet === undefined) throw Error("user not logged in");
 
-      const backend: Backend = await wallet.getCanisterActor(
-        backendId,
-        backendFactory,
+      const developerStudio: DeveloperStudio = await wallet.getCanisterActor(
+        DeveloperStudioId,
+        developerStudioFactory,
         false
       );
-      const result = await backend.requestToolSubmission(toolDetails);
+      const result = await developerStudio.requestToolSubmission(toolDetails);
       return result;
     },
   });

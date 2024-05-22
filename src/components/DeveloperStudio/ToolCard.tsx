@@ -4,7 +4,7 @@ import {
   DeveloperToolStatus,
   DeveloperTool,
   DeveloperToolWithCreator,
-} from "declarations/backend/backend.did";
+} from "declarations/developer_studio/developer_studio.did";
 import { ExtractKeysFromVariant } from "src/types";
 
 function ToolCard({
@@ -31,9 +31,9 @@ function ToolCard({
       case "rejected":
         return "bg-danger";
       default:
-        // check if switch exhaustive(https://stackoverflow.com/a/58009992/7157529)
-        const exhaustiveCheck: never = status;
-        throw new Error(`Unhandled  case: ${exhaustiveCheck}`);
+        // check if switch exhaustive in comment to this answer(https://stackoverflow.com/a/58009992/7157529)
+        status satisfies never;
+        throw new Error(`Unhandled  case: ${status}`);
     }
   };
 

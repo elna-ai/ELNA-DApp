@@ -25,7 +25,7 @@ actor class Backend(_owner : Principal) {
   stable var _userTokens : [(Principal, Types.UserToken)] = [];
   private stable var _developerUsers : [Types.Developer] = [];
   private stable var _developerPendingApproval : [Types.DeveloperApproval] = [];
-  // TODO: move tools to new canister
+  // TODO: remove developer tools after new canister check
   private stable var _developerTools : [Types.DeveloperTool] = [];
 
   var whitelistedUsers = Buffer.Buffer<Principal>(5);
@@ -33,6 +33,7 @@ actor class Backend(_owner : Principal) {
   var userTokens = HashMap.HashMap<Principal, Types.UserToken>(5, Principal.equal, Principal.hash);
   var developerUsers = Buffer.Buffer<Types.Developer>(10);
   var developerPendingApproval = Buffer.Buffer<Types.DeveloperApproval>(10);
+  // TODO: remove developer tools after new canister check
   var developerTools = Buffer.Buffer<Types.DeveloperTool>(10);
 
   public shared query (message) func isUserWhitelisted(principalId : ?Principal) : async Bool {
@@ -207,7 +208,7 @@ actor class Backend(_owner : Principal) {
     return Buffer.toArray(developerPendingApproval);
   };
 
-  public shared (message) func getDevelopers() : async [Types.Developer] {
+  public shared query (message) func getDevelopers() : async [Types.Developer] {
     return Buffer.toArray(developerUsers);
   };
 
@@ -323,171 +324,171 @@ actor class Backend(_owner : Principal) {
     );
   };
 
-  public query func getApprovedTools() : async [Types.DeveloperToolWithCreator] {
-    let approvedTools = Array.filter(
-      Buffer.toArray(developerTools),
-      func(request : Types.DeveloperTool) : Bool {
-        request.status == #approved;
-      },
-    );
+  // public query func getApprovedTools() : async [Types.DeveloperToolWithCreator] {
+  //   let approvedTools = Array.filter(
+  //     Buffer.toArray(developerTools),
+  //     func(request : Types.DeveloperTool) : Bool {
+  //       request.status == #approved;
+  //     },
+  //   );
 
-    let developerToolsWithCreator = Buffer.map<Types.DeveloperTool, Types.DeveloperToolWithCreator>(
-      Buffer.fromArray(approvedTools),
-      func(devTool) {
-        let creator = Array.find(
-          Buffer.toArray(developerUsers),
-          func(developer : Types.Developer) : Bool {
-            developer.principal == devTool.principal;
-          },
-        );
-        switch (creator) {
-          case (?user) {
-            return {
-              creator = user.alias;
-              id = devTool.id;
-              name = devTool.name;
-              description = devTool.description;
-              projectUrl = devTool.projectUrl;
-              category = devTool.category;
-              status = devTool.status;
-            };
-          };
-          case null {
-            return {
-              creator = "";
-              id = devTool.id;
-              name = devTool.name;
-              description = devTool.description;
-              projectUrl = devTool.projectUrl;
-              category = devTool.category;
-              status = devTool.status;
-            };
-          };
-        };
-      },
-    );
-    return Buffer.toArray(developerToolsWithCreator);
-  };
+  //   let developerToolsWithCreator = Buffer.map<Types.DeveloperTool, Types.DeveloperToolWithCreator>(
+  //     Buffer.fromArray(approvedTools),
+  //     func(devTool) {
+  //       let creator = Array.find(
+  //         Buffer.toArray(developerUsers),
+  //         func(developer : Types.Developer) : Bool {
+  //           developer.principal == devTool.principal;
+  //         },
+  //       );
+  //       switch (creator) {
+  //         case (?user) {
+  //           return {
+  //             creator = user.alias;
+  //             id = devTool.id;
+  //             name = devTool.name;
+  //             description = devTool.description;
+  //             projectUrl = devTool.projectUrl;
+  //             category = devTool.category;
+  //             status = devTool.status;
+  //           };
+  //         };
+  //         case null {
+  //           return {
+  //             creator = "";
+  //             id = devTool.id;
+  //             name = devTool.name;
+  //             description = devTool.description;
+  //             projectUrl = devTool.projectUrl;
+  //             category = devTool.category;
+  //             status = devTool.status;
+  //           };
+  //         };
+  //       };
+  //     },
+  //   );
+  //   return Buffer.toArray(developerToolsWithCreator);
+  // };
 
-  public shared ({ caller }) func getTools() : async [Types.DeveloperTool] {
-    let canUserApprove = isOwner(caller) or Utils.isUserAdmin(adminUsers, caller);
-    if (not canUserApprove) {
-      throw Error.reject("User not authorized for this action");
-    };
+  // public shared ({ caller }) func getTools() : async [Types.DeveloperTool] {
+  //   let canUserApprove = isOwner(caller) or Utils.isUserAdmin(adminUsers, caller);
+  //   if (not canUserApprove) {
+  //     throw Error.reject("User not authorized for this action");
+  //   };
 
-    return Buffer.toArray(developerTools);
-  };
+  //   return Buffer.toArray(developerTools);
+  // };
 
-  public shared ({ caller }) func requestToolSubmission(tool : Types.DeveloperTool) : async Bool {
-    if (tool.principal != caller) {
-      throw Error.reject("Principal does not match");
-    };
+  // public shared ({ caller }) func requestToolSubmission(tool : Types.DeveloperTool) : async Bool {
+  //   if (tool.principal != caller) {
+  //     throw Error.reject("Principal does not match");
+  //   };
 
-    developerTools.add(tool);
-    return true;
-  };
+  //   developerTools.add(tool);
+  //   return true;
+  // };
 
-  public shared ({ caller }) func approvePendingDeveloperTool(id : Text) : async Text {
-    let canUserApprove = isOwner(caller) or Utils.isUserAdmin(adminUsers, caller);
-    if (not canUserApprove) {
-      throw Error.reject("User not authorized for this action");
-    };
-    // TODO: check if already approved
+  // public shared ({ caller }) func approvePendingDeveloperTool(id : Text) : async Text {
+  //   let canUserApprove = isOwner(caller) or Utils.isUserAdmin(adminUsers, caller);
+  //   if (not canUserApprove) {
+  //     throw Error.reject("User not authorized for this action");
+  //   };
+  //   // TODO: check if already approved
 
-    let pendingRequest = Array.find(
-      Buffer.toArray(developerTools),
-      func(request : Types.DeveloperTool) : Bool {
-        request.id == id;
-      },
-    );
-    switch (pendingRequest) {
-      case (?request) {
-        let index = Buffer.indexOf(
-          request,
-          developerTools,
-          func(request1 : Types.DeveloperTool, request2 : Types.DeveloperTool) : Bool {
-            request1.id == request2.id;
-          },
-        );
-        switch (index) {
-          case null {
-            return "Request not found";
-          };
-          case (?index) {
-            let updatedDetails = {
-              id = request.id;
-              name = request.name;
-              description = request.description;
-              projectUrl = request.projectUrl;
-              principal = request.principal;
-              category = request.category;
-              status = #approved;
-            };
-            developerTools.put(index, updatedDetails);
-            return "Request approved";
-          };
-        };
-      };
-      case null {
-        throw Error.reject("Request not found");
-      };
-    };
-  };
+  //   let pendingRequest = Array.find(
+  //     Buffer.toArray(developerTools),
+  //     func(request : Types.DeveloperTool) : Bool {
+  //       request.id == id;
+  //     },
+  //   );
+  //   switch (pendingRequest) {
+  //     case (?request) {
+  //       let index = Buffer.indexOf(
+  //         request,
+  //         developerTools,
+  //         func(request1 : Types.DeveloperTool, request2 : Types.DeveloperTool) : Bool {
+  //           request1.id == request2.id;
+  //         },
+  //       );
+  //       switch (index) {
+  //         case null {
+  //           return "Request not found";
+  //         };
+  //         case (?index) {
+  //           let updatedDetails = {
+  //             id = request.id;
+  //             name = request.name;
+  //             description = request.description;
+  //             projectUrl = request.projectUrl;
+  //             principal = request.principal;
+  //             category = request.category;
+  //             status = #approved;
+  //           };
+  //           developerTools.put(index, updatedDetails);
+  //           return "Request approved";
+  //         };
+  //       };
+  //     };
+  //     case null {
+  //       throw Error.reject("Request not found");
+  //     };
+  //   };
+  // };
 
-  public shared ({ caller }) func rejectDeveloperTool(id : Text) : async Text {
-    let canUserApprove = isOwner(caller) or Utils.isUserAdmin(adminUsers, caller);
-    if (not canUserApprove) {
-      throw Error.reject("User not authorized for this action");
-    };
-    // TODO: check if already approved
+  // public shared ({ caller }) func rejectDeveloperTool(id : Text) : async Text {
+  //   let canUserApprove = isOwner(caller) or Utils.isUserAdmin(adminUsers, caller);
+  //   if (not canUserApprove) {
+  //     throw Error.reject("User not authorized for this action");
+  //   };
+  //   // TODO: check if already approved
 
-    let pendingRequest = Array.find(
-      Buffer.toArray(developerTools),
-      func(request : Types.DeveloperTool) : Bool {
-        request.id == id;
-      },
-    );
-    switch (pendingRequest) {
-      case (?request) {
-        let index = Buffer.indexOf(
-          request,
-          developerTools,
-          func(request1 : Types.DeveloperTool, request2 : Types.DeveloperTool) : Bool {
-            request1.id == request2.id;
-          },
-        );
-        switch (index) {
-          case null {
-            return "Count't find pending approval";
-          };
-          case (?index) {
-            let updatedDetails = {
-              id = request.id;
-              name = request.name;
-              description = request.description;
-              projectUrl = request.projectUrl;
-              principal = request.principal;
-              category = request.category;
-              status = #rejected;
-            };
-            developerTools.put(index, updatedDetails);
-            return "Request rejected";
-          };
-        };
-      };
-      case null {
-        throw Error.reject("Request not found");
-      };
-    };
-  };
-  public shared query ({ caller }) func getUserTools() : async [Types.DeveloperTool] {
-    Array.filter(
-      Buffer.toArray(developerTools),
-      func(request : Types.DeveloperTool) : Bool {
-        request.principal == caller;
-      },
-    );
-  };
+  //   let pendingRequest = Array.find(
+  //     Buffer.toArray(developerTools),
+  //     func(request : Types.DeveloperTool) : Bool {
+  //       request.id == id;
+  //     },
+  //   );
+  //   switch (pendingRequest) {
+  //     case (?request) {
+  //       let index = Buffer.indexOf(
+  //         request,
+  //         developerTools,
+  //         func(request1 : Types.DeveloperTool, request2 : Types.DeveloperTool) : Bool {
+  //           request1.id == request2.id;
+  //         },
+  //       );
+  //       switch (index) {
+  //         case null {
+  //           return "Count't find pending approval";
+  //         };
+  //         case (?index) {
+  //           let updatedDetails = {
+  //             id = request.id;
+  //             name = request.name;
+  //             description = request.description;
+  //             projectUrl = request.projectUrl;
+  //             principal = request.principal;
+  //             category = request.category;
+  //             status = #rejected;
+  //           };
+  //           developerTools.put(index, updatedDetails);
+  //           return "Request rejected";
+  //         };
+  //       };
+  //     };
+  //     case null {
+  //       throw Error.reject("Request not found");
+  //     };
+  //   };
+  // };
+  // public shared query ({ caller }) func getUserTools() : async [Types.DeveloperTool] {
+  //   Array.filter(
+  //     Buffer.toArray(developerTools),
+  //     func(request : Types.DeveloperTool) : Bool {
+  //       request.principal == caller;
+  //     },
+  //   );
+  // };
 
   func isOwner(callerId : Principal) : Bool {
     callerId == owner;
