@@ -1,0 +1,21 @@
+{
+  "backend": {
+    "production": "ev7jo-jaaaa-aaaah-adthq-cai",
+    "staging": "6qy4q-5aaaa-aaaah-adwma-cai"
+  },
+  "developer_studio": {
+    "staging": "r22tl-gaaaa-aaaah-ad3ha-cai"
+  },
+  "elna_ai": {
+    "production": "n4ahg-pqaaa-aaaah-advla-cai",
+    "staging": "662ry-gqaaa-aaaah-adwna-cai"
+  },
+  "frontend": {
+    "production": "gpdbs-xqaaa-aaaah-adtiq-cai",
+    "staging": "6z3xm-liaaa-aaaah-adwnq-cai"
+  },
+  "wizard_details": {
+    "production": "gichg-2iaaa-aaaah-adtia-cai",
+    "staging": "6xz2e-qyaaa-aaaah-adwmq-cai"
+  }
+}
