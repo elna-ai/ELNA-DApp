@@ -51,7 +51,9 @@
       "stoic": "Stoic Wallet",
       "plug": "Plug",
       "astrox": "AstroX ME",
-      "bitfinity": "Infinity Wallet"
+      "bitfinity": "Infinity Wallet",
+      "nfid": "NFID",
+      "metamask": "MetaMask"
     }
   },
   "createAgent": {
