@@ -324,6 +324,104 @@ actor class Backend(_owner : Principal) {
     );
   };
 
+  public shared ({ caller }) func revokeDeveloperAccess(developerId : Text) : async Text {
+    let canRevokeUser = isOwner(caller) or Utils.isUserAdmin(adminUsers, caller);
+    if (not canRevokeUser) {
+      throw Error.reject("User not authorized for this action");
+    };
+
+    let developer = Array.find(
+      Buffer.toArray(developerUsers),
+      func(request : Types.Developer) : Bool {
+        request.id == developerId;
+      },
+    );
+    switch (developer) {
+      case (?developer) {
+        let index = Buffer.indexOf(
+          developer,
+          developerUsers,
+          func(developer1 : Types.Developer, develper2 : Types.Developer) : Bool {
+            developer1.id == developer1.id;
+          },
+        );
+        switch (index) {
+          case null {
+            throw Error.reject("Count't find developer");
+          };
+          case (?index) {
+            if (developer.status == #disabled) {
+              throw Error.reject("Developer already disabled");
+            };
+
+            let updatedDetails = {
+              id = developer.id;
+              alias = developer.alias;
+              email = developer.email;
+              github = developer.github;
+              principal = developer.principal;
+              status = #disabled;
+            };
+            developerUsers.put(index, updatedDetails);
+            return "Developer disbaled";
+          };
+        };
+      };
+      case null {
+        throw Error.reject("Developer not found");
+      };
+    };
+  };
+
+  public shared ({ caller }) func enableDeveloperAccess(developerId : Text) : async Text {
+    let canRevokeUser = isOwner(caller) or Utils.isUserAdmin(adminUsers, caller);
+    if (not canRevokeUser) {
+      throw Error.reject("User not authorized for this action");
+    };
+
+    let developer = Array.find(
+      Buffer.toArray(developerUsers),
+      func(request : Types.Developer) : Bool {
+        request.id == developerId;
+      },
+    );
+    switch (developer) {
+      case (?developer) {
+        let index = Buffer.indexOf(
+          developer,
+          developerUsers,
+          func(developer1 : Types.Developer, develper2 : Types.Developer) : Bool {
+            developer1.id == developer1.id;
+          },
+        );
+        switch (index) {
+          case null {
+            throw Error.reject("Count't find developer");
+          };
+          case (?index) {
+            if (developer.status == #approved) {
+              throw Error.reject("Developer already approved");
+            };
+
+            let updatedDetails = {
+              id = developer.id;
+              alias = developer.alias;
+              email = developer.email;
+              github = developer.github;
+              principal = developer.principal;
+              status = #approved;
+            };
+            developerUsers.put(index, updatedDetails);
+            return "Developer approved";
+          };
+        };
+      };
+      case null {
+        throw Error.reject("Developer not found");
+      };
+    };
+  };
+
   // public query func getApprovedTools() : async [Types.DeveloperToolWithCreator] {
   //   let approvedTools = Array.filter(
   //     Buffer.toArray(developerTools),

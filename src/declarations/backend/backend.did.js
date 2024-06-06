@@ -28,6 +28,7 @@ export const idlFactory = ({ IDL }) => {
   const Backend = IDL.Service({
     'addAdmin' : IDL.Func([IDL.Principal], [IDL.Text], []),
     'approvePendingDeveloper' : IDL.Func([IDL.Text], [IDL.Text], []),
+    'enableDeveloperAccess' : IDL.Func([IDL.Text], [IDL.Text], []),
     'generateUserToken' : IDL.Func([], [IDL.Text], []),
     'getDevelopers' : IDL.Func([], [IDL.Vec(Developer)], ['query']),
     'getPendingDevelopers' : IDL.Func([], [IDL.Vec(DeveloperApproval)], []),
@@ -46,6 +47,7 @@ export const idlFactory = ({ IDL }) => {
     'removeAdmin' : IDL.Func([IDL.Principal], [IDL.Text], []),
     'removeWhitelistedUser' : IDL.Func([IDL.Principal], [IDL.Text], []),
     'requestDeveloperAccess' : IDL.Func([DeveloperApproval], [IDL.Bool], []),
+    'revokeDeveloperAccess' : IDL.Func([IDL.Text], [IDL.Text], []),
     'whitelistUser' : IDL.Func([IDL.Principal], [IDL.Text], []),
   });
   return Backend;

@@ -32,6 +32,7 @@ type Backend =
  service {
    addAdmin: (principal) -> (text);
    approvePendingDeveloper: (text) -> (text);
+   enableDeveloperAccess: (text) -> (text);
    generateUserToken: () -> (text);
    getDevelopers: () -> (vec Developer) query;
    getPendingDevelopers: () -> (vec DeveloperApproval);
@@ -46,6 +47,7 @@ type Backend =
    removeAdmin: (principal) -> (text);
    removeWhitelistedUser: (principal) -> (text);
    requestDeveloperAccess: (DeveloperApproval) -> (bool);
+   revokeDeveloperAccess: (text) -> (text);
    whitelistUser: (principal) -> (text);
  };
 service : (principal) -> Backend

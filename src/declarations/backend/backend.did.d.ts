@@ -5,6 +5,7 @@ import type { IDL } from '@dfinity/candid';
 export interface Backend {
   'addAdmin' : ActorMethod<[Principal], string>,
   'approvePendingDeveloper' : ActorMethod<[string], string>,
+  'enableDeveloperAccess' : ActorMethod<[string], string>,
   'generateUserToken' : ActorMethod<[], string>,
   'getDevelopers' : ActorMethod<[], Array<Developer>>,
   'getPendingDevelopers' : ActorMethod<[], Array<DeveloperApproval>>,
@@ -19,6 +20,7 @@ export interface Backend {
   'removeAdmin' : ActorMethod<[Principal], string>,
   'removeWhitelistedUser' : ActorMethod<[Principal], string>,
   'requestDeveloperAccess' : ActorMethod<[DeveloperApproval], boolean>,
+  'revokeDeveloperAccess' : ActorMethod<[string], string>,
   'whitelistUser' : ActorMethod<[Principal], string>,
 }
 export interface Developer {
