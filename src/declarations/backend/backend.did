@@ -1,0 +1,53 @@
+type DeveloperStatus = 
+ variant {
+   approved;
+   disabled;
+ };
+type DeveloperApprovalStatus = 
+ variant {
+   approved;
+   pending;
+   rejected;
+ };
+type DeveloperApproval = 
+ record {
+   alias: text;
+   description: text;
+   email: text;
+   github: text;
+   id: text;
+   "principal": principal;
+   status: DeveloperApprovalStatus;
+ };
+type Developer = 
+ record {
+   alias: text;
+   email: text;
+   github: text;
+   id: text;
+   "principal": principal;
+   status: DeveloperStatus;
+ };
+type Backend = 
+ service {
+   addAdmin: (principal) -> (text);
+   approvePendingDeveloper: (text) -> (text);
+   enableDeveloperAccess: (text) -> (text);
+   generateUserToken: () -> (text);
+   getDevelopers: () -> (vec Developer) query;
+   getPendingDevelopers: () -> (vec DeveloperApproval);
+   getUserRequests: () -> (vec DeveloperApproval) query;
+   getUserToken: (principal) -> (text);
+   getWhitelistedUser: () -> (vec principal);
+   isDeveloper: () -> (bool);
+   isPrincipalAdmin: (principal) -> (bool) query;
+   isUserAdmin: () -> (bool) query;
+   isUserWhitelisted: (opt principal) -> (bool) query;
+   rejectPendingDeveloper: (text) -> (text);
+   removeAdmin: (principal) -> (text);
+   removeWhitelistedUser: (principal) -> (text);
+   requestDeveloperAccess: (DeveloperApproval) -> (bool);
+   revokeDeveloperAccess: (text) -> (text);
+   whitelistUser: (principal) -> (text);
+ };
+service : (principal) -> Backend

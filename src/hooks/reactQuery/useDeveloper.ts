@@ -119,3 +119,45 @@ export const useGetUserRequest = () => {
     },
   });
 };
+
+export const useDisableDeveloper = () => {
+  const wallet = useWallet();
+  return useMutation({
+    mutationFn: async (developerId: string) => {
+      if (wallet === undefined) throw Error("user not logged in");
+
+      const backend: Backend = await wallet.getCanisterActor(
+        backendId,
+        backendFactory,
+        false
+      );
+      const result = await backend.revokeDeveloperAccess(developerId);
+      return result;
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.DEVELOPERS_LIST],
+      }),
+  });
+};
+
+export const useEnableDeveloper = () => {
+  const wallet = useWallet();
+  return useMutation({
+    mutationFn: async (developerId: string) => {
+      if (wallet === undefined) throw Error("user not logged in");
+
+      const backend: Backend = await wallet.getCanisterActor(
+        backendId,
+        backendFactory,
+        false
+      );
+      const result = await backend.enableDeveloperAccess(developerId);
+      return result;
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.DEVELOPERS_LIST],
+      }),
+  });
+};
