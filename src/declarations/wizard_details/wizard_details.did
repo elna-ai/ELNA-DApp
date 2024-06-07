@@ -4,6 +4,15 @@ type WizardVisibility =
    publicVisibility;
    unlistedVisibility;
  };
+type WizardUpdateDetails = 
+ record {
+   avatar: text;
+   biography: text;
+   description: text;
+   greeting: text;
+   name: text;
+   visibility: WizardVisibility;
+ };
 type WizardDetailsBasic = 
  record {
    avatar: text;
@@ -49,6 +58,7 @@ type Main =
    publishWizard: (text) -> (Response);
    unpublishWizard: (text) -> (Response);
    updateMessageAnalytics: (text) -> ();
+   updateWizard: (text, WizardUpdateDetails) -> (text);
  };
 type Analytics_V1 = record {messagesReplied: nat;};
 type Analytics = variant {v1: Analytics_V1;};

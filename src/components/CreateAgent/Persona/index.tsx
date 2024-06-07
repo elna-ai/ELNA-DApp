@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
@@ -11,32 +10,34 @@ import {
   WizardDetails,
   WizardVisibility,
 } from "declarations/wizard_details/wizard_details.did";
-import { useAddWizard } from "hooks/reactQuery/wizards/useMyWizards";
+import {
+  useAddWizard,
+  useUpdateWizard,
+} from "hooks/reactQuery/wizards/useMyWizards";
 import { getAvatar } from "src/utils";
 import { AVATAR_IMAGES } from "src/constants";
 import LoadingButton from "components/common/LoadingButton";
+import { useCreateWizardStore } from "stores/useCreateWizard";
+import queryClient from "utils/queryClient";
 
 import { PERSONA_VALIDATION_SCHEMA } from "../constants";
 import AvatarImage from "./AvatarImage";
-import { useCreateWizardStore } from "stores/useCreateWizard";
 
 type PersonaProps = {
   wizard: any;
   setCurrentNav: React.Dispatch<React.SetStateAction<string>>;
   setWizardId: React.Dispatch<React.SetStateAction<string>>;
+  isEdit: boolean;
 };
 
-function Persona({ wizard, setCurrentNav, setWizardId }: PersonaProps) {
+function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
   const { t } = useTranslation();
   const wallet = useWallet();
   const wizardName = useCreateWizardStore(state => state.name);
 
-  const {
-    mutate: addWizard,
-    isPending: isAddingWizard,
-    error,
-    isError,
-  } = useAddWizard();
+  const { mutate: addWizard, isPending: isAddingWizard } = useAddWizard();
+  const { mutate: updateWizard, isPending: isUpdatingWizard } =
+    useUpdateWizard();
 
   type Visibility = "public" | "private" | "unlisted";
   type PersonaValues = {
@@ -53,29 +54,44 @@ function Persona({ wizard, setCurrentNav, setWizardId }: PersonaProps) {
     } as WizardVisibility;
     if (userId === undefined) return;
     if (wizardName === null) return;
-
-    const payload: WizardDetails = {
-      ...values,
-      id: uuidv4(),
-      userId,
-      name: wizardName,
-      visibility,
-      summary: [],
-      isPublished: false,
-    };
-    addWizard(payload, {
-      onSuccess: () => {
-        setWizardId(payload.id);
-        setCurrentNav("knowledge");
-      },
-    });
+    if (isEdit) {
+      updateWizard(
+        {
+          wizardId: wizard.id,
+          updatedWizardDetails: {
+            ...values,
+            name: wizardName ? wizardName : wizard.name,
+            visibility,
+          },
+        },
+        {
+          onSuccess: () =>
+            queryClient.invalidateQueries({ queryKey: [wizard.id] }),
+          onError: error => {
+            console.error(error);
+            toast.error(error.message);
+          },
+        }
+      );
+    } else {
+      const payload: WizardDetails = {
+        ...values,
+        id: uuidv4(),
+        userId,
+        name: wizardName,
+        visibility,
+        summary: [],
+        isPublished: false,
+      };
+      addWizard(payload, {
+        onSuccess: () => {
+          setWizardId(payload.id);
+          setCurrentNav("knowledge");
+        },
+        onError: error => toast.error(error.message),
+      });
+    }
   };
-
-  useEffect(() => {
-    if (!isError) return;
-
-    toast.error(error.message);
-  }, [isError]);
 
   return (
     <Formik
@@ -326,10 +342,14 @@ function Persona({ wizard, setCurrentNav, setWizardId }: PersonaProps) {
             </Form.Group>
             <div className="d-flex justify-content-end">
               <LoadingButton
-                label={t("common.next")}
+                label={
+                  isEdit
+                    ? t("common.update", { entity: "agent" })
+                    : t("common.next")
+                }
                 className="ml-auto px-5"
                 isDisabled={!dirty}
-                isLoading={isAddingWizard}
+                isLoading={isAddingWizard || isUpdatingWizard}
                 type="submit"
               />
             </div>

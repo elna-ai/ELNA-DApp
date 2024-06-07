@@ -8,6 +8,7 @@ import {
   Main,
   Response,
   WizardDetails,
+  WizardUpdateDetails,
 } from "declarations/wizard_details/wizard_details.did";
 import { QUERY_KEYS } from "src/constants/query";
 import queryClient from "utils/queryClient";
@@ -25,6 +26,11 @@ type useDeleteMyWizardsProps = {
 type usePublishUnpublishWizardMutationProps = {
   wizardId: string;
   shouldPublish: boolean;
+};
+
+type UseUpdateWizardProps = {
+  wizardId: string;
+  updatedWizardDetails: WizardUpdateDetails;
 };
 
 export const useFetchMyWizards = ({ userId }: useFetchMyWizardsProps) =>
@@ -165,5 +171,38 @@ export const usePublishUnpublishWizard = () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MY_WIZARDS_LIST] });
     },
     onError: error => toast.error(error.message),
+  });
+};
+
+export const useUpdateWizard = () => {
+  const wallet = useWallet();
+  return useMutation({
+    mutationFn: async ({
+      wizardId,
+      updatedWizardDetails,
+    }: UseUpdateWizardProps) => {
+      if (wallet === undefined) {
+        throw Error("User not logged in");
+      }
+
+      const wizardDetails: Main = await wallet.getCanisterActor(
+        canisterId,
+        idlFactory,
+        false
+      );
+      const response = wizardDetails.updateWizard(
+        wizardId,
+        updatedWizardDetails
+      );
+      return response;
+    },
+    onSuccess: response => {
+      toast.success(response);
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MY_WIZARDS_LIST] });
+    },
+    onError: error => {
+      console.error(error);
+      toast.error(error.message);
+    },
   });
 };

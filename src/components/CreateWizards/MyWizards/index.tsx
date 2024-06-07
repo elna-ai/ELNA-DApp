@@ -19,6 +19,7 @@ import NoWizards from "./NoWizards";
 import Title from "./Title";
 import Card from "../Card";
 import WizardNotLoggedIn from "./WizardNotLoggedIn";
+import { useNavigate } from "react-router-dom";
 
 function MyWizards() {
   const [isDeleteWizard, setIsDeleteWizard] = useState(false);
@@ -28,6 +29,7 @@ function MyWizards() {
   }>();
 
   const wallet = useWallet();
+  const navigate = useNavigate();
   const isUserLoggedIn = useUserStore(state => state.isUserLoggedIn);
 
   const {
@@ -74,6 +76,11 @@ function MyWizards() {
     setWizardIdToDelete(undefined);
     setIsDeleteWizard(false);
   };
+
+  const handleEdit = (id: string) => {
+    navigate(`/create-agent/edit/${id}`);
+  };
+
   // TODO: Refactor
   const renderBody = () => {
     if (isUserWizardsLoading) {
@@ -105,6 +112,7 @@ function MyWizards() {
                   imageUrl={getAvatar(avatar)!.image}
                   handleDelete={handleDeletePopup}
                   messagesReplied={analytics?.[id]?.messagesReplied || 0n}
+                  handleEdit={handleEdit}
                 />
               </div>
             )

@@ -17,6 +17,7 @@ export interface Main {
   'publishWizard' : ActorMethod<[string], Response>,
   'unpublishWizard' : ActorMethod<[string], Response>,
   'updateMessageAnalytics' : ActorMethod<[string], undefined>,
+  'updateWizard' : ActorMethod<[string, WizardUpdateDetails], string>,
 }
 export interface Response { 'status' : bigint, 'message' : string }
 export interface WizardDetails {
@@ -38,6 +39,14 @@ export interface WizardDetailsBasic {
   'name' : string,
   'biography' : string,
   'description' : string,
+  'avatar' : string,
+}
+export interface WizardUpdateDetails {
+  'name' : string,
+  'biography' : string,
+  'greeting' : string,
+  'description' : string,
+  'visibility' : WizardVisibility,
   'avatar' : string,
 }
 export type WizardVisibility = { 'privateVisibility' : null } |

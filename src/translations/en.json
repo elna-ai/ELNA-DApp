@@ -178,6 +178,8 @@
     "free": "Free",
     "beta": "Beta",
     "chatter": "Chatter",
-    "developer": "Developer"
+    "developer": "Developer",
+    "update": "Update {{entity}}",
+    "edit": "Edit {{entity}}"
   }
 }
