@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import Cookies from "js-cookie";
-import { Button } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useGenerateUserToken } from "hooks/reactQuery/useUser";
 import { useUserStore } from "stores/useUser";
@@ -12,11 +12,13 @@ import { v4 as uuidv4 } from "uuid";
 
 import Card from "./Card";
 import UploadFile from "./UploadFile";
+import DeleteKnowledgeModal from "./DeleteModal";
 
 type KnowledgeProps = { wizardId: string };
 
 function Knowledge({ wizardId }: KnowledgeProps) {
   const [isAddDocument, setIsAddDocument] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const { t } = useTranslation();
   const wallet = useWallet();
@@ -24,7 +26,8 @@ function Knowledge({ wizardId }: KnowledgeProps) {
   const { mutate: generateUserToken } = useGenerateUserToken();
   const { mutate: loginExternalService } = useLogin();
   // const { data: documents } = useWizardGetFileNames(wizardId);
-  const { data: documents } = useGetFileNames(wizardId);
+  const { data: documents, isFetching: isDocumentsLoading } =
+    useGetFileNames(wizardId);
 
   useEffect(() => {
     !userToken && generateUserToken();
@@ -84,16 +87,30 @@ function Knowledge({ wizardId }: KnowledgeProps) {
       </div>
       <span className="mt-2 text-center fs-7">{t("common.comingSoon")}</span>
       <div className="mt-4 row gx-3 row-cols-xxl-4 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
-        {documents !== undefined &&
+        {isDocumentsLoading ? (
+          <Spinner className="mx-auto mt-2" />
+        ) : (
+          documents !== undefined &&
           documents?.length > 0 &&
           documents.map((document: string) => (
-            <Card key={uuidv4()} title={document} isLearning={false} />
-          ))}
+            <Card
+              key={uuidv4()}
+              title={document}
+              isLearning={false}
+              handleDelete={() => setIsDeleteModalOpen(true)}
+            />
+          ))
+        )}
       </div>
       <UploadFile
         isOpen={isAddDocument}
         onClose={() => setIsAddDocument(false)}
         agentId={wizardId}
+      />
+      <DeleteKnowledgeModal
+        isOpen={isDeleteModalOpen}
+        onHide={() => setIsDeleteModalOpen(false)}
+        wizardId={wizardId}
       />
     </div>
   );

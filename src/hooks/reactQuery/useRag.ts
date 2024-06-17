@@ -27,5 +27,11 @@ export const useGetFileNames = (agentId: string) =>
 
       return response.Ok;
     },
-    retry: 6,
+    retry: 10,
+  });
+
+export const useDeleteCollections = () =>
+  useMutation({
+    mutationFn: (wizardID: string) =>
+      elnaRagBackend.delete_collections_(wizardID),
   });

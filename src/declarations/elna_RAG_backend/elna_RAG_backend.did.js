@@ -23,6 +23,10 @@ export const idlFactory = ({ IDL }) => {
     'CanisterReject' : IDL.Null,
   });
   const Result_1 = IDL.Variant({
+    'Ok' : IDL.Text,
+    'Err' : IDL.Tuple(RejectionCode, IDL.Text),
+  });
+  const Result_2 = IDL.Variant({
     'Ok' : IDL.Vec(IDL.Text),
     'Err' : IDL.Tuple(RejectionCode, IDL.Text),
   });
@@ -42,7 +46,8 @@ export const idlFactory = ({ IDL }) => {
         [Result],
         [],
       ),
-    'get_file_names' : IDL.Func([IDL.Text], [Result_1], []),
+    'delete_collections_' : IDL.Func([IDL.Text], [Result_1], []),
+    'get_file_names' : IDL.Func([IDL.Text], [Result_2], []),
     'transform' : IDL.Func([TransformArgs], [HttpResponse], ['query']),
   });
 };

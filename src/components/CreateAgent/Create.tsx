@@ -181,7 +181,7 @@ function Create() {
       {currentNav === "persona" ? (
         <Persona isEdit={!!uuid} {...{ wizard, setCurrentNav, setWizardId }} />
       ) : (
-        <Knowledge wizardId={wizardId} />
+        <Knowledge wizardId={uuid ? uuid : wizardId} />
       )}
       <Modal show={isPublishSuccessful} onHide={handleClose} centered>
         <ModalBody>

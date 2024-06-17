@@ -9,7 +9,6 @@ import {
   usePublishUnpublishWizard,
 } from "hooks/reactQuery/wizards/useMyWizards";
 import { getAvatar } from "src/utils";
-import { useDeleteIndex } from "hooks/reactQuery/useExternalService";
 import { useGetAllAnalytics } from "hooks/reactQuery/wizards/useAnalytics";
 import { useUserStore } from "stores/useUser";
 import CheckWizardNameCreateModal from "components/common/CheckWizardNameCreate";
@@ -20,6 +19,7 @@ import Title from "./Title";
 import Card from "../Card";
 import WizardNotLoggedIn from "./WizardNotLoggedIn";
 import { useNavigate } from "react-router-dom";
+import { useDeleteCollections } from "hooks/reactQuery/useRag";
 
 function MyWizards() {
   const [isDeleteWizard, setIsDeleteWizard] = useState(false);
@@ -43,7 +43,7 @@ function MyWizards() {
   const { mutate: deleteMyWizard, isPending: isDeletePending } =
     useDeleteMyWizard();
   const { mutate: publishUnpublishWizard } = usePublishUnpublishWizard();
-  const { mutate: deleteIndex } = useDeleteIndex();
+  const { mutate: deleteIndex } = useDeleteCollections();
   const { data: analytics } = useGetAllAnalytics();
 
   const handleDeletePopup = (id: string, name: string) => {

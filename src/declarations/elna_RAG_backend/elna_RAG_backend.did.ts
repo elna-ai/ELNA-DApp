@@ -29,7 +29,9 @@ export type RejectionCode = { 'NoError' : null } |
 export interface Response { 'body' : Body, 'statusCode' : number }
 export type Result = { 'Ok' : Response } |
   { 'Err' : Error };
-export type Result_1 = { 'Ok' : Array<string> } |
+export type Result_1 = { 'Ok' : string } |
+  { 'Err' : [RejectionCode, string] };
+export type Result_2 = { 'Ok' : Array<string> } |
   { 'Err' : [RejectionCode, string] };
 export interface TransformArgs {
   'context' : Uint8Array | number[],
@@ -37,7 +39,8 @@ export interface TransformArgs {
 }
 export interface _SERVICE {
   'chat' : ActorMethod<[string, string, Array<number>, string], Result>,
-  'get_file_names' : ActorMethod<[string], Result_1>,
+  'delete_collections_' : ActorMethod<[string], Result_1>,
+  'get_file_names' : ActorMethod<[string], Result_2>,
   'transform' : ActorMethod<[TransformArgs], HttpResponse>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;

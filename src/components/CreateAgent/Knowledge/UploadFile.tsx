@@ -80,6 +80,10 @@ function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
           });
           onClose();
         },
+        onError: error => {
+          console.error(error);
+          toast.error(error.message);
+        },
       }
     );
   };
