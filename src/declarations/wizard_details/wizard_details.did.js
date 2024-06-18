@@ -28,6 +28,14 @@ export const idlFactory = ({ IDL }) => {
     'description' : IDL.Text,
     'avatar' : IDL.Text,
   });
+  const WizardUpdateDetails = IDL.Record({
+    'name' : IDL.Text,
+    'biography' : IDL.Text,
+    'greeting' : IDL.Text,
+    'description' : IDL.Text,
+    'visibility' : WizardVisibility,
+    'avatar' : IDL.Text,
+  });
   const Main = IDL.Service({
     'addWizard' : IDL.Func([WizardDetails], [Response], []),
     'deleteWizard' : IDL.Func([IDL.Text], [Response], []),
@@ -49,6 +57,7 @@ export const idlFactory = ({ IDL }) => {
     'publishWizard' : IDL.Func([IDL.Text], [Response], []),
     'unpublishWizard' : IDL.Func([IDL.Text], [Response], []),
     'updateMessageAnalytics' : IDL.Func([IDL.Text], [], []),
+    'updateWizard' : IDL.Func([IDL.Text, WizardUpdateDetails], [IDL.Text], []),
   });
   return Main;
 };

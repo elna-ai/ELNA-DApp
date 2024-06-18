@@ -1,12 +1,14 @@
 import PropTypes from "prop-types";
+import { Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
 type CardProps = {
   title: string;
   isLearning: boolean;
+  handleDelete: () => void;
 };
 
-function Card({ title, isLearning }: CardProps) {
+function Card({ title, isLearning, handleDelete }: CardProps) {
   const { t } = useTranslation();
 
   return (
@@ -57,6 +59,14 @@ function Card({ title, isLearning }: CardProps) {
             <span className="text-xs sub-title-color">
               {t("common.learned")}
             </span>
+            <Button
+              style={{ marginLeft: "auto" }}
+              variant="danger"
+              size="sm"
+              onClick={handleDelete}
+            >
+              <i className="ri-delete-bin-line"></i>
+            </Button>
           </div>
         )}
       </div>

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Formik } from "formik";
 import Nav from "react-bootstrap/Nav";
 import Form from "react-bootstrap/Form";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LoadingButton from "components/common/LoadingButton";
 import { useGetFileNames } from "hooks/reactQuery/useRag";
@@ -19,6 +19,7 @@ import { Button, CloseButton, Modal, ModalBody } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { generateTwitterShareLink } from "utils/index";
 import { CREATE_BOT_MODAL_VALIDATION_SCHEMA } from "components/common/CheckWizardNameCreate/constants";
+import PageLoader from "components/common/PageLoader";
 
 function Create() {
   const [currentNav, setCurrentNav] = useState<string>("persona");
@@ -28,6 +29,7 @@ function Create() {
   const { t } = useTranslation();
   const [urlSearchParams, _] = useSearchParams();
   const navigate = useNavigate();
+  const { uuid } = useParams();
   const wizardName = useCreateWizardStore(state => state.name);
   const setWizardName = useCreateWizardStore(state => state.setWizardName);
   const resetWizardName = useCreateWizardStore(state => state.resetWizardName);
@@ -35,7 +37,9 @@ function Create() {
   const { data: documents } = useGetFileNames(wizardId);
   const { mutate: publishWizard, isPending: isPublishingWizard } =
     usePublishUnpublishWizard();
-  const { data: wizard } = useShowWizard(wizardId);
+  const { data: wizard, isFetching: isWizardLoading } = useShowWizard(
+    uuid ? uuid : wizardId
+  );
 
   const handlePublish = () => {
     publishWizard(
@@ -65,9 +69,9 @@ function Create() {
     navigate("/");
   };
 
-  // if (isLoading) {
-  //   return <PageLoader />;
-  // }
+  if (uuid && isWizardLoading) {
+    return <PageLoader />;
+  }
 
   return (
     <>
@@ -175,9 +179,9 @@ function Create() {
       </div>
       <hr className="mt-0" />
       {currentNav === "persona" ? (
-        <Persona {...{ wizard, setCurrentNav, setWizardId }} />
+        <Persona isEdit={!!uuid} {...{ wizard, setCurrentNav, setWizardId }} />
       ) : (
-        <Knowledge wizardId={wizardId} />
+        <Knowledge wizardId={uuid ? uuid : wizardId} />
       )}
       <Modal show={isPublishSuccessful} onHide={handleClose} centered>
         <ModalBody>

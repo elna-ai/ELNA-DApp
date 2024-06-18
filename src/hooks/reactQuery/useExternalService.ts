@@ -55,21 +55,22 @@ export const useCreateElnaVectorDbIndex = () =>
       ),
   });
 
-export const useDeleteIndex = () =>
-  useMutation({
-    mutationFn: (wizardId: string) =>
-      axios.post(
-        `${import.meta.env.VITE_EXTERNAL_SERVICE_BASE}/delete-index`,
-        {
-          index_name: wizardId,
-        },
-        { headers: { Authorization: `jwt ${Cookies.get("external_token")}` } }
-      ),
-    onError: error => {
-      toast.error(error.message);
-      console.error(error);
-    },
-  });
+// TODO: not required, moved delete to RAG
+// export const useDeleteIndex = () =>
+//   useMutation({
+//     mutationFn: (wizardId: string) =>
+//       axios.post(
+//         `${import.meta.env.VITE_EXTERNAL_SERVICE_BASE}/delete-index`,
+//         {
+//           index_name: wizardId,
+//         },
+//         { headers: { Authorization: `jwt ${Cookies.get("external_token")}` } }
+//       ),
+//     onError: error => {
+//       toast.error(error.message);
+//       console.error(error);
+//     },
+//   });
 
 export const useWizardGetFileNames = (wizardId: string) =>
   useQuery({

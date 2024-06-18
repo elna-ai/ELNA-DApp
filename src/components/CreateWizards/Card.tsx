@@ -13,6 +13,7 @@ interface CardProps {
   price?: number;
   handleDelete?: (id: string, name: string) => void;
   handlePublish?: (id: string, isPublished: boolean) => void;
+  handleEdit?: (id: string) => void;
 }
 
 function Card({
@@ -26,6 +27,7 @@ function Card({
   price = 0,
   handleDelete,
   handlePublish,
+  handleEdit,
 }: CardProps) {
   const { t } = useTranslation();
 
@@ -58,6 +60,11 @@ function Card({
                   <i className="ri-more-line" />
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
+                  {handleEdit && (
+                    <Dropdown.Item onClick={() => handleEdit(id)}>
+                      {t("common.edit", { entity: "agent" })}
+                    </Dropdown.Item>
+                  )}
                   <Dropdown.Item
                     onClick={() => handleDelete(id, name)}
                     className="card-dropdown-delete"
