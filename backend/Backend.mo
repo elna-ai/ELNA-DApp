@@ -33,6 +33,14 @@ actor class Backend(_owner : Principal) {
   var userTokens = HashMap.HashMap<Principal, Types.UserToken>(5, Principal.equal, Principal.hash);
   var developerUsers = Buffer.Buffer<Types.Developer>(10);
   var developerPendingApproval = Buffer.Buffer<Types.DeveloperApproval>(10);
+
+  var creatorUsers = Buffer.Buffer<Types.Creator>(10);
+  var creatorPendingApproval = Buffer.Buffer<Types.CreatorApproval>(10);
+
+
+
+
+
   // TODO: remove developer tools after new canister check
   var developerTools = Buffer.Buffer<Types.DeveloperTool>(10);
 
@@ -392,4 +400,96 @@ actor class Backend(_owner : Principal) {
     developerPendingApproval := Buffer.fromArray(_developerPendingApproval);
     developerTools := Buffer.fromArray(_developerTools);
   };
+
+
+  public shared ({ caller }) func approvePendingCreator(requestId : Text) : async Text {
+    let canUserApprove = isOwner(caller) or Utils.isUserAdmin(adminUsers, caller);
+    if (not canUserApprove) {
+      throw Error.reject("User not authorized for this action");
+    };
+
+    let pendingRequest = Array.find(
+      Buffer.toArray(creatorPendingApproval),
+      func(request : Types.CreatorApproval) : Bool {
+        request.id == requestId;
+      },
+    );
+    switch (pendingRequest) {
+      case (?request) {
+        let approvedRequest = {
+          id = request.id;
+          alias = request.alias;
+          email = request.email;
+          github = request.github;
+          principal = request.principal;
+          status = #approved;
+        };
+        creatorUsers.add(approvedRequest);
+        let index = Buffer.indexOf(
+          request,
+          creatorPendingApproval,
+          func(request1 : Types.CreatorApproval, request2 : Types.CreatorApproval) : Bool {
+            request1.id == request2.id;
+          },
+        );
+        switch (index) {
+          case null {
+            return "Count't update pending approval,but request approved";
+          };
+          case (?index) {
+            let updatedDetails = Utils.updatePendingCreatorStatus(request, #approved);
+            creatorPendingApproval.put(index, updatedDetails);
+            return "Request approved";
+          };
+        };
+      };
+      case null {
+        throw Error.reject("Request not found");
+      };
+    };
+  };
+
+  public shared ({ caller }) func rejectPendingCreator(requestId : Text) : async Text {
+    let canUserApprove = isOwner(caller) or Utils.isUserAdmin(adminUsers, caller);
+    if (not canUserApprove) {
+      throw Error.reject("User not authorized for this action");
+    };
+    
+
+    let pendingRequest = Array.find(
+      Buffer.toArray(creatorPendingApproval),
+      func(request : Types.CreatorApproval) : Bool {
+        request.id == requestId;
+      },
+    );
+    switch (pendingRequest) {
+      case (?request) {
+        let index = Buffer.indexOf(
+          request,
+          creatorPendingApproval,
+          func(request1 : Types.CreatorApproval, request2 : Types.CreatorApproval) : Bool {
+            request1.id == request2.id;
+          },
+        );
+        switch (index) {
+          case null {
+            throw Error.reject("Count't find pending approval");
+          };
+          case (?index) {
+            let updatedDetails = Utils.updatePendingCreatorStatus(request, #rejected);
+            creatorPendingApproval.put(index, updatedDetails);
+            return "Request rejected";
+          };
+        };
+      };
+      case null {
+        throw Error.reject("Request not found");
+      };
+    };
+  };
+
+
+
 };
+
+
