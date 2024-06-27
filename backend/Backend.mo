@@ -34,6 +34,7 @@ actor class Backend(_owner : Principal) {
   var userTokens = HashMap.HashMap<Principal, Types.UserToken>(5, Principal.equal, Principal.hash);
   var developerUsers = Buffer.Buffer<Types.Developer>(10);
   var developerPendingApproval = Buffer.Buffer<Types.DeveloperApproval>(10);
+  var creatorPendingApproval = Buffer.Buffer<Types.CreatorApproval>(10);
   // TODO: remove developer tools after new canister check
   var developerTools = Buffer.Buffer<Types.DeveloperTool>(10);
 
@@ -189,6 +190,15 @@ actor class Backend(_owner : Principal) {
     };
 
     developerPendingApproval.add(details);
+    return true;
+  };
+
+    public shared ({ caller }) func requestCreatorAccess(details : Types.CreatorApproval) : async Bool {
+    if (details.principal != caller) {
+      throw Error.reject("Principal does not match");
+    };
+
+    creatorPendingApproval.add(details);
     return true;
   };
 
