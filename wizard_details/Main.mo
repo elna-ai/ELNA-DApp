@@ -34,6 +34,12 @@ actor class Main(_owner : Principal) {
     callerId == owner;
   };
 
+  // TODO: better way to do and maintin this?
+  let UserManagementCanister = actor (Principal.toText(_userManagementCanisterId)) : actor {
+    isPrincipalAdmin : (Principal) -> async (Bool);
+    isCreator : (?Principal) -> async (Bool);
+  };
+
   public query func getAnalytics(wizardId : Text) : async Types.Analytics_V1 {
     switch (analytics.get(wizardId)) {
       case null {
@@ -98,7 +104,7 @@ actor class Main(_owner : Principal) {
   };
 
   public shared (message) func addWizard(wizard : Types.WizardDetails) : async Types.Response {
-    let isCreator = await Backend.isCreator(?message.caller);
+    let isUserWhitelisted = await UserManagementCanister.isUserWhitelisted(?message.caller);
 
     if (not isCreator) {
       return { status = 422; message = "User dosen't have permission" };
