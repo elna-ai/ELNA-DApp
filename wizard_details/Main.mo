@@ -93,9 +93,9 @@ actor class Main(_owner : Principal) {
   };
 
   public shared (message) func addWizard(wizard : Types.WizardDetails) : async Types.Response {
-    let isUserWhitelisted = await Backend.isUserWhitelisted(?message.caller);
+    let isCreator = await Backend.isCreator(?message.caller);
 
-    if (not isUserWhitelisted) {
+    if (not isCreator) {
       return { status = 422; message = "User dosen't have permission" };
     };
 

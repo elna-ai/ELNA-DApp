@@ -25,13 +25,13 @@ actor class Backend(_owner : Principal) {
   var adminUsers = Buffer.Buffer<Principal>(5);
   var userTokens = HashMap.HashMap<Principal, Types.UserToken>(5, Principal.equal, Principal.hash);
 
-  public shared query (message) func isUserWhitelisted(principalId : ?Principal) : async Bool {
+  public shared query (message) func isCreator(principalId : ?Principal) : async Bool {
     switch (principalId) {
       case null {
-        return Utils.isUserWhitelisted(whitelistedUsers, message.caller);
+        return Utils.isCreator(whitelistedUsers, message.caller);
       };
       case (?id) {
-        Utils.isUserWhitelisted(whitelistedUsers, id);
+        Utils.isCreator(whitelistedUsers, id);
       };
     };
   };
@@ -54,7 +54,7 @@ actor class Backend(_owner : Principal) {
       throw Error.reject("User not authorized for this action");
     };
 
-    let isAlreadyWhitelisted : Bool = Utils.isUserWhitelisted(whitelistedUsers, userId);
+    let isAlreadyWhitelisted : Bool = Utils.isCreator(whitelistedUsers, userId);
 
     switch (isAlreadyWhitelisted) {
       case false {

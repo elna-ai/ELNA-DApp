@@ -10,7 +10,7 @@ import Types "Types";
 module {
   let TOKEN_EXPIERY_TIME = 120000000000; // 2min in nanoseconds
 
-  public func isUserWhitelisted(whitelistedUsers : Buffer.Buffer<Principal>, userId : Principal) : Bool {
+  public func isCreator(whitelistedUsers : Buffer.Buffer<Principal>, userId : Principal) : Bool {
     Buffer.contains(
       whitelistedUsers,
       userId,
