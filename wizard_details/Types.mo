@@ -29,6 +29,15 @@ module {
     visibility : WizardVisibility;
   };
 
+  public type WizardUpdateDetails = {
+    name : Text;
+    biography : Text;
+    description : Text;
+    avatar : Text;
+    greeting : Text;
+    visibility : WizardVisibility;
+  };
+
   public type Response = {
     status : Nat;
     message : Text;

@@ -89,7 +89,7 @@ export const SIDEBAR_LINK: SidebarLinkProps[][] = [
       to: "/developer-studio",
       Icon: () => <i className="ri-lg ri-terminal-window-fill"></i>,
       key: "developerStudio",
-      isComingSoon: true,
+      isComingSoon: false,
     },
     {
       Icon: feedbackIcon,
@@ -139,6 +139,24 @@ export const ADMIN_SIDEBAR_LINKS: SidebarLinkProps[][] = [
       Icon: homeIcon,
       to: "/admin/agents",
       key: "admin.agents",
+      isComingSoon: false,
+    },
+    {
+      Icon: homeIcon,
+      to: "/admin/pending-developer",
+      key: "admin.developerRequest",
+      isComingSoon: false,
+    },
+    {
+      Icon: homeIcon,
+      to: "/admin/developers",
+      key: "admin.developers",
+      isComingSoon: false,
+    },
+    {
+      Icon: homeIcon,
+      to: "/admin/pending-tools",
+      key: "admin.pendingTools",
       isComingSoon: false,
     },
   ],

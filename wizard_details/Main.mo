@@ -77,7 +77,7 @@ actor class Main(_owner : Principal) {
 
     getWizardsBasicDetails(publicWizards);
   };
-
+  // TODO: should use caller to get current User
   public query func getUserWizards(userId : Text) : async [Types.WizardDetailsBasic] {
     let userWizards = getWizardsByUser(wizards, userId);
 
@@ -155,6 +155,43 @@ actor class Main(_owner : Principal) {
         Buffer.toArray(wizards);
       };
     };
+  };
+
+  public shared ({ caller }) func updateWizard(wizardId : Text, wizardDetails : Types.WizardUpdateDetails) : async Text {
+    let wizard = findWizardById(wizardId, wizards);
+    switch (wizard) {
+      case null {
+        throw Error.reject("Agent not found");
+      };
+      case (?wizard) {
+        if (Principal.toText(caller) != wizard.userId) {
+          throw Error.reject("User dose not have permission to edit agent");
+        };
+        let wizardId = findWizardIndex(wizard, wizards);
+        switch (wizardId) {
+          case null {
+            throw Error.reject("Agent not found");
+          };
+          case (?index) {
+            let updatedWizardDetails = {
+              name = wizardDetails.name;
+              biography = wizardDetails.biography;
+              description = wizardDetails.description;
+              avatar = wizardDetails.avatar;
+              greeting = wizardDetails.greeting;
+              visibility = wizardDetails.visibility;
+              id = wizard.id;
+              userId = wizard.userId;
+              isPublished = wizard.isPublished;
+              summary = wizard.summary;
+            };
+            wizards.put(index, updatedWizardDetails);
+            return "Agent updated";
+          };
+        };
+      };
+    };
+
   };
 
   public query func getAllAnalytics() : async [(Text, Types.Analytics)] {

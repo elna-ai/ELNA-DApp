@@ -11,3 +11,8 @@ export type Message = {
   };
   message: string;
 };
+
+// Extract Key from Motoko Variants
+export type ExtractKeysFromVariant<T> = T extends { [K in keyof T]: null }
+  ? keyof T
+  : never;

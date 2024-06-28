@@ -1,0 +1,37 @@
+type DeveloperToolWithCreator = 
+ record {
+   category: text;
+   creator: text;
+   description: text;
+   id: text;
+   name: text;
+   projectUrl: text;
+   status: DeveloperToolStatus;
+ };
+type DeveloperToolStatus = 
+ variant {
+   approved;
+   disabled;
+   pending;
+   rejected;
+ };
+type DeveloperTool = 
+ record {
+   category: text;
+   description: text;
+   id: text;
+   name: text;
+   "principal": principal;
+   projectUrl: text;
+   status: DeveloperToolStatus;
+ };
+type DeveloperStudio = 
+ service {
+   approvePendingDeveloperTool: (text) -> (text);
+   getApprovedTools: () -> (vec DeveloperToolWithCreator);
+   getTools: () -> (vec DeveloperTool);
+   getUserTools: () -> (vec DeveloperTool) query;
+   rejectDeveloperTool: (text) -> (text);
+   requestToolSubmission: (DeveloperTool) -> (bool);
+ };
+service : () -> DeveloperStudio

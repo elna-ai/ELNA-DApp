@@ -1,0 +1,16 @@
+.tool-card {
+  display: grid;
+  grid-template-rows: 0.5fr 1fr auto;
+  height: 100%;
+  gap: 10px;
+  border-radius: 10px;
+  min-width: 375px;
+  background-color: var(--background-elevated-base);
+  border: 1px solid var(--background-base-border);
+  padding: 12px 16px;
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+  }
+}

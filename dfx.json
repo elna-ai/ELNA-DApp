@@ -9,8 +9,13 @@
       "main": "wizard_details/Main.mo",
       "dependencies": ["backend"]
     },
+    "developer_studio": {
+      "type": "motoko",
+      "main": "developer_studio/DeveloperStudio.mo",
+      "dependencies": ["backend"]
+    },
     "frontend": {
-      "dependencies": ["backend", "wizard_details", "elna_ai"],
+      "dependencies": ["backend", "wizard_details", "developer_studio"],
       "type": "assets",
       "source": ["dist/"]
     },
