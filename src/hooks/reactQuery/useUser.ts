@@ -109,7 +109,7 @@ export const useAddWhitelistedUser = () => {
   });
 };
 
-export const useIsUserWhiteListed = () => {
+export const useisCreator = () => {
   const wallet = useWallet();
 
   return useQuery({
@@ -121,7 +121,7 @@ export const useIsUserWhiteListed = () => {
         backendFactory,
         false
       );
-      const response = await backend.isUserWhitelisted([]);
+      const response = await backend.isCreator([]);
       return response;
     },
     queryKey: [QUERY_KEYS.WHITELISTED_USERS, wallet?.principalId],

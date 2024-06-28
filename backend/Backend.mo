@@ -18,6 +18,7 @@ import Utils "./Utils";
 actor class Backend(_owner : Principal) {
 
   private stable var owner : Principal = _owner;
+  
   private stable var _whitelistedUsers : [Principal] = [];
   private stable var _adminUsers : [Principal] = [];
   // TODO: check if userDetails requried?
@@ -36,13 +37,13 @@ actor class Backend(_owner : Principal) {
   // TODO: remove developer tools after new canister check
   var developerTools = Buffer.Buffer<Types.DeveloperTool>(10);
 
-  public shared query (message) func isUserWhitelisted(principalId : ?Principal) : async Bool {
+  public shared query (message) func isCreator(principalId : ?Principal) : async Bool {
     switch (principalId) {
       case null {
-        return Utils.isUserWhitelisted(whitelistedUsers, message.caller);
+        return Utils.isCreator(whitelistedUsers, message.caller);
       };
       case (?id) {
-        Utils.isUserWhitelisted(whitelistedUsers, id);
+        Utils.isCreator(whitelistedUsers, id);
       };
     };
   };
@@ -65,7 +66,7 @@ actor class Backend(_owner : Principal) {
       throw Error.reject("User not authorized for this action");
     };
 
-    let isAlreadyWhitelisted : Bool = Utils.isUserWhitelisted(whitelistedUsers, userId);
+    let isAlreadyWhitelisted : Bool = Utils.isCreator(whitelistedUsers, userId);
 
     switch (isAlreadyWhitelisted) {
       case false {
