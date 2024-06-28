@@ -35,31 +35,9 @@ actor class Backend(_owner : Principal) {
   var developerUsers = Buffer.Buffer<Types.Developer>(10);
   var developerPendingApproval = Buffer.Buffer<Types.DeveloperApproval>(10);
   var creatorPendingApproval = Buffer.Buffer<Types.CreatorApproval>(10);
+  var creatorUsers = Buffer.Buffer<Types.Creator>(10);
   // TODO: remove developer tools after new canister check
   var developerTools = Buffer.Buffer<Types.DeveloperTool>(10);
-
-  public shared query (message) func isCreator(principalId : ?Principal) : async Bool {
-    switch (principalId) {
-      case null {
-        return Utils.isCreator(whitelistedUsers, message.caller);
-      };
-      case (?id) {
-        Utils.isCreator(whitelistedUsers, id);
-      };
-    };
-  };
-
-  public shared (message) func getWhitelistedUser() : async [Principal] {
-
-    switch (Utils.isUserAdmin(adminUsers, message.caller)) {
-      case false {
-        throw Error.reject("User is not admin");
-      };
-      case true {
-        return Buffer.toArray(whitelistedUsers);
-      };
-    };
-  };
 
   public shared (message) func whitelistUser(userId : Principal) : async Text {
     let canUserWhitelist = isOwner(message.caller) or Utils.isUserAdmin(adminUsers, message.caller);
@@ -190,15 +168,6 @@ actor class Backend(_owner : Principal) {
     };
 
     developerPendingApproval.add(details);
-    return true;
-  };
-
-    public shared ({ caller }) func requestCreatorAccess(details : Types.CreatorApproval) : async Bool {
-    if (details.principal != caller) {
-      throw Error.reject("Principal does not match");
-    };
-
-    creatorPendingApproval.add(details);
     return true;
   };
 
@@ -377,6 +346,100 @@ actor class Backend(_owner : Principal) {
       };
       case null {
         throw Error.reject("Developer not found");
+      };
+    };
+  };
+
+  public shared query (message) func isCreator(principalId : ?Principal) : async Bool {
+    switch (principalId) {
+      case null {
+        return Utils.isCreator(whitelistedUsers, message.caller);
+      };
+      case (?id) {
+        Utils.isCreator(whitelistedUsers, id);
+      };
+    };
+  };
+
+  public shared (message) func getCreators() : async [Principal] {
+
+    switch (Utils.isUserAdmin(adminUsers, message.caller)) {
+      case false {
+        throw Error.reject("User is not admin");
+      };
+      case true {
+        return Buffer.toArray(whitelistedUsers);
+      };
+    };
+  };
+
+  public shared ({ caller }) func requestCreatorAccess(details : Types.CreatorApproval) : async Bool {
+    if (details.principal != caller) {
+      throw Error.reject("Principal does not match");
+    };
+
+    creatorPendingApproval.add(details);
+    return true;
+  };
+
+  public shared ({ caller }) func revokeCreatorAccess(creatorId : Text) : async Text {
+    let canRevokeUser = isOwner(caller) or Utils.isUserAdmin(adminUsers, caller);
+    if (not canRevokeUser) {
+      throw Error.reject("User not authorized for this action");
+    };
+
+    let creator = Utils.findCreator(creatorUsers, creatorId);
+    switch (creator) {
+      case (?creator) {
+        let index = Utils.findCreatorIndex(creatorUsers, creator);
+        switch (index) {
+          case null {
+            throw Error.reject("Count't find creator");
+          };
+          case (?index) {
+            if (creator.status == #disabled) {
+              throw Error.reject("Creator already disabled");
+            };
+
+            let updatedDetails = Utils.updateCreatorStatus(creator, #disabled);
+            creatorUsers.put(index, updatedDetails);
+            return "Creator disbaled";
+          };
+        };
+      };
+      case null {
+        throw Error.reject("Creator not found");
+      };
+    };
+  };
+
+  public shared ({ caller }) func enableCreatorAccess(creatorId : Text) : async Text {
+    let canRevokeUser = isOwner(caller) or Utils.isUserAdmin(adminUsers, caller);
+    if (not canRevokeUser) {
+      throw Error.reject("User not authorized for this action");
+    };
+
+    let creator = Utils.findCreator(creatorUsers, creatorId);
+    switch (creator) {
+      case (?creator) {
+        let index = Utils.findCreatorIndex(creatorUsers, creator);
+        switch (index) {
+          case null {
+            throw Error.reject("Couldn't find creator");
+          };
+          case (?index) {
+            if (creator.status == #approved) {
+              throw Error.reject("Creator already approved");
+            };
+
+            let updatedDetails = Utils.updateCreatorStatus(creator, #approved);
+            creatorUsers.put(index, updatedDetails);
+            return "Creator approved";
+          };
+        };
+      };
+      case null {
+        throw Error.reject("Creator not found");
       };
     };
   };
