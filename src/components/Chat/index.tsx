@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
-import axios from "axios";
 
 import PageLoader from "components/common/PageLoader";
 import {
@@ -12,20 +11,22 @@ import {
   getAvatar,
   transformHistory,
 } from "src/utils";
-
-import Bubble from "./Bubble";
-import NoHistory from "./NoHistory";
-import { elna_ai as elnaAi } from "declarations/elna_ai";
 import useAutoSizeTextArea from "hooks/useAutoResizeTextArea";
 import { Message } from "src/types";
 import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
-import { TWITTER_SHARE_CONTENT } from "./constants";
 import { useUpdateMessagesReplied } from "hooks/reactQuery/wizards/useAnalytics";
+import { useCreatingQuestionEmbedding } from "hooks/reactQuery/useExternalService";
+import { useChat } from "hooks/reactQuery/useRag";
+import { isErr } from "utils/ragCanister";
+
+import Bubble from "./Bubble";
+import NoHistory from "./NoHistory";
+import { TWITTER_SHARE_CONTENT } from "./constants";
 
 function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [messageInput, setMessageInput] = useState("");
-  const [isResponseLoading, setIsResponseLoading] = useState(false);
+  // const [isResponseLoading, setIsResponseLoading] = useState(false);
 
   const { id } = useParams();
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -38,7 +39,9 @@ function Chat() {
     isError,
   } = useShowWizard(id);
   const { mutate: updateMessagesReplied } = useUpdateMessagesReplied();
+  const { mutate: createQuestionEmbedding } = useCreatingQuestionEmbedding();
   useAutoSizeTextArea(inputRef.current, messageInput);
+  const { mutate: sendChat, isPending: isResponseLoading } = useChat();
 
   useEffect(() => {
     if (!isError) return;
@@ -68,35 +71,45 @@ function Chat() {
 
   const handleSubmit = async () => {
     const message = messageInput.trim();
-    const history = transformHistory(messages);
+    // TODO: add history support to rag
+    // const history = transformHistory(messages);
     setMessages(prev => [...prev, { user: { name: "User" }, message }]);
     setMessageInput("");
-    setIsResponseLoading(true);
-    try {
-      const response: any = await axios.post(
-        `${import.meta.env.VITE_EXTERNAL_SERVICE_BASE}/chat`,
-        {
-          biography: wizard!.biography,
-          query_text: message,
-          greeting: wizard!.greeting,
-          index_name: wizard!.id,
-          history,
-        }
-      );
-      updateMessagesReplied(wizard?.id || "");
+    createQuestionEmbedding(message, {
+      onSuccess(data) {
+        const embeddings = data.data.body.vectors;
+        sendChat(
+          {
+            agentId: wizard!.id,
+            queryText: message,
+            embeddings,
+          },
+          {
+            onSuccess: response => {
+              if (isErr(response)) {
+                toast.error("something went wrong");
+                console.error(Object.keys(response.Err).join());
+                return;
+              }
 
-      setIsResponseLoading(false);
-      setMessages(prev => [
-        ...prev,
-        {
-          user: { name: wizard!.name, isBot: true },
-          message: response.data.body.response,
-        },
-      ]);
-    } catch (e) {
-      console.error(e);
-      toast.error("Something went wrong");
-    }
+              updateMessagesReplied(wizard?.id || "");
+              setMessages(prev => [
+                ...prev,
+                {
+                  user: { name: wizard!.name, isBot: true },
+                  message: response?.Ok?.body?.response,
+                },
+              ]);
+            },
+            onError: e => {
+              console.error(e);
+              toast.error(e.message);
+            },
+          }
+        );
+      },
+      onError: e => toast.error(e.message),
+    });
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {

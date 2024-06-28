@@ -25,11 +25,10 @@ dist-ssr
 *.sw?
 
 # Canisters
-/src/declarations
 .dfx
 .vessel
 .mops
-canister_ids.json
+# canister_ids.json
 
 # Environment variables
 .env
