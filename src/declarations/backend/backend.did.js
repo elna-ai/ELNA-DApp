@@ -38,7 +38,7 @@ export const idlFactory = ({ IDL }) => {
     'isDeveloper' : IDL.Func([], [IDL.Bool], []),
     'isPrincipalAdmin' : IDL.Func([IDL.Principal], [IDL.Bool], ['query']),
     'isUserAdmin' : IDL.Func([], [IDL.Bool], ['query']),
-    'isUserWhitelisted' : IDL.Func(
+    'isCreator' : IDL.Func(
         [IDL.Opt(IDL.Principal)],
         [IDL.Bool],
         ['query'],
