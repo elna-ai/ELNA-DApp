@@ -193,14 +193,29 @@ actor class Backend(_owner : Principal) {
     return true;
   };
 
-    public shared ({ caller }) func requestCreatorAccess(details : Types.CreatorApproval) : async Bool {
+  public shared ({ caller }) func requestCreatorAccess(details : Types.CreatorApproval) : async Bool {
     if (details.principal != caller) {
-      throw Error.reject("Principal does not match");
+        throw Error.reject("Principal does not match");
     };
 
-    creatorPendingApproval.add(details);
-    return true;
-  };
+    let existingApproval = Array.find(
+        Buffer.toArray(creatorPendingApproval),
+        func(approval : Types.CreatorApproval) : Bool {
+            approval.principal == details.principal;
+        },
+    );
+
+    switch (existingApproval) {
+        case (?approval) {
+            throw Error.reject("Approval request already exists for this user");
+        };
+        case null {
+            creatorPendingApproval.add(details);
+            return true;
+        };
+    };
+};
+
 
   public shared ({ caller }) func isDeveloper() : async Bool {
     let developer = Array.find(

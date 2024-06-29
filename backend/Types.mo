@@ -54,16 +54,18 @@ module {
     status : CreatorStatus;
   };
 
-  public type CreatorApproval = {
+public type CreatorApproval = {
     id : Text;
     alias : Text;
     email : Text;
     github : Text;
     description : Text;
     principal : Principal;
-    // TODO: IS this required?
     status : CreatorApprovalStatus;
-  };
+    createdAt : Time.Time;
+    updatedAt : Time.Time;
+};
+
 
   public type DeveloperApproval = {
     id : Text;
