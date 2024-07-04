@@ -9,7 +9,8 @@
     "t&c": "T&C"
   },
   "header": {
-    "connectWallet": "Connect Wallet"
+    "connectWallet": "Connect Wallet",
+    "userProfile": "User Profile"
   },
   "sidebar": {
     "plusHeading": "Get more out of {{name}}+",
@@ -28,7 +29,10 @@
     "admin": {
       "dashboard": "Admin dashboard",
       "whitelist": "Whitelist Users",
-      "agents": "All agents"
+      "agents": "All agents",
+      "developerRequest": "Developer request",
+      "developers": "developers",
+      "pendingTools": "Pending tools"
     }
   },
   "wizards": {
@@ -47,7 +51,9 @@
       "stoic": "Stoic Wallet",
       "plug": "Plug",
       "astrox": "AstroX ME",
-      "bitfinity": "Infinity Wallet"
+      "bitfinity": "Infinity Wallet",
+      "nfid": "NFID",
+      "metamask": "MetaMask"
     }
   },
   "createAgent": {
@@ -120,6 +126,32 @@
       "principalId": "Principal id"
     }
   },
+  "profile": {
+    "title": "My Profile",
+    "description": "Details about you",
+    "principal": "Principal:",
+    "roles": "Roles:",
+    "requestDevAccess": "Request for Developer access",
+    "devRequest": {
+      "form": {
+        "alias": "Alias",
+        "email": "Email",
+        "github": "Github",
+        "description": "Description"
+      }
+    }
+  },
+  "developerStudio": {
+    "toolsMarketplace": "Tools Marketplace",
+    "toolsMarketplaceDesc": "Get started on creating an engaging agent with a pre-made template.",
+    "myTools": "My Tools",
+    "noTools": "You have no Tools",
+    "createBanner": {
+      "title": "List your tools",
+      "description": "Discover amazing tools made by the community",
+      "listATool": "List A tool"
+    }
+  },
   "common": {
     "elna": "ELNA",
     "eywa": "Eywa",
@@ -144,6 +176,10 @@
     "deleteConfirmation": "Are you sure you want to delete <bold>{{entity}}</bold>",
     "add": "Add {{entity}}",
     "free": "Free",
-    "beta": "Beta"
+    "beta": "Beta",
+    "chatter": "Chatter",
+    "developer": "Developer",
+    "update": "Update {{entity}}",
+    "edit": "Edit {{entity}}"
   }
 }

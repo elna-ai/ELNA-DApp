@@ -9,6 +9,8 @@ import HashMap "mo:base/HashMap";
 import Time "mo:base/Time";
 import Error "mo:base/Error";
 import Iter "mo:base/Iter";
+import Array "mo:base/Array";
+import Debug "mo:base/Debug";
 
 import Types "./Types";
 import Utils "./Utils";
@@ -18,12 +20,21 @@ actor class Backend(_owner : Principal) {
   private stable var owner : Principal = _owner;
   private stable var _whitelistedUsers : [Principal] = [];
   private stable var _adminUsers : [Principal] = [];
+  // TODO: check if userDetails requried?
   stable var userDetails = Map.new<Types.UserAddress, Types.UserDetails>();
   stable var _userTokens : [(Principal, Types.UserToken)] = [];
+  private stable var _developerUsers : [Types.Developer] = [];
+  private stable var _developerPendingApproval : [Types.DeveloperApproval] = [];
+  // TODO: remove developer tools after new canister check
+  private stable var _developerTools : [Types.DeveloperTool] = [];
 
   var whitelistedUsers = Buffer.Buffer<Principal>(5);
   var adminUsers = Buffer.Buffer<Principal>(5);
   var userTokens = HashMap.HashMap<Principal, Types.UserToken>(5, Principal.equal, Principal.hash);
+  var developerUsers = Buffer.Buffer<Types.Developer>(10);
+  var developerPendingApproval = Buffer.Buffer<Types.DeveloperApproval>(10);
+  // TODO: remove developer tools after new canister check
+  var developerTools = Buffer.Buffer<Types.DeveloperTool>(10);
 
   public shared query (message) func isUserWhitelisted(principalId : ?Principal) : async Bool {
     switch (principalId) {
@@ -171,6 +182,194 @@ actor class Backend(_owner : Principal) {
     };
   };
 
+  public shared ({ caller }) func requestDeveloperAccess(details : Types.DeveloperApproval) : async Bool {
+    if (details.principal != caller) {
+      throw Error.reject("Principal does not match");
+    };
+
+    developerPendingApproval.add(details);
+    return true;
+  };
+
+  public shared ({ caller }) func isDeveloper() : async Bool {
+    let developer = Array.find(
+      Buffer.toArray(developerUsers),
+      func(developer : Types.Developer) : Bool {
+        developer.principal == caller;
+      },
+    );
+    switch (developer) {
+      case (?dev) { return true };
+      case null { return false };
+    };
+  };
+
+  public shared (message) func getPendingDevelopers() : async [Types.DeveloperApproval] {
+    return Buffer.toArray(developerPendingApproval);
+  };
+
+  public shared query (message) func getDevelopers() : async [Types.Developer] {
+    return Buffer.toArray(developerUsers);
+  };
+
+  public shared ({ caller }) func approvePendingDeveloper(requestId : Text) : async Text {
+    let canUserApprove = isOwner(caller) or Utils.isUserAdmin(adminUsers, caller);
+    if (not canUserApprove) {
+      throw Error.reject("User not authorized for this action");
+    };
+    // TODO: check if already approved
+
+    let pendingRequest = Array.find(
+      Buffer.toArray(developerPendingApproval),
+      func(request : Types.DeveloperApproval) : Bool {
+        request.id == requestId;
+      },
+    );
+    switch (pendingRequest) {
+      case (?request) {
+        let approvedRequest = {
+          id = request.id;
+          alias = request.alias;
+          email = request.email;
+          github = request.github;
+          principal = request.principal;
+          status = #approved;
+        };
+        developerUsers.add(approvedRequest);
+        let index = Buffer.indexOf(
+          request,
+          developerPendingApproval,
+          func(request1 : Types.DeveloperApproval, request2 : Types.DeveloperApproval) : Bool {
+            request1.id == request2.id;
+          },
+        );
+        switch (index) {
+          case null {
+            return "Count't update pending approval,but request approved";
+          };
+          case (?index) {
+            let updatedDetails = Utils.updatePendingDeveloperStatus(request, #approved);
+            developerPendingApproval.put(index, updatedDetails);
+            return "Request approved";
+          };
+        };
+      };
+      case null {
+        throw Error.reject("Request not found");
+      };
+    };
+  };
+
+  public shared ({ caller }) func rejectPendingDeveloper(requestId : Text) : async Text {
+    let canUserApprove = isOwner(caller) or Utils.isUserAdmin(adminUsers, caller);
+    if (not canUserApprove) {
+      throw Error.reject("User not authorized for this action");
+    };
+    // TODO: check if already approved
+
+    let pendingRequest = Array.find(
+      Buffer.toArray(developerPendingApproval),
+      func(request : Types.DeveloperApproval) : Bool {
+        request.id == requestId;
+      },
+    );
+    switch (pendingRequest) {
+      case (?request) {
+        let index = Buffer.indexOf(
+          request,
+          developerPendingApproval,
+          func(request1 : Types.DeveloperApproval, request2 : Types.DeveloperApproval) : Bool {
+            request1.id == request2.id;
+          },
+        );
+        switch (index) {
+          case null {
+            throw Error.reject("Count't find pending approval");
+          };
+          case (?index) {
+            let updatedDetails = Utils.updatePendingDeveloperStatus(request, #rejected);
+            developerPendingApproval.put(index, updatedDetails);
+            return "Request rejected";
+          };
+        };
+      };
+      case null {
+        throw Error.reject("Request not found");
+      };
+    };
+  };
+
+  public shared query ({ caller }) func getUserRequests() : async [Types.DeveloperApproval] {
+    Array.filter(
+      Buffer.toArray(developerPendingApproval),
+      func(request : Types.DeveloperApproval) : Bool {
+        request.principal == caller;
+      },
+    );
+  };
+
+  public shared ({ caller }) func revokeDeveloperAccess(developerId : Text) : async Text {
+    let canRevokeUser = isOwner(caller) or Utils.isUserAdmin(adminUsers, caller);
+    if (not canRevokeUser) {
+      throw Error.reject("User not authorized for this action");
+    };
+
+    let developer = Utils.findDeveloper(developerUsers, developerId);
+    switch (developer) {
+      case (?developer) {
+        let index = Utils.findDeveloperIndex(developerUsers, developer);
+        switch (index) {
+          case null {
+            throw Error.reject("Count't find developer");
+          };
+          case (?index) {
+            if (developer.status == #disabled) {
+              throw Error.reject("Developer already disabled");
+            };
+
+            let updatedDetails = Utils.updateDeveloperStatus(developer, #disabled);
+            developerUsers.put(index, updatedDetails);
+            return "Developer disbaled";
+          };
+        };
+      };
+      case null {
+        throw Error.reject("Developer not found");
+      };
+    };
+  };
+
+  public shared ({ caller }) func enableDeveloperAccess(developerId : Text) : async Text {
+    let canRevokeUser = isOwner(caller) or Utils.isUserAdmin(adminUsers, caller);
+    if (not canRevokeUser) {
+      throw Error.reject("User not authorized for this action");
+    };
+
+    let developer = Utils.findDeveloper(developerUsers, developerId);
+    switch (developer) {
+      case (?developer) {
+        let index = Utils.findDeveloperIndex(developerUsers, developer);
+        switch (index) {
+          case null {
+            throw Error.reject("Count't find developer");
+          };
+          case (?index) {
+            if (developer.status == #approved) {
+              throw Error.reject("Developer already approved");
+            };
+
+            let updatedDetails = Utils.updateDeveloperStatus(developer, #approved);
+            developerUsers.put(index, updatedDetails);
+            return "Developer approved";
+          };
+        };
+      };
+      case null {
+        throw Error.reject("Developer not found");
+      };
+    };
+  };
+
   func isOwner(callerId : Principal) : Bool {
     callerId == owner;
   };
@@ -179,6 +378,9 @@ actor class Backend(_owner : Principal) {
     _whitelistedUsers := Buffer.toArray(whitelistedUsers);
     _adminUsers := Buffer.toArray(adminUsers);
     _userTokens := Iter.toArray(userTokens.entries());
+    _developerUsers := Buffer.toArray(developerUsers);
+    _developerPendingApproval := Buffer.toArray(developerPendingApproval);
+    _developerTools := Buffer.toArray(developerTools);
 
   };
 
@@ -186,5 +388,8 @@ actor class Backend(_owner : Principal) {
     whitelistedUsers := Buffer.fromArray(_whitelistedUsers);
     adminUsers := Buffer.fromArray(_adminUsers);
     userTokens := HashMap.fromIter<Principal, Types.UserToken>(_userTokens.vals(), 5, Principal.equal, Principal.hash);
+    developerUsers := Buffer.fromArray(_developerUsers);
+    developerPendingApproval := Buffer.fromArray(_developerPendingApproval);
+    developerTools := Buffer.fromArray(_developerTools);
   };
 };

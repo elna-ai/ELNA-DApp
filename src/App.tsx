@@ -23,6 +23,8 @@ import "common/i18n";
 import "stylesheets/index.scss";
 import "remixicon/fonts/remixicon.css";
 import "react-toastify/dist/ReactToastify.css";
+import Profile from "components/Profile";
+import DeveloperStudio from "components/DeveloperStudio";
 
 function App() {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -55,9 +57,14 @@ function App() {
                           element={<CreateAgent />}
                         />
                         <Route
+                          path="/developer-studio/*"
+                          element={<DeveloperStudio />}
+                        />
+                        <Route
                           path="/admin/*"
                           element={<PrivateRoute component={AdminDashboard} />}
                         />
+                        <Route path="/profile/*" element={<Profile />} />
                         <Route path="*" element={<Page404 />} />
                       </Routes>
                     )}

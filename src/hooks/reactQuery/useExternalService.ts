@@ -45,21 +45,32 @@ export const useCreateIndex = () =>
     },
   });
 
-export const useDeleteIndex = () =>
+export const useCreateElnaVectorDbIndex = () =>
   useMutation({
-    mutationFn: (wizardId: string) =>
+    mutationFn: (payload: useCreateIndexProps) =>
       axios.post(
-        `${import.meta.env.VITE_EXTERNAL_SERVICE_BASE}/delete-index`,
-        {
-          index_name: wizardId,
-        },
+        `${import.meta.env.VITE_EXTERNAL_SERVICE_BASE}/create-elna-index`,
+        payload,
         { headers: { Authorization: `jwt ${Cookies.get("external_token")}` } }
       ),
-    onError: error => {
-      toast.error(error.message);
-      console.error(error);
-    },
   });
+
+// TODO: not required, moved delete to RAG
+// export const useDeleteIndex = () =>
+//   useMutation({
+//     mutationFn: (wizardId: string) =>
+//       axios.post(
+//         `${import.meta.env.VITE_EXTERNAL_SERVICE_BASE}/delete-index`,
+//         {
+//           index_name: wizardId,
+//         },
+//         { headers: { Authorization: `jwt ${Cookies.get("external_token")}` } }
+//       ),
+//     onError: error => {
+//       toast.error(error.message);
+//       console.error(error);
+//     },
+//   });
 
 export const useWizardGetFileNames = (wizardId: string) =>
   useQuery({
@@ -73,4 +84,13 @@ export const useWizardGetFileNames = (wizardId: string) =>
     select: data => {
       return data?.data?.body?.data;
     },
+  });
+
+export const useCreatingQuestionEmbedding = () =>
+  useMutation({
+    mutationFn: (text: string) =>
+      axios.post(
+        `${import.meta.env.VITE_EXTERNAL_SERVICE_BASE}/create-embedding`,
+        { text }
+      ),
   });

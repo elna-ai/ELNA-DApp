@@ -1,0 +1,65 @@
+type WizardVisibility = 
+ variant {
+   privateVisibility;
+   publicVisibility;
+   unlistedVisibility;
+ };
+type WizardUpdateDetails = 
+ record {
+   avatar: text;
+   biography: text;
+   description: text;
+   greeting: text;
+   name: text;
+   visibility: WizardVisibility;
+ };
+type WizardDetailsBasic = 
+ record {
+   avatar: text;
+   biography: text;
+   description: text;
+   id: text;
+   isPublished: bool;
+   name: text;
+   userId: text;
+ };
+type WizardDetails = 
+ record {
+   avatar: text;
+   biography: text;
+   description: text;
+   greeting: text;
+   id: text;
+   isPublished: bool;
+   name: text;
+   summary: opt text;
+   userId: text;
+   visibility: WizardVisibility;
+ };
+type Response = 
+ record {
+   message: text;
+   status: nat;
+ };
+type Main = 
+ service {
+   addWizard: (WizardDetails) -> (Response);
+   deleteWizard: (text) -> (Response);
+   getAllAnalytics: () -> (vec record {
+                                 text;
+                                 Analytics;
+                               }) query;
+   getAllWizards: () -> (vec WizardDetails);
+   getAnalytics: (text) -> (Analytics_V1) query;
+   getUserWizards: (text) -> (vec WizardDetailsBasic) query;
+   getWizard: (text) -> (opt WizardDetails) query;
+   getWizards: () -> (vec WizardDetailsBasic) query;
+   isWizardNameValid: (text) -> (bool) query;
+   publishWizard: (text) -> (Response);
+   unpublishWizard: (text) -> (Response);
+   updateMessageAnalytics: (text) -> ();
+   updateWizard: (text, WizardUpdateDetails) -> (text);
+ };
+type Analytics_V1 = record {messagesReplied: nat;};
+type Analytics = variant {v1: Analytics_V1;};
+service : (principal) -> Main

@@ -12,6 +12,7 @@
 @import "components/buttons";
 @import "components/my_wizard";
 @import "components/banner";
+@import "components/tool_card";
 
 @import "pages/chat";
 @import "pages/persona";
@@ -707,4 +708,14 @@ textarea.form-control {
 
 .text-xs {
   font-size: 0.85rem;
+}
+.req-card {
+  padding: 12px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  max-width: 360px;
+  background-color: var(--background-elevated-base);
+  border: 1px solid var(--background-base-border);
+  margin-bottom: 1rem;
 }
