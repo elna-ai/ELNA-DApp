@@ -3,26 +3,27 @@ import Text "mo:base/Text";
 import Buffer "mo:base/Buffer";
 import Bool "mo:base/Bool";
 import Principal "mo:base/Principal";
+import Time "mo:base/Time";
 
 import Types "./Types";
 
 module {
 
   public func getWizardsByUser(
-    wizards : Buffer.Buffer<Types.WizardDetails>,
+    wizards : Buffer.Buffer<Types.WizardDetailsWithTimeStamp>,
     // TODO: make principal?
     userId : Text,
-  ) : [Types.WizardDetails] {
+  ) : [Types.WizardDetailsWithTimeStamp] {
     Array.filter(
       Buffer.toArray(wizards),
-      func(wizard : Types.WizardDetails) : Bool {
+      func(wizard : Types.WizardDetailsWithTimeStamp) : Bool {
         wizard.userId == userId;
       },
     );
   };
 
   public func isWizardNameTakenByUser(
-    wizards : Buffer.Buffer<Types.WizardDetails>,
+    wizards : Buffer.Buffer<Types.WizardDetailsWithTimeStamp>,
     // TODO: make principal?
     userId : Text,
     wizardName : Text,
@@ -36,10 +37,10 @@ module {
     ).size() == 0;
   };
 
-  public func getWizardsBasicDetails(wizards : [Types.WizardDetails]) : [Types.WizardDetailsBasic] {
+  public func getWizardsBasicDetails(wizards : [Types.WizardDetailsWithTimeStamp]) : [Types.WizardDetailsBasicWithTimeStamp] {
     Array.map(
       wizards,
-      func(wizard : Types.WizardDetails) : Types.WizardDetailsBasic {
+      func(wizard : Types.WizardDetailsWithTimeStamp) : Types.WizardDetailsBasicWithTimeStamp {
         {
           id = wizard.id;
           name = wizard.name;
@@ -48,6 +49,9 @@ module {
           description = wizard.description;
           avatar = wizard.avatar;
           isPublished = wizard.isPublished;
+          createdAt = wizard.createdAt;
+          updatedAt = wizard.updatedAt;
+
         };
       },
     );
@@ -57,7 +61,7 @@ module {
     wizard.userId == Principal.toText(userId);
   };
 
-  public func findWizardById(wizardId : Text, wizards : Buffer.Buffer<Types.WizardDetails>) : ?Types.WizardDetails {
+  public func findWizardById(wizardId : Text, wizards : Buffer.Buffer<Types.WizardDetailsWithTimeStamp>) : ?Types.WizardDetailsWithTimeStamp {
     Array.find(
       Buffer.toArray(wizards),
       func(wizard : Types.WizardDetails) : Bool {
@@ -66,17 +70,17 @@ module {
     );
   };
 
-  public func findWizardIndex(wizard : Types.WizardDetails, wizards : Buffer.Buffer<Types.WizardDetails>) : ?Nat {
+  public func findWizardIndex(wizard : Types.WizardDetailsWithTimeStamp, wizards : Buffer.Buffer<Types.WizardDetailsWithTimeStamp>) : ?Nat {
     Buffer.indexOf(
       wizard,
       wizards,
-      func(wizard1 : Types.WizardDetails, wizard2 : Types.WizardDetails) : Bool {
+      func(wizard1 : Types.WizardDetailsWithTimeStamp, wizard2 : Types.WizardDetailsWithTimeStamp) : Bool {
         return wizard1.id == wizard2.id;
       },
     );
   };
 
-  public func updatePublishState(wizard : Types.WizardDetails, isPublished : Bool) : Types.WizardDetails {
+  public func updatePublishState(wizard : Types.WizardDetailsWithTimeStamp, isPublished : Bool) : Types.WizardDetailsWithTimeStamp {
     {
       isPublished = isPublished;
       id = wizard.id;
@@ -88,12 +92,14 @@ module {
       greeting = wizard.greeting;
       summary = wizard.summary;
       visibility = wizard.visibility;
+      createdAt = wizard.createdAt;
+      updatedAt = Time.now();
     };
   };
 
   public func publishUnpublishWizard({
     wizardId : Text;
-    wizards : Buffer.Buffer<Types.WizardDetails>;
+    wizards : Buffer.Buffer<Types.WizardDetailsWithTimeStamp>;
     isPublish : Bool;
     caller : Principal;
   }) : Types.Response {
@@ -122,6 +128,24 @@ module {
           };
         };
       };
+    };
+  };
+
+  public func addTimeStamp(wizard : Types.WizardDetails) : Types.WizardDetailsWithTimeStamp {
+
+    {
+      id = wizard.id;
+      name = wizard.name;
+      userId = wizard.userId;
+      biography = wizard.biography;
+      description = wizard.description;
+      avatar = wizard.avatar;
+      isPublished = wizard.isPublished;
+      greeting = wizard.greeting;
+      summary = wizard.summary;
+      visibility = wizard.visibility;
+      createdAt = Time.now();
+      updatedAt = Time.now();
     };
   };
 };

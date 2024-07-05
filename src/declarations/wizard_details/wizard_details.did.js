@@ -19,13 +19,16 @@ export const idlFactory = ({ IDL }) => {
   const Response = IDL.Record({ 'status' : IDL.Nat, 'message' : IDL.Text });
   const Analytics_V1 = IDL.Record({ 'messagesReplied' : IDL.Nat });
   const Analytics = IDL.Variant({ 'v1' : Analytics_V1 });
-  const WizardDetailsBasic = IDL.Record({
+  const Time = IDL.Int;
+  const WizardDetailsBasicWithTimeStamp = IDL.Record({
     'id' : IDL.Text,
     'isPublished' : IDL.Bool,
     'userId' : IDL.Text,
     'name' : IDL.Text,
+    'createdAt' : Time,
     'biography' : IDL.Text,
     'description' : IDL.Text,
+    'updatedAt' : Time,
     'avatar' : IDL.Text,
   });
   const WizardUpdateDetails = IDL.Record({
@@ -48,11 +51,15 @@ export const idlFactory = ({ IDL }) => {
     'getAnalytics' : IDL.Func([IDL.Text], [Analytics_V1], ['query']),
     'getUserWizards' : IDL.Func(
         [IDL.Text],
-        [IDL.Vec(WizardDetailsBasic)],
+        [IDL.Vec(WizardDetailsBasicWithTimeStamp)],
         ['query'],
       ),
     'getWizard' : IDL.Func([IDL.Text], [IDL.Opt(WizardDetails)], ['query']),
-    'getWizards' : IDL.Func([], [IDL.Vec(WizardDetailsBasic)], ['query']),
+    'getWizards' : IDL.Func(
+        [],
+        [IDL.Vec(WizardDetailsBasicWithTimeStamp)],
+        ['query'],
+      ),
     'isWizardNameValid' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
     'publishWizard' : IDL.Func([IDL.Text], [Response], []),
     'unpublishWizard' : IDL.Func([IDL.Text], [Response], []),

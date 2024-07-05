@@ -9,7 +9,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import AdminDashboard from "components/Admin";
 import Chat from "components/Chat";
 import ErrorBoundary from "common/ErrorBoundary";
-import CreateWizards from "components/CreateWizards";
+import ViewAgents from "components/ViewAgents";
 import Sidebar from "components/common/Sidebar";
 import Header from "components/common/Header";
 import Footer from "components/common/Footer";
@@ -51,7 +51,7 @@ function App() {
                     ) : (
                       <Routes>
                         <Route path="/chat/:id?" element={<Chat />} />
-                        <Route path="/" element={<CreateWizards />} />
+                        <Route path="/" element={<ViewAgents />} />
                         <Route
                           path="/create-agent/*"
                           element={<CreateAgent />}

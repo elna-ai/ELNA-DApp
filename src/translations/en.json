@@ -180,6 +180,8 @@
     "chatter": "Chatter",
     "developer": "Developer",
     "update": "Update {{entity}}",
-    "edit": "Edit {{entity}}"
+    "edit": "Edit {{entity}}",
+    "recentlyUpdated": "Recently updated",
+    "popularity": " Popularity"
   }
 }
