@@ -11,8 +11,7 @@
     },
     "developer_studio": {
       "type": "motoko",
-      "main": "developer_studio/DeveloperStudio.mo",
-      "dependencies": ["backend"]
+      "main": "developer_studio/DeveloperStudio.mo"
     },
     "frontend": {
       "dependencies": ["backend", "wizard_details", "developer_studio"],

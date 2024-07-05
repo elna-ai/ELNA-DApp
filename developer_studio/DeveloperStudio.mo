@@ -1,19 +1,38 @@
 import Array "mo:base/Array";
 import Buffer "mo:base/Buffer";
 import Error "mo:base/Error";
-import Backend "canister:backend";
+import Principal "mo:base/Principal";
 
 import Types "./Types";
 import Utils "./Utils";
 
-actor class DeveloperStudio() {
+actor class DeveloperStudio(initialArgs : Types.InitialArgs) {
+  private stable var _userManagementCanisterId : Principal = initialArgs.userManagementCanisterId;
   private stable var _developerTools : [Types.DeveloperTool] = [];
 
   var developerTools = Buffer.Buffer<Types.DeveloperTool>(10);
 
+  // TODO: better way to do and maintin this?
+  type DeveloperStatus = {
+    #approved;
+    #disabled;
+  };
+  type Developer = {
+    alias : Text;
+    email : Text;
+    github : Text;
+    id : Text;
+    principal : Principal;
+    status : DeveloperStatus;
+  };
+  let UserManagementCanister = actor (Principal.toText(_userManagementCanisterId)) : actor {
+    isPrincipalAdmin : (Principal) -> async (Bool);
+    getDevelopers : () -> async [Developer];
+  };
+
   public func getApprovedTools() : async [Types.DeveloperToolWithCreator] {
     let approvedTools = Utils.filterApprovedTools(developerTools);
-    let developerUsers = await Backend.getDevelopers();
+    let developerUsers = await UserManagementCanister.getDevelopers();
     let developerToolsWithCreator = Buffer.map<Types.DeveloperTool, Types.DeveloperToolWithCreator>(
       Buffer.fromArray(approvedTools),
       func(devTool) {
@@ -34,7 +53,7 @@ actor class DeveloperStudio() {
 
   public shared ({ caller }) func getTools() : async [Types.DeveloperTool] {
     // TODO: create a cache for isUserAdmin?
-    let isUserAdmin = await Backend.isPrincipalAdmin(caller);
+    let isUserAdmin = await UserManagementCanister.isPrincipalAdmin(caller);
     if (not isUserAdmin) {
       throw Error.reject("User not authorized for this action");
     };
@@ -53,7 +72,7 @@ actor class DeveloperStudio() {
 
   public shared ({ caller }) func approvePendingDeveloperTool(id : Text) : async Text {
 
-    let isUserAdmin = await Backend.isPrincipalAdmin(caller);
+    let isUserAdmin = await UserManagementCanister.isPrincipalAdmin(caller);
     if (not isUserAdmin) {
       throw Error.reject("User not authorized for this action");
     };
@@ -84,7 +103,7 @@ actor class DeveloperStudio() {
   };
 
   public shared ({ caller }) func rejectDeveloperTool(id : Text) : async Text {
-    let isUserAdmin = await Backend.isPrincipalAdmin(caller);
+    let isUserAdmin = await UserManagementCanister.isPrincipalAdmin(caller);
     if (not isUserAdmin) {
       throw Error.reject("User not authorized for this action");
     };
