@@ -2,7 +2,7 @@ import { ReactNode, useState } from "react";
 
 import Modal from "react-bootstrap/Modal";
 import { useUserStore } from "stores/useUser";
-import { useIsUserWhiteListed } from "hooks/reactQuery/useUser";
+import { useisCreator } from "hooks/reactQuery/useUser";
 
 import NoPermission from "./NoPermission";
 import CheckNameUnique from "./CheckNameUnique";
@@ -18,8 +18,8 @@ function CheckWizardNameCreateModal({
   const [isWalletListOpen, setIsWalletListOpen] = useState(false);
 
   const isUserLoggedIn = useUserStore(state => state.isUserLoggedIn);
-  const { data: isUserWhitelisted, isFetching: isUserWhitelistedLoading } =
-    useIsUserWhiteListed();
+  const { data: isCreator, isFetching: isCreatorLoading } =
+    useisCreator();
 
   const handleCreate = async () => {
     if (!isUserLoggedIn) {
@@ -40,14 +40,14 @@ function CheckWizardNameCreateModal({
         centered
         show={isCreate}
         onHide={() => {
-          !isUserWhitelistedLoading && setIsCreate(false);
+          !isCreatorLoading && setIsCreate(false);
         }}
       >
-        {isUserWhitelistedLoading ? (
+        {isCreatorLoading ? (
           <Modal.Body style={{ height: "200px" }}>
             <PageLoader />
           </Modal.Body>
-        ) : isUserWhitelisted ? (
+        ) : isCreator ? (
           <CheckNameUnique setIsCreate={setIsCreate} />
         ) : (
           <NoPermission />

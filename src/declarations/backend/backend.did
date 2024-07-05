@@ -42,7 +42,7 @@ type Backend =
    isDeveloper: () -> (bool);
    isPrincipalAdmin: (principal) -> (bool) query;
    isUserAdmin: () -> (bool) query;
-   isUserWhitelisted: (opt principal) -> (bool) query;
+   isCreator: (opt principal) -> (bool) query;
    rejectPendingDeveloper: (text) -> (text);
    removeAdmin: (principal) -> (text);
    removeWhitelistedUser: (principal) -> (text);

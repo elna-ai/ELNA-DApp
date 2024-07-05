@@ -15,7 +15,7 @@ export interface Backend {
   'isDeveloper' : ActorMethod<[], boolean>,
   'isPrincipalAdmin' : ActorMethod<[Principal], boolean>,
   'isUserAdmin' : ActorMethod<[], boolean>,
-  'isUserWhitelisted' : ActorMethod<[[] | [Principal]], boolean>,
+  'isCreator' : ActorMethod<[[] | [Principal]], boolean>,
   'rejectPendingDeveloper' : ActorMethod<[string], string>,
   'removeAdmin' : ActorMethod<[Principal], string>,
   'removeWhitelistedUser' : ActorMethod<[Principal], string>,
