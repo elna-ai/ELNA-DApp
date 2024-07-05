@@ -7,7 +7,6 @@ import Error "mo:base/Error";
 import HashMap "mo:base/HashMap";
 import Iter "mo:base/Iter";
 import Time "mo:base/Time";
-import Backend "canister:backend";
 
 import Types "./Types";
 import {
@@ -21,17 +20,24 @@ import {
   addTimeStamp;
 } "./Utils";
 
-actor class Main(_owner : Principal) {
+actor class Main(initlaArgs : Types.InitalArgs) {
   private stable var _wizardsNew : [Types.WizardDetails] = [];
   private stable var _wizardsV2 : [Types.WizardDetailsWithTimeStamp] = [];
   private stable var _analytics : [(Text, Types.Analytics)] = [];
-  private stable var owner : Principal = _owner;
+  private stable var owner : Principal = initlaArgs.owner;
+  private stable var _userManagementCanisterId : Principal = initlaArgs.userManagementCanisterId;
   var wizards = Buffer.Buffer<Types.WizardDetails>(10);
   var wizardsV2 = Buffer.Buffer<Types.WizardDetailsWithTimeStamp>(10);
   var analytics = HashMap.HashMap<Text, Types.Analytics>(5, Text.equal, Text.hash);
 
   func isOwner(callerId : Principal) : Bool {
     callerId == owner;
+  };
+
+  // TODO: better way to do and maintin this?
+  let UserManagementCanister = actor (Principal.toText(_userManagementCanisterId)) : actor {
+    isPrincipalAdmin : (Principal) -> async (Bool);
+    isUserWhitelisted : (?Principal) -> async (Bool);
   };
 
   public query func getAnalytics(wizardId : Text) : async Types.Analytics_V1 {
@@ -98,7 +104,7 @@ actor class Main(_owner : Principal) {
   };
 
   public shared (message) func addWizard(wizard : Types.WizardDetails) : async Types.Response {
-    let isUserWhitelisted = await Backend.isUserWhitelisted(?message.caller);
+    let isUserWhitelisted = await UserManagementCanister.isUserWhitelisted(?message.caller);
 
     if (not isUserWhitelisted) {
       return { status = 422; message = "User dosen't have permission" };
@@ -161,7 +167,7 @@ actor class Main(_owner : Principal) {
   };
 
   public shared ({ caller }) func getAllWizards() : async [Types.WizardDetails] {
-    let isUserAdmin = await Backend.isPrincipalAdmin(caller);
+    let isUserAdmin = await UserManagementCanister.isPrincipalAdmin(caller);
     switch (isUserAdmin) {
       case false {
         throw Error.reject("User is not admin");

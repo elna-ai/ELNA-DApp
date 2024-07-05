@@ -63,6 +63,11 @@ type Main =
    updateMessageAnalytics: (text) -> ();
    updateWizard: (text, WizardUpdateDetails) -> (text);
  };
+type InitalArgs = 
+ record {
+   owner: principal;
+   userManagementCanisterId: principal;
+ };
 type Analytics_V1 = record {messagesReplied: nat;};
 type Analytics = variant {v1: Analytics_V1;};
-service : (principal) -> Main
+service : (InitalArgs) -> Main
