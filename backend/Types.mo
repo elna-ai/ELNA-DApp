@@ -19,13 +19,40 @@ module {
     #disabled;
   };
 
+
+  // type creator status
+  public type CreatorStatus = {
+    #approved;
+    #disabled;
+  };
+
+
   public type DeveloperApprovalStatus = {
     #approved;
     #pending;
     #rejected;
   };
 
+//Creator approval status
+  public type CreatorApprovalStatus = {
+    #approved;
+    #pending;
+    #rejected;
+  };
+
+
+
   public type Developer = {
+    id : Text;
+    alias : Text;
+    email : Text;
+    github : Text;
+    principal : Principal;
+    status : DeveloperStatus;
+  };
+
+  //Creator type
+  public type Creator = {
     id : Text;
     alias : Text;
     email : Text;
@@ -43,6 +70,17 @@ module {
     principal : Principal;
     // TODO: IS this required?
     status : DeveloperApprovalStatus;
+  };
+
+//creator approval type
+  public type CreatorApproval = {
+    id : Text;
+    alias : Text;
+    email : Text;
+    github : Text;
+    description : Text;
+    principal : Principal;
+    status : CreatorApprovalStatus;
   };
 
   public type DeveloperToolStatus = {
