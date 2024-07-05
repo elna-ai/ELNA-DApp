@@ -1,4 +1,8 @@
 export const idlFactory = ({ IDL }) => {
+  const InitalArgs = IDL.Record({
+    'owner' : IDL.Principal,
+    'userManagementCanisterId' : IDL.Principal,
+  });
   const WizardVisibility = IDL.Variant({
     'privateVisibility' : IDL.Null,
     'publicVisibility' : IDL.Null,
@@ -68,4 +72,10 @@ export const idlFactory = ({ IDL }) => {
   });
   return Main;
 };
-export const init = ({ IDL }) => { return [IDL.Principal]; };
+export const init = ({ IDL }) => {
+  const InitalArgs = IDL.Record({
+    'owner' : IDL.Principal,
+    'userManagementCanisterId' : IDL.Principal,
+  });
+  return [InitalArgs];
+};
