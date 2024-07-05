@@ -6,6 +6,7 @@ import Buffer "mo:base/Buffer";
 import Error "mo:base/Error";
 import HashMap "mo:base/HashMap";
 import Iter "mo:base/Iter";
+import Time "mo:base/Time";
 import Backend "canister:backend";
 
 import Types "./Types";
@@ -17,13 +18,16 @@ import {
   publishUnpublishWizard;
   findWizardById;
   findWizardIndex;
+  addTimeStamp;
 } "./Utils";
 
 actor class Main(_owner : Principal) {
   private stable var _wizardsNew : [Types.WizardDetails] = [];
+  private stable var _wizardsV2 : [Types.WizardDetailsWithTimeStamp] = [];
   private stable var _analytics : [(Text, Types.Analytics)] = [];
   private stable var owner : Principal = _owner;
   var wizards = Buffer.Buffer<Types.WizardDetails>(10);
+  var wizardsV2 = Buffer.Buffer<Types.WizardDetailsWithTimeStamp>(10);
   var analytics = HashMap.HashMap<Text, Types.Analytics>(5, Text.equal, Text.hash);
 
   func isOwner(callerId : Principal) : Bool {
@@ -66,30 +70,31 @@ actor class Main(_owner : Principal) {
     };
   };
 
-  public query func getWizards() : async [Types.WizardDetailsBasic] {
+  public query func getWizards() : async [Types.WizardDetailsBasicWithTimeStamp] {
 
     let publicWizards = Array.filter(
-      Buffer.toArray(wizards),
-      func(wizard : Types.WizardDetails) : Bool {
+      Buffer.toArray(wizardsV2),
+      func(wizard : Types.WizardDetailsWithTimeStamp) : Bool {
         wizard.visibility == #publicVisibility and wizard.isPublished;
       },
     );
 
     getWizardsBasicDetails(publicWizards);
   };
+
   // TODO: should use caller to get current User
-  public query func getUserWizards(userId : Text) : async [Types.WizardDetailsBasic] {
-    let userWizards = getWizardsByUser(wizards, userId);
+  public query func getUserWizards(userId : Text) : async [Types.WizardDetailsBasicWithTimeStamp] {
+    let userWizards = getWizardsByUser(wizardsV2, userId);
 
     getWizardsBasicDetails(userWizards);
   };
 
   public query func getWizard(id : Text) : async ?Types.WizardDetails {
-    findWizardById(id, wizards);
+    findWizardById(id, wizardsV2);
   };
 
   public shared query (message) func isWizardNameValid(wizardName : Text) : async Bool {
-    isWizardNameTakenByUser(wizards, Principal.toText(message.caller), wizardName);
+    isWizardNameTakenByUser(wizardsV2, Principal.toText(message.caller), wizardName);
   };
 
   public shared (message) func addWizard(wizard : Types.WizardDetails) : async Types.Response {
@@ -99,10 +104,10 @@ actor class Main(_owner : Principal) {
       return { status = 422; message = "User dosen't have permission" };
     };
 
-    let isNewWizardName = isWizardNameTakenByUser(wizards, Principal.toText(message.caller), wizard.name);
+    let isNewWizardName = isWizardNameTakenByUser(wizardsV2, Principal.toText(message.caller), wizard.name);
 
     if (isNewWizardName) {
-      wizards.add(wizard);
+      wizardsV2.add(addTimeStamp(wizard));
       return { status = 200; message = "Created wizard" };
     } else {
       return { status = 422; message = "Wizard named already exist" };
@@ -111,7 +116,7 @@ actor class Main(_owner : Principal) {
 
   public shared (message) func deleteWizard(wizardId : Text) : async Types.Response {
 
-    switch (findWizardById(wizardId, wizards)) {
+    switch (findWizardById(wizardId, wizardsV2)) {
       case null { return { status = 422; message = "Wizard does not exist" } };
       case (?wizard) {
         let canUserDelete = isOwner(message.caller) or isUserBotCreator(message.caller, wizard);
@@ -122,12 +127,12 @@ actor class Main(_owner : Principal) {
             message = "Wizard does not belong to user";
           };
         };
-        switch (findWizardIndex(wizard, wizards)) {
+        switch (findWizardIndex(wizard, wizardsV2)) {
           case null {
             return { status = 422; message = "Wizard does not exist" };
           };
           case (?index) {
-            ignore wizards.remove(index);
+            ignore wizardsV2.remove(index);
             ignore analytics.remove(wizardId);
             return { status = 200; message = "Wizard deleted" };
           };
@@ -138,11 +143,21 @@ actor class Main(_owner : Principal) {
   };
 
   public shared ({ caller }) func publishWizard(wizardId : Text) : async Types.Response {
-    publishUnpublishWizard({ caller; wizardId; wizards; isPublish = true });
+    publishUnpublishWizard({
+      caller;
+      wizardId;
+      wizards = wizardsV2;
+      isPublish = true;
+    });
   };
 
   public shared ({ caller }) func unpublishWizard(wizardId : Text) : async Types.Response {
-    publishUnpublishWizard({ caller; wizardId; wizards; isPublish = false });
+    publishUnpublishWizard({
+      caller;
+      wizardId;
+      wizards = wizardsV2;
+      isPublish = false;
+    });
   };
 
   public shared ({ caller }) func getAllWizards() : async [Types.WizardDetails] {
@@ -152,13 +167,13 @@ actor class Main(_owner : Principal) {
         throw Error.reject("User is not admin");
       };
       case true {
-        Buffer.toArray(wizards);
+        Buffer.toArray(wizardsV2);
       };
     };
   };
 
   public shared ({ caller }) func updateWizard(wizardId : Text, wizardDetails : Types.WizardUpdateDetails) : async Text {
-    let wizard = findWizardById(wizardId, wizards);
+    let wizard = findWizardById(wizardId, wizardsV2);
     switch (wizard) {
       case null {
         throw Error.reject("Agent not found");
@@ -167,7 +182,7 @@ actor class Main(_owner : Principal) {
         if (Principal.toText(caller) != wizard.userId) {
           throw Error.reject("User dose not have permission to edit agent");
         };
-        let wizardId = findWizardIndex(wizard, wizards);
+        let wizardId = findWizardIndex(wizard, wizardsV2);
         switch (wizardId) {
           case null {
             throw Error.reject("Agent not found");
@@ -184,8 +199,10 @@ actor class Main(_owner : Principal) {
               userId = wizard.userId;
               isPublished = wizard.isPublished;
               summary = wizard.summary;
+              createdAt = wizard.createdAt;
+              updatedAt = Time.now();
             };
-            wizards.put(index, updatedWizardDetails);
+            wizardsV2.put(index, updatedWizardDetails);
             return "Agent updated";
           };
         };
@@ -201,11 +218,23 @@ actor class Main(_owner : Principal) {
   system func preupgrade() {
 
     _wizardsNew := Buffer.toArray(wizards);
+    let wizardWithTime = Array.map(
+      Buffer.toArray(wizards),
+      func(wizard : Types.WizardDetails) : Types.WizardDetailsWithTimeStamp {
+        addTimeStamp(wizard);
+      },
+    );
+    if (wizardsV2.size() > 0) {
+      _wizardsV2 := Buffer.toArray(wizardsV2);
+    } else {
+      _wizardsV2 := wizardWithTime;
+    };
     _analytics := Iter.toArray(analytics.entries());
   };
 
   system func postupgrade() {
     wizards := Buffer.fromArray(_wizardsNew);
+    wizardsV2 := Buffer.fromArray(_wizardsV2);
     analytics := HashMap.fromIter<Text, Types.Analytics>(_analytics.vals(), 5, Text.equal, Text.hash);
   };
 };
