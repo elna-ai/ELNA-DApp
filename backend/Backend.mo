@@ -210,7 +210,18 @@ actor class Backend(_owner : Principal) {
             throw Error.reject("Approval request already exists for this user");
         };
         case null {
-            creatorPendingApproval.add(details);
+            let updatedDetails = {
+                id = details.id;
+                alias = details.alias;
+                email = details.email;
+                github = details.github;
+                description = details.description;
+                principal = details.principal;
+                status = details.status;
+                createdAt = Time.now();
+                updatedAt = Time.now();
+            };
+            creatorPendingApproval.add(updatedDetails);
             return true;
         };
     };
