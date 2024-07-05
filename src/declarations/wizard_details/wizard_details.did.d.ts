@@ -10,9 +10,12 @@ export interface Main {
   'getAllAnalytics' : ActorMethod<[], Array<[string, Analytics]>>,
   'getAllWizards' : ActorMethod<[], Array<WizardDetails>>,
   'getAnalytics' : ActorMethod<[string], Analytics_V1>,
-  'getUserWizards' : ActorMethod<[string], Array<WizardDetailsBasic>>,
+  'getUserWizards' : ActorMethod<
+    [string],
+    Array<WizardDetailsBasicWithTimeStamp>
+  >,
   'getWizard' : ActorMethod<[string], [] | [WizardDetails]>,
-  'getWizards' : ActorMethod<[], Array<WizardDetailsBasic>>,
+  'getWizards' : ActorMethod<[], Array<WizardDetailsBasicWithTimeStamp>>,
   'isWizardNameValid' : ActorMethod<[string], boolean>,
   'publishWizard' : ActorMethod<[string], Response>,
   'unpublishWizard' : ActorMethod<[string], Response>,
@@ -20,6 +23,7 @@ export interface Main {
   'updateWizard' : ActorMethod<[string, WizardUpdateDetails], string>,
 }
 export interface Response { 'status' : bigint, 'message' : string }
+export type Time = bigint;
 export interface WizardDetails {
   'id' : string,
   'isPublished' : boolean,
@@ -32,13 +36,15 @@ export interface WizardDetails {
   'visibility' : WizardVisibility,
   'avatar' : string,
 }
-export interface WizardDetailsBasic {
+export interface WizardDetailsBasicWithTimeStamp {
   'id' : string,
   'isPublished' : boolean,
   'userId' : string,
   'name' : string,
+  'createdAt' : Time,
   'biography' : string,
   'description' : string,
+  'updatedAt' : Time,
   'avatar' : string,
 }
 export interface WizardUpdateDetails {
