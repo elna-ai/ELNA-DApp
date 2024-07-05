@@ -4,6 +4,10 @@ import type { IDL } from '@dfinity/candid';
 
 export type Analytics = { 'v1' : Analytics_V1 };
 export interface Analytics_V1 { 'messagesReplied' : bigint }
+export interface InitalArgs {
+  'owner' : Principal,
+  'userManagementCanisterId' : Principal,
+}
 export interface Main {
   'addWizard' : ActorMethod<[WizardDetails], Response>,
   'deleteWizard' : ActorMethod<[string], Response>,

@@ -5,6 +5,13 @@ import Bool "mo:base/Bool";
 import Time "mo:base/Time";
 
 module {
+
+  public type InitalArgs = {
+    owner : Principal;
+    userManagementCanisterId : Principal;
+
+  };
+
   public type WizardVisibility = {
     #publicVisibility;
     #privateVisibility;

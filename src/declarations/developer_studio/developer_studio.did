@@ -1,3 +1,4 @@
+type InitialArgs = record {userManagementCanisterId: principal;};
 type DeveloperToolWithCreator = 
  record {
    category: text;
@@ -34,4 +35,4 @@ type DeveloperStudio =
    rejectDeveloperTool: (text) -> (text);
    requestToolSubmission: (DeveloperTool) -> (bool);
  };
-service : () -> DeveloperStudio
+service : (InitialArgs) -> DeveloperStudio
