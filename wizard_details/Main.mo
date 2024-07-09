@@ -231,11 +231,11 @@ actor class Main(initlaArgs : Types.InitalArgs) {
     return ?[];
   };
 
-  public func getWizardOld() : async [Types.WizardDetails] {
+  public query func getWizardOld() : async [Types.WizardDetails] {
     Buffer.toArray(wizards);
   };
 
-  public func testGetWizards() : async [Types.WizardDetailsWithTimeStamp] {
+  public query func testGetWizards() : async [Types.WizardDetailsWithTimeStamp] {
     Buffer.toArray(wizardsV2);
   };
 
