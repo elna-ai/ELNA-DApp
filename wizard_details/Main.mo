@@ -217,6 +217,28 @@ actor class Main(initlaArgs : Types.InitalArgs) {
 
   };
 
+  public func updatedWizardsV2() : async ?[Types.WizardDetailsWithTimeStamp] {
+    if (wizardsV2.size() > 0) {
+      return ?Buffer.toArray(wizardsV2);
+    };
+    let wizardWithTime = Array.map(
+      Buffer.toArray(wizards),
+      func(wizard : Types.WizardDetails) : Types.WizardDetailsWithTimeStamp {
+        addTimeStamp(wizard);
+      },
+    );
+    _wizardsV2 := wizardWithTime;
+    return ?[];
+  };
+
+  public func getWizardOld() : async [Types.WizardDetails] {
+    Buffer.toArray(wizards);
+  };
+
+  public func testGetWizards() : async [Types.WizardDetailsWithTimeStamp] {
+    Buffer.toArray(wizardsV2);
+  };
+
   public query func getAllAnalytics() : async [(Text, Types.Analytics)] {
     Iter.toArray(analytics.entries());
   };
