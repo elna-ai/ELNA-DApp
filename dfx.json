@@ -6,13 +6,11 @@
     },
     "wizard_details": {
       "type": "motoko",
-      "main": "wizard_details/Main.mo",
-      "dependencies": ["backend"]
+      "main": "wizard_details/Main.mo"
     },
     "developer_studio": {
       "type": "motoko",
-      "main": "developer_studio/DeveloperStudio.mo",
-      "dependencies": ["backend"]
+      "main": "developer_studio/DeveloperStudio.mo"
     },
     "frontend": {
       "dependencies": ["backend", "wizard_details", "developer_studio"],

@@ -2,6 +2,10 @@ import Text "mo:base/Text";
 import Principal "mo:base/Principal";
 
 module {
+
+  public type InitialArgs = {
+    userManagementCanisterId : Principal;
+  };
   public type DeveloperStatus = {
     #approved;
     #disabled;

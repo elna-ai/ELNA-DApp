@@ -13,14 +13,16 @@ type WizardUpdateDetails =
    name: text;
    visibility: WizardVisibility;
  };
-type WizardDetailsBasic = 
+type WizardDetailsBasicWithTimeStamp = 
  record {
    avatar: text;
    biography: text;
+   createdAt: Time;
    description: text;
    id: text;
    isPublished: bool;
    name: text;
+   updatedAt: Time;
    userId: text;
  };
 type WizardDetails = 
@@ -36,6 +38,7 @@ type WizardDetails =
    userId: text;
    visibility: WizardVisibility;
  };
+type Time = int;
 type Response = 
  record {
    message: text;
@@ -51,15 +54,20 @@ type Main =
                                }) query;
    getAllWizards: () -> (vec WizardDetails);
    getAnalytics: (text) -> (Analytics_V1) query;
-   getUserWizards: (text) -> (vec WizardDetailsBasic) query;
+   getUserWizards: (text) -> (vec WizardDetailsBasicWithTimeStamp) query;
    getWizard: (text) -> (opt WizardDetails) query;
-   getWizards: () -> (vec WizardDetailsBasic) query;
+   getWizards: () -> (vec WizardDetailsBasicWithTimeStamp) query;
    isWizardNameValid: (text) -> (bool) query;
    publishWizard: (text) -> (Response);
    unpublishWizard: (text) -> (Response);
    updateMessageAnalytics: (text) -> ();
    updateWizard: (text, WizardUpdateDetails) -> (text);
  };
+type InitalArgs = 
+ record {
+   owner: principal;
+   userManagementCanisterId: principal;
+ };
 type Analytics_V1 = record {messagesReplied: nat;};
 type Analytics = variant {v1: Analytics_V1;};
-service : (principal) -> Main
+service : (InitalArgs) -> Main

@@ -1,4 +1,7 @@
 export const idlFactory = ({ IDL }) => {
+  const InitialArgs = IDL.Record({
+    'userManagementCanisterId' : IDL.Principal,
+  });
   const DeveloperToolStatus = IDL.Variant({
     'pending' : IDL.Null,
     'disabled' : IDL.Null,
@@ -33,4 +36,9 @@ export const idlFactory = ({ IDL }) => {
   });
   return DeveloperStudio;
 };
-export const init = ({ IDL }) => { return []; };
+export const init = ({ IDL }) => {
+  const InitialArgs = IDL.Record({
+    'userManagementCanisterId' : IDL.Principal,
+  });
+  return [InitialArgs];
+};

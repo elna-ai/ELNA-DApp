@@ -2,8 +2,16 @@ import Text "mo:base/Text";
 import Nat "mo:base/Nat";
 import Principal "mo:base/Principal";
 import Bool "mo:base/Bool";
+import Time "mo:base/Time";
 
 module {
+
+  public type InitalArgs = {
+    owner : Principal;
+    userManagementCanisterId : Principal;
+
+  };
+
   public type WizardVisibility = {
     #publicVisibility;
     #privateVisibility;
@@ -23,10 +31,20 @@ module {
     isPublished : Bool;
   };
 
+  public type WizardDetailsBasicWithTimeStamp = WizardDetailsBasic and {
+    createdAt : Time.Time;
+    updatedAt : Time.Time;
+  };
+
   public type WizardDetails = WizardDetailsBasic and {
     greeting : Text;
     summary : ?Text;
     visibility : WizardVisibility;
+  };
+
+  public type WizardDetailsWithTimeStamp = WizardDetails and {
+    createdAt : Time.Time;
+    updatedAt : Time.Time;
   };
 
   public type WizardUpdateDetails = {

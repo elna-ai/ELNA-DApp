@@ -32,6 +32,7 @@ export interface DeveloperToolWithCreator {
   'category' : string,
   'projectUrl' : string,
 }
+export interface InitialArgs { 'userManagementCanisterId' : Principal }
 export interface _SERVICE extends DeveloperStudio {}
 export declare const idlFactory: IDL.InterfaceFactory;
 export declare const init: ({ IDL }: { IDL: IDL }) => IDL.Type[];
