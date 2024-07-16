@@ -79,14 +79,20 @@ export const convertFromMotokoOptional = <T>(value: [T] | []) => {
   return value.length > 0 ? value[0] : undefined;
 };
 
-export const convertFromMotokoVariant = <T extends object>(status: T): VariantKeys<T> => {
+export const convertFromMotokoVariant = <T extends object>(
+  status: T
+): VariantKeys<T> => {
   return Object.keys(status)[0] as VariantKeys<T>;
 };
 
-export const convertToMotokoVariant = <T>(status: string): Record<string, null> => {
+export const convertToMotokoVariant = <T>(
+  status: string
+): Record<string, null> => {
   const variant: Record<string, null> = {};
   variant[status] = null;
   return variant;
 };
 
-export const convertToIDLVariant = <T>(status: VariantKeys<T>) => { return { [status]: null } as T }
+export const convertToIDLVariant = <T>(status: VariantKeys<T>) => {
+  return { [status]: null } as T;
+};
