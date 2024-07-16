@@ -1,0 +1,39 @@
+.user_profile {
+  &__summary {
+    &__req-card {
+      padding: 12px;
+      max-width: 360px;
+      background-color: var(--background-elevated-base);
+      border: 1px solid var(--background-base-border);
+      margin-bottom: 1rem;
+
+      &__icon {
+        color: var(--elna-blue);
+      }
+
+      &__developer {
+        color: var(--elna-blue);
+        font-weight: 600;
+      }
+
+      &__tag {
+        color: var(--background-base);
+        border-radius: 30px;
+        padding: 2px 16px 2px 16px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 0;
+      }
+
+      &__x-share {
+        width: 80px;
+        background-color: #1e1f23;
+        padding: var(--bs-btn-padding-y) 0;
+        &__svg {
+          width: 16px;
+          margin-right: 0.5rem;
+        }
+      }
+    }
+  }
+}

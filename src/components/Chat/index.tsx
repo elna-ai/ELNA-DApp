@@ -21,7 +21,7 @@ import { isErr } from "utils/ragCanister";
 
 import Bubble from "./Bubble";
 import NoHistory from "./NoHistory";
-import { TWITTER_SHARE_CONTENT } from "./constants";
+import { TWITTER_HASHTAGS, TWITTER_SHARE_CONTENT } from "./constants";
 
 function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -152,7 +152,8 @@ function Chat() {
                     `${TWITTER_SHARE_CONTENT(
                       wizard.name,
                       `${window.location.origin}/chat/${id}`
-                    )}`
+                    )}`,
+                    TWITTER_HASHTAGS
                   )}
                   target="_blank"
                   rel="noopener noreferrer"

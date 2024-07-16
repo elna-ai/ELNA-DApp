@@ -13,7 +13,7 @@ import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
 import Persona from "./Persona";
 import Knowledge from "./Knowledge";
 
-import { TWITTER_SHARE_CONTENT } from "./constants";
+import { TWITTER_HASHTAGS, TWITTER_SHARE_CONTENT } from "./constants";
 import { useCreateWizardStore } from "stores/useCreateWizard";
 import { Button, CloseButton, Modal, ModalBody } from "react-bootstrap";
 import { toast } from "react-toastify";
@@ -225,7 +225,8 @@ function Create() {
               `${TWITTER_SHARE_CONTENT(
                 wizardName,
                 `${window.location.origin}/chat/${wizardId}`
-              )}`
+              )}`,
+              TWITTER_HASHTAGS
             )}
             target="_blank"
             rel="noopener noreferrer"
