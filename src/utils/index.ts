@@ -63,7 +63,7 @@ export const transformHistory = (messages: Message[]) => {
   );
 };
 
-export const generateTwitterShareLink = (content: string) =>
+export const generateTwitterShareLink = (content: string, hashtags: string) =>
   `https://twitter.com/intent/tweet?text=${encodeURI(
     content
-  )}&hashtags=AIagentActivated,ELNAai,DecentralizedAl,GenerativeAl,ICP`;
+  )}&hashtags=${hashtags}`;

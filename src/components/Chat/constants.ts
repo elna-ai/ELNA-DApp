@@ -27,3 +27,6 @@ ${url}
 
 @elna_live is the world's 1st DeAI creation platform.\n\n
 `;
+
+export const TWITTER_HASHTAGS =
+  "AIagentActivated,ELNAai,DecentralizedAl,GenerativeAl,ICP";
