@@ -17,6 +17,7 @@
 @import "pages/chat";
 @import "pages/persona";
 @import "pages/admin_whitelist";
+@import "pages/user_profile";
 
 // TODO: download font locally
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap");
@@ -708,14 +709,4 @@ textarea.form-control {
 
 .text-xs {
   font-size: 0.85rem;
-}
-.req-card {
-  padding: 12px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  max-width: 360px;
-  background-color: var(--background-elevated-base);
-  border: 1px solid var(--background-base-border);
-  margin-bottom: 1rem;
 }
