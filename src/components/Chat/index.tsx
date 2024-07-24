@@ -18,6 +18,7 @@ import { useUpdateMessagesReplied } from "hooks/reactQuery/wizards/useAnalytics"
 import { useCreatingQuestionEmbedding } from "hooks/reactQuery/useExternalService";
 import { useChat } from "hooks/reactQuery/useRag";
 import { isErr } from "utils/ragCanister";
+import { useUserStore } from "stores/useUser";
 
 import Bubble from "./Bubble";
 import NoHistory from "./NoHistory";
@@ -32,6 +33,7 @@ function Chat() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const lastBubbleRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
+  const isUserLoggedIn = useUserStore(state => state.isUserLoggedIn);
   const {
     data: wizard,
     isFetching: isLoadingWizard,
@@ -71,8 +73,6 @@ function Chat() {
 
   const handleSubmit = async () => {
     const message = messageInput.trim();
-    // TODO: add history support to rag
-    // const history = transformHistory(messages);
     setMessages(prev => [...prev, { user: { name: "User" }, message }]);
     setMessageInput("");
     createQuestionEmbedding(message, {
@@ -83,6 +83,7 @@ function Chat() {
             agentId: wizard!.id,
             queryText: message,
             embeddings,
+            history: isUserLoggedIn ? [] : transformHistory(messages),
           },
           {
             onSuccess: response => {
