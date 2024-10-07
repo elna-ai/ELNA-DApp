@@ -11,5 +11,5 @@ export const isErr = (response: Result): response is { Err: Error } =>
 
 export const isErrGetFileNames = (
   response: Result_2
-): response is { Err: [RejectionCode, string] } =>
+): response is { Err: [RejectionCode, string, string] } =>
   Object.keys(response).includes("Err");

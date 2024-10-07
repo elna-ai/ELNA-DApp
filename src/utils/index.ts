@@ -3,6 +3,7 @@ import { CharacterTextSplitter } from "langchain/text_splitter";
 import { WebPDFLoader } from "langchain/document_loaders/web/pdf";
 import * as pdfJs from "pdfjs-dist";
 import pdfJsWorker from "pdfjs-dist/build/pdf.worker";
+import { History } from "declarations/elna_RAG_backend/elna_RAG_backend.did";
 
 import { AVATAR_IMAGES } from "../constants";
 import { Message } from "../types";
@@ -55,11 +56,11 @@ export const fixNewlines = (text: string): string =>
 export const removeMultipleNewlines = (text: string): string =>
   text.replace(/\n{2,}/g, "\n");
 
-export const transformHistory = (messages: Message[]) => {
+export const transformHistory = (messages: Message[]): History[] => {
   return messages.map(({ user, message }) =>
     user.isBot
-      ? { role: "assistant", content: message }
-      : { role: "user", content: message }
+      ? { role: { Assistant: null }, content: message }
+      : { role: { User: null }, content: message }
   );
 };
 

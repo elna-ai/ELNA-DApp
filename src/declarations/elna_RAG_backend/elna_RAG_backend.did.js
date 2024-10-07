@@ -4,6 +4,12 @@ export const idlFactory = ({ IDL }) => {
     'wizard_details_canister_id' : IDL.Text,
     'vectordb_canister_id' : IDL.Text,
   });
+  const Roles = IDL.Variant({
+    'System' : IDL.Null,
+    'User' : IDL.Null,
+    'Assistant' : IDL.Null,
+  });
+  const History = IDL.Record({ 'content' : IDL.Text, 'role' : Roles });
   const Body = IDL.Record({ 'response' : IDL.Text });
   const Response = IDL.Record({ 'body' : Body, 'statusCode' : IDL.Nat16 });
   const Error = IDL.Variant({
@@ -28,7 +34,7 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result_2 = IDL.Variant({
     'Ok' : IDL.Vec(IDL.Text),
-    'Err' : IDL.Tuple(RejectionCode, IDL.Text),
+    'Err' : IDL.Tuple(RejectionCode, IDL.Text, IDL.Text),
   });
   const HttpHeader = IDL.Record({ 'value' : IDL.Text, 'name' : IDL.Text });
   const HttpResponse = IDL.Record({
@@ -42,7 +48,7 @@ export const idlFactory = ({ IDL }) => {
   });
   return IDL.Service({
     'chat' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Vec(IDL.Float32), IDL.Text],
+        [IDL.Text, IDL.Text, IDL.Vec(IDL.Float32), IDL.Text, IDL.Vec(History)],
         [Result],
         [],
       ),

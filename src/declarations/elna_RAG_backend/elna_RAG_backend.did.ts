@@ -13,6 +13,7 @@ export type Error = { 'CantParseHost' : null } |
   { 'BodyNonSerializable' : null } |
   { 'ParseError' : null } |
   { 'HttpError' : string };
+export interface History { 'content' : string, 'role' : Roles }
 export interface HttpHeader { 'value' : string, 'name' : string }
 export interface HttpResponse {
   'status' : bigint,
@@ -32,13 +33,19 @@ export type Result = { 'Ok' : Response } |
 export type Result_1 = { 'Ok' : string } |
   { 'Err' : [RejectionCode, string] };
 export type Result_2 = { 'Ok' : Array<string> } |
-  { 'Err' : [RejectionCode, string] };
+  { 'Err' : [RejectionCode, string, string] };
+export type Roles = { 'System' : null } |
+  { 'User' : null } |
+  { 'Assistant' : null };
 export interface TransformArgs {
   'context' : Uint8Array | number[],
   'response' : HttpResponse,
 }
 export interface _SERVICE {
-  'chat' : ActorMethod<[string, string, Array<number>, string], Result>,
+  'chat' : ActorMethod<
+    [string, string, Array<number>, string, Array<History>],
+    Result
+  >,
   'delete_collections_' : ActorMethod<[string], Result_1>,
   'get_file_names' : ActorMethod<[string], Result_2>,
   'transform' : ActorMethod<[TransformArgs], HttpResponse>,
