@@ -24,7 +24,7 @@ function LoadingButton({
   return (
     <Button
       className={classNames(
-        "ml-auto px-5 d-flex gap-1 align-items-center",
+        "ml-auto px-4 d-flex gap-1 align-items-center",
         className
       )}
       variant={variant}
