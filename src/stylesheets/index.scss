@@ -18,6 +18,7 @@
 @import "pages/persona";
 @import "pages/admin_whitelist";
 @import "pages/user_profile";
+@import "pages/profile";
 
 // TODO: download font locally
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap");
@@ -664,10 +665,6 @@ textarea.form-control {
   &:hover {
     border-color: #24714f;
   }
-
-  &::placeholder {
-    color: var(--title-sub-color);
-  }
 }
 
 .info-text {
@@ -709,4 +706,13 @@ textarea.form-control {
 
 .text-xs {
   font-size: 0.85rem;
+}
+
+textarea.form-control {
+  background: var(--color-bg1);
+  border-color: var(--color-line);
+}
+.form-control::placeholder,
+textarea.form-control::placeholder {
+  color: var(--placeholder-text-w);
 }
