@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Principal } from "@dfinity/principal";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import devicon from "src/assets/dev.svg";
+import devicon from "src/images/dev.svg";
 
 import LoadingButton from "components/common/LoadingButton";
 import { useWallet } from "hooks/useWallet";
