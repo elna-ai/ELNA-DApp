@@ -22,3 +22,14 @@ https://dapp.elna.ai/
 // #AI on #Blockchain
 export const TWITTER_HASHTAGS =
   "ELNA_Devs,ELNAai,DecentralizedAl,GenerativeAl,Alagents,DeAiHackELNA,DeAiBootcampELNA";
+
+export const USER_PROFILE_FORM_INITIAL = {
+  alias: "",
+  xHandle: "",
+  bio: "",
+};
+
+export const USER_PROFILE_FORM_VALIDATION = yup.object().shape({
+  alias: yup.string().trim().required().min(3),
+  bio: yup.string().min(10),
+});

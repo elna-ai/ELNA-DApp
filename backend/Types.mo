@@ -3,11 +3,6 @@ import Principal "mo:base/Principal";
 import Time "mo:base/Time";
 
 module {
-  public type UserAddress = Principal;
-
-  public type UserDetails = {
-    botList : [Text];
-  };
 
   public type UserToken = {
     token : Text;
@@ -70,5 +65,11 @@ module {
     category : Text;
     creator : Text;
     status : DeveloperToolStatus;
+  };
+
+  public type UserProfile = {
+    alias : Text;
+    xHandle : ?Text;
+    bio : ?Text;
   };
 };
