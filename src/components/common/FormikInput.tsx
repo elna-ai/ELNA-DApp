@@ -31,7 +31,9 @@ function FormikInput({
         style={as === "input" ? { color: "#fff" } : undefined}
       />
       <Form.Control.Feedback type="invalid">
-        {hasError && typeof errors[name] === "string" && errors[name]}
+        {hasError &&
+          typeof errors[name] === "string" &&
+          errors[name]?.toString()}
       </Form.Control.Feedback>
     </Form.Group>
   );
