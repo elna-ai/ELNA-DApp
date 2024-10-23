@@ -12,6 +12,7 @@ export const QUERY_KEYS = {
   USER_PENDING_REQUEST: "user-pending-request",
   APPROVED_DEVELOPER_TOOLS: "approved-developer-tools",
   DEVELOPER_TOOLS: "developer-tools",
+  USER_PROFILE: "user-profile",
 };
 
 export const DEFAULT_STALE_TIME = 3_600_000; // 1 hour

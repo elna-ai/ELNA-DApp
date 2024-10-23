@@ -132,12 +132,25 @@
     "principal": "Principal:",
     "roles": "Roles:",
     "requestDevAccess": "Request for Developer access",
+    "updateProfile": "Update profile details",
     "devRequest": {
       "form": {
         "alias": "Alias",
         "email": "Email",
         "github": "Github",
         "description": "Description"
+      }
+    },
+    "add": {
+      "title": "Complete Profile",
+      "description": "Complete your profile, create your agent, and publish it with ease.",
+      "form": {
+        "aliasPlaceHolder": "Enter alias",
+        "aliasLabel": "<span>Alias (Username)*</span><div>Pick a good one! You've got one shot</div>",
+        "xHandlePlaceHolder": "xHandle",
+        "xHandleLabel": "<span>X handle (Optional)</span> <div>Note: your X handle is important to give credit when sharing your public agent with the ELNA community</div>",
+        "bioPlaceHolder": "Enter Bio",
+        "bioLabel": "Bio(optional)"
       }
     }
   },
