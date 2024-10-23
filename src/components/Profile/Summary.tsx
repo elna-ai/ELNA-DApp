@@ -39,6 +39,10 @@ function Summary() {
           {t("profile.title")}
         </h5>
         <p>{t("profile.description")}</p>
+        <Button variant="secondary">
+          <Link to="add">{t("profile.updateProfile")}</Link>
+        </Button>
+
         <div className="d-flex align-items-center gap-2 mt-4">
           <p>{t("profile.principal")}</p>
           <p className="fw-semibold">{wallet?.principalId}</p>

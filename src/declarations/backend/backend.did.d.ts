@@ -4,11 +4,13 @@ import type { IDL } from '@dfinity/candid';
 
 export interface Backend {
   'addAdmin' : ActorMethod<[Principal], string>,
+  'addUserProfile' : ActorMethod<[UserProfile], string>,
   'approvePendingDeveloper' : ActorMethod<[string], string>,
   'enableDeveloperAccess' : ActorMethod<[string], string>,
   'generateUserToken' : ActorMethod<[], string>,
   'getDevelopers' : ActorMethod<[], Array<Developer>>,
   'getPendingDevelopers' : ActorMethod<[], Array<DeveloperApproval>>,
+  'getUserProfile' : ActorMethod<[Principal], UserProfile>,
   'getUserRequests' : ActorMethod<[], Array<DeveloperApproval>>,
   'getUserToken' : ActorMethod<[Principal], string>,
   'getWhitelistedUser' : ActorMethod<[], Array<Principal>>,
@@ -21,6 +23,7 @@ export interface Backend {
   'removeWhitelistedUser' : ActorMethod<[Principal], string>,
   'requestDeveloperAccess' : ActorMethod<[DeveloperApproval], boolean>,
   'revokeDeveloperAccess' : ActorMethod<[string], string>,
+  'updateUserProfile' : ActorMethod<[UserProfile], string>,
   'whitelistUser' : ActorMethod<[Principal], string>,
 }
 export interface Developer {
@@ -45,6 +48,11 @@ export type DeveloperApprovalStatus = { 'pending' : null } |
   { 'rejected' : null };
 export type DeveloperStatus = { 'disabled' : null } |
   { 'approved' : null };
+export interface UserProfile {
+  'bio' : [] | [string],
+  'alias' : string,
+  'xHandle' : [] | [string],
+}
 export interface _SERVICE extends Backend {}
 export declare const idlFactory: IDL.InterfaceFactory;
-export declare const init: ({ IDL }: { IDL: IDL }) => IDL.Type[];
+export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];
