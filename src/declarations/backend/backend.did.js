@@ -1,4 +1,9 @@
 export const idlFactory = ({ IDL }) => {
+  const UserProfile = IDL.Record({
+    'bio' : IDL.Opt(IDL.Text),
+    'alias' : IDL.Text,
+    'xHandle' : IDL.Opt(IDL.Text),
+  });
   const DeveloperStatus = IDL.Variant({
     'disabled' : IDL.Null,
     'approved' : IDL.Null,
@@ -27,11 +32,13 @@ export const idlFactory = ({ IDL }) => {
   });
   const Backend = IDL.Service({
     'addAdmin' : IDL.Func([IDL.Principal], [IDL.Text], []),
+    'addUserProfile' : IDL.Func([UserProfile], [IDL.Text], []),
     'approvePendingDeveloper' : IDL.Func([IDL.Text], [IDL.Text], []),
     'enableDeveloperAccess' : IDL.Func([IDL.Text], [IDL.Text], []),
     'generateUserToken' : IDL.Func([], [IDL.Text], []),
     'getDevelopers' : IDL.Func([], [IDL.Vec(Developer)], ['query']),
     'getPendingDevelopers' : IDL.Func([], [IDL.Vec(DeveloperApproval)], []),
+    'getUserProfile' : IDL.Func([IDL.Principal], [UserProfile], []),
     'getUserRequests' : IDL.Func([], [IDL.Vec(DeveloperApproval)], ['query']),
     'getUserToken' : IDL.Func([IDL.Principal], [IDL.Text], []),
     'getWhitelistedUser' : IDL.Func([], [IDL.Vec(IDL.Principal)], []),
@@ -48,6 +55,7 @@ export const idlFactory = ({ IDL }) => {
     'removeWhitelistedUser' : IDL.Func([IDL.Principal], [IDL.Text], []),
     'requestDeveloperAccess' : IDL.Func([DeveloperApproval], [IDL.Bool], []),
     'revokeDeveloperAccess' : IDL.Func([IDL.Text], [IDL.Text], []),
+    'updateUserProfile' : IDL.Func([UserProfile], [IDL.Text], []),
     'whitelistUser' : IDL.Func([IDL.Principal], [IDL.Text], []),
   });
   return Backend;
