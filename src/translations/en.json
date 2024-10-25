@@ -147,6 +147,7 @@
       "form": {
         "aliasPlaceHolder": "Enter alias",
         "aliasLabel": "<span>Alias (Username)*</span><div>Pick a good one! You've got one shot</div>",
+        "principalIdLabel": "Principal ID",
         "xHandlePlaceHolder": "xHandle",
         "xHandleLabel": "<span>X handle (Optional)</span> <div>Note: your X handle is important to give credit when sharing your public agent with the ELNA community</div>",
         "bioPlaceHolder": "Enter Bio",
