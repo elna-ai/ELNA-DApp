@@ -95,7 +95,11 @@ function AddDetails() {
             onSubmit={handleSubmit}
           >
             {({ dirty, handleSubmit, handleReset }) => (
-              <Form onSubmit={handleSubmit} noValidate>
+              <Form
+                onSubmit={handleSubmit}
+                noValidate
+                className="add-profile__form"
+              >
                 <FormikInput
                   name="alias"
                   placeholder={t("profile.add.form.aliasPlaceHolder")}
@@ -109,6 +113,14 @@ function AddDetails() {
                     />
                   }
                 />
+                <div className="add-profile__form__principalid">
+                  <span className="add-profile__form__label">
+                    {t("profile.add.form.principalIdLabel")}
+                  </span>
+                  <div className="add-profile__form__principalid__input">
+                    <p className="fw-semibold mb-0">{wallet?.principalId}</p>
+                  </div>
+                </div>
                 <FormikInput
                   name="xHandle"
                   placeholder={t("profile.add.form.xHandlePlaceHolder")}

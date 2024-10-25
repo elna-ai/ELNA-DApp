@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import NoToolImg from "images/no-tool.png";
 
 import {
   DeveloperToolStatus,
@@ -44,17 +45,44 @@ function ToolCard({
 
   return (
     <div className="tool-card">
-      <div></div>
-      <p className="text-center">{tool.name}</p>
+      <div className="tool-card__cover">
+        <img
+          className="tool-card__cover__img img-fluid"
+          src={NoToolImg}
+          alt="no tool image"
+        />
+      </div>
+      <p className="tool-card__title text-left text-truncate">{tool.name}</p>
+      <p className="tool-card__desc text-left text-truncate">
+        {tool.description}
+      </p>
+      <p className="tool-card__footer__url text-truncate mb-0">
+        <a href={tool.projectUrl} target="_blank" rel="noopener noreferrer">
+          <i className="ri-external-link-fill me-2"></i> {tool.projectUrl}
+        </a>
+      </p>
+      <hr />
       <div className="tool-card__footer">
         {isUserTool ? (
-          <p className={classNames("badge", getStatusColor(status))}>
+          <p
+            className={classNames(
+              "badge",
+              "tool-card__footer__badge",
+              "mb-0",
+              getStatusColor(status)
+            )}
+          >
             {status}
           </p>
         ) : (
-          <p>{tool.creator}</p>
+          <p className="tool-card__footer__creator">
+            <i className="ri-at-fill"></i> {tool.creator}
+          </p>
         )}
-        <p>{tool.category}</p>
+        <p className="tool-card__footer__category">
+          <i className="ri-honour-fill me-2"></i>
+          {tool.category}
+        </p>
       </div>
     </div>
   );
