@@ -12,7 +12,7 @@ type useShowWizardProps = string | undefined;
 export const useShowWizard = (wizardId: useShowWizardProps) =>
   useQuery({
     queryFn: () => wizardDetails.getWizard(wizardId!),
-    queryKey: [QUERY_KEYS.POPULAR_WIZARDS_LIST, wizardId],
+    queryKey: [QUERY_KEYS.PUBLIC_WIZARDS_LIST, wizardId],
     enabled: !!wizardId,
     select: data => data[0],
   });

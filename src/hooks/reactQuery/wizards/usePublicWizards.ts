@@ -4,7 +4,7 @@ import {  QUERY_KEYS } from "src/constants/query";
 
 
 
-export const useFetchPopularWizards = () => useQuery({
-  queryKey:[QUERY_KEYS.POPULAR_WIZARDS_LIST],
+export const useFetchPublicWizards = () => useQuery({
+  queryKey:[QUERY_KEYS.PUBLIC_WIZARDS_LIST],
   queryFn:() =>wizard_details.getWizards(),
 });

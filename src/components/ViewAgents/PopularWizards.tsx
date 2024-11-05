@@ -1,26 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dropdown, Spinner } from "react-bootstrap";
+import { Dropdown, Spinner, Button, Form, ListGroup } from "react-bootstrap";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 import { useGetAllAnalytics } from "hooks/reactQuery/wizards/useAnalytics";
 
 import Card from "./Card";
-import { useFetchPopularWizards } from "hooks/reactQuery/wizards/usePopularWizards";
+import { useFetchPublicWizards } from "hooks/reactQuery/wizards/usePublicWizards";
 import { WizardDetailsBasicWithTimeStamp } from "declarations/wizard_details/wizard_details.did";
 import classNames from "classnames";
+import { SearchIcon } from "src/assets/searchIcon";
 
 type SortByOptions = "popularity" | "recentlyUpdated";
 
 function PopularWizards() {
   const [sortBy, setSortBy] = useState<SortByOptions>("recentlyUpdated");
   const { t } = useTranslation();
+  const [suggestionResults, setSuggestionResults] = useState<Array<WizardDetailsBasicWithTimeStamp>>([]);
+  const [suggestionActive, setSuggestionActive] = useState<Boolean>(false);
+  const [searchButtonActive, setSearchButtonActive] = useState<Boolean>(false);
+  const searchQueryRef = useRef<HTMLInputElement>(null);
   const {
     data: popularWizards,
     isFetching: isLoadingPopularWizards,
     isError,
     error,
-  } = useFetchPopularWizards();
+  } = useFetchPublicWizards();
   const { data: analytics } = useGetAllAnalytics();
 
   const sortWizards = (
@@ -29,10 +35,15 @@ function PopularWizards() {
   ) => {
     if (popularWizards === undefined) return undefined;
 
-    let wizardsWithAnalytics = popularWizards.map(agent => ({
+    //test solution
+    let chosenWizardArray;
+    if(searchButtonActive) chosenWizardArray = suggestionResults; else chosenWizardArray = popularWizards
+
+    let wizardsWithAnalytics = chosenWizardArray.map(agent => ({
       ...agent,
       messagesReplied: analytics?.[agent.id]?.messagesReplied || 0n,
     }));
+
     if (sortBy === "popularity") {
       return wizardsWithAnalytics?.sort(
         (a, b) => Number(b.messagesReplied) - Number(a.messagesReplied)
@@ -42,6 +53,23 @@ function PopularWizards() {
         (a, b) => Number(b.updatedAt) - Number(a.updatedAt)
       );
     }
+  };
+
+  function searchWizards(
+    popularWizards: WizardDetailsBasicWithTimeStamp[] | undefined,
+    searchQuery: string
+  ) {
+    if (popularWizards === undefined) return undefined;
+    if (searchQuery === "") {
+      setSuggestionResults([]);
+      return undefined
+    }
+
+    const results = popularWizards.filter(agent =>
+      agent.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    setSuggestionResults(results);
   };
 
   useEffect(() => {
@@ -81,24 +109,80 @@ function PopularWizards() {
         </div>
       </div>
       {!isLoadingPopularWizards && popularWizards?.length && (
-        <Dropdown className="mb-2">
-          <Dropdown.Toggle variant="secondary">Sort</Dropdown.Toggle>
+        <div className="mb-3 d-flex align-items-center gap-3">
+          <Dropdown>
+            <Dropdown.Toggle variant="secondary">Sort</Dropdown.Toggle>
 
-          <Dropdown.Menu>
-            <Dropdown.Item
-              onClick={() => setSortBy("recentlyUpdated")}
-              active={sortBy === "recentlyUpdated"}
-            >
-              {t("common.recentlyUpdated")}
-            </Dropdown.Item>
-            <Dropdown.Item
-              onClick={() => setSortBy("popularity")}
-              active={sortBy === "popularity"}
-            >
-              {t("common.popularity")}
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+            <Dropdown.Menu>
+              <Dropdown.Item
+                onClick={() => setSortBy("recentlyUpdated")}
+                active={sortBy === "recentlyUpdated"}
+              >
+                {t("common.recentlyUpdated")}
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => setSortBy("popularity")}
+                active={sortBy === "popularity"}
+              >
+                {t("common.popularity")}
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+          <div className="position-relative w-100">
+            <Form.Control
+              onChange={e => {
+                if(e.target.value === "") setSearchButtonActive(false);
+                setSuggestionActive(true)
+                searchWizards(popularWizards, e.target.value)
+              }}
+              onFocus={() => {
+                setSuggestionActive(true)
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  if(searchQueryRef.current === null) return;
+                  setSearchButtonActive(true);
+                  setSuggestionActive(false);
+                }
+              }}
+              onBeforeInput={() => setSearchButtonActive(false)}
+              style={{ color: "#fff" }}
+              placeholder="Agent Search"
+              aria-label="Agent Search"
+              aria-describedby="basic-addon1"
+              ref={searchQueryRef}
+              />
+              <ListGroup className="position-absolute top-100 mt-1 z-2">
+                {
+                  suggestionResults?.length > 0 && suggestionActive ?
+                    suggestionResults?.map(wizard => (
+                      <Link to={`/chat/${wizard?.id}`} key={wizard?.id}>
+                        <ListGroup.Item 
+                          key={wizard.id}action variant="secondary"
+                          onClick={() => {
+                            if(searchQueryRef.current === null) return;
+                            searchWizards(popularWizards, searchQueryRef.current.value)
+                            searchQueryRef.current.value = wizard?.name;
+                            setSuggestionActive(false)
+                          }}
+                          >
+                          <SearchIcon strokeValue="#000"/>{wizard?.name}
+                        </ListGroup.Item>
+                      </Link>
+                    )) : null
+                }
+              </ListGroup>
+          </div>
+          <Button onClick={() => {
+              if(searchQueryRef.current === null) return;
+              setSearchButtonActive(true);
+              setSuggestionActive(false);
+            }} 
+            className="btn btn-icon btn-rounded btn-flush-dark flush-soft-hover">
+            <SearchIcon strokeValue="#000"/>
+          </Button>
+
+        </div>
       )}
       <div className="row gx-3 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
         {isLoadingPopularWizards ? (
