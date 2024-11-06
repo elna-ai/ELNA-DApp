@@ -16,7 +16,7 @@ export const DEVELOPER_REQUEST_FORM_VALIDATION = yup.object().shape({
 
 export const TWITTER_SHARE_CONTENT = `Check this out! I'm a Developer at ELNA.ai - World's 1st Decentralised AI Agent creation platform.
 https://dapp.elna.ai/
-@elna_live is the world's 1st DeAI creation platform.\n\n
+@ELNA_DeAi is the world's 1st DeAI creation platform.\n\n
 `;
 
 // #AI on #Blockchain

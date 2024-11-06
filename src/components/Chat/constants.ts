@@ -25,7 +25,7 @@ export const TWITTER_SHARE_CONTENT = (
 
 ${url}
 
-@elna_live is the world's 1st DeAI creation platform.\n\n
+@ELNA_DeAi is the world's 1st DeAI creation platform.\n\n
 `;
 
 export const TWITTER_HASHTAGS =
