@@ -17,10 +17,13 @@ type SortByOptions = "popularity" | "recentlyUpdated";
 function PopularWizards() {
   const [sortBy, setSortBy] = useState<SortByOptions>("recentlyUpdated");
   const { t } = useTranslation();
+
   const [suggestionResults, setSuggestionResults] = useState<Array<WizardDetailsBasicWithTimeStamp>>([]);
   const [suggestionActive, setSuggestionActive] = useState<Boolean>(false);
   const [searchButtonActive, setSearchButtonActive] = useState<Boolean>(false);
+  const [clearInputButtonActive, setClearInputButtonActive] = useState<Boolean>(false);
   const searchQueryRef = useRef<HTMLInputElement>(null);
+
   const {
     data: popularWizards,
     isFetching: isLoadingPopularWizards,
@@ -79,6 +82,10 @@ function PopularWizards() {
     toast.error(error.message);
   }, [isError]);
 
+  useEffect(() => {
+    console.log(clearInputButtonActive)
+  }, [clearInputButtonActive]);
+
   return (
     <>
       <div className="d-flex align-items-top justify-content-between mt-4 mb-2">
@@ -128,12 +135,16 @@ function PopularWizards() {
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
-          <div className="position-relative w-100">
+          <div className="position-relative w-100 d-flex align-items-center">
             <Form.Control
               onChange={e => {
-                if(e.target.value === "") setSearchButtonActive(false);
+                if(e.target.value === "") {
+                  setSearchButtonActive(false);
+                  setClearInputButtonActive(false)
+                }
                 setSuggestionActive(true)
                 searchWizards(popularWizards, e.target.value)
+                setClearInputButtonActive(true)
               }}
               onFocus={() => {
                 setSuggestionActive(true)
@@ -151,14 +162,26 @@ function PopularWizards() {
               aria-label="Agent Search"
               aria-describedby="basic-addon1"
               ref={searchQueryRef}
-              />
+            />
+            {
+              clearInputButtonActive && searchQueryRef.current && searchQueryRef.current?.value.length > 0 &&
+              <Button onClick={() => {
+                if(searchQueryRef.current === null) return;
+                searchQueryRef.current.value = ""
+                setClearInputButtonActive(false)
+              }}
+              variant="tertiary"
+              className="position-absolute end-0 text-light"
+              >X</Button>
+            }
               <ListGroup className="position-absolute top-100 mt-1 z-2">
                 {
-                  suggestionResults?.length > 0 && suggestionActive ?
+                  suggestionActive ?
                     suggestionResults?.map(wizard => (
                       <Link to={`/chat/${wizard?.id}`} key={wizard?.id}>
                         <ListGroup.Item 
-                          key={wizard.id}action variant="secondary"
+                          key={wizard.id} 
+                          action variant="secondary"
                           onClick={() => {
                             if(searchQueryRef.current === null) return;
                             searchWizards(popularWizards, searchQueryRef.current.value)
@@ -173,13 +196,15 @@ function PopularWizards() {
                 }
               </ListGroup>
           </div>
-          <Button onClick={() => {
+          <Button 
+              variant="secondary"
+              onClick={() => {
               if(searchQueryRef.current === null) return;
               setSearchButtonActive(true);
               setSuggestionActive(false);
             }} 
             className="btn btn-icon btn-rounded btn-flush-dark flush-soft-hover">
-            <SearchIcon strokeValue="#000"/>
+            <SearchIcon strokeValue="#fff"/>
           </Button>
 
         </div>
