@@ -10,7 +10,8 @@ import Card from "./Card";
 import { useFetchPublicWizards } from "hooks/reactQuery/wizards/usePublicWizards";
 import { WizardDetailsBasicWithTimeStamp } from "declarations/wizard_details/wizard_details.did";
 import classNames from "classnames";
-import { SearchIcon } from "src/assets/searchIcon";
+import SearchIcon from "src/assets/search_icon.svg?react";
+import CloseIcon from "src/assets/close_icon.svg?react";
 
 type SortByOptions = "popularity" | "recentlyUpdated";
 
@@ -81,10 +82,6 @@ function PopularWizards() {
     console.error(error);
     toast.error(error.message);
   }, [isError]);
-
-  useEffect(() => {
-    console.log(clearInputButtonActive)
-  }, [clearInputButtonActive]);
 
   return (
     <>
@@ -172,7 +169,8 @@ function PopularWizards() {
               }}
               variant="tertiary"
               className="position-absolute end-0 text-light"
-              >X</Button>
+              ><div className="stroke-light w-4 d-flex align-items-center"><CloseIcon/></div></Button>
+              
             }
               <ListGroup className="position-absolute top-100 mt-1 z-2">
                 {
@@ -180,6 +178,7 @@ function PopularWizards() {
                     suggestionResults?.map(wizard => (
                       <Link to={`/chat/${wizard?.id}`} key={wizard?.id}>
                         <ListGroup.Item 
+                          className="d-flex align-items-center gap-3"
                           key={wizard.id} 
                           action variant="secondary"
                           onClick={() => {
@@ -189,22 +188,23 @@ function PopularWizards() {
                             setSuggestionActive(false)
                           }}
                           >
-                          <SearchIcon strokeValue="#000"/>{wizard?.name}
+                          <div className="stroke-dark w-4 d-flex align-items-center"><SearchIcon/></div>
+                          {wizard?.name}
                         </ListGroup.Item>
                       </Link>
                     )) : null
-                }
+                  }
               </ListGroup>
           </div>
           <Button 
               variant="secondary"
               onClick={() => {
-              if(searchQueryRef.current === null) return;
-              setSearchButtonActive(true);
-              setSuggestionActive(false);
-            }} 
+                if(searchQueryRef.current === null) return;
+                setSearchButtonActive(true);
+                setSuggestionActive(false);
+              }} 
             className="btn btn-icon btn-rounded btn-flush-dark flush-soft-hover">
-            <SearchIcon strokeValue="#fff"/>
+            <div className="stroke-light w-4 h-4"><SearchIcon/></div>
           </Button>
 
         </div>
