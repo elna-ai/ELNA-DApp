@@ -1,17 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dropdown, Spinner, Button, Form, ListGroup } from "react-bootstrap";
+import { Dropdown, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
 
 import { useGetAllAnalytics } from "hooks/reactQuery/wizards/useAnalytics";
 
 import Card from "./Card";
 import { useFetchPublicWizards } from "hooks/reactQuery/wizards/usePublicWizards";
 import { WizardDetailsBasicWithTimeStamp } from "declarations/wizard_details/wizard_details.did";
-import classNames from "classnames";
-import SearchIcon from "src/assets/search_icon.svg?react";
-import CloseIcon from "src/assets/close_icon.svg?react";
+import SearchBarWizards from "components/common/SearchBarWizards";
 
 type SortByOptions = "popularity" | "recentlyUpdated";
 
@@ -20,10 +17,7 @@ function PopularWizards() {
   const { t } = useTranslation();
 
   const [suggestionResults, setSuggestionResults] = useState<Array<WizardDetailsBasicWithTimeStamp>>([]);
-  const [suggestionActive, setSuggestionActive] = useState<Boolean>(false);
-  const [searchButtonActive, setSearchButtonActive] = useState<Boolean>(false);
-  const [clearInputButtonActive, setClearInputButtonActive] = useState<Boolean>(false);
-  const searchQueryRef = useRef<HTMLInputElement>(null);
+  const [searchButtonActive, setSearchButtonActive] = useState<Boolean>(false); //When data is displayed somewhere other than suggestions on search button click
 
   const {
     data: popularWizards,
@@ -39,10 +33,9 @@ function PopularWizards() {
   ) => {
     if (popularWizards === undefined) return undefined;
 
-    //test solution
     let chosenWizardArray;
     if(searchButtonActive) chosenWizardArray = suggestionResults; else chosenWizardArray = popularWizards
-
+    
     let wizardsWithAnalytics = chosenWizardArray.map(agent => ({
       ...agent,
       messagesReplied: analytics?.[agent.id]?.messagesReplied || 0n,
@@ -57,23 +50,6 @@ function PopularWizards() {
         (a, b) => Number(b.updatedAt) - Number(a.updatedAt)
       );
     }
-  };
-
-  function searchWizards(
-    popularWizards: WizardDetailsBasicWithTimeStamp[] | undefined,
-    searchQuery: string
-  ) {
-    if (popularWizards === undefined) return undefined;
-    if (searchQuery === "") {
-      setSuggestionResults([]);
-      return undefined
-    }
-
-    const results = popularWizards.filter(agent =>
-      agent.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    setSuggestionResults(results);
   };
 
   useEffect(() => {
@@ -132,81 +108,12 @@ function PopularWizards() {
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
-          <div className="position-relative w-100 d-flex align-items-center">
-            <Form.Control
-              onChange={e => {
-                if(e.target.value === "") {
-                  setSearchButtonActive(false);
-                  setClearInputButtonActive(false)
-                }
-                setSuggestionActive(true)
-                searchWizards(popularWizards, e.target.value)
-                setClearInputButtonActive(true)
-              }}
-              onFocus={() => {
-                setSuggestionActive(true)
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  if(searchQueryRef.current === null) return;
-                  setSearchButtonActive(true);
-                  setSuggestionActive(false);
-                }
-              }}
-              onBeforeInput={() => setSearchButtonActive(false)}
-              style={{ color: "#fff" }}
-              placeholder="Agent Search"
-              aria-label="Agent Search"
-              aria-describedby="basic-addon1"
-              ref={searchQueryRef}
-            />
-            {
-              clearInputButtonActive && searchQueryRef.current && searchQueryRef.current?.value.length > 0 &&
-              <Button onClick={() => {
-                if(searchQueryRef.current === null) return;
-                searchQueryRef.current.value = ""
-                setClearInputButtonActive(false)
-              }}
-              variant="tertiary"
-              className="position-absolute end-0 text-light"
-              ><div className="stroke-light w-4 d-flex align-items-center"><CloseIcon/></div></Button>
-              
-            }
-              <ListGroup className="position-absolute top-100 mt-1 z-2">
-                {
-                  suggestionActive ?
-                    suggestionResults?.map(wizard => (
-                      <Link to={`/chat/${wizard?.id}`} key={wizard?.id}>
-                        <ListGroup.Item 
-                          className="d-flex align-items-center gap-3"
-                          key={wizard.id} 
-                          action variant="secondary"
-                          onClick={() => {
-                            if(searchQueryRef.current === null) return;
-                            searchWizards(popularWizards, searchQueryRef.current.value)
-                            searchQueryRef.current.value = wizard?.name;
-                            setSuggestionActive(false)
-                          }}
-                          >
-                          <div className="stroke-dark w-4 d-flex align-items-center"><SearchIcon/></div>
-                          {wizard?.name}
-                        </ListGroup.Item>
-                      </Link>
-                    )) : null
-                  }
-              </ListGroup>
-          </div>
-          <Button 
-              variant="secondary"
-              onClick={() => {
-                if(searchQueryRef.current === null) return;
-                setSearchButtonActive(true);
-                setSuggestionActive(false);
-              }} 
-            className="btn btn-icon btn-rounded btn-flush-dark flush-soft-hover">
-            <div className="stroke-light w-4 h-4"><SearchIcon/></div>
-          </Button>
-
+          <SearchBarWizards 
+            popularWizards={popularWizards} 
+            setSearchButtonActive={setSearchButtonActive}
+            suggestionResults={suggestionResults}
+            setSuggestionResults={setSuggestionResults}
+          />
         </div>
       )}
       <div className="row gx-3 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
@@ -234,3 +141,4 @@ function PopularWizards() {
 }
 
 export default PopularWizards;
+
