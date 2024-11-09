@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
-import { ListGroup, Form, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Form, Button } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import classNames from "classnames";
 
 import { WizardDetailsBasicWithTimeStamp } from "declarations/wizard_details/wizard_details.did";
 
@@ -16,42 +17,32 @@ function SearchBarWizards(
         setSuggestionResults: React.Dispatch<React.SetStateAction<Array<WizardDetailsBasicWithTimeStamp>>>
     }
 ) {
+
+    const navigate = useNavigate();
     
     const [suggestionActive, setSuggestionActive] = useState<Boolean>(false);
     const [clearInputButtonActive, setClearInputButtonActive] = useState<Boolean>(false);
+    const [suggestionIndex, setSuggestionIndex] = useState<number>(-1);
     const searchQueryRef = useRef<HTMLInputElement>(null);
 
     function searchWizards(
         popularWizards: WizardDetailsBasicWithTimeStamp[] | undefined,
         searchQuery: string
-      ) {
+    ) {
         if (popularWizards === undefined) return undefined;
         if (searchQuery === "") {
           setSuggestionResults([]);
           return undefined
         }
     
-        const results = popularWizards.filter(agent =>
-          agent.name.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-        //messagesReplied to be added to WizardDetailsBasicWithTimeStamp interface
-        // .sort((a, b) => {
-        //   const aMessagesReplied = parseInt(a.messagesReplied.replace('n', ''));
-        //   const bMessagesReplied = parseInt(b.messagesReplied.replace('n', ''));
-        //   if (isNaN(aMessagesReplied) || isNaN(bMessagesReplied)) {
-        //     return 0; 
-        //   } else {
-        //     return bMessagesReplied - aMessagesReplied;
-        //   }
-        // });
+        const results = popularWizards.filter(agent =>agent.name.toLowerCase().includes(searchQuery.toLowerCase()))
     
         setSuggestionResults(results);
-      };
-
+    };
     
   return (
         <>
-          <div className="position-relative w-100 d-flex align-items-center">
+          <div className="position-relative w-100 mw-500p d-flex align-items-center">
             <Form.Control
               onChange={e => {
                 if(e.target.value === "") {
@@ -65,21 +56,31 @@ function SearchBarWizards(
               onFocus={() => {
                 if(searchQueryRef.current === null) return;
                 if(searchQueryRef.current.value === "" && suggestionActive) setSuggestionActive(false);
-                setSuggestionActive(true)
               }}
               onBlur={() => setSuggestionActive(false)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  if(searchQueryRef.current === null) return;
-                  setSearchButtonActive(true);
-                  setSuggestionActive(false);
+                if(searchQueryRef.current === null || searchQueryRef.current?.value === "") return;
+                if (suggestionResults) {
+                    if (e.key === 'Enter') {
+                        console.log(suggestionIndex)
+                        if(suggestionIndex !== -1) navigate(`/chat/${suggestionResults[suggestionIndex]?.id}`);
+                        else {
+                            setSearchButtonActive(true);
+                            setSuggestionActive(false);
+                        }
+                    }
+                    if (e.key === 'ArrowDown') {
+                        setSuggestionIndex(prev => Number(prev) + 1)
+                    }
+                    if (e.key === 'ArrowUp') {
+                        setSuggestionIndex(prev => Number(prev) - 1)
+                    }
                 }
               }}
               onBeforeInput={() => setSearchButtonActive(false)}
               style={{ color: "#fff" }}
               placeholder="Agent Search"
               aria-label="Agent Search"
-              aria-describedby="basic-addon1"
               ref={searchQueryRef}
             />
             {
@@ -94,29 +95,25 @@ function SearchBarWizards(
               ><div className="stroke-light w-4 d-flex align-items-center"><CloseIcon/></div></Button>
               
             }
-              <ListGroup className="position-absolute top-100 mt-1 z-2">
+              <div className="suggestion-list">
                 {
                   suggestionActive ?
-                    suggestionResults?.slice(0,15)?.map((wizard) => (
-                      <Link to={`/chat/${wizard?.id}`} key={wizard?.id}>
-                        <ListGroup.Item 
-                        className="d-flex align-items-center gap-3"
-                        key={wizard.id} 
-                        action variant="secondary"
-                        onClick={() => {
-                          if(searchQueryRef.current === null) return;
-                          searchWizards(popularWizards, searchQueryRef.current.value)
-                          searchQueryRef.current.value = wizard?.name;
-                          setSuggestionActive(false)
-                        }}
+                    suggestionResults?.slice(0,15)?.map((wizard, index) => (
+                        <Link
+                        className={classNames("suggestion-item", {
+                            "suggestion-highlight": suggestionIndex === index
+                          })}
+                        key={index} 
+                        to={`/chat/${wizard?.id}`} 
                         >
-                          <div className="stroke-dark w-4 d-flex align-items-center"><SearchIcon/></div>
-                          {wizard?.name}
-                        </ListGroup.Item>
-                      </Link>
+                            <div className="stroke-dark w-4 d-flex align-items-center">
+                                <SearchIcon/>
+                            </div>
+                            {wizard?.name}
+                        </Link>
                     )) : null
                   }
-              </ListGroup>
+              </div>
           </div>
           <Button 
               variant="secondary"

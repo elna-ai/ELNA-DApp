@@ -35,7 +35,7 @@ function PopularWizards() {
 
     let chosenWizardArray;
     if(searchButtonActive) chosenWizardArray = suggestionResults; else chosenWizardArray = popularWizards
-    
+
     let wizardsWithAnalytics = chosenWizardArray.map(agent => ({
       ...agent,
       messagesReplied: analytics?.[agent.id]?.messagesReplied || 0n,

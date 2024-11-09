@@ -1,0 +1,27 @@
+.suggestion-list {
+    position: absolute;
+    top: 100%;
+    z-index: 2;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
+    background-color: var(--color-bg1);
+    border-radius: 5px;
+}
+.suggestion-item {
+    display: flex;
+    color: var(--title-color);
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border: 1px solid var(--color-line);
+    border-radius: 5px;
+}
+.suggestion-item:hover {
+    background-color: var(--color-line);
+    border: 1px solid var(--primary-color);
+}
+.suggestion-highlight {
+    background-color: var(--color-line);
+    border: 1px solid var(--primary-color);
+}
