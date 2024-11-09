@@ -367,7 +367,7 @@ actor class Backend(_owner : Principal) {
     };
   };
 
-  public shared func getUserProfile(princial : Principal) : async Types.UserProfile {
+  public query func getUserProfile(princial : Principal) : async Types.UserProfile {
     switch (userProfiles.get(princial)) {
       case (?userProfile) { return userProfile };
       case null { throw Error.reject("User Profile not found") };

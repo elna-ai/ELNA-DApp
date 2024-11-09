@@ -5,11 +5,7 @@ import * as pdfJs from "pdfjs-dist";
 import pdfJsWorker from "pdfjs-dist/build/pdf.worker";
 import { History } from "declarations/elna_RAG_backend/elna_RAG_backend.did";
 
-import { AVATAR_IMAGES } from "../constants";
 import { Message } from "../types";
-
-export const getAvatar = (id: string) =>
-  AVATAR_IMAGES.find(avatar => avatar.id === id);
 
 export const extractDocumentsFromPDF = async (file: File) => {
   const loader = new WebPDFLoader(file, {

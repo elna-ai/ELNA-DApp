@@ -38,7 +38,7 @@ export const idlFactory = ({ IDL }) => {
     'generateUserToken' : IDL.Func([], [IDL.Text], []),
     'getDevelopers' : IDL.Func([], [IDL.Vec(Developer)], ['query']),
     'getPendingDevelopers' : IDL.Func([], [IDL.Vec(DeveloperApproval)], []),
-    'getUserProfile' : IDL.Func([IDL.Principal], [UserProfile], []),
+    'getUserProfile' : IDL.Func([IDL.Principal], [UserProfile], ['query']),
     'getUserRequests' : IDL.Func([], [IDL.Vec(DeveloperApproval)], ['query']),
     'getUserToken' : IDL.Func([IDL.Principal], [IDL.Text], []),
     'getWhitelistedUser' : IDL.Func([], [IDL.Vec(IDL.Principal)], []),
