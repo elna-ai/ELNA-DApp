@@ -8,7 +8,6 @@ import {
   useFetchMyWizards,
   usePublishUnpublishWizard,
 } from "hooks/reactQuery/wizards/useMyWizards";
-import { getAvatar } from "src/utils";
 import { useGetAllAnalytics } from "hooks/reactQuery/wizards/useAnalytics";
 import { useUserStore } from "stores/useUser";
 import CheckWizardNameCreateModal from "components/common/CheckWizardNameCreate";
@@ -109,7 +108,7 @@ function MyWizards() {
                   handlePublish={(id, shouldPublish) =>
                     publishUnpublishWizard({ wizardId: id, shouldPublish })
                   }
-                  imageUrl={getAvatar(avatar)!.image}
+                  imageId={avatar}
                   handleDelete={handleDeletePopup}
                   messagesReplied={analytics?.[id]?.messagesReplied || 0n}
                   handleEdit={handleEdit}

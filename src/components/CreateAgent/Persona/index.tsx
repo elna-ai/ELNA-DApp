@@ -14,7 +14,6 @@ import {
   useAddWizard,
   useUpdateWizard,
 } from "hooks/reactQuery/wizards/useMyWizards";
-import { getAvatar } from "src/utils";
 import { AVATAR_IMAGES } from "src/constants";
 import LoadingButton from "components/common/LoadingButton";
 import { useCreateWizardStore } from "stores/useCreateWizard";
@@ -96,7 +95,7 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
   return (
     <Formik
       initialValues={{
-        avatar: wizard?.avatar || AVATAR_IMAGES[0].id,
+        avatar: wizard?.avatar || AVATAR_IMAGES[0],
         biography: wizard?.biography || "",
         greeting: wizard?.greeting || "",
         visibility:
@@ -128,18 +127,18 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
             </h3>
             <div className="persona__avatar">
               <AvatarImage
-                key={getAvatar(values.avatar)!.id}
-                image={getAvatar(values.avatar)!.image}
+                key={values.avatar}
+                assetId={values.avatar}
                 selected={false}
                 preview={true}
               />
               <InputGroup className="persona__avatar__image-wrapper">
                 {AVATAR_IMAGES.map(avatar => (
                   <AvatarImage
-                    key={avatar.id}
-                    image={avatar.image}
-                    selected={values.avatar === avatar.id}
-                    onClick={() => handleChange("avatar")(avatar.id)}
+                    key={avatar}
+                    assetId={avatar}
+                    selected={values.avatar === avatar}
+                    onClick={() => handleChange("avatar")(avatar)}
                   />
                 ))}
               </InputGroup>

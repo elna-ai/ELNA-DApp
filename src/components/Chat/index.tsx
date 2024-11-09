@@ -6,11 +6,7 @@ import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
 import PageLoader from "components/common/PageLoader";
-import {
-  generateTwitterShareLink,
-  getAvatar,
-  transformHistory,
-} from "src/utils";
+import { generateTwitterShareLink, transformHistory } from "src/utils";
 import useAutoSizeTextArea from "hooks/useAutoResizeTextArea";
 import { Message } from "src/types";
 import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
@@ -19,6 +15,7 @@ import { useCreatingQuestionEmbedding } from "hooks/reactQuery/useExternalServic
 import { useChat } from "hooks/reactQuery/useRag";
 import { isErr } from "utils/ragCanister";
 import { useUserStore } from "stores/useUser";
+import { useGetAsset } from "hooks/reactQuery/useElnaImages";
 
 import Bubble from "./Bubble";
 import NoHistory from "./NoHistory";
@@ -44,6 +41,7 @@ function Chat() {
   const { mutate: createQuestionEmbedding } = useCreatingQuestionEmbedding();
   useAutoSizeTextArea(inputRef.current, messageInput);
   const { mutate: sendChat, isPending: isResponseLoading } = useChat();
+  const { data: avatar } = useGetAsset(wizard?.avatar);
 
   useEffect(() => {
     if (!isError) return;
@@ -135,7 +133,7 @@ function Chat() {
                 <div className="chat-header__avatar">
                   <div className="avatar">
                     <img
-                      src={getAvatar(wizard.avatar)?.image}
+                      src={avatar?.asset}
                       alt="user"
                       className="avatar-img"
                     />

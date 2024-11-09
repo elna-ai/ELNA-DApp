@@ -13,6 +13,7 @@ export const QUERY_KEYS = {
   APPROVED_DEVELOPER_TOOLS: "approved-developer-tools",
   DEVELOPER_TOOLS: "developer-tools",
   USER_PROFILE: "user-profile",
+  AVATAR_IMAGE: "avatar-image",
 };
 
 export const DEFAULT_STALE_TIME = 3_600_000; // 1 hour
