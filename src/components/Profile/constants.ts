@@ -1,5 +1,7 @@
 import * as yup from "yup";
 
+import { X_Handle } from "src/constants";
+
 export const DEVELOPER_REQUEST_FORM_INITIAL = {
   alias: "",
   email: "",
@@ -16,7 +18,7 @@ export const DEVELOPER_REQUEST_FORM_VALIDATION = yup.object().shape({
 
 export const TWITTER_SHARE_CONTENT = `Check this out! I'm a Developer at ELNA.ai - World's 1st Decentralised AI Agent creation platform.
 https://dapp.elna.ai/
-@ELNA_DeAi is the world's 1st DeAI creation platform.\n\n
+${X_Handle} is the world's 1st DeAI creation platform.\n\n
 `;
 
 // #AI on #Blockchain

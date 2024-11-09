@@ -5,6 +5,7 @@ import boxydudeimg from "images/avatar/04.png";
 import quantumcomputingimg from "images/avatar/05.png";
 import sathoshiimg from "images/avatar/06.png";
 import sonicimg from "images/avatar/07.png";
+import { X_Handle } from "src/constants";
 
 export const DEFAULT_AGENT_ID = "2";
 
@@ -25,7 +26,7 @@ export const TWITTER_SHARE_CONTENT = (
 
 ${url}
 
-@ELNA_DeAi is the world's 1st DeAI creation platform.\n\n
+${X_Handle} is the world's 1st DeAI creation platform.\n\n
 `;
 
 export const TWITTER_HASHTAGS =

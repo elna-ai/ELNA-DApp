@@ -1,3 +1,5 @@
+export const X_Handle = "@ELNA_DeAi"
+
 export const AVATAR_IMAGES = [
   "default_img_1",
   "default_img_10",
