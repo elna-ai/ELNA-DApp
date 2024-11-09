@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { Dropdown, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 
-import { getAvatar } from "src/utils";
 import { useGetAllAnalytics } from "hooks/reactQuery/wizards/useAnalytics";
 
 import Card from "./Card";
@@ -112,7 +111,7 @@ function PopularWizards() {
                   {...{ name, description }}
                   id={id}
                   key={id}
-                  imageUrl={getAvatar(avatar)?.image}
+                  imageId={avatar}
                   userId={userId}
                   messagesReplied={analytics?.[id]?.messagesReplied || 0n}
                 />

@@ -1,3 +1,4 @@
+import { useGetAsset } from "hooks/reactQuery/useElnaImages";
 import { Dropdown } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -5,7 +6,7 @@ import { Link } from "react-router-dom";
 interface CardProps {
   name: string;
   description: string;
-  imageUrl?: string;
+  imageId?: string;
   userId?: string;
   id: string;
   isPublished?: boolean;
@@ -19,7 +20,7 @@ interface CardProps {
 function Card({
   name,
   description,
-  imageUrl,
+  imageId,
   userId,
   id,
   isPublished,
@@ -30,18 +31,13 @@ function Card({
   handleEdit,
 }: CardProps) {
   const { t } = useTranslation();
+  const { data: avatarData } = useGetAsset(imageId);
 
   const displayAddress = (principal: string) => {
     const firstPart = principal.substring(0, 5);
     const lastPart = principal.substring(principal.length - 3);
     return `${firstPart}...${lastPart}`;
   };
-
-  const Avatar = ({ name }: { name: string }) => (
-    <div className="avatar avatar-xl avatar-soft-primary avatar-rounded bg-gray-300 text-green-700">
-      <span className="initial-wrap">{name[0].toUpperCase()}</span>
-    </div>
-  );
 
   return (
     <div className="col">
@@ -83,11 +79,11 @@ function Card({
             )}
           </div>
           <div className="avatar avatar-xl avatar-rounded">
-            {imageUrl ? (
-              <img src={imageUrl} alt="user" className="avatar-img" />
-            ) : (
-              <Avatar {...{ name }} />
-            )}
+            <img
+              src={avatarData?.asset}
+              alt="avatar image"
+              className="avatar-img"
+            />
           </div>
           <div className="user-name text-truncate">
             <Link to={`/chat/${id}`} className="btn-link stretched-link">

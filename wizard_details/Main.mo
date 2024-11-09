@@ -38,6 +38,7 @@ actor class Main(initlaArgs : Types.InitalArgs) {
   let UserManagementCanister = actor (Principal.toText(_userManagementCanisterId)) : actor {
     isPrincipalAdmin : (Principal) -> async (Bool);
     isUserWhitelisted : (?Principal) -> async (Bool);
+    getUserProfile : (Principal) -> async (Types.UserProfile);
   };
 
   public query func getAnalytics(wizardId : Text) : async Types.Analytics_V1 {
@@ -214,7 +215,46 @@ actor class Main(initlaArgs : Types.InitalArgs) {
         };
       };
     };
+  };
 
+  // For migration only to be deleted after
+  public shared ({ caller }) func updateWizardAdmin(wizardId : Text, newImageId : Text) : async Text {
+    if (not isOwner(caller)) {
+      throw Error.reject("Not admin");
+    };
+
+    let wizard = findWizardById(wizardId, wizardsV2);
+    switch (wizard) {
+      case null {
+        throw Error.reject("Agent not found");
+      };
+      case (?wizard) {
+        let wizardId = findWizardIndex(wizard, wizardsV2);
+        switch (wizardId) {
+          case null {
+            throw Error.reject("Agent not found");
+          };
+          case (?index) {
+            let updatedWizardDetails = {
+              avatar = newImageId;
+              name = wizard.name;
+              biography = wizard.biography;
+              description = wizard.description;
+              greeting = wizard.greeting;
+              visibility = wizard.visibility;
+              id = wizard.id;
+              userId = wizard.userId;
+              isPublished = wizard.isPublished;
+              summary = wizard.summary;
+              createdAt = wizard.createdAt;
+              updatedAt = wizard.updatedAt;
+            };
+            wizardsV2.put(index, updatedWizardDetails);
+            return "Agent avatar updated";
+          };
+        };
+      };
+    };
   };
 
   public query func getAllAnalytics() : async [(Text, Types.Analytics)] {
