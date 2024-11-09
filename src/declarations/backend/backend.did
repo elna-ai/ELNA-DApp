@@ -43,7 +43,7 @@ type Backend =
    generateUserToken: () -> (text);
    getDevelopers: () -> (vec Developer) query;
    getPendingDevelopers: () -> (vec DeveloperApproval);
-   getUserProfile: (principal) -> (UserProfile);
+   getUserProfile: (principal) -> (UserProfile) query;
    getUserRequests: () -> (vec DeveloperApproval) query;
    getUserToken: (principal) -> (text);
    getWhitelistedUser: () -> (vec principal);

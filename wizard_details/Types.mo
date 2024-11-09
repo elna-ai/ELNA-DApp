@@ -69,4 +69,10 @@ module {
     #v1 : Analytics_V1;
   };
 
+  public type UserProfile = {
+    alias : Text;
+    xHandle : ?Text;
+    bio : ?Text;
+  };
+
 };
