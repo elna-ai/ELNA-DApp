@@ -8,7 +8,7 @@ import { useGetAllAnalytics } from "hooks/reactQuery/wizards/useAnalytics";
 import Card from "./Card";
 import { useFetchPublicWizards } from "hooks/reactQuery/wizards/usePublicWizards";
 import { WizardDetailsBasicWithTimeStamp } from "declarations/wizard_details/wizard_details.did";
-import SearchBarWizards from "components/common/SearchBarWizards";
+import SearchBarWizards from "components/ViewAgents/SearchBarWizards";
 
 type SortByOptions = "popularity" | "recentlyUpdated";
 

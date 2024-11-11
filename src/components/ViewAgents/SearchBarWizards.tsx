@@ -83,7 +83,7 @@ function SearchBarWizards(
               onChange={e => inputOnchange(e)}
               onKeyDown={(e) => inputOnKeyDown(e)}
               onFocus={() => inputOnFocus()}
-              onBlur={() => setSuggestionActive(false)}
+              onBlur={() => setTimeout(() => setSuggestionActive(false), 50)}
               onBeforeInput={() => setSearchButtonActive(false)}
               style={{ color: "#fff" }}
               placeholder="Agent Search"
