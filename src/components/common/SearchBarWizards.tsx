@@ -21,7 +21,6 @@ function SearchBarWizards(
     const navigate = useNavigate();
     
     const [suggestionActive, setSuggestionActive] = useState(false);
-    const [clearInputButtonActive, setClearInputButtonActive] = useState(false);
     const [suggestionIndex, setSuggestionIndex] = useState<number>(-1);
     const searchQueryRef = useRef<HTMLInputElement>(null);
 
@@ -35,48 +34,56 @@ function SearchBarWizards(
           return undefined
         }
     
-        const results = popularWizards.filter(agent =>agent.name.toLowerCase().includes(searchQuery.toLowerCase()))
+        const results = popularWizards.filter(agent =>agent.name.toLowerCase().includes(searchQuery.toLowerCase().trim()));
     
         setSuggestionResults(results);
     };
+
+    function inputOnchange(e: React.ChangeEvent<HTMLInputElement>) {
+      if(e.target.value === "") {
+        setSearchButtonActive(false);
+      }
+      setSuggestionActive(true)
+      searchWizards(popularWizards, e.target.value)
+    }
+
+    function inputOnFocus() {
+      if(searchQueryRef.current === null) return;
+      if(searchQueryRef.current.value === "" && suggestionActive) setSuggestionActive(false);
+    }
     
+    function inputOnKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+      if(searchQueryRef.current === null || searchQueryRef.current?.value === "") return;
+      if(!suggestionActive) return;
+      if (e.key === 'Enter') {
+          if(suggestionIndex !== -1) navigate(`/chat/${suggestionResults[suggestionIndex]?.id}`);
+          else {
+              setSearchButtonActive(true);
+              setSuggestionActive(false);
+          }
+      }
+      if (e.key === 'ArrowDown') {
+          setSuggestionIndex(prev => Number(prev) + 1)
+      }
+      if (e.key === 'ArrowUp') {
+          setSuggestionIndex(prev => Number(prev) - 1)
+      }
+    }
+
+    function searchButtonOnClick() {
+      if(searchQueryRef.current === null) return;
+      setSearchButtonActive(true);
+      setSuggestionActive(false);
+    }
+
   return (
         <>
           <div className="position-relative w-100 max-w-500p d-flex align-items-center">
             <Form.Control
-              onChange={e => {
-                if(e.target.value === "") {
-                  setSearchButtonActive(false);
-                  setClearInputButtonActive(false)
-                }
-                setSuggestionActive(true)
-                searchWizards(popularWizards, e.target.value)
-                setClearInputButtonActive(true)
-              }}
-              onFocus={() => {
-                if(searchQueryRef.current === null) return;
-                if(searchQueryRef.current.value === "" && suggestionActive) setSuggestionActive(false);
-              }}
+              onChange={e => inputOnchange(e)}
+              onKeyDown={(e) => inputOnKeyDown(e)}
+              onFocus={() => inputOnFocus()}
               onBlur={() => setSuggestionActive(false)}
-              onKeyDown={(e) => {
-                if(searchQueryRef.current === null || searchQueryRef.current?.value === "") return;
-                if (suggestionResults) {
-                    if (e.key === 'Enter') {
-                        console.log(suggestionIndex)
-                        if(suggestionIndex !== -1) navigate(`/chat/${suggestionResults[suggestionIndex]?.id}`);
-                        else {
-                            setSearchButtonActive(true);
-                            setSuggestionActive(false);
-                        }
-                    }
-                    if (e.key === 'ArrowDown') {
-                        setSuggestionIndex(prev => Number(prev) + 1)
-                    }
-                    if (e.key === 'ArrowUp') {
-                        setSuggestionIndex(prev => Number(prev) - 1)
-                    }
-                }
-              }}
               onBeforeInput={() => setSearchButtonActive(false)}
               style={{ color: "#fff" }}
               placeholder="Agent Search"
@@ -84,27 +91,25 @@ function SearchBarWizards(
               ref={searchQueryRef}
             />
             {
-              clearInputButtonActive && searchQueryRef.current && searchQueryRef.current?.value.length > 0 &&
+              !!searchQueryRef.current?.value && searchQueryRef.current?.value.length > 0 &&
               <Button onClick={() => {
                 if(searchQueryRef.current === null) return;
                 searchQueryRef.current.value = ""
-                setClearInputButtonActive(false)
               }}
               variant="tertiary"
               className="position-absolute end-0 text-light"
               ><div className="stroke-light w-4 d-flex align-items-center"><CloseIcon/></div></Button>
-              
             }
-              <div className="suggestion-list">
+              <div className="suggestion__list">
                 {
                   suggestionActive ?
                     suggestionResults?.slice(0,15)?.map((wizard, index) => (
                         <Link
-                        className={classNames("suggestion-item", {
-                            "suggestion-highlight": suggestionIndex === index
-                          })}
-                        key={index} 
-                        to={`/chat/${wizard?.id}`} 
+                          to={`/chat/${wizard?.id}`}
+                          className={classNames("suggestion__item", {
+                              "suggestion__item--highlight": suggestionIndex === index
+                            })}
+                          key={index} 
                         >
                             <div className="stroke-dark w-4 d-flex align-items-center">
                                 <SearchIcon/>
@@ -117,11 +122,7 @@ function SearchBarWizards(
           </div>
           <Button 
               variant="secondary"
-              onClick={() => {
-                if(searchQueryRef.current === null) return;
-                setSearchButtonActive(true);
-                setSuggestionActive(false);
-              }} 
+              onClick={() => searchButtonOnClick()} 
             className="btn btn-icon btn-rounded btn-flush-dark flush-soft-hover">
             <div className="stroke-light w-4 h-4"><SearchIcon/></div>
           </Button>
