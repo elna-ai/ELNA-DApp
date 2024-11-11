@@ -37,7 +37,6 @@ actor class Main(initlaArgs : Types.InitalArgs) {
   // TODO: better way to do and maintin this?
   let UserManagementCanister = actor (Principal.toText(_userManagementCanisterId)) : actor {
     isPrincipalAdmin : (Principal) -> async (Bool);
-    isUserWhitelisted : (?Principal) -> async (Bool);
     getUserProfile : (Principal) -> async (Types.UserProfile);
   };
 
@@ -104,14 +103,10 @@ actor class Main(initlaArgs : Types.InitalArgs) {
     isWizardNameTakenByUser(wizardsV2, Principal.toText(message.caller), wizardName);
   };
 
-  public shared (message) func addWizard(wizard : Types.WizardDetails) : async Types.Response {
-    let isUserWhitelisted = await UserManagementCanister.isUserWhitelisted(?message.caller);
-
-    if (not isUserWhitelisted) {
-      return { status = 422; message = "User dosen't have permission" };
-    };
-
-    let isNewWizardName = isWizardNameTakenByUser(wizardsV2, Principal.toText(message.caller), wizard.name);
+  public shared ({ caller }) func addWizard(wizard : Types.WizardDetails) : async Types.Response {
+    // Throws profile not found error if profile is not complete
+    let _userProfile = await UserManagementCanister.getUserProfile(caller);
+    let isNewWizardName = isWizardNameTakenByUser(wizardsV2, Principal.toText(caller), wizard.name);
 
     if (isNewWizardName) {
       wizardsV2.add(addTimeStamp(wizard));
