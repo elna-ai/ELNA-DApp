@@ -33,17 +33,6 @@ actor class Backend(_owner : Principal) {
   // TODO: remove developer tools after new canister check
   var developerTools = Buffer.Buffer<Types.DeveloperTool>(10);
 
-  public shared query (message) func isUserWhitelisted(principalId : ?Principal) : async Bool {
-    switch (principalId) {
-      case null {
-        return Utils.isUserWhitelisted(whitelistedUsers, message.caller);
-      };
-      case (?id) {
-        Utils.isUserWhitelisted(whitelistedUsers, id);
-      };
-    };
-  };
-
   public shared (message) func getWhitelistedUser() : async [Principal] {
 
     switch (Utils.isUserAdmin(adminUsers, message.caller)) {
@@ -61,7 +50,7 @@ actor class Backend(_owner : Principal) {
     if (not canUserWhitelist) {
       throw Error.reject("User not authorized for this action");
     };
-
+    // TODO: need to be removed
     let isAlreadyWhitelisted : Bool = Utils.isUserWhitelisted(whitelistedUsers, userId);
 
     switch (isAlreadyWhitelisted) {
