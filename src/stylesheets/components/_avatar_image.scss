@@ -22,6 +22,10 @@
     height: 90px;
   }
 
+  &--loading {
+    background-color: var(--background-btn-secondary);
+  }
+
   &__tick {
     position: absolute;
     right: -5px;
