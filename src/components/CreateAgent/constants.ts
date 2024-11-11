@@ -7,6 +7,8 @@ import musk from "images/musk.png";
 import albert from "images/albert.png";
 import hacker from "images/hacker.png";
 
+import { X_Handle } from "src/constants";
+
 export const TEMPLATE_BOTS = [
   {
     id: uuidv4(),
@@ -70,7 +72,7 @@ export const TWITTER_SHARE_CONTENT = (
 
 ${url}
 
-@elna_live is the world's 1st DeAI creation platform.\n\n`;
+${X_Handle} is the world's 1st DeAI creation platform.\n\n`;
 
 export const TWITTER_HASHTAGS =
   "AIagentActivated,ELNAai,DecentralizedAl,GenerativeAl,ICP";
