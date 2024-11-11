@@ -42,7 +42,7 @@ function SearchBarWizards(
     
   return (
         <>
-          <div className="position-relative w-100 mw-500p d-flex align-items-center">
+          <div className="position-relative w-100 max-w-500p d-flex align-items-center">
             <Form.Control
               onChange={e => {
                 if(e.target.value === "") {
