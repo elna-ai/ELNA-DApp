@@ -1,7 +1,7 @@
 @import "../node_modules/bootstrap/scss/bootstrap";
 
 @import "abstract/variables";
-@import "./utils";
+@import "abstract/mixins";
 
 @import "components/sidebar";
 @import "components/card";
