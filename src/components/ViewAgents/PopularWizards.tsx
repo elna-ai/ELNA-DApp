@@ -17,7 +17,7 @@ function PopularWizards() {
   const { t } = useTranslation();
 
   const [suggestionResults, setSuggestionResults] = useState<Array<WizardDetailsBasicWithTimeStamp>>([]);
-  const [searchButtonActive, setSearchButtonActive] = useState<Boolean>(false); //When data is displayed somewhere other than suggestions on search button click
+  const [searchButtonActive, setSearchButtonActive] = useState(false); //When data is displayed somewhere other than suggestions on search button click
 
   const {
     data: popularWizards,

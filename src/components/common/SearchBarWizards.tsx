@@ -11,22 +11,22 @@ import SearchIcon from "src/assets/search_icon.svg?react";
 function SearchBarWizards(
     {popularWizards, setSearchButtonActive, suggestionResults, setSuggestionResults}: 
     {
-        popularWizards: WizardDetailsBasicWithTimeStamp[] | undefined,
-        setSearchButtonActive: React.Dispatch<React.SetStateAction<Boolean>>
-        suggestionResults: WizardDetailsBasicWithTimeStamp[] | undefined
+        popularWizards: WizardDetailsBasicWithTimeStamp[],
+        setSearchButtonActive: React.Dispatch<React.SetStateAction<boolean>>
+        suggestionResults: WizardDetailsBasicWithTimeStamp[]
         setSuggestionResults: React.Dispatch<React.SetStateAction<Array<WizardDetailsBasicWithTimeStamp>>>
     }
 ) {
 
     const navigate = useNavigate();
     
-    const [suggestionActive, setSuggestionActive] = useState<Boolean>(false);
-    const [clearInputButtonActive, setClearInputButtonActive] = useState<Boolean>(false);
+    const [suggestionActive, setSuggestionActive] = useState(false);
+    const [clearInputButtonActive, setClearInputButtonActive] = useState(false);
     const [suggestionIndex, setSuggestionIndex] = useState<number>(-1);
     const searchQueryRef = useRef<HTMLInputElement>(null);
 
     function searchWizards(
-        popularWizards: WizardDetailsBasicWithTimeStamp[] | undefined,
+        popularWizards: WizardDetailsBasicWithTimeStamp[],
         searchQuery: string
     ) {
         if (popularWizards === undefined) return undefined;
