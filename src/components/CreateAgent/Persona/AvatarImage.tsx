@@ -16,7 +16,7 @@ function AvatarImage({
   onClick,
   preview = false,
 }: AvatarImageProps) {
-  const { data } = useGetAsset(assetId);
+  const { data, isFetching: isLoading } = useGetAsset(assetId);
 
   return (
     <div
@@ -29,9 +29,10 @@ function AvatarImage({
       <img
         className={classNames("avatar-image", {
           "avatar-image--preview": preview,
+          "avatar-image--loading": isLoading,
         })}
         src={data?.asset}
-        alt={`avatar ${data?.file_name}`}
+        alt={isLoading ? "loading" : `avatar ${data?.file_name}`}
       />
       {selected && (
         <img

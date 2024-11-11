@@ -2,7 +2,7 @@ import { Principal } from "@dfinity/principal";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useUserStore } from "stores/useUser";
-import { QUERY_KEYS } from "src/constants/query";
+import { DEFAULT_STALE_TIME, QUERY_KEYS } from "src/constants/query";
 import { useWallet } from "hooks/useWallet";
 import { Backend, UserProfile } from "declarations/backend/backend.did";
 import {
@@ -110,26 +110,6 @@ export const useAddWhitelistedUser = () => {
   });
 };
 
-export const useIsUserWhiteListed = () => {
-  const wallet = useWallet();
-
-  return useQuery({
-    queryFn: async () => {
-      if (wallet === undefined) throw Error("user not logged in");
-
-      const backend: Backend = await wallet.getCanisterActor(
-        backendId,
-        backendFactory,
-        false
-      );
-      const response = await backend.isUserWhitelisted([]);
-      return response;
-    },
-    queryKey: [QUERY_KEYS.WHITELISTED_USERS, wallet?.principalId],
-    enabled: !!wallet?.principalId,
-  });
-};
-
 export const useIsUserAdmin = () => {
   const wallet = useWallet();
 
@@ -161,6 +141,8 @@ export const useGetUserProfile = (principal?: string) =>
     },
     queryKey: [QUERY_KEYS.USER_PROFILE, principal],
     enabled: !!principal,
+    retry: false,
+    staleTime: DEFAULT_STALE_TIME,
   });
 
 export const useAddUserProfile = () => {

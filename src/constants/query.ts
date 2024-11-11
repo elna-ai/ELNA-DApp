@@ -16,4 +16,5 @@ export const QUERY_KEYS = {
   AVATAR_IMAGE: "avatar-image",
 };
 
-export const DEFAULT_STALE_TIME = 3_600_000; // 1 hour
+/** 1 hour */
+export const DEFAULT_STALE_TIME = 3_600_000;

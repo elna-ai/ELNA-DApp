@@ -101,9 +101,10 @@
         "visibility": "Please select a visibility option"
       }
     },
-    "noPermission": {
-      "title": "Oops! It seems you don't have permission to create agents.",
-      "gainAccess": "To gain access, simply join our whitelist.",
+    "completeProfile": {
+      "modalTitle": "Complete your profile",
+      "title": "Oops! It seems you have not completed your profile.",
+      "gainAccess": "To create agents, Please complete your profile.",
       "askAccess": "Click the link to fill out the form and <a><strong><u>Get started!</u></strong></a>"
     },
     "templateStore": {
@@ -181,7 +182,6 @@
     "scratch": "Scratch",
     "publish": "Publish",
     "loadingPage": "Loading page",
-    "noPermission": "No Permission",
     "next": "Next",
     "backToHome": "Back to home",
     "learning": "Learning",
