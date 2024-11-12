@@ -21,7 +21,7 @@ function SearchBarWizards(
     const navigate = useNavigate();
     
     const [suggestionActive, setSuggestionActive] = useState(false);
-    const [suggestionIndex, setSuggestionIndex] = useState<number>(-1);
+    const [suggestionIndex, setSuggestionIndex] = useState(-1);
     const searchQueryRef = useRef<HTMLInputElement>(null);
 
     function searchWizards(
@@ -91,7 +91,7 @@ function SearchBarWizards(
               ref={searchQueryRef}
             />
             {
-              !!searchQueryRef.current?.value && searchQueryRef.current?.value.length > 0 &&
+              !!searchQueryRef.current?.value &&
               <Button onClick={() => {
                 if(searchQueryRef.current === null) return;
                 searchQueryRef.current.value = ""
