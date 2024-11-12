@@ -86,8 +86,8 @@ function SearchBarWizards(
     }
 
   return (
-        <>
-          <div className="position-relative w-100 max-w-500p d-flex align-items-center">
+        <div className="d-flex align-items-center w-full gap-3">
+          <div className="position-relative w-full max-w-500p d-flex align-items-center">
             <Form.Control
               onChange={e => inputOnchange(e)}
               onKeyDown={(e) => inputOnKeyDown(e)}
@@ -109,25 +109,25 @@ function SearchBarWizards(
               className="position-absolute end-0 text-light"
               ><div className="stroke-light w-4 d-flex align-items-center"><CloseIcon/></div></Button>
             }
-              <div className="suggestion__list">
-                {
-                  suggestionActive ?
-                    suggestionResults?.slice(0,15)?.map((wizard, index) => (
-                        <Link
-                          to={`/chat/${wizard?.id}`}
-                          className={classNames("suggestion__item", {
-                              "suggestion__item--highlight": suggestionIndex === index
-                            })}
-                          key={index} 
-                        >
-                            <div className="stroke-dark w-4 d-flex align-items-center">
-                                <SearchIcon/>
-                            </div>
-                            {wizard?.name}
-                        </Link>
-                    )) : null
-                  }
-              </div>
+            <div className="suggestion__list">
+              {
+                suggestionActive ?
+                  suggestionResults?.slice(0,15)?.map((wizard, index) => (
+                      <Link
+                        to={`/chat/${wizard?.id}`}
+                        className={classNames("suggestion__item", {
+                            "suggestion__item--highlight": suggestionIndex === index
+                          })}
+                        key={index} 
+                      >
+                          <div className="stroke-dark w-4 d-flex align-items-center">
+                              <SearchIcon/>
+                          </div>
+                          {wizard?.name}
+                      </Link>
+                  )) : null
+                }
+            </div>
           </div>
           <Button 
               variant="secondary"
@@ -135,7 +135,7 @@ function SearchBarWizards(
             className="btn btn-icon btn-rounded btn-flush-dark flush-soft-hover">
             <div className="stroke-light w-4 h-4"><SearchIcon/></div>
           </Button>
-        </>
+        </div>
     )   
 }
 

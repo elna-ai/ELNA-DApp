@@ -88,10 +88,15 @@ function PopularWizards() {
         </div>
       </div>
       {!isLoadingPopularWizards && popularWizards?.length && (
-        <div className="mb-3 d-flex align-items-center gap-3">
+        <div className="mb-3 d-flex justify-content-between align-items-center gap-3">
+          <SearchBarWizards 
+            popularWizards={popularWizards} 
+            setSearchButtonActive={setSearchButtonActive}
+            suggestionResults={suggestionResults}
+            setSuggestionResults={setSuggestionResults}
+          />
           <Dropdown>
             <Dropdown.Toggle variant="secondary">Sort</Dropdown.Toggle>
-
             <Dropdown.Menu>
               <Dropdown.Item
                 onClick={() => setSortBy("recentlyUpdated")}
@@ -107,12 +112,6 @@ function PopularWizards() {
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
-          <SearchBarWizards 
-            popularWizards={popularWizards} 
-            setSearchButtonActive={setSearchButtonActive}
-            suggestionResults={suggestionResults}
-            setSuggestionResults={setSuggestionResults}
-          />
         </div>
       )}
       <div className="row gx-3 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
