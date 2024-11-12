@@ -70,7 +70,7 @@ export const useDeleteMyWizard = () => {
 
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MY_WIZARDS_LIST] });
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.POPULAR_WIZARDS_LIST],
+        queryKey: [QUERY_KEYS.PUBLIC_WIZARDS_LIST],
       });
       toast.success(response.message);
     },
@@ -166,7 +166,7 @@ export const usePublishUnpublishWizard = () => {
     onSuccess: response => {
       toast.success(response.message);
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.POPULAR_WIZARDS_LIST],
+        queryKey: [QUERY_KEYS.PUBLIC_WIZARDS_LIST],
       });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MY_WIZARDS_LIST] });
     },

@@ -35,7 +35,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <div
-            className={classNames("hk-wrapper full-width", {
+            className={classNames("hk-wrapper w-100vw", {
               default: isExpanded,
               collapsed: !isExpanded,
             })}

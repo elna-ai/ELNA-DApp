@@ -1,7 +1,7 @@
 @import "../node_modules/bootstrap/scss/bootstrap";
 
 @import "abstract/variables";
-@import "./utils";
+@import "abstract/mixins";
 
 @import "components/sidebar";
 @import "components/card";
@@ -13,6 +13,7 @@
 @import "components/my_wizard";
 @import "components/banner";
 @import "components/tool_card";
+@import "components/search";
 
 @import "pages/chat";
 @import "pages/persona";

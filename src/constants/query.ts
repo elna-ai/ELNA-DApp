@@ -1,5 +1,5 @@
 export const QUERY_KEYS = {
-  POPULAR_WIZARDS_LIST: "popular-wizards-list",
+  PUBLIC_WIZARDS_LIST: "public-wizards-list",
   MY_WIZARDS_LIST: "my-wizards-list",
   WHITELISTED_USERS: "whitelisted-users-list",
   IS_USER_ADMIN: "is-user-admin",

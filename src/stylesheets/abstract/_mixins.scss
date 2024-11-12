@@ -1,0 +1,20 @@
+@import "variables";
+
+@mixin generate-widths($map) {
+    @each $class, $size in $map {
+      .#{$class} {
+        width: $size;
+      }
+    }
+  }
+  
+  @mixin generate-max-widths($map) {
+    @each $class, $size in $map {
+      .#{$class} {
+        max-width: $size;
+      }
+    }
+  }
+
+@include generate-widths($widths);
+@include generate-max-widths($max-widths);
