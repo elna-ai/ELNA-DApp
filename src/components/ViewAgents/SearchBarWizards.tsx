@@ -8,7 +8,8 @@ import { WizardDetailsBasicWithTimeStamp } from "declarations/wizard_details/wiz
 
 import CloseIcon from "src/assets/close_icon.svg?react";
 import SearchIcon from "src/assets/search_icon.svg?react";
-import { FormControlElement } from "react-bootstrap/esm/FormControl";
+
+type FormControlElement = HTMLInputElement | HTMLTextAreaElement;
 
 function SearchBarWizards(
     {popularWizards, setSearchButtonActive, suggestionResults, setSuggestionResults}: 
