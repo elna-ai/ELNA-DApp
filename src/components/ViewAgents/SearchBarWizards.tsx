@@ -8,6 +8,7 @@ import { WizardDetailsBasicWithTimeStamp } from "declarations/wizard_details/wiz
 
 import CloseIcon from "src/assets/close_icon.svg?react";
 import SearchIcon from "src/assets/search_icon.svg?react";
+import { FormControlElement } from "react-bootstrap/esm/FormControl";
 
 function SearchBarWizards(
     {popularWizards, setSearchButtonActive, suggestionResults, setSuggestionResults}: 
@@ -40,7 +41,7 @@ function SearchBarWizards(
         setSuggestionResults(results);
     };
 
-    function inputOnchange(e: React.ChangeEvent<HTMLInputElement>) {
+    function inputOnchange(e: React.ChangeEvent<FormControlElement>) {
       if(e.target.value === "") {
         setSearchButtonActive(false);
       }
@@ -53,7 +54,7 @@ function SearchBarWizards(
       if(searchQueryRef.current.value === "" && suggestionActive) setSuggestionActive(false);
     }
     
-    function inputOnKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    function inputOnKeyDown(e: React.KeyboardEvent<FormControlElement>) {
       if(searchQueryRef.current === null || searchQueryRef.current?.value === "") return;
       if(!suggestionActive) return;
       if (e.key === 'Enter') {
