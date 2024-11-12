@@ -33,7 +33,7 @@ function PopularWizards() {
   ) => {
     if (popularWizards === undefined) return undefined;
 
-    const chosenWizardArray = searchButtonActive ? suggestionResults : popularWizards;
+    const chosenWizardArray = (searchButtonActive && suggestionResults.length) ? suggestionResults : popularWizards;
 
     let wizardsWithAnalytics = chosenWizardArray.map(agent => ({
       ...agent,

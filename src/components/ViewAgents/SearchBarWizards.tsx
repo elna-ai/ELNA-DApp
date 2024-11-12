@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { Form, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import classNames from "classnames";
+import { toast } from "react-toastify";
 
 import { WizardDetailsBasicWithTimeStamp } from "declarations/wizard_details/wizard_details.did";
 
@@ -33,9 +34,9 @@ function SearchBarWizards(
           setSuggestionResults([]);
           return undefined
         }
-    
+        
         const results = popularWizards.filter(agent =>agent.name.toLowerCase().includes(searchQuery.toLowerCase().trim()));
-    
+        
         setSuggestionResults(results);
     };
 
@@ -56,6 +57,7 @@ function SearchBarWizards(
       if(searchQueryRef.current === null || searchQueryRef.current?.value === "") return;
       if(!suggestionActive) return;
       if (e.key === 'Enter') {
+          noResultToast();
           if(suggestionIndex !== -1) navigate(`/chat/${suggestionResults[suggestionIndex]?.id}`);
           else {
               setSearchButtonActive(true);
@@ -72,8 +74,13 @@ function SearchBarWizards(
 
     function searchButtonOnClick() {
       if(searchQueryRef.current === null) return;
+      noResultToast();
       setSearchButtonActive(true);
       setSuggestionActive(false);
+    }
+
+    function noResultToast() {
+      if(suggestionResults.length === 0) toast("No matching agents found");
     }
 
   return (
