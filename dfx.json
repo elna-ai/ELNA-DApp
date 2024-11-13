@@ -16,11 +16,6 @@
       "dependencies": ["backend", "wizard_details", "developer_studio"],
       "type": "assets",
       "source": ["dist/"]
-    },
-
-    "elna_ai": {
-      "type": "motoko",
-      "main": "elnaAi/ChatAi.mo"
     }
   },
   "networks": {
