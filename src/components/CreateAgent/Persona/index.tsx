@@ -21,6 +21,7 @@ import queryClient from "utils/queryClient";
 
 import { PERSONA_VALIDATION_SCHEMA } from "../constants";
 import AvatarImage from "./AvatarImage";
+import UploadAvatarImage from "./UploadAvatarImage";
 
 type PersonaProps = {
   wizard: any;
@@ -126,13 +127,26 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
               {t("createAgent.avatar")}
             </h3>
             <div className="persona__avatar">
-              <AvatarImage
+              {
+                values.avatar.slice(0,10) === "data:image" ?
+                <div className="avatar-image-wrapper avatar-image--preview">
+                  <img src={values.avatar} className="avatar-image avatar-image--preview" alt="" />
+                </div>
+                :
+                <AvatarImage
                 key={values.avatar}
                 assetId={values.avatar}
                 selected={false}
                 preview={true}
-              />
+                />
+              }
               <InputGroup className="persona__avatar__image-wrapper">
+                <UploadAvatarImage
+                  selected={values.avatar.slice(0,10) === "data:image"}
+                  onAvatarSelected={(image) => {
+                    handleChange("avatar")(image)
+                  }}
+                />
                 {AVATAR_IMAGES.map(avatar => (
                   <AvatarImage
                     key={avatar}

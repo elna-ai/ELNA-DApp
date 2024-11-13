@@ -41,6 +41,19 @@ body {
   overflow-x: hidden;
 }
 
+    .child {
+        opacity: 0;
+        transition: opacity 0.15s ease;
+    }
+
+    .parent .child {
+        pointer-events: none;
+    }
+
+    .parent:hover .child {
+        opacity: 1;
+    }
+
 h6,
 .h6,
 h5,
