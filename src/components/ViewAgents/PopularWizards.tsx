@@ -7,7 +7,7 @@ import { useGetAllAnalytics } from "hooks/reactQuery/wizards/useAnalytics";
 
 import Card from "./Card";
 import { useFetchPublicWizards } from "hooks/reactQuery/wizards/usePublicWizards";
-import { WizardDetailsBasicWithTimeStamp } from "declarations/wizard_details/wizard_details.did";
+import { WizardDetailsBasicWithCreatorName } from "declarations/wizard_details/wizard_details.did";
 import SearchBarWizards from "./SearchBarWizards";
 
 type SortByOptions = "popularity" | "recentlyUpdated";
@@ -16,7 +16,9 @@ function PopularWizards() {
   const [sortBy, setSortBy] = useState<SortByOptions>("recentlyUpdated");
   const { t } = useTranslation();
 
-  const [suggestionResults, setSuggestionResults] = useState<Array<WizardDetailsBasicWithTimeStamp>>([]);
+  const [suggestionResults, setSuggestionResults] = useState<
+    Array<WizardDetailsBasicWithCreatorName>
+  >([]);
   const [searchButtonActive, setSearchButtonActive] = useState(false); //When data is displayed somewhere other than suggestions on search button click
 
   const {
@@ -28,12 +30,15 @@ function PopularWizards() {
   const { data: analytics } = useGetAllAnalytics();
 
   const sortWizards = (
-    popularWizards: WizardDetailsBasicWithTimeStamp[] | undefined,
+    popularWizards: WizardDetailsBasicWithCreatorName[] | undefined,
     sortBy: SortByOptions
   ) => {
     if (popularWizards === undefined) return undefined;
 
-    const chosenWizardArray = (searchButtonActive && suggestionResults.length) ? suggestionResults : popularWizards;
+    const chosenWizardArray =
+      searchButtonActive && suggestionResults.length
+        ? suggestionResults
+        : popularWizards;
 
     let wizardsWithAnalytics = chosenWizardArray.map(agent => ({
       ...agent,
@@ -89,8 +94,8 @@ function PopularWizards() {
       </div>
       {!isLoadingPopularWizards && popularWizards?.length && (
         <div className="mb-3 d-flex justify-content-between align-items-center gap-3">
-          <SearchBarWizards 
-            popularWizards={popularWizards} 
+          <SearchBarWizards
+            popularWizards={popularWizards}
             setSearchButtonActive={setSearchButtonActive}
             suggestionResults={suggestionResults}
             setSuggestionResults={setSuggestionResults}
@@ -120,9 +125,9 @@ function PopularWizards() {
         ) : (
           <>
             {sortWizards(popularWizards, sortBy)?.map(
-              ({ id, name, userId, description, avatar }) => (
+              ({ id, name, userId, description, avatar, creatorName }) => (
                 <Card
-                  {...{ name, description }}
+                  {...{ name, description, creatorName }}
                   id={id}
                   key={id}
                   imageId={avatar}
@@ -139,4 +144,3 @@ function PopularWizards() {
 }
 
 export default PopularWizards;
-
