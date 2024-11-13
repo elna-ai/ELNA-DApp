@@ -41,6 +41,10 @@ type Backend =
    approvePendingDeveloper: (text) -> (text);
    enableDeveloperAccess: (text) -> (text);
    generateUserToken: () -> (text);
+   getAllUserProfiles: () -> (vec record {
+                                    principal;
+                                    UserProfile;
+                                  }) query;
    getDevelopers: () -> (vec Developer) query;
    getPendingDevelopers: () -> (vec DeveloperApproval);
    getUserProfile: (principal) -> (UserProfile) query;
@@ -50,7 +54,6 @@ type Backend =
    isDeveloper: () -> (bool);
    isPrincipalAdmin: (principal) -> (bool) query;
    isUserAdmin: () -> (bool) query;
-   isUserWhitelisted: (opt principal) -> (bool) query;
    rejectPendingDeveloper: (text) -> (text);
    removeAdmin: (principal) -> (text);
    removeWhitelistedUser: (principal) -> (text);

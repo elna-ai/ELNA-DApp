@@ -11,6 +11,7 @@ interface CardProps {
   id: string;
   isPublished?: boolean;
   messagesReplied: bigint;
+  creatorName: string;
   price?: number;
   handleDelete?: (id: string, name: string) => void;
   handlePublish?: (id: string, isPublished: boolean) => void;
@@ -25,6 +26,7 @@ function Card({
   id,
   isPublished,
   messagesReplied,
+  creatorName,
   price = 0,
   handleDelete,
   handlePublish,
@@ -38,6 +40,7 @@ function Card({
     const lastPart = principal.substring(principal.length - 3);
     return `${firstPart}...${lastPart}`;
   };
+  const creator = creatorName ? creatorName : displayAddress(userId || "");
 
   return (
     <div className="col">
@@ -97,9 +100,7 @@ function Card({
             <i className="ri-chat-4-line"></i>
             <span>{messagesReplied.toString()}</span>
           </div>
-          <span className="fs-7 ms-auto lh-1">
-            {userId && displayAddress(userId)}
-          </span>
+          <span className="fs-7 ms-auto lh-1">{creator}</span>
         </div>
       </div>
     </div>

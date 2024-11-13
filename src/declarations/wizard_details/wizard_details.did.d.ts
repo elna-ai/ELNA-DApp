@@ -16,15 +16,16 @@ export interface Main {
   'getAnalytics' : ActorMethod<[string], Analytics_V1>,
   'getUserWizards' : ActorMethod<
     [string],
-    Array<WizardDetailsBasicWithTimeStamp>
+    Array<WizardDetailsBasicWithCreatorName>
   >,
   'getWizard' : ActorMethod<[string], [] | [WizardDetails]>,
-  'getWizards' : ActorMethod<[], Array<WizardDetailsBasicWithTimeStamp>>,
+  'getWizards' : ActorMethod<[], Array<WizardDetailsBasicWithCreatorName>>,
   'isWizardNameValid' : ActorMethod<[string], boolean>,
   'publishWizard' : ActorMethod<[string], Response>,
   'unpublishWizard' : ActorMethod<[string], Response>,
   'updateMessageAnalytics' : ActorMethod<[string], undefined>,
   'updateWizard' : ActorMethod<[string, WizardUpdateDetails], string>,
+  'updateWizardAdmin' : ActorMethod<[string, string], string>,
 }
 export interface Response { 'status' : bigint, 'message' : string }
 export type Time = bigint;
@@ -40,7 +41,7 @@ export interface WizardDetails {
   'visibility' : WizardVisibility,
   'avatar' : string,
 }
-export interface WizardDetailsBasicWithTimeStamp {
+export interface WizardDetailsBasicWithCreatorName {
   'id' : string,
   'isPublished' : boolean,
   'userId' : string,
@@ -48,6 +49,7 @@ export interface WizardDetailsBasicWithTimeStamp {
   'createdAt' : Time,
   'biography' : string,
   'description' : string,
+  'creatorName' : string,
   'updatedAt' : Time,
   'avatar' : string,
 }
@@ -64,4 +66,4 @@ export type WizardVisibility = { 'privateVisibility' : null } |
   { 'unlistedVisibility' : null };
 export interface _SERVICE extends Main {}
 export declare const idlFactory: IDL.InterfaceFactory;
-export declare const init: ({ IDL }: { IDL: IDL }) => IDL.Type[];
+export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

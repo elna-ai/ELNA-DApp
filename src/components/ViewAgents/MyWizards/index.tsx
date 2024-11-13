@@ -98,7 +98,7 @@ function MyWizards() {
         <Title />
         <div className="my-wizards__card-wrapper">
           {userWizards?.map(
-            ({ id, name, description, avatar, isPublished }) => (
+            ({ id, name, description, avatar, isPublished, creatorName }) => (
               <div key={id} className="col">
                 <Card
                   name={name}
@@ -112,6 +112,7 @@ function MyWizards() {
                   handleDelete={handleDeletePopup}
                   messagesReplied={analytics?.[id]?.messagesReplied || 0n}
                   handleEdit={handleEdit}
+                  creatorName={creatorName}
                 />
               </div>
             )

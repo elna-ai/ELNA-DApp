@@ -4,6 +4,7 @@ import Buffer "mo:base/Buffer";
 import Bool "mo:base/Bool";
 import Principal "mo:base/Principal";
 import Time "mo:base/Time";
+import HashMap "mo:base/HashMap";
 
 import Types "./Types";
 
@@ -37,10 +38,10 @@ module {
     ).size() == 0;
   };
 
-  public func getWizardsBasicDetails(wizards : [Types.WizardDetailsWithTimeStamp]) : [Types.WizardDetailsBasicWithTimeStamp] {
+  public func getWizardsBasicDetails(wizards : [Types.WizardDetailsWithCreatorName]) : [Types.WizardDetailsBasicWithCreatorName] {
     Array.map(
       wizards,
-      func(wizard : Types.WizardDetailsWithTimeStamp) : Types.WizardDetailsBasicWithTimeStamp {
+      func(wizard : Types.WizardDetailsWithCreatorName) : Types.WizardDetailsBasicWithCreatorName {
         {
           id = wizard.id;
           name = wizard.name;
@@ -51,6 +52,7 @@ module {
           isPublished = wizard.isPublished;
           createdAt = wizard.createdAt;
           updatedAt = wizard.updatedAt;
+          creatorName = wizard.creatorName;
 
         };
       },
@@ -132,7 +134,6 @@ module {
   };
 
   public func addTimeStamp(wizard : Types.WizardDetails) : Types.WizardDetailsWithTimeStamp {
-
     {
       id = wizard.id;
       name = wizard.name;
@@ -147,5 +148,24 @@ module {
       createdAt = Time.now();
       updatedAt = Time.now();
     };
+  };
+
+  public func getWizardsWithCreator(wizards : [Types.WizardDetailsWithTimeStamp], creatorProfilesArray : [(Principal, Types.UserProfile)]) : [Types.WizardDetailsWithCreatorName] {
+    let userProfiles = HashMap.fromIter<Principal, Types.UserProfile>(creatorProfilesArray.vals(), 5, Principal.equal, Principal.hash);
+    let wizardsWithCreatorNames = Array.map(
+      wizards,
+      func(wizard : Types.WizardDetailsWithTimeStamp) : Types.WizardDetailsWithCreatorName {
+        let creatorProfile = userProfiles.get(Principal.fromText(wizard.userId));
+        let alias = switch creatorProfile {
+          case (?profile) { profile.alias };
+          case null "";
+        };
+        return {
+          wizard and { creatorName = alias }
+        };
+      },
+    );
+
+    return wizardsWithCreatorNames;
   };
 };

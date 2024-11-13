@@ -363,6 +363,10 @@ actor class Backend(_owner : Principal) {
     };
   };
 
+  public query func getAllUserProfiles() : async [(Principal, Types.UserProfile)] {
+    Iter.toArray(userProfiles.entries());
+  };
+
   public shared ({ caller }) func addUserProfile(profileDetails : Types.UserProfile) : async Text {
     switch (userProfiles.get(caller)) {
       case (?_userProfile) {
