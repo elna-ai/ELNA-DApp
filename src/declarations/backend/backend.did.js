@@ -36,6 +36,11 @@ export const idlFactory = ({ IDL }) => {
     'approvePendingDeveloper' : IDL.Func([IDL.Text], [IDL.Text], []),
     'enableDeveloperAccess' : IDL.Func([IDL.Text], [IDL.Text], []),
     'generateUserToken' : IDL.Func([], [IDL.Text], []),
+    'getAllUserProfiles' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Tuple(IDL.Principal, UserProfile))],
+        ['query'],
+      ),
     'getDevelopers' : IDL.Func([], [IDL.Vec(Developer)], ['query']),
     'getPendingDevelopers' : IDL.Func([], [IDL.Vec(DeveloperApproval)], []),
     'getUserProfile' : IDL.Func([IDL.Principal], [UserProfile], ['query']),
@@ -45,11 +50,6 @@ export const idlFactory = ({ IDL }) => {
     'isDeveloper' : IDL.Func([], [IDL.Bool], []),
     'isPrincipalAdmin' : IDL.Func([IDL.Principal], [IDL.Bool], ['query']),
     'isUserAdmin' : IDL.Func([], [IDL.Bool], ['query']),
-    'isUserWhitelisted' : IDL.Func(
-        [IDL.Opt(IDL.Principal)],
-        [IDL.Bool],
-        ['query'],
-      ),
     'rejectPendingDeveloper' : IDL.Func([IDL.Text], [IDL.Text], []),
     'removeAdmin' : IDL.Func([IDL.Principal], [IDL.Text], []),
     'removeWhitelistedUser' : IDL.Func([IDL.Principal], [IDL.Text], []),

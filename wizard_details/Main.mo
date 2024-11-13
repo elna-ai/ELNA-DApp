@@ -18,6 +18,7 @@ import {
   findWizardById;
   findWizardIndex;
   addTimeStamp;
+  getWizardsWithCreator;
 } "./Utils";
 
 actor class Main(initlaArgs : Types.InitalArgs) {
@@ -38,6 +39,7 @@ actor class Main(initlaArgs : Types.InitalArgs) {
   let UserManagementCanister = actor (Principal.toText(_userManagementCanisterId)) : actor {
     isPrincipalAdmin : (Principal) -> async (Bool);
     getUserProfile : (Principal) -> async (Types.UserProfile);
+    getAllUserProfiles : () -> async [(Principal, Types.UserProfile)];
   };
 
   public query func getAnalytics(wizardId : Text) : async Types.Analytics_V1 {
@@ -76,7 +78,7 @@ actor class Main(initlaArgs : Types.InitalArgs) {
     };
   };
 
-  public query func getWizards() : async [Types.WizardDetailsBasicWithTimeStamp] {
+  public func getWizards() : async [Types.WizardDetailsBasicWithCreatorName] {
 
     let publicWizards = Array.filter(
       Buffer.toArray(wizardsV2),
@@ -84,15 +86,19 @@ actor class Main(initlaArgs : Types.InitalArgs) {
         wizard.visibility == #publicVisibility and wizard.isPublished;
       },
     );
+    let userProfilesArray = await UserManagementCanister.getAllUserProfiles();
+    let wizardsWithCreatorNames = getWizardsWithCreator(publicWizards, userProfilesArray);
 
-    getWizardsBasicDetails(publicWizards);
+    getWizardsBasicDetails(wizardsWithCreatorNames);
   };
 
   // TODO: should use caller to get current User
-  public query func getUserWizards(userId : Text) : async [Types.WizardDetailsBasicWithTimeStamp] {
+  public func getUserWizards(userId : Text) : async [Types.WizardDetailsBasicWithCreatorName] {
     let userWizards = getWizardsByUser(wizardsV2, userId);
+    let userProfilesArray = await UserManagementCanister.getAllUserProfiles();
+    let wizardsWithCreatorNames = getWizardsWithCreator(userWizards, userProfilesArray);
 
-    getWizardsBasicDetails(userWizards);
+    getWizardsBasicDetails(wizardsWithCreatorNames);
   };
 
   public query func getWizard(id : Text) : async ?Types.WizardDetails {

@@ -24,7 +24,7 @@ export const idlFactory = ({ IDL }) => {
   const Analytics_V1 = IDL.Record({ 'messagesReplied' : IDL.Nat });
   const Analytics = IDL.Variant({ 'v1' : Analytics_V1 });
   const Time = IDL.Int;
-  const WizardDetailsBasicWithTimeStamp = IDL.Record({
+  const WizardDetailsBasicWithCreatorName = IDL.Record({
     'id' : IDL.Text,
     'isPublished' : IDL.Bool,
     'userId' : IDL.Text,
@@ -32,6 +32,7 @@ export const idlFactory = ({ IDL }) => {
     'createdAt' : Time,
     'biography' : IDL.Text,
     'description' : IDL.Text,
+    'creatorName' : IDL.Text,
     'updatedAt' : Time,
     'avatar' : IDL.Text,
   });
@@ -55,20 +56,21 @@ export const idlFactory = ({ IDL }) => {
     'getAnalytics' : IDL.Func([IDL.Text], [Analytics_V1], ['query']),
     'getUserWizards' : IDL.Func(
         [IDL.Text],
-        [IDL.Vec(WizardDetailsBasicWithTimeStamp)],
-        ['query'],
+        [IDL.Vec(WizardDetailsBasicWithCreatorName)],
+        [],
       ),
     'getWizard' : IDL.Func([IDL.Text], [IDL.Opt(WizardDetails)], ['query']),
     'getWizards' : IDL.Func(
         [],
-        [IDL.Vec(WizardDetailsBasicWithTimeStamp)],
-        ['query'],
+        [IDL.Vec(WizardDetailsBasicWithCreatorName)],
+        [],
       ),
     'isWizardNameValid' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
     'publishWizard' : IDL.Func([IDL.Text], [Response], []),
     'unpublishWizard' : IDL.Func([IDL.Text], [Response], []),
     'updateMessageAnalytics' : IDL.Func([IDL.Text], [], []),
     'updateWizard' : IDL.Func([IDL.Text, WizardUpdateDetails], [IDL.Text], []),
+    'updateWizardAdmin' : IDL.Func([IDL.Text, IDL.Text], [IDL.Text], []),
   });
   return Main;
 };
