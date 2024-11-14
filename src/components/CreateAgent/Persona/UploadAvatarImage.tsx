@@ -15,7 +15,7 @@ function UploadAvatarImage({
   onAvatarSelected,
 }: UploadAvatarImageProps
 ) {
-  const [preview, setPreview] = useState('');
+  const [previewSrc, setPreviewSrc] = useState('');
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -25,7 +25,7 @@ function UploadAvatarImage({
 
       reader.onload = () => {
         const base64String = reader.result as string;
-        setPreview(base64String);
+        setPreviewSrc(base64String);
         onAvatarSelected?.(base64String);
       };
       reader.readAsDataURL(file);       // Convert image to Base64
@@ -35,48 +35,45 @@ function UploadAvatarImage({
   };
 
   return (
-    <div
-      // onClick={setAvatar}
-      className={classNames("avatar-image-wrapper", {
-          "avatar-image--selected": preview && selected,
-          // "avatar-image--preview": preview,
-        })}
-      > 
-        {preview &&
-          <img
-            src={preview} alt="Preview"
-            className={classNames("avatar-image", {
-              // "avatar-image--preview": preview,
-              // "avatar-image--loading": isLoading,
-          })}/>
-        }
-        <>
-          <input
-            onChange={handleFileChange}
-            type="file"
-            accept="image/*"
-            hidden
-            id="avatarUpload" 
+    <>
+      <div className="avatar-image-wrapper">
+        <input
+          onChange={handleFileChange}
+          type="file"
+          accept="image/*"
+          hidden
+          id="avatarUpload" 
           />
-          <label 
-            className="parent z-index-2 btn position-absolute bg-transparent avatar-image d-flex align-items-center justify-content-center" 
-            htmlFor="avatarUpload"
+        <label 
+          className="parent btn avatar-image bg-dark d-flex align-items-center justify-content-center" 
+          htmlFor="avatarUpload"
           >
-            <CameraIcon 
-              className={classNames("stroke-light bg-transparent w-4", {
-                "child": preview,
-              })}
+          <CameraIcon 
+            className="child stroke-light w-6"
             />
-          </label>
-        </>
-        {selected && (
-        <img
-          className="avatar-image__tick"
-          src={tickSolid}
-          alt="selected avatar"
-        />
-      )}
-    </div>
+        </label>
+      </div>
+      {previewSrc &&
+        <div
+          onClick={() => onAvatarSelected?.(previewSrc)}
+          className={classNames("avatar-image-wrapper", {
+            "avatar-image--selected": previewSrc && selected,
+          })}
+        > 
+          <img
+          src={previewSrc} alt="Preview"
+          className={classNames("avatar-image", {
+          })}/>
+          {selected && (
+            <img
+            className="avatar-image__tick"
+            src={tickSolid}
+            alt="selected avatar"
+            />
+          )}
+        </div>
+      }
+    </>
   );
 }
 

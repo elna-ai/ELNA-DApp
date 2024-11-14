@@ -40,15 +40,23 @@ body {
   -webkit-tap-highlight-color: transparent;
   overflow-x: hidden;
 }
+    .parent {
+      border: (var(--primary-hover-color) 1px solid);
+    }
+    
+    .parent:hover{
+      border: (var(--primary-success) 1px solid);
+    }
 
     .child {
-        opacity: 0;
+        opacity: 0.7;
         transition: opacity 0.15s ease;
     }
 
     .parent .child {
         pointer-events: none;
     }
+
 
     .parent:hover .child {
         opacity: 1;
