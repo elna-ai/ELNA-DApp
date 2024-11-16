@@ -10,6 +10,13 @@ import {
   WizardDetails,
   WizardUpdateDetails,
 } from "declarations/wizard_details/wizard_details.did";
+import { 
+  elna_images_backend as elnaImagesBackend,
+  canisterId as elnaImagesCanisterId,
+  idlFactory as elnaImagesIdlFactory
+} from "declarations/elna_images_backend";
+import { _SERVICE } from "declarations/elna_images_backend/elna_images_backend.did";
+import { Principal } from "@dfinity/principal";
 import { QUERY_KEYS } from "src/constants/query";
 import queryClient from "utils/queryClient";
 import { useWallet } from "hooks/useWallet";
@@ -31,6 +38,11 @@ type usePublishUnpublishWizardMutationProps = {
 type UseUpdateWizardProps = {
   wizardId: string;
   updatedWizardDetails: WizardUpdateDetails;
+};
+
+type UseUploadCustomImageProps = {
+  fileName: string;
+  base64Image: string;
 };
 
 export const useFetchMyWizards = ({ userId }: useFetchMyWizardsProps) =>
@@ -199,6 +211,39 @@ export const useUpdateWizard = () => {
     onSuccess: response => {
       toast.success(response);
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MY_WIZARDS_LIST] });
+    },
+    onError: error => {
+      console.error(error);
+      toast.error(error.message);
+    },
+  });
+};
+
+export const useUploadCustomImage = () => {
+  const wallet = useWallet();
+  return useMutation({
+    mutationFn: async ({
+      fileName,
+      base64Image,
+    }: UseUploadCustomImageProps) => {
+      if (wallet === undefined) {
+        throw Error("User not logged in");
+      }
+
+      const imageIdResponse: _SERVICE = await wallet.getCanisterActor(
+        elnaImagesCanisterId,
+        elnaImagesIdlFactory,
+        false
+      );
+      const response = imageIdResponse.add_asset({
+        asset: base64Image,
+        owner: Principal.fromText(wallet.principalId),
+        file_name: fileName,
+      }, ["ok"])
+      return response;
+    },
+    onSuccess: (response, { fileName }) => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.AVATAR_IMAGE, fileName] });
     },
     onError: error => {
       console.error(error);

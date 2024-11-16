@@ -1,7 +1,8 @@
+import { useRef, MutableRefObject } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { Formik } from "formik";
+import { Formik, FormikProps } from "formik";
 import { Trans, useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -13,11 +14,13 @@ import {
 import {
   useAddWizard,
   useUpdateWizard,
+  useUploadCustomImage
 } from "hooks/reactQuery/wizards/useMyWizards";
 import { AVATAR_IMAGES } from "src/constants";
 import LoadingButton from "components/common/LoadingButton";
 import { useCreateWizardStore } from "stores/useCreateWizard";
 import queryClient from "utils/queryClient";
+import { Principal } from "@dfinity/principal";
 
 import { PERSONA_VALIDATION_SCHEMA } from "../constants";
 import AvatarImage from "./AvatarImage";
@@ -34,10 +37,12 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
   const { t } = useTranslation();
   const wallet = useWallet();
   const wizardName = useCreateWizardStore(state => state.name);
+  const customImageNameRef = useRef('');
 
   const { mutate: addWizard, isPending: isAddingWizard } = useAddWizard();
   const { mutate: updateWizard, isPending: isUpdatingWizard } =
     useUpdateWizard();
+  const { mutate: uploadCustomImage, isPending: isUploadingCustomImage } = useUploadCustomImage();
 
   type Visibility = "public" | "private" | "unlisted";
   type PersonaValues = {
@@ -54,44 +59,87 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
     } as WizardVisibility;
     if (userId === undefined) return;
     if (wizardName === null) return;
-    if (isEdit) {
-      updateWizard(
-        {
-          wizardId: wizard.id,
-          updatedWizardDetails: {
-            ...values,
-            name: wizardName ? wizardName : wizard.name,
-            visibility,
-          },
-        },
-        {
-          onSuccess: () =>
-            queryClient.invalidateQueries({ queryKey: [wizard.id] }),
-          onError: error => {
-            console.error(error);
-            toast.error(error.message);
-          },
+
+    try {
+      const success = await handleUploadCustomImage(values);
+      console.log("call",values)
+      if (success) {
+          if (isEdit) handleUpdateWizard(values, visibility); 
+          else handleAddWizard(values, userId, visibility);
         }
-      );
-    } else {
-      const payload: WizardDetails = {
-        ...values,
-        id: uuidv4(),
-        userId,
-        name: wizardName,
-        visibility,
-        summary: [],
-        isPublished: false,
-      };
-      addWizard(payload, {
-        onSuccess: () => {
-          setWizardId(payload.id);
-          setCurrentNav("knowledge");
-        },
-        onError: error => toast.error(error.message),
-      });
+    } catch (error) {
+        console.error("Upload failed", error);
     }
+
+    
   };
+
+  const handleUploadCustomImage = async (values: PersonaValues) => {
+    if (customImageNameRef.current !== '') {
+      return new Promise((resolve, reject) => {
+        uploadCustomImage({
+          fileName: customImageNameRef.current,
+          base64Image: values.avatar
+        }, {
+          onSuccess: (response) => {
+            if ('Ok' in response) {
+              const id = response.Ok;
+              values.avatar = id;
+              resolve(true);
+            } else {
+              reject(false);
+            }
+          },
+          onError: error => {
+            reject(false);
+          },
+        });
+      });
+    } else {
+      return Promise.resolve(true);
+    }
+  }
+
+  const handleUpdateWizard = async (values: PersonaValues, visibility: WizardVisibility) => {
+    updateWizard(
+      {
+        wizardId: wizard.id,
+        updatedWizardDetails: {
+          ...values,
+          name: wizardName ? wizardName : wizard.name,
+          visibility,
+        },
+      },
+      {
+        onSuccess: () =>
+          queryClient.invalidateQueries({ queryKey: [wizard.id] }),
+        onError: error => {
+          console.error(error);
+          toast.error(error.message);
+        },
+      }
+    );
+  };
+
+  const handleAddWizard = async (values: PersonaValues, userId: string, visibility: WizardVisibility) => {
+    console.log("values",values)
+    const payload: WizardDetails = {
+      ...values,
+      id: uuidv4(),
+      userId,
+      name: wizardName,
+      visibility,
+      summary: [],
+      isPublished: false,
+    };
+    addWizard(payload, {
+      onSuccess: () => {
+        setWizardId(payload.id);
+        setCurrentNav("knowledge");
+      },
+      onError: error => toast.error(error.message),
+    });
+  }
 
   return (
     <Formik
@@ -143,6 +191,7 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
               <InputGroup className="persona__avatar__image-wrapper">
                 <UploadAvatarImage
                   selected={values.avatar.slice(0,10) === "data:image"}
+                  customImageNameRef={customImageNameRef}
                   onAvatarSelected={(image) => {
                     handleChange("avatar")(image)
                   }}
@@ -362,7 +411,7 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
                 }
                 className="ml-auto px-5"
                 isDisabled={!dirty}
-                isLoading={isAddingWizard || isUpdatingWizard}
+                isLoading={isAddingWizard || isUpdatingWizard || isUploadingCustomImage}
                 type="submit"
               />
             </div>

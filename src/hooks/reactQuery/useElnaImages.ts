@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { elna_images_backend as elnaImagesBackend } from "declarations/elna_images_backend";
+import { t } from "i18next";
 import { DEFAULT_STALE_TIME, QUERY_KEYS } from "src/constants/query";
 
 export const useGetAsset = (id: string | undefined) =>

@@ -7,14 +7,17 @@ import tickSolid from "images/tickSolid.png";
 
 type UploadAvatarImageProps = {
   selected: boolean;
+  customImageNameRef: React.MutableRefObject<string>;
   onAvatarSelected?: (image: string) => void;
 };
 
 function UploadAvatarImage({
   selected,
+  customImageNameRef,
   onAvatarSelected,
 }: UploadAvatarImageProps
 ) {
+  
   const [previewSrc, setPreviewSrc] = useState('');
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,6 +25,7 @@ function UploadAvatarImage({
 
     if (file && file.size <= 500 * 1024) {
       const reader = new FileReader();
+      customImageNameRef.current = file.name;
 
       reader.onload = () => {
         const base64String = reader.result as string;
