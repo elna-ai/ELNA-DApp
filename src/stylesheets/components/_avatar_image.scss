@@ -36,3 +36,21 @@
     border-radius: 999px;
   }
 }
+
+.custom-avatar-parent {
+  border: (var(--primary-hover-color) 1px solid);
+
+  &:hover {
+    border: (var(--primary-success) 1px solid);
+  }
+
+  &:hover .custom-avatar-parent__child {
+    opacity: 1;
+  }
+  
+  &__child {
+    opacity: 0.7;
+    transition: opacity 0.15s ease;
+    pointer-events: none;
+  }
+}

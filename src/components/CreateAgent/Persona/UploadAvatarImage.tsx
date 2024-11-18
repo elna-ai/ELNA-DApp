@@ -49,11 +49,11 @@ function UploadAvatarImage({
           id="avatarUpload" 
           />
         <label 
-          className="parent btn avatar-image bg-dark d-flex align-items-center justify-content-center" 
+          className="custom-avatar-parent btn avatar-image bg-dark d-flex align-items-center justify-content-center" 
           htmlFor="avatarUpload"
           >
           <CameraIcon 
-            className="child stroke-light w-6"
+            className="custom-avatar-parent__child stroke-light w-6"
             />
         </label>
       </div>

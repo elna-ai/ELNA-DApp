@@ -45,6 +45,13 @@ type UseUploadCustomImageProps = {
   base64Image: string;
 };
 
+export const useFetchImageWizard = ({ userId }: useFetchMyWizardsProps) =>
+  useQuery({
+    queryKey: [QUERY_KEYS.MY_WIZARDS_LIST, userId],
+    queryFn: () => wizard_details.getUserWizards(userId!),
+    enabled: !!userId,
+  });
+
 export const useFetchMyWizards = ({ userId }: useFetchMyWizardsProps) =>
   useQuery({
     queryKey: [QUERY_KEYS.MY_WIZARDS_LIST, userId],
@@ -244,6 +251,33 @@ export const useUploadCustomImage = () => {
     },
     onSuccess: (response, { fileName }) => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.AVATAR_IMAGE, fileName] });
+    },
+    onError: error => {
+      console.error(error);
+      toast.error(error.message);
+    },
+  });
+};
+
+export const useDeleteCustomImage = () => {
+  const wallet = useWallet();
+  return useMutation({
+    mutationFn: async (fileName: string) => {
+      if (wallet === undefined) {
+        throw Error("User not logged in");
+      }
+
+      const imageIdResponse: _SERVICE = await wallet.getCanisterActor(
+        elnaImagesCanisterId,
+        elnaImagesIdlFactory,
+        false
+      );
+      const response = imageIdResponse.delete_asset(fileName);
+      return response;
+    },
+    onSuccess: (response) => {
+      console.log("onsuccess",response);
+      // queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.AVATAR_IMAGE, fileName] });
     },
     onError: error => {
       console.error(error);

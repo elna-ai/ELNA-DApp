@@ -14,7 +14,8 @@ import {
 import {
   useAddWizard,
   useUpdateWizard,
-  useUploadCustomImage
+  useUploadCustomImage,
+  useDeleteCustomImage
 } from "hooks/reactQuery/wizards/useMyWizards";
 import { AVATAR_IMAGES } from "src/constants";
 import LoadingButton from "components/common/LoadingButton";
@@ -43,6 +44,7 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
   const { mutate: updateWizard, isPending: isUpdatingWizard } =
     useUpdateWizard();
   const { mutate: uploadCustomImage, isPending: isUploadingCustomImage } = useUploadCustomImage();
+  const { mutate: deleteCustomImage, isPending: isDeletingCustomImage } = useDeleteCustomImage();
 
   type Visibility = "public" | "private" | "unlisted";
   type PersonaValues = {
@@ -60,18 +62,40 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
     if (userId === undefined) return;
     if (wizardName === null) return;
 
-    try {
-      const success = await handleUploadCustomImage(values);
-      console.log("call",values)
-      if (success) {
-          if (isEdit) handleUpdateWizard(values, visibility); 
-          else handleAddWizard(values, userId, visibility);
-        }
-    } catch (error) {
-        console.error("Upload failed", error);
-    }
+    console.log("avatar",wizard.avatar)
 
-    
+    if (isEdit) {
+      if(wizard.avatar.slice(0,11) === "default_img") {
+        try {
+          const uploadSuccess = await handleUploadCustomImage(values);
+          if (uploadSuccess) handleAddWizard(values, userId, visibility);
+        } catch (error) {
+          console.error("Upload failed", error);
+        }
+      }
+      else {
+        deleteCustomImage(wizard.avatar, {
+          onSuccess: async () => {
+            try {
+              const uploadSuccess = await handleUploadCustomImage(values);
+              if (uploadSuccess) handleUpdateWizard(values, visibility);
+            } catch (error) {
+              console.error("Upload failed", error);
+            }
+          },
+          onError: error => {
+            console.error(error);
+          },
+        })
+      }
+    } else {
+      try {
+        const uploadSuccess = await handleUploadCustomImage(values);
+        if (uploadSuccess) handleAddWizard(values, userId, visibility);
+      } catch (error) {
+          console.error("Upload failed", error);
+      }
+    }
   };
 
   const handleUploadCustomImage = async (values: PersonaValues) => {
@@ -91,6 +115,7 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
             }
           },
           onError: error => {
+            console.error(error);
             reject(false);
           },
         });
@@ -174,6 +199,9 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
               </svg>
               {t("createAgent.avatar")}
             </h3>
+            <Form.Label className="fs-7">
+                {t("createAgent.avatarDesc")}
+            </Form.Label>
             <div className="persona__avatar">
               {
                 values.avatar.slice(0,10) === "data:image" ?
