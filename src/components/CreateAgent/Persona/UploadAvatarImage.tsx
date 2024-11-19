@@ -2,7 +2,6 @@ import { useState } from 'react';
 import classNames from "classnames";
 import { toast } from "react-toastify";
 
-import CameraIcon from "src/assets/camera.svg?react";
 import tickSolid from "images/tickSolid.png";
 
 type UploadAvatarImageProps = {
@@ -52,9 +51,7 @@ function UploadAvatarImage({
           className="custom-avatar-parent btn avatar-image bg-dark d-flex align-items-center justify-content-center" 
           htmlFor="avatarUpload"
           >
-          <CameraIcon 
-            className="custom-avatar-parent__child stroke-light w-6"
-            />
+          <i className="ri-upload-2-fill custom-avatar-parent__child text-white"></i>
         </label>
       </div>
       {previewSrc &&
