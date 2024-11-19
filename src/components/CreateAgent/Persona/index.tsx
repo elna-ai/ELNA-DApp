@@ -62,8 +62,6 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
     if (userId === undefined) return;
     if (wizardName === null) return;
 
-    console.log("avatar",wizard.avatar)
-
     if (isEdit) {
       if(wizard.avatar.slice(0,11) === "default_img") {
         try {
@@ -147,7 +145,6 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
   };
 
   const handleAddWizard = async (values: PersonaValues, userId: string, visibility: WizardVisibility) => {
-    console.log("values",values)
     const payload: WizardDetails = {
       ...values,
       id: uuidv4(),

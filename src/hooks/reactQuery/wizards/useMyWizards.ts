@@ -246,10 +246,10 @@ export const useUploadCustomImage = () => {
         asset: base64Image,
         owner: Principal.fromText(wallet.principalId),
         file_name: fileName,
-      }, ["ok"])
+      },[])
       return response;
     },
-    onSuccess: (response, { fileName }) => {
+    onSuccess: (fileName) => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.AVATAR_IMAGE, fileName] });
     },
     onError: error => {
@@ -275,9 +275,7 @@ export const useDeleteCustomImage = () => {
       const response = imageIdResponse.delete_asset(fileName);
       return response;
     },
-    onSuccess: (response) => {
-      console.log("onsuccess",response);
-      // queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.AVATAR_IMAGE, fileName] });
+    onSuccess: () => {
     },
     onError: error => {
       console.error(error);
