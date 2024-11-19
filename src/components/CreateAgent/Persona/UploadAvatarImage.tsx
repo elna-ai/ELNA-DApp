@@ -8,7 +8,7 @@ import tickSolid from "images/tickSolid.png";
 type UploadAvatarImageProps = {
   selected: boolean;
   customImageNameRef: React.MutableRefObject<string>;
-  onAvatarSelected?: (image: string) => void;
+  onAvatarSelected: (image: string) => void;
 };
 
 function UploadAvatarImage({
@@ -30,11 +30,11 @@ function UploadAvatarImage({
       reader.onload = () => {
         const base64String = reader.result as string;
         setPreviewSrc(base64String);
-        onAvatarSelected?.(base64String);
+        onAvatarSelected(base64String);
       };
-      reader.readAsDataURL(file);       // Convert image to Base64
+      reader.readAsDataURL(file);
     } else {
-      toast('File size exceeds 500 KB. Please upload a smaller file.');
+      toast('Image size exceeds 500 KB. Please upload a smaller image.');
     }
   };
 
@@ -66,8 +66,7 @@ function UploadAvatarImage({
         > 
           <img
           src={previewSrc} alt="Preview"
-          className={classNames("avatar-image", {
-          })}/>
+          className="avatar-image"/>
           {selected && (
             <img
             className="avatar-image__tick"

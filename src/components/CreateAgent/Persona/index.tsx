@@ -1,27 +1,23 @@
-import { useRef, MutableRefObject } from "react";
+import { useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { Formik, FormikProps } from "formik";
+import { Formik } from "formik";
 import { Trans, useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import { useWallet } from "hooks/useWallet";
 import {
   WizardDetails,
+  WizardUpdateDetails,
   WizardVisibility,
 } from "declarations/wizard_details/wizard_details.did";
-import {
-  useAddWizard,
-  useUpdateWizard,
-  useUploadCustomImage,
-  useDeleteCustomImage
-} from "hooks/reactQuery/wizards/useMyWizards";
+import { useAddWizard, useUpdateWizard } from "hooks/reactQuery/wizards/useMyWizards";
+import { useUploadCustomImage, useDeleteCustomImage } from "hooks/reactQuery/useElnaImages";
 import { AVATAR_IMAGES } from "src/constants";
 import LoadingButton from "components/common/LoadingButton";
 import { useCreateWizardStore } from "stores/useCreateWizard";
 import queryClient from "utils/queryClient";
-import { Principal } from "@dfinity/principal";
 
 import { PERSONA_VALIDATION_SCHEMA } from "../constants";
 import AvatarImage from "./AvatarImage";
@@ -41,8 +37,7 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
   const customImageNameRef = useRef('');
 
   const { mutate: addWizard, isPending: isAddingWizard } = useAddWizard();
-  const { mutate: updateWizard, isPending: isUpdatingWizard } =
-    useUpdateWizard();
+  const { mutate: updateWizard, isPending: isUpdatingWizard } = useUpdateWizard();
   const { mutate: uploadCustomImage, isPending: isUploadingCustomImage } = useUploadCustomImage();
   const { mutate: deleteCustomImage, isPending: isDeletingCustomImage } = useDeleteCustomImage();
 
@@ -54,6 +49,7 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
     avatar: string;
     visibility: Visibility;
   };
+
   const handleSubmit = async (values: PersonaValues) => {
     const userId = wallet?.principalId;
     const visibility = {
@@ -61,66 +57,88 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
     } as WizardVisibility;
     if (userId === undefined) return;
     if (wizardName === null) return;
-
-    if (isEdit) {
+    
+    if(!isEdit) {
+      if(values.avatar.slice(0,11) === "default_img") handleAddWizard(values, userId, visibility);
+      else handleUploadCustomImage(values, userId, visibility);
+    }
+    else {
       if(wizard.avatar.slice(0,11) === "default_img") {
-        try {
-          const uploadSuccess = await handleUploadCustomImage(values);
-          if (uploadSuccess) handleAddWizard(values, userId, visibility);
-        } catch (error) {
-          console.error("Upload failed", error);
-        }
+        if(values.avatar.slice(0,11) === "default_img") handleUpdateWizard(values, visibility);
+        else handleUploadCustomImage(values, userId, visibility);
       }
       else {
-        deleteCustomImage(wizard.avatar, {
-          onSuccess: async () => {
-            try {
-              const uploadSuccess = await handleUploadCustomImage(values);
-              if (uploadSuccess) handleUpdateWizard(values, visibility);
-            } catch (error) {
-              console.error("Upload failed", error);
-            }
-          },
-          onError: error => {
-            console.error(error);
-          },
-        })
-      }
-    } else {
-      try {
-        const uploadSuccess = await handleUploadCustomImage(values);
-        if (uploadSuccess) handleAddWizard(values, userId, visibility);
-      } catch (error) {
-          console.error("Upload failed", error);
+        await handleDeleteCustomImage(wizard.avatar)
+        if(values.avatar.slice(0,11) === "default_img") handleUpdateWizard(values, visibility);
+        else handleUploadCustomImage(values, userId, visibility);
       }
     }
   };
 
-  const handleUploadCustomImage = async (values: PersonaValues) => {
-    if (customImageNameRef.current !== '') {
-      return new Promise((resolve, reject) => {
-        uploadCustomImage({
-          fileName: customImageNameRef.current,
-          base64Image: values.avatar
-        }, {
-          onSuccess: (response) => {
-            if ('Ok' in response) {
-              const id = response.Ok;
-              values.avatar = id;
-              resolve(true);
-            } else {
-              reject(false);
-            }
-          },
-          onError: error => {
-            console.error(error);
-            reject(false);
-          },
-        });
-      });
-    } else {
-      return Promise.resolve(true);
+  const handleUploadCustomImage = async (values: PersonaValues, userId: string, visibility: WizardVisibility) => {
+    if (customImageNameRef.current === '') {
+      toast.error("Invalid Image name")
     }
+    else uploadCustomImage(
+      {
+        fileName: customImageNameRef.current,
+        base64Image: values.avatar,
+      },
+      {
+        onSuccess: (response) => {
+          if ("Ok" in response) {
+            if(isEdit) {
+              const updatePayload = {
+                wizardId: wizard.id,
+                updatedWizardDetails: {
+                  ...values,
+                  avatar: response.Ok,
+                  name: wizardName ? wizardName : wizard.name,
+                  visibility,
+                } as WizardUpdateDetails,
+              }
+              updateWizard(
+                updatePayload,
+                {
+                  onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: [wizard.id] })
+                  },
+                  onError: error => {
+                    console.error(error);
+                    toast.error(error.message);
+                  },
+                }
+              );
+            }
+            else {
+              const addPayload: WizardDetails = {
+                ...values,
+                id: uuidv4(),
+                userId,
+                name: wizardName,
+                visibility,
+                summary: [],
+                isPublished: false,
+              };
+              addWizard(addPayload, {
+                onSuccess: () => {
+                  setWizardId(addPayload.id);
+                  setCurrentNav("knowledge");
+                },
+                onError: error => toast.error(error.message),
+              });
+            }
+          } else toast.error("Invalid response")
+        },
+        onError: (error) => {
+          console.error(error);
+        },
+      }
+    );
+  }
+
+  const handleDeleteCustomImage = async (customImageId: string) => {
+    deleteCustomImage(customImageId);
   }
 
   const handleUpdateWizard = async (values: PersonaValues, visibility: WizardVisibility) => {
@@ -134,8 +152,9 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
         },
       },
       {
-        onSuccess: () =>
-          queryClient.invalidateQueries({ queryKey: [wizard.id] }),
+        onSuccess: () => {
+          queryClient.refetchQueries({ queryKey: [wizard.id] })
+        },
         onError: error => {
           console.error(error);
           toast.error(error.message);
@@ -215,7 +234,7 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
               }
               <InputGroup className="persona__avatar__image-wrapper">
                 <UploadAvatarImage
-                  selected={values.avatar.slice(0,10) === "data:image"}
+                  selected={values.avatar.slice(0,11) !== "default_img"}
                   customImageNameRef={customImageNameRef}
                   onAvatarSelected={(image) => {
                     handleChange("avatar")(image)
