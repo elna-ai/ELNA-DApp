@@ -62,6 +62,7 @@
     "nameAgent": "Name your Agent",
     "persona": "Persona",
     "avatar": "Avatar",
+    "avatarDesc": "Choose an avatar or upload your own (Maximum size of 500kb)",
     "biography": "Biography",
     "biographyDesc": "A snapshot of your wizard, including their backstory, personality, and interest",
     "greeting": "Greeting",
