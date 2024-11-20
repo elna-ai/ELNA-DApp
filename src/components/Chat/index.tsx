@@ -16,6 +16,8 @@ import { useChat } from "hooks/reactQuery/useRag";
 import { isErr } from "utils/ragCanister";
 import { useUserStore } from "stores/useUser";
 import { useGetAsset } from "hooks/reactQuery/useElnaImages";
+import { useWallet } from "hooks/useWallet";
+import { useGetUserProfile } from "hooks/reactQuery/useUser";
 
 import Bubble from "./Bubble";
 import NoHistory from "./NoHistory";
@@ -42,6 +44,8 @@ function Chat() {
   useAutoSizeTextArea(inputRef.current, messageInput);
   const { mutate: sendChat, isPending: isResponseLoading } = useChat();
   const { data: avatar } = useGetAsset(wizard?.avatar);
+  const wallet = useWallet();
+  const { data: userProfile, isFetching: isUserProfileLoading } = useGetUserProfile(wallet?.principalId);
 
   useEffect(() => {
     if (!isError) return;
@@ -145,29 +149,32 @@ function Chat() {
                 </div>
               </div>
               <div>
-                <a
-                  className="el-btn-secondary"
-                  href={generateTwitterShareLink(
-                    `${TWITTER_SHARE_CONTENT(
-                      wizard.name,
-                      `${window.location.origin}/chat/${id}`
-                    )}`,
-                    TWITTER_HASHTAGS
-                  )}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path d="M18.2048 2.25H21.5128L14.2858 10.51L22.7878 21.75H16.1308L10.9168 14.933L4.95084 21.75H1.64084L9.37084 12.915L1.21484 2.25H8.04084L12.7538 8.481L18.2048 2.25ZM17.0438 19.77H18.8768L7.04484 4.126H5.07784L17.0438 19.77Z"></path>
-                    </svg>
-                  </span>
-                  <span className="text-xs sub-title-color">Share</span>
-                </a>
+                {userProfile?.xHandle && 
+                  <a
+                    className="el-btn-secondary"
+                    href={generateTwitterShareLink(
+                      `${TWITTER_SHARE_CONTENT(
+                        wizard.name,
+                        `${window.location.origin}/chat/${id}`,
+                        userProfile.xHandle[0] || ""
+                      )}`,
+                      TWITTER_HASHTAGS
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                      >
+                        <path d="M18.2048 2.25H21.5128L14.2858 10.51L22.7878 21.75H16.1308L10.9168 14.933L4.95084 21.75H1.64084L9.37084 12.915L1.21484 2.25H8.04084L12.7538 8.481L18.2048 2.25ZM17.0438 19.77H18.8768L7.04484 4.126H5.07784L17.0438 19.77Z"></path>
+                      </svg>
+                    </span>
+                    <span className="text-xs sub-title-color">Share</span>
+                  </a>
+                }
               </div>
             </div>
 
