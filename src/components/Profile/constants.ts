@@ -16,9 +16,8 @@ export const DEVELOPER_REQUEST_FORM_VALIDATION = yup.object().shape({
   description: yup.string().trim().required().min(10),
 });
 
-export const TWITTER_SHARE_CONTENT = `Check this out! I'm a Developer at ELNA.ai - World's 1st Decentralised AI Agent creation platform.
-https://dapp.elna.ai/
-${X_Handle} is the world's 1st DeAI creation platform.\n\n
+export const TWITTER_SHARE_CONTENT = `Check this out! I'm a Developer at Elna.ai  - World's 1st Decentralised AI Agent creation platform.\n
+Create your own DeAI agent at dapp.elna.ai and stay up to date with our latest developments at ${X_Handle}!\n
 `;
 
 // #AI on #Blockchain
