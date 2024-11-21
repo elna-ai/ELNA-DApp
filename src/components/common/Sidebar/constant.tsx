@@ -74,6 +74,12 @@ export const SIDEBAR_LINK: SidebarLinkProps[][] = [
       isComingSoon: false,
     },
     {
+      to: "/my-space",
+      Icon: () => <i className="ri-lg ri-robot-2-fill"></i>,
+      key: "mySpace",
+      isComingSoon: false,
+    },
+    {
       to: "/create-agent",
       Icon: () => <i className="ri-lg ri-robot-2-fill"></i>,
       key: "myAgents",

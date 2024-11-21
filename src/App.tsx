@@ -23,6 +23,7 @@ import "common/i18n";
 import "stylesheets/index.scss";
 import "remixicon/fonts/remixicon.css";
 import "react-toastify/dist/ReactToastify.css";
+import MySpace from "components/MySpace";
 import Profile from "components/Profile";
 import DeveloperStudio from "components/DeveloperStudio";
 
@@ -52,6 +53,10 @@ function App() {
                       <Routes>
                         <Route path="/chat/:id?" element={<Chat />} />
                         <Route path="/" element={<ViewAgents />} />
+                        <Route
+                          path="/my-space/*"
+                          element={<MySpace />}
+                        />
                         <Route
                           path="/create-agent/*"
                           element={<CreateAgent />}
