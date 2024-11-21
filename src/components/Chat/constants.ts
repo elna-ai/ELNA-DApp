@@ -23,13 +23,11 @@ export const TWITTER_SHARE_CONTENT = (
   wizardName: string,
   url: string,
   user_X_Handle: string
-) => `Check this out! I'm talking to this DeAI agent ${wizardName} built
-
-${user_X_Handle ? `by @${user_X_Handle} on` : "by"} ELNA.ai
+) => `Check this out! I'm talking to DeAI agent ${wizardName} built ${user_X_Handle ? `by @${user_X_Handle} on` : "by"} ELNA.ai
 
 ${url}
 
-${X_Handle} is the world's 1st DeAI creation platform.\n\n
+${X_Handle} is the world's 1st DeAI creation platform!\n\n
 `;
 
 export const TWITTER_HASHTAGS =
