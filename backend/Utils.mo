@@ -66,6 +66,23 @@ module {
       status = status;
     };
   };
+
+
+
+  //Upate developer status
+  public func updateCreatorStatus(developer : Types.Creator, status : Types.CreatorStatus) : Types.Creator {
+    {
+      id = developer.id;
+      alias = developer.alias;
+      email = developer.email;
+      github = developer.github;
+      principal = developer.principal;
+      status = status;
+    };
+  };
+
+
+
   public func updatePendingDeveloperStatus(request : Types.DeveloperApproval, status : Types.DeveloperApprovalStatus) : Types.DeveloperApproval {
     {
       id = request.id;
@@ -77,4 +94,25 @@ module {
       status = status;
     };
   };
+
+
+
+
+  //Update pending Creator Status
+  public func updatePendingCreatorStatus(request : Types.CreatorApproval, status : Types.CreatorApprovalStatus) : Types.CreatorApproval {
+    {
+      id = request.id;
+      alias = request.alias;
+      email = request.email;
+      github = request.github;
+      description = request.description;
+      principal = request.principal;
+      status = status;
+    };
+  };
+
+
+
+
+
 };
