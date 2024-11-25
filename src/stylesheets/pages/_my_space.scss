@@ -1,0 +1,73 @@
+.myspace {
+  &__tab {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-left: -1rem;
+    border-bottom: 1px solid #848e9c;
+
+    &__navlink {
+      padding: 1rem;
+      text-transform: capitalize;
+    }
+  }
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  width: min(90%, 800px);
+  margin-top: 30px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &__body {
+    margin-top: 16px;
+    &__alias {
+      &__heading {
+        font-size: 24px;
+        font-weight: 600;
+      }
+    }
+
+    &__principal {
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+
+    &__roles {
+      border: 1px solid var(--background-base-border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      min-height: 60px;
+      padding: 16px;
+      justify-content: space-between;
+
+      p {
+        margin-bottom: 0;
+      }
+      &__button {
+        .btn-outline {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          color: var(--primary-color);
+          border: 1px solid var(--primary-color);
+          padding: 8px 16px;
+          &:hover {
+            // background-color: var(--primary-color);
+            &-link {
+              color: var(--elna-primary-text-color) !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}

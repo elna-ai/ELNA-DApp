@@ -11,6 +11,7 @@ import { Button, Form, Badge } from "react-bootstrap";
 import FormikInput from "components/common/FormikInput";
 import { Trans, useTranslation } from "react-i18next";
 import creatorIcon from "src/images/creator.svg";
+import AvatarImg from "images/avatar.png";
 import {
   USER_PROFILE_FORM_INITIAL,
   USER_PROFILE_FORM_VALIDATION,
@@ -26,9 +27,12 @@ import { QUERY_KEYS } from "src/constants/query";
 function Profile() {
   const { t } = useTranslation();
   const wallet = useWallet();
-  const { data: userProfile, isFetching: isUserProfileLoading } = useGetUserProfile(wallet?.principalId);
-  const { mutate: addUserProfile, isPending: isAddProfileLoading } = useAddUserProfile();
-  const { mutate: updateProfile, isPending: isUpdateProfileLoading } = useUpdateUserProfile();
+  const { data: userProfile, isFetching: isUserProfileLoading } =
+    useGetUserProfile(wallet?.principalId);
+  const { mutate: addUserProfile, isPending: isAddProfileLoading } =
+    useAddUserProfile();
+  const { mutate: updateProfile, isPending: isUpdateProfileLoading } =
+    useUpdateUserProfile();
   const { data: isDeveloper, isFetching: isLoading } = useIsDeveloper();
 
   const displayAddress = useGetDisplayAddress();
@@ -81,51 +85,72 @@ function Profile() {
   if (isUserProfileLoading) return <PageLoader />;
 
   return (
-    <div className="row justify-content-center">
-      <div className="add-profile">
-        <div className="col-md-12">
-          <div
-            onClick={copyToClipBoard}
-            className="d-flex"
-          >
+    <div className="row">
+      <div className="profile">
+        <div className="profile__header">
+          <div className="profile__header__img">
+            <img
+              className="rounded-circle d-inline me-2"
+              src={AvatarImg}
+              alt="profile-avatar"
+              width={144}
+            />
+          </div>
+          <div className="profile__header__button">
+            <Button variant="secondary">Edit Profile</Button>
+          </div>
+        </div>
+        <div className="profile__body">
+          <div className="profile__body__alias">
+            <h2 className="profile__body__alias__heading">Alias Name</h2>
+          </div>
+
+          <div onClick={copyToClipBoard} className="profile__body__principal">
             <i className="ri-file-copy-line"></i>
             Principal Id {displayAddress}
           </div>
-          <div className="d-flex align-items-center gap-2">
-            <p>{t("profile.roles")}</p>
-            <p className="d-flex gap-2">
-              <Badge bg="secondary">{t("common.chatter")}</Badge>
-              {isDeveloper && <Badge bg="success">{t("common.developer")}</Badge>}
-            </p>
-          </div>
-          {!isDeveloper && (
-            <Button variant="secondary">
-              <Link to="request/developer">{t("profile.requestDevAccess")}</Link>
-            </Button>
-          )}
-          <div className="add-profile__header">
-            <div className="add-profile__header__icon">
-              <img
-                src={creatorIcon}
-                className="add-profile__header__icon-img"
-                alt="Creator Icon"
-              />
+
+          <div className="profile__body__roles">
+            <div className="d-flex align-items-center gap-2">
+              <p>{t("profile.roles")}</p>
+              <p className="d-flex gap-2">
+                <Badge bg="secondary">
+                  <i className="ri-sparkling-fill"></i>
+                  {t("common.creater")}
+                </Badge>
+                {isDeveloper && (
+                  <Badge bg="success">
+                    <i className="ri-code-box-fill"></i>
+                    {t("common.developer")}
+                  </Badge>
+                )}
+              </p>
             </div>
-            <h3 className="add-profile__header__title">
-              {t("profile.add.title")}
-            </h3>
-            <p className="add-profile__header_desc">
-              {t("profile.add.description")}
-            </p>
+
+            <div className="d-flex align-items-center profile__body__roles__button">
+              {!isDeveloper && (
+                <Button variant="outline">
+                  <Link
+                    to="request/developer"
+                    className="profile__body__roles__button-link"
+                  >
+                    <i className="ri-code-box-fill"></i>
+                    {t("profile.requestDevAccess")}
+                  </Link>
+                </Button>
+              )}
+            </div>
           </div>
+          <hr />
+
           <Formik
             initialValues={
               userProfile
                 ? {
-                  bio: userProfile.bio[0] || "",
-                  alias: userProfile.alias,
-                  xHandle: userProfile.xHandle[0] || "",
-                }
+                    bio: userProfile.bio[0] || "",
+                    alias: userProfile.alias,
+                    xHandle: userProfile.xHandle[0] || "",
+                  }
                 : USER_PROFILE_FORM_INITIAL
             }
             validationSchema={USER_PROFILE_FORM_VALIDATION}
@@ -150,14 +175,6 @@ function Profile() {
                     />
                   }
                 />
-                <div className="add-profile__form__principalid">
-                  <span className="add-profile__form__label">
-                    {t("profile.add.form.principalIdLabel")}
-                  </span>
-                  <div className="add-profile__form__principalid__input">
-                    <p className="fw-semibold mb-0">{wallet?.principalId}</p>
-                  </div>
-                </div>
                 <FormikInput
                   name="xHandle"
                   placeholder={t("profile.add.form.xHandlePlaceHolder")}
@@ -181,25 +198,6 @@ function Profile() {
                   }
                   placeholder={t("profile.add.form.bioPlaceHolder")}
                 />
-                <div className="d-flex gap-3 mt-4 flex-row-reverse">
-                  <LoadingButton
-                    type="submit"
-                    label={
-                      userProfile
-                        ? t("common.update", { entity: "" })
-                        : t("common.ok")
-                    }
-                    isDisabled={!dirty}
-                    isLoading={isAddProfileLoading || isUpdateProfileLoading}
-                  />
-                  <Button
-                    variant="secondary"
-                    onClick={handleReset}
-                    disabled={isAddProfileLoading || isUpdateProfileLoading}
-                  >
-                    {t("common.clear")}
-                  </Button>
-                </div>
               </Form>
             )}
           </Formik>
