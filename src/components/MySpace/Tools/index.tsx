@@ -6,9 +6,9 @@ import { useGetUserTools } from "hooks/reactQuery/useDeveloperTools";
 import { useUserStore } from "stores/useUser";
 import { useNavigate } from "react-router-dom";
 
-import NoTools from "./ErrorPages/NoTools";
-import NoDeveloperAccess from "./ErrorPages/NoDeveloperAccess";
-import NoLogin from "./ErrorPages/NoLogin";
+import NoTools from "./NoTools";
+import NoDeveloperAccess from "./NoDeveloperAccess";
+import NoLogin from "../NoLogin";
 import { Button } from "react-bootstrap";
 
 //check and make common
