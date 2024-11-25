@@ -103,7 +103,7 @@ function Header({ setIsLoading }: HeaderProps) {
                     Principal Id {displayAddress}
                   </Dropdown.Item>
                   <Dropdown.Item>
-                    <Link to="/profile">
+                    <Link to="/my-space/profile">
                       <i className="ri-user-fill"></i>
                       {t("header.userProfile")}
                     </Link>

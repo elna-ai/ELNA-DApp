@@ -40,7 +40,7 @@ function DeveloperRequest() {
     requestDeveloperAccess(devDetails, {
       onSuccess: () => {
         toast.success("Request submitted");
-        navigate("/admin/profile");
+        navigate("/my-space/profile");
       },
       onError: error => {
         console.error(error);

@@ -1,4 +1,4 @@
-import MyWizards from "./MyWizards";
+import HomePageWizardPlaceholder from "./HomePageWizardPlaceholder";
 import PopularWizards from "./PopularWizards";
 import { useGetAllAnalytics } from "hooks/reactQuery/wizards/useAnalytics";
 
@@ -8,7 +8,7 @@ function CreateWizards() {
 
   return (
     <div className="w-100">
-      <MyWizards />
+      <HomePageWizardPlaceholder />
       <PopularWizards />
     </div>
   );
