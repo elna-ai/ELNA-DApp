@@ -58,10 +58,6 @@ function App() {
                           element={<MySpace />}
                         />
                         <Route
-                          path="/create-agent/*"
-                          element={<CreateAgent />}
-                        />
-                        <Route
                           path="/developer-studio/*"
                           element={<DeveloperStudio />}
                         />
