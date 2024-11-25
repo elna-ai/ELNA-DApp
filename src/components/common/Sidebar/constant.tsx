@@ -74,7 +74,7 @@ export const SIDEBAR_LINK: SidebarLinkProps[][] = [
       isComingSoon: false,
     },
     {
-      to: "/my-space",
+      to: "/my-space/profile",
       Icon: () => <i className="ri-lg ri-robot-2-fill"></i>,
       key: "mySpace",
       isComingSoon: false,

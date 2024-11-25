@@ -8,7 +8,7 @@ export type MySpaceMenuProps = {
 
 export const MY_SPACE_LINK: MySpaceMenuProps[] = [
   {
-    to: "/my-space",
+    to: "/my-space/profile",
     key: "Profile",
     toolTip: "Profile Details",
   },
@@ -22,16 +22,16 @@ export const MY_SPACE_LINK: MySpaceMenuProps[] = [
     key: "My Tools",
     toolTip: "Your Tools",
   },
-  {
-    to: "/my-space/plans",
-    key: "Plans",
-    toolTip: "Your Subscription Plans",
-  },
-  {
-    to: "/my-space/settings",
-    key: "Settings",
-    toolTip: "Tweak your Settings",
-  },
+  // {
+  //   to: "/my-space/plans",
+  //   key: "Plans",
+  //   toolTip: "Your Subscription Plans",
+  // },
+  // {
+  //   to: "/my-space/settings",
+  //   key: "Settings",
+  //   toolTip: "Tweak your Settings",
+  // },
 ];
 
 export const DEVELOPER_REQUEST_FORM_INITIAL = {
@@ -57,4 +57,18 @@ export const USER_PROFILE_FORM_INITIAL = {
 export const USER_PROFILE_FORM_VALIDATION = yup.object().shape({
   alias: yup.string().trim().required().min(3),
   bio: yup.string().min(10),
+});
+
+export const CREATE_TOOL_FORM_INITIAL = {
+  name: "",
+  description: "",
+  projectUrl: "",
+  category: "",
+};
+
+export const CREATE_TOOL_FORM_VALIDATION = yup.object().shape({
+  name: yup.string().trim().required(),
+  description: yup.string().trim().required(),
+  projectUrl: yup.string().url().trim().required(),
+  category: yup.string().trim().required(),
 });
