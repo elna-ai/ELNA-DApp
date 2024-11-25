@@ -44,7 +44,6 @@ function Chat() {
   const { mutate: sendChat, isPending: isResponseLoading } = useChat();
   const { data: avatar } = useGetAsset(wizard?.avatar);
   const { data: userProfile, isFetching: isUserProfileLoading } = useGetUserProfile(wizard?.userId);
-  console.log(userProfile)
 
   useEffect(() => {
     if (!isError) return;

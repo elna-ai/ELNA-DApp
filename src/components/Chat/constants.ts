@@ -22,8 +22,8 @@ export const AVATAR_DUMMY_IMAGE = [
 export const TWITTER_SHARE_CONTENT = (
   wizardName: string,
   url: string,
-  user_X_Handle: string
-) => `Check this out! I'm talking to DeAI agent ${wizardName} built ${user_X_Handle ? `by @${user_X_Handle} on` : "by"} ELNA.ai
+  userXHandle: string
+) => `Check this out! I'm talking to DeAI agent ${wizardName} built ${userXHandle ? `by @${userXHandle} on` : "on"} ELNA.ai
 
 ${url}
 
