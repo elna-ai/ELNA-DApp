@@ -80,12 +80,6 @@ export const SIDEBAR_LINK: SidebarLinkProps[][] = [
       isComingSoon: false,
     },
     {
-      to: "/create-agent",
-      Icon: () => <i className="ri-lg ri-robot-2-fill"></i>,
-      key: "myAgents",
-      isComingSoon: false,
-    },
-    {
       to: "/agent-marketplace",
       Icon: () => <i className="ri-lg ri-store-3-fill"></i>,
       key: "agentMarketplace",
