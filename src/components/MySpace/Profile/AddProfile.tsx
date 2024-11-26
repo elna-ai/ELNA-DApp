@@ -14,13 +14,14 @@ import {
   USER_PROFILE_FORM_INITIAL,
   USER_PROFILE_FORM_VALIDATION,
 } from "../constant";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useWallet } from "hooks/useWallet";
 import { UserProfile } from "declarations/backend/backend.did";
 import queryClient from "utils/queryClient";
 import { QUERY_KEYS } from "src/constants/query";
 
-function AddDetails() {
+function AddProfile() {
   const { t } = useTranslation();
   const wallet = useWallet();
   const { data: userProfile, isFetching: isUserProfileLoading } =
@@ -29,6 +30,7 @@ function AddDetails() {
     useAddUserProfile();
   const { mutate: updateProfile, isPending: isUpdateProfileLoading } =
     useUpdateUserProfile();
+  const navigate = useNavigate();
 
   const handleSubmit = (values: typeof USER_PROFILE_FORM_INITIAL) => {
     const payload: UserProfile = {
@@ -51,7 +53,10 @@ function AddDetails() {
       });
     } else {
       addUserProfile(payload, {
-        onSuccess: () => toast.success("Profile Details added"),
+        onSuccess: () => {
+          navigate("/my-space/profile");
+          toast.success("Profile Details added")
+        },
         onError: err => {
           console.error(err);
           toast.error(err.message);
@@ -172,4 +177,4 @@ function AddDetails() {
   );
 }
 
-export default AddDetails;
+export default AddProfile;
