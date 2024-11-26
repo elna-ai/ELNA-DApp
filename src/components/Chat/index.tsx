@@ -16,6 +16,7 @@ import { useChat } from "hooks/reactQuery/useRag";
 import { isErr } from "utils/ragCanister";
 import { useUserStore } from "stores/useUser";
 import { useGetAsset } from "hooks/reactQuery/useElnaImages";
+import { useGetUserProfile } from "hooks/reactQuery/useUser";
 
 import Bubble from "./Bubble";
 import NoHistory from "./NoHistory";
@@ -42,6 +43,7 @@ function Chat() {
   useAutoSizeTextArea(inputRef.current, messageInput);
   const { mutate: sendChat, isPending: isResponseLoading } = useChat();
   const { data: avatar } = useGetAsset(wizard?.avatar);
+  const { data: userProfile, isFetching: isUserProfileLoading } = useGetUserProfile(wizard?.userId);
 
   useEffect(() => {
     if (!isError) return;
@@ -150,7 +152,8 @@ function Chat() {
                   href={generateTwitterShareLink(
                     `${TWITTER_SHARE_CONTENT(
                       wizard.name,
-                      `${window.location.origin}/chat/${id}`
+                      `${window.location.origin}/chat/${id}`,
+                      userProfile?.xHandle[0] || ""
                     )}`,
                     TWITTER_HASHTAGS
                   )}
