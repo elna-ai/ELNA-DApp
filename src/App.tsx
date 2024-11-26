@@ -24,6 +24,7 @@ import "stylesheets/index.scss";
 import "remixicon/fonts/remixicon.css";
 import "react-toastify/dist/ReactToastify.css";
 import Profile from "components/Profile";
+import PopularWizards from "components/ViewAgents/PopularWizards";
 import DeveloperStudio from "components/DeveloperStudio";
 
 function App() {
@@ -55,6 +56,10 @@ function App() {
                         <Route
                           path="/create-agent/*"
                           element={<CreateAgent />}
+                        />
+                        <Route
+                          path="/agent-marketplace/*"
+                          element={<PopularWizards isHomePage={false}/>}
                         />
                         <Route
                           path="/developer-studio/*"
