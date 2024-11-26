@@ -1,5 +1,4 @@
 import * as yup from "yup";
-import { X_Handle } from "src/constants";
 
 export type MySpaceMenuProps = {
   to: string;
@@ -73,12 +72,3 @@ export const CREATE_TOOL_FORM_VALIDATION = yup.object().shape({
   projectUrl: yup.string().url().trim().required(),
   category: yup.string().trim().required(),
 });
-
-export const TWITTER_SHARE_CONTENT = `Check this out! I'm a Developer at ELNA.ai - World's 1st Decentralised AI Agent creation platform.
-https://dapp.elna.ai/
-${X_Handle} is the world's 1st DeAI creation platform.\n\n
-`;
-
-// #AI on #Blockchain
-export const TWITTER_HASHTAGS =
-  "ELNA_Devs,ELNAai,DecentralizedAl,GenerativeAl,Alagents,DeAiHackELNA,DeAiBootcampELNA";
