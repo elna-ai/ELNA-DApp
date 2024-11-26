@@ -9,7 +9,6 @@ import {
     usePublishUnpublishWizard,
 } from "hooks/reactQuery/wizards/useMyWizards";
 import { useGetAllAnalytics } from "hooks/reactQuery/wizards/useAnalytics";
-import { useUserStore } from "stores/useUser";
 import CheckWizardNameCreateModal from "components/common/CheckWizardNameCreate";
 
 //check if these should be moved to common
@@ -28,7 +27,6 @@ function MyWizards() {
 
     const wallet = useWallet();
     const navigate = useNavigate();
-    const isUserLoggedIn = useUserStore(state => state.isUserLoggedIn);
 
     const {
         data: userWizards,
@@ -102,7 +100,7 @@ function MyWizards() {
             return <Spinner className="!flex mx-auto" />;
         }
 
-        if (!isUserLoggedIn || (userWizards?.length || 0) === 0) {
+        if ((userWizards?.length || 0) === 0) {
             return <NoWizards />;
         }
 
