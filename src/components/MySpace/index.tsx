@@ -6,7 +6,7 @@ import { useGetUserProfile } from "hooks/reactQuery/useUser";
 
 import NoLogin from "./NoLogin";
 import Profile from "./Profile";
-import AddDetails from "./Profile/AddDetails";
+import AddProfile from "components/Profile/AddProfile";
 import MyWizards from "./Agents";
 import UserTools from "./Tools";
 import CreateTool from "./Tools/CreateTool";
@@ -54,7 +54,7 @@ function MySpace() {
 
             <Routes>
                 <Route path="/profile" element={<Profile />} />
-                <Route path="/profile/add" element={<AddDetails />} />
+                <Route path="/profile/add" element={<AddProfile />} />
                 <Route path="/my-agents" element={<MyWizards />} />
                 <Route path="/my-tools" element={<UserTools />} />
                 <Route path="/my-tools/create-tool" element={<CreateTool />} />

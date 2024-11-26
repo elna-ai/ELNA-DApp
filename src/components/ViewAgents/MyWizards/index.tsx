@@ -16,7 +16,7 @@ import DeleteWizardModal from "./DeleteWizardModal";
 import NoWizards from "./NoWizards";
 import Title from "./Title";
 import Card from "../Card";
-import HomePageWizardPlaceholder from "../HomePageWizardPlaceholder";
+import WizardPlaceholder from "../WizardPlaceholder";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDeleteCollections } from "hooks/reactQuery/useRag";
 
@@ -89,7 +89,7 @@ function MyWizards() {
     }
 
     if (!isUserLoggedIn) {
-      return <HomePageWizardPlaceholder />;
+      return <WizardPlaceholder />;
     }
 
     if ((userWizards?.length || 0) === 0) {
