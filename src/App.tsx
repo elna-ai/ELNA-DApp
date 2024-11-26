@@ -15,7 +15,6 @@ import Header from "components/common/Header";
 import Footer from "components/common/Footer";
 import PageLoader from "components/common/PageLoader";
 import PrivateRoute from "components/common/PrivateRoute";
-import CreateAgent from "components/CreateAgent";
 import Page404 from "common/Page404";
 import queryClient from "utils/queryClient";
 import "common/i18n";
@@ -24,7 +23,8 @@ import "stylesheets/index.scss";
 import "remixicon/fonts/remixicon.css";
 import "react-toastify/dist/ReactToastify.css";
 import MySpace from "components/MySpace";
-import Profile from "components/Profile";
+import Profile from "components/MySpace/Profile";
+import AddProfile from "components/MySpace/Profile/AddProfile";
 import PopularWizards from "components/ViewAgents/PopularWizards";
 import DeveloperStudio from "components/DeveloperStudio";
 
@@ -71,6 +71,7 @@ function App() {
                           element={<PrivateRoute component={AdminDashboard} />}
                         />
                         <Route path="/profile/*" element={<Profile />} />
+                        <Route path="/profile/add" element={<AddProfile />} />
                         <Route path="*" element={<Page404 />} />
                       </Routes>
                     )}
