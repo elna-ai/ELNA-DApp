@@ -4,7 +4,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Spinner from "react-bootstrap/Spinner";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import WalletList from "./WalletList";
 import AvatarImg from "images/avatar.png";
@@ -26,6 +26,8 @@ function Header({ setIsLoading }: HeaderProps) {
   const isUserLoggedIn = useUserStore(state => state.isUserLoggedIn);
   const resetLoggedInState = useUserStore(state => state.resetLoggedInState);
   const wallet = useWallet();
+  const location = useLocation();
+  const navigate = useNavigate();
   const displayAddress = useGetDisplayAddress();
   const { data: isAdmin } = useIsUserAdmin();
   useGetUserProfile(wallet?.principalId);
@@ -53,6 +55,7 @@ function Header({ setIsLoading }: HeaderProps) {
       resetLoggedInState();
       //   await wallet.disconnect();
       setIsLoggingOut(false);
+      if(location.pathname.includes("/my-space")) navigate("/");
     } else {
       setIsWalletModelOpen(prev => !prev);
     }

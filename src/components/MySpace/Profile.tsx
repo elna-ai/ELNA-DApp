@@ -81,9 +81,9 @@ function Profile() {
     }
   };
 
-  if (!isUserLoggedIn) {
-    return <NoLogin />;
-  }
+  // if (!isUserLoggedIn || !userProfile) {
+  //   return <NoLogin />;
+  // }
 
   if (isUserProfileLoading) return <PageLoader />;
 
