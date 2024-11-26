@@ -156,6 +156,19 @@
         "bioPlaceHolder": "Enter Bio",
         "bioLabel": "Bio(optional)"
       }
+    },
+    "update": {
+      "title": "Complete Profile",
+      "description": "Complete your profile, create your agent, and publish it with ease.",
+      "form": {
+        "aliasPlaceHolder": "Enter alias",
+        "aliasLabel": "<span>Alias (Username)*</span>",
+        "principalIdLabel": "Principal ID",
+        "xHandlePlaceHolder": "xHandle",
+        "xHandleLabel": "<span>X handle (Optional)</span>",
+        "bioPlaceHolder": "Enter Bio",
+        "bioLabel": "Bio(optional)"
+      }
     }
   },
   "developerStudio": {

@@ -1,7 +1,5 @@
 import LoadingButton from "components/common/LoadingButton";
 import PageLoader from "components/common/PageLoader";
-import { useUserStore } from "stores/useUser";
-import NoLogin from "./NoLogin";
 import { Formik } from "formik";
 import {
   useAddUserProfile,
@@ -29,7 +27,6 @@ import { QUERY_KEYS } from "src/constants/query";
 function Profile() {
   const { t } = useTranslation();
   const wallet = useWallet();
-  const isUserLoggedIn = useUserStore(state => state.isUserLoggedIn);
   const { data: userProfile, isFetching: isUserProfileLoading } = useGetUserProfile(wallet?.principalId);
   const { mutate: addUserProfile, isPending: isAddProfileLoading } = useAddUserProfile();
   const { mutate: updateProfile, isPending: isUpdateProfileLoading } = useUpdateUserProfile();
@@ -80,10 +77,6 @@ function Profile() {
       });
     }
   };
-
-  // if (!isUserLoggedIn || !userProfile) {
-  //   return <NoLogin />;
-  // }
 
   if (isUserProfileLoading) return <PageLoader />;
 
@@ -177,26 +170,24 @@ function Profile() {
 
                 <FormikInput
                   name="alias"
-                  placeholder={t("profile.add.form.aliasPlaceHolder")}
+                  placeholder={t("profile.update.form.aliasPlaceHolder")}
                   label={
                     <Trans
-                      i18nKey="profile.add.form.aliasLabel"
+                      i18nKey="profile.update.form.aliasLabel"
                       components={{
-                        span: <span className="add-profile__form__label" />,
-                        div: <div className="add-profile__form__label-desc" />,
+                        span: <span className="add-profile__form__label" />
                       }}
                     />
                   }
                 />
                 <FormikInput
                   name="xHandle"
-                  placeholder={t("profile.add.form.xHandlePlaceHolder")}
+                  placeholder={t("profile.update.form.xHandlePlaceHolder")}
                   label={
                     <Trans
-                      i18nKey="profile.add.form.xHandleLabel"
+                      i18nKey="profile.update.form.xHandleLabel"
                       components={{
-                        span: <span className="add-profile__form__label" />,
-                        div: <div className="add-profile__form__label-desc" />,
+                        span: <span className="add-profile__form__label" />
                       }}
                     />
                   }
@@ -206,10 +197,10 @@ function Profile() {
                   as="textarea"
                   label={
                     <span className="add-profile__form__label">
-                      {t("profile.add.form.bioLabel")}
+                      {t("profile.update.form.bioLabel")}
                     </span>
                   }
-                  placeholder={t("profile.add.form.bioPlaceHolder")}
+                  placeholder={t("profile.update.form.bioPlaceHolder")}
                 />
               </div>
             </Form>
