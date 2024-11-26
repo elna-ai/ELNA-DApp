@@ -5,7 +5,6 @@ import CreateTool from "./CreateTool";
 function DeveloperStudio() {
   return (
     <Routes>
-      <Route path="/create-tool" element={<CreateTool />} />
       <Route path="*" element={<Dashboard />} />
     </Routes>
   );

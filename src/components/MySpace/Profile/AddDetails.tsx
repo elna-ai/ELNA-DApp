@@ -13,7 +13,7 @@ import creatorIcon from "src/images/creator.svg";
 import {
   USER_PROFILE_FORM_INITIAL,
   USER_PROFILE_FORM_VALIDATION,
-} from "./constants";
+} from "../constant";
 import { toast } from "react-toastify";
 import { useWallet } from "hooks/useWallet";
 import { UserProfile } from "declarations/backend/backend.did";
