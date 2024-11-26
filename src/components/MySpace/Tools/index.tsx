@@ -1,6 +1,8 @@
 import { Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
+import { useWallet } from "hooks/useWallet";
+import { useGetUserProfile } from "hooks/reactQuery/useUser";
 import { useIsDeveloper } from "hooks/reactQuery/useDeveloper";
 import { useGetUserTools } from "hooks/reactQuery/useDeveloperTools";
 import { useUserStore } from "stores/useUser";
@@ -17,7 +19,9 @@ import ToolCard from "../../DeveloperStudio/ToolCard";
 
 function UserTools() {
     const { t } = useTranslation();
+    const wallet = useWallet();
     const isUserLoggedIn = useUserStore(state => state.isUserLoggedIn);
+    const { data: userProfile, isFetching: isUserProfileLoading } = useGetUserProfile(wallet?.principalId);
     const { data: isDeveloper, isFetching: isLoading } = useIsDeveloper();
     const { data: userTools, isFetching: isUserToolsLoading } = useGetUserTools();
     const navigate = useNavigate();
@@ -43,7 +47,7 @@ function UserTools() {
 
     const renderBody = () => {
 
-        if (!isUserLoggedIn) {
+        if (!isUserLoggedIn || !userProfile) {
             return <NoLogin />;
         }
         

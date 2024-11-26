@@ -1,19 +1,43 @@
-import { Button } from "react-bootstrap";
-import { LoginButtonWrapper } from "components/common/LoginButtonWrapper";
+import { Modal } from "react-bootstrap";
+import { useUserStore } from "stores/useUser";
+import { useWallet } from "hooks/useWallet";
+import CompleteLogin from "components/common/CompleteLogin";
+import CompleteProfile from "components/common/CheckWizardNameCreate/CompleteProfile";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import NoChatWizardImg from "images/no-chatbot.png";
+import { useGetUserProfile } from "hooks/reactQuery/useUser";
+import { Spinner } from "react-bootstrap";
 
 function NoLogin() {
     const { t } = useTranslation();
 
+    const wallet = useWallet();
+    const isUserLoggedIn = useUserStore(state => state.isUserLoggedIn);
+    const { data: userProfile, isFetching: isUserProfileLoading } = useGetUserProfile(wallet?.principalId);
+    const navigate = useNavigate();
+
+    const renderBody = () => {
+        if (isUserProfileLoading) return <Spinner animation="border" />
+        else if (!isUserLoggedIn) return <CompleteLogin />;
+        else if (!userProfile) return <CompleteProfile />
+    }
+
     return (
         <>
             <div className="w-100 py-5 text-center">
-                <img className="d-inline" src={NoChatWizardImg} alt="no wizard" />
-                <p>Not Logged in</p>
-                <LoginButtonWrapper>
-                    <Button variant="primary">Connect Wallet to continue</Button>
-                </LoginButtonWrapper>
+                <Modal
+                    className="bot-name-modal"
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                    show={!isUserLoggedIn || !userProfile}
+                    onHide={() => {
+                        if (userProfile && isUserLoggedIn) navigate("/my-space/profile");
+                        else navigate("/");
+                    }}
+                >
+                    {renderBody()}
+                </Modal>
             </div>
         </>
     );

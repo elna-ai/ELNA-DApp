@@ -98,7 +98,6 @@ function MyWizards() {
 
     // TODO: Refactor
     const renderBody = () => {
-
         if (isUserWizardsLoading) {
             return <Spinner className="!flex mx-auto" />;
         }

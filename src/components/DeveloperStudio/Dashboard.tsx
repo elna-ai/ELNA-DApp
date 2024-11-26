@@ -19,23 +19,6 @@ function Dashboard() {
 
   return (
     <div>
-      {isDeveloper && (
-        <div className="d-flex justify-content-between align-items-center list-tool">
-          <div>
-            <h5 className="mb-0">{t("developerStudio.createBanner.title")}</h5>
-            <p className="mb-0" style={{ color: "#E0E0E1" }}>
-              {t("developerStudio.createBanner.description")}
-            </p>
-          </div>
-          <Button
-            disabled={!isDeveloper}
-            onClick={() => navigate("/developer-studio/create-tool")}
-          >
-            {t("developerStudio.createBanner.listATool")}
-          </Button>
-        </div>
-      )}
-      <UserTools />
       <AllTools />
     </div>
   );
