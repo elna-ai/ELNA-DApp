@@ -83,7 +83,7 @@ export const SIDEBAR_LINK: SidebarLinkProps[][] = [
       to: "/agent-marketplace",
       Icon: () => <i className="ri-lg ri-store-3-fill"></i>,
       key: "agentMarketplace",
-      isComingSoon: true,
+      isComingSoon: false,
     },
     {
       to: "/developer-studio",

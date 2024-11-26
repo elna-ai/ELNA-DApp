@@ -9,7 +9,7 @@ function CreateWizards() {
   return (
     <div className="w-100">
       <HomePageWizardPlaceholder />
-      <PopularWizards />
+      <PopularWizards isHomePage={true}/>
     </div>
   );
 }

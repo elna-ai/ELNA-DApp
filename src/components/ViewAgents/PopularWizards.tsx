@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Dropdown, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 import { useGetAllAnalytics } from "hooks/reactQuery/wizards/useAnalytics";
 
@@ -12,7 +13,7 @@ import SearchBarWizards from "./SearchBarWizards";
 
 type SortByOptions = "popularity" | "recentlyUpdated";
 
-function PopularWizards() {
+function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
   const [sortBy, setSortBy] = useState<SortByOptions>("recentlyUpdated");
   const { t } = useTranslation();
 
@@ -87,12 +88,14 @@ function PopularWizards() {
           <p>{t("wizards.popularWizardsDesc")}</p>
         </div>
         <div>
-          <a href="#" className="el-btn-secondary">
-            {t("common.viewAll")}
-          </a>
+          {
+            isHomePage && <Link to="/agent-marketplace" className="el-btn-secondary">
+              {t("common.viewAll")}
+            </Link>
+          }
         </div>
       </div>
-      {!isLoadingPopularWizards && popularWizards?.length && (
+      {!isLoadingPopularWizards && popularWizards?.length && !isHomePage && (
         <div className="mb-3 d-flex justify-content-between align-items-center gap-3">
           <SearchBarWizards
             popularWizards={popularWizards}
@@ -124,8 +127,9 @@ function PopularWizards() {
           <Spinner className="m-auto" />
         ) : (
           <>
-            {sortWizards(popularWizards, sortBy)?.map(
-              ({ id, name, userId, description, avatar, creatorName }) => (
+            {sortWizards(popularWizards, sortBy)
+              ?.slice(0, (isHomePage ? 6 : sortWizards(popularWizards, sortBy)?.length))
+              ?.map(({ id, name, userId, description, avatar, creatorName }) => (
                 <Card
                   {...{ name, description, creatorName }}
                   id={id}
@@ -134,8 +138,8 @@ function PopularWizards() {
                   userId={userId}
                   messagesReplied={analytics?.[id]?.messagesReplied || 0n}
                 />
-              )
-            )}
+              ))
+            }
           </>
         )}
       </div>
