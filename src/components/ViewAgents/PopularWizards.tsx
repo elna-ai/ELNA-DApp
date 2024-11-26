@@ -128,7 +128,6 @@ function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
         ) : (
           <>
             {sortWizards(popularWizards, sortBy)
-              ?.slice(0, (isHomePage ? 6 : sortWizards(popularWizards, sortBy)?.length))
               ?.map(({ id, name, userId, description, avatar, creatorName }) => (
                 <Card
                   {...{ name, description, creatorName }}

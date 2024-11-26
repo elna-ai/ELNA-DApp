@@ -3,7 +3,7 @@ import { Button } from "react-bootstrap";
 import { Trans } from "react-i18next";
 import agentMontageBg from "images/botsMontageBg.webp";
 
-function HomePageWizardPlaceholder() {
+function WizardPlaceholder() {
   return (
     <div className="my-wizards__wrapper">
       <div
@@ -39,4 +39,4 @@ function HomePageWizardPlaceholder() {
   );
 }
 
-export default HomePageWizardPlaceholder;
+export default WizardPlaceholder;

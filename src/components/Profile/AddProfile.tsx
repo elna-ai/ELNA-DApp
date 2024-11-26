@@ -20,7 +20,7 @@ import { UserProfile } from "declarations/backend/backend.did";
 import queryClient from "utils/queryClient";
 import { QUERY_KEYS } from "src/constants/query";
 
-function AddDetails() {
+function AddProfile() {
   const { t } = useTranslation();
   const wallet = useWallet();
   const { data: userProfile, isFetching: isUserProfileLoading } =
@@ -172,4 +172,4 @@ function AddDetails() {
   );
 }
 
-export default AddDetails;
+export default AddProfile;
