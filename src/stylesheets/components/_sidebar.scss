@@ -231,7 +231,8 @@
 
 // X-Small devices (portrait phones, less than 576px)
 @media (max-width: 729px) {
-  .hk-wrapper.collapsed .hk-pg-wrapper {
+  .hk-wrapper.collapsed .hk-pg-wrapper,
+  .hk-wrapper.collapsed .hk-footer.chatfooter {
     margin-left: 0px !important;
   }
 }
