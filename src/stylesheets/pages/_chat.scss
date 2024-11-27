@@ -30,7 +30,7 @@
     padding: 1rem;
 
     &--bot {
-      background-color: #1E2329;
+      background-color: #1e2329;
       color: var(--title-sub-color);
     }
   }
@@ -67,7 +67,6 @@
 
   &__avatar {
     flex-shrink: 0;
-
   }
 }
 
@@ -89,4 +88,11 @@
   display: inline-block;
   text-overflow: ellipsis;
   margin: 0;
+}
+
+// X-Small devices (portrait phones, less than 576px)
+@media (max-width: 729px) {
+  .text-desc {
+    max-width: 8rem;
+  }
 }
