@@ -141,9 +141,9 @@ function MyWizards() {
   }, [isError]);
 
   return (
-    <div className="">
+    <div>
       <Title />
-      <div className="">
+      <div>
         {renderBody()}
         <DeleteWizardModal
           isDeleting={isDeletePending}
