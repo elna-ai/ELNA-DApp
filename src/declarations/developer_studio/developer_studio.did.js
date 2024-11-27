@@ -21,8 +21,12 @@ export const idlFactory = ({ IDL }) => {
     'id' : IDL.Text,
     'status' : DeveloperToolStatus,
     'principal' : IDL.Principal,
+    'icon' : IDL.Opt(IDL.Text),
     'name' : IDL.Text,
     'description' : IDL.Text,
+    'coverImage' : IDL.Opt(IDL.Text),
+    'presentationUrl' : IDL.Opt(IDL.Text),
+    'demoUrl' : IDL.Opt(IDL.Text),
     'category' : IDL.Text,
     'projectUrl' : IDL.Text,
   });

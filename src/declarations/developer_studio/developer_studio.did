@@ -19,9 +19,13 @@ type DeveloperToolStatus =
 type DeveloperTool = 
  record {
    category: text;
+   coverImage: opt text;
+   demoUrl: opt text;
    description: text;
+   icon: opt text;
    id: text;
    name: text;
+   presentationUrl: opt text;
    "principal": principal;
    projectUrl: text;
    status: DeveloperToolStatus;
