@@ -3,11 +3,19 @@
     padding-top: 1rem;
     padding-bottom: 1rem;
     margin-left: -1rem;
-    border-bottom: 1px solid #848e9c;
+    border-bottom: 1px solid var(--background-form-border);
+    margin-bottom: 1.25rem;
 
     &__navlink {
       padding: 1rem;
       text-transform: capitalize;
+      color: var(--title-sub-color);
+      border-bottom: 2px solid transparent;
+      &--active {
+        border-bottom: 2px solid var(--primary-color);
+        font-weight: 600;
+        color: var(--title-color);
+      }
     }
   }
 }
@@ -38,6 +46,9 @@
     &__principal {
       margin-bottom: 8px;
       display: inline-block;
+      &:hover {
+        cursor: pointer;
+      }
     }
 
     &__roles {
