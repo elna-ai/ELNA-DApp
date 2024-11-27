@@ -24,6 +24,7 @@ import "remixicon/fonts/remixicon.css";
 import "react-toastify/dist/ReactToastify.css";
 import MySpace from "components/MySpace";
 import Profile from "components/MySpace/Profile";
+import CreateAgent from "components/CreateAgent";
 import AddProfile from "components/MySpace/Profile/AddProfile";
 import PopularWizards from "components/ViewAgents/PopularWizards";
 import DeveloperStudio from "components/DeveloperStudio";
@@ -57,6 +58,10 @@ function App() {
                         <Route
                           path="/my-space/*"
                           element={<MySpace />}
+                        />
+                        <Route
+                          path="/create-agent/*"
+                          element={<CreateAgent />}
                         />
                         <Route
                           path="/agent-marketplace/*"

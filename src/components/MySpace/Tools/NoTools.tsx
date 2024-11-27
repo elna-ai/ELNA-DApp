@@ -10,7 +10,7 @@ function NoTools() {
     <>
       <div className="w-100 py-5 text-center">
         <img className="d-inline" src={NoChatWizardImg} alt="no wizard" />
-        <p>{t("wizards.noWizards")}</p>
+        <h5>{t("wizards.noWizards")}</h5>
         <p>craft and fine tune...</p>
         <Button variant="outline">
           <Link
