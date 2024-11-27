@@ -88,7 +88,9 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
             </Modal.Body>
           </Modal>
         ) : (
-          <BrandSm className="brand-img img-fluid" />
+          <i className="ri-menu-line" style={{ fontSize: "24px" }}/>
+
+          // "boiii"
         )}
       </div>
     );
