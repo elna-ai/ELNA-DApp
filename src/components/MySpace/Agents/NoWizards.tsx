@@ -10,8 +10,8 @@ function NoWizards() {
     <>
       <div className="w-100 py-5 text-center">
         <img className="d-inline" src={NoChatWizardImg} alt="no wizard" />
-        <p>{t("wizards.noWizards")}</p>
-        <p>craft and fine tune...</p>
+        <h5>{t("wizards.noWizards")}</h5>
+        <p>Craft and fine tune your agent</p>
         <CheckWizardNameCreateModal>
           <Button>Create Agent</Button>
         </CheckWizardNameCreateModal>
