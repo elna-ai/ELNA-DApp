@@ -96,7 +96,6 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
             />
             <i className="ri-menu-line" style={{ fontSize: "24px" }} />
           </>
-          // "boiii"
         )}
       </div>
     );
