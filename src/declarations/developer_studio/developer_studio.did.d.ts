@@ -14,8 +14,12 @@ export interface DeveloperTool {
   'id' : string,
   'status' : DeveloperToolStatus,
   'principal' : Principal,
+  'icon' : [] | [string],
   'name' : string,
   'description' : string,
+  'coverImage' : [] | [string],
+  'presentationUrl' : [] | [string],
+  'demoUrl' : [] | [string],
   'category' : string,
   'projectUrl' : string,
 }
@@ -35,4 +39,4 @@ export interface DeveloperToolWithCreator {
 export interface InitialArgs { 'userManagementCanisterId' : Principal }
 export interface _SERVICE extends DeveloperStudio {}
 export declare const idlFactory: IDL.InterfaceFactory;
-export declare const init: ({ IDL }: { IDL: IDL }) => IDL.Type[];
+export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

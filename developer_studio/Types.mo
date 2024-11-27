@@ -35,6 +35,10 @@ module {
     category : Text;
     principal : Principal;
     status : DeveloperToolStatus;
+    icon : ?Text;
+    coverImage : ?Text;
+    demoUrl : ?Text;
+    presentationUrl : ?Text;
   };
 
   public type DeveloperToolWithCreator = {

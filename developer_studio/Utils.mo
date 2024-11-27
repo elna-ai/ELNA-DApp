@@ -54,17 +54,6 @@ module {
     );
   };
 
-  public func updateToolStatus(tool : Types.DeveloperTool, newStatus : Types.DeveloperToolStatus) : Types.DeveloperTool {
-    {
-      id = tool.id;
-      name = tool.name;
-      description = tool.description;
-      projectUrl = tool.projectUrl;
-      principal = tool.principal;
-      category = tool.category;
-      status = newStatus;
-    };
-  };
 
   public func getUserTool(developerTools : Buffer.Buffer<Types.DeveloperTool>, principal : Principal) : [Types.DeveloperTool] {
     Array.filter(
