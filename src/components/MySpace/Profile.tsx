@@ -1,12 +1,13 @@
 import LoadingButton from "components/common/LoadingButton";
 import PageLoader from "components/common/PageLoader";
+import Spinner from "react-bootstrap/Spinner";
 import { Formik } from "formik";
 import {
   useAddUserProfile,
   useGetUserProfile,
   useUpdateUserProfile,
 } from "hooks/reactQuery/useUser";
-import { useIsDeveloper } from "hooks/reactQuery/useDeveloper";
+import { useIsDeveloper, useGetUserRequest } from "hooks/reactQuery/useDeveloper";
 import { Button, Form, Badge } from "react-bootstrap";
 import FormikInput from "components/common/FormikInput";
 import { Trans, useTranslation } from "react-i18next";
@@ -15,7 +16,10 @@ import AvatarImg from "images/avatar.png";
 import {
   USER_PROFILE_FORM_INITIAL,
   USER_PROFILE_FORM_VALIDATION,
+  TWITTER_SHARE_CONTENT,
+  TWITTER_HASHTAGS,
 } from "./constant";
+import { generateTwitterShareLink } from "utils/index";
 import { toast } from "react-toastify";
 import { useWallet } from "hooks/useWallet";
 import { UserProfile } from "declarations/backend/backend.did";
@@ -31,6 +35,13 @@ function Profile() {
   const { mutate: addUserProfile, isPending: isAddProfileLoading } = useAddUserProfile();
   const { mutate: updateProfile, isPending: isUpdateProfileLoading } = useUpdateUserProfile();
   const { data: isDeveloper, isFetching: isLoading } = useIsDeveloper();
+  const { data: userRequest, isFetching: isUserRequestLoading } = useGetUserRequest();
+
+  const getColor = (status: string) => {
+    if (status === "approved") return "bg-primary";
+    if (status === "rejected") return "bg-danger";
+    if (status === "pending") return "bg-secondary";
+  };
 
   const displayAddress = useGetDisplayAddress();
   //make reusable component in utils
@@ -150,6 +161,46 @@ function Profile() {
                       )}
                     </p>
                   </div>
+                  <div>
+          {isUserRequestLoading ? (
+            <Spinner />
+          ) : (
+            userRequest?.map(request => (
+                <div className="d-flex justify-content-between align-items-center">
+                  <p
+                    className={`user_profile__summary__req-card__tag ${getColor(
+                      Object.keys(request.status).join(",")
+                    )} `}
+                  >
+                    {Object.keys(request.status).join(",")}
+                  </p>
+                  {isDeveloper && (
+                    <a
+                      className="btn btn-secondary user_profile__summary__req-card__x-share"
+                      href={generateTwitterShareLink(
+                        TWITTER_SHARE_CONTENT,
+                        TWITTER_HASHTAGS
+                      )}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          className="user_profile__summary__req-card__x-share__svg"
+                        >
+                          <path d="M18.2048 2.25H21.5128L14.2858 10.51L22.7878 21.75H16.1308L10.9168 14.933L4.95084 21.75H1.64084L9.37084 12.915L1.21484 2.25H8.04084L12.7538 8.481L18.2048 2.25ZM17.0438 19.77H18.8768L7.04484 4.126H5.07784L17.0438 19.77Z"></path>
+                        </svg>
+                      </span>
+                      <span className="text-xs sub-title-color">Share</span>
+                    </a>
+                  )}
+                </div>
+            ))
+          )}
+        </div>
 
                   <div className="d-flex align-items-center profile__body__roles__button">
                     {!isDeveloper && (
