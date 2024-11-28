@@ -16,7 +16,7 @@ function NoDeveloperAccess() {
           with agents
         </p>
         <Button>
-          <Link to="/my-space/request/developer" className="">
+          <Link to="/my-space/request/developer">
             {t("profile.requestDevAccess")}
           </Link>
         </Button>

@@ -133,7 +133,7 @@ function MyWizards() {
   }, [isError]);
 
   return (
-    <div className="">
+    <div>
       <div>
         <div>
           <h2>Agents</h2>
@@ -146,7 +146,7 @@ function MyWizards() {
           </CheckWizardNameCreateModal>
         }
       </div>
-      <div className="">
+      <div>
         {renderBody()}
         <DeleteWizardModal
           isDeleting={isDeletePending}
