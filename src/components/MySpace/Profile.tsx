@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import LoadingButton from "components/common/LoadingButton";
 import PageLoader from "components/common/PageLoader";
 import Spinner from "react-bootstrap/Spinner";
@@ -147,10 +147,6 @@ function Profile() {
 
     )
   }
-
-  useEffect(() => {
-    console.log("formActive", formActive)
-  }, [formActive])
 
   if (isUserProfileLoading) return <PageLoader />;
 
