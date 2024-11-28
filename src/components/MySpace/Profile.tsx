@@ -89,6 +89,62 @@ function Profile() {
     }
   };
 
+  const renderDeveloperStatus = () => {
+    if (isLoading) return <Spinner size="sm" />;
+    if (!isLoading && !isDeveloper) {
+      if (!isUserRequestLoading && userRequest) {
+        if (Object.keys(userRequest[0]?.status)[0] === "pending") {
+          return (
+            <p
+              className={`user_profile__summary__req-card__tag ${getColor(
+                Object.keys(userRequest[0].status).join(",")
+              )} `}
+            >
+              {Object.keys(userRequest[0].status).join(",")}
+            </p>
+          )
+        }
+      }
+      else return (
+        <div className="d-flex align-items-center profile__body__roles__button">
+          <Button variant="outline">
+            <Link
+              to="/my-space/request/developer"
+              className="profile__body__roles__button-link"
+            >
+              <i className="ri-code-box-fill"></i>
+              {t("profile.requestDevAccess")}
+            </Link>
+          </Button>
+        </div>
+      );
+    }
+    if (isDeveloper) return (
+      <a
+        className="btn btn-secondary user_profile__summary__req-card__x-share"
+        href={generateTwitterShareLink(
+          TWITTER_SHARE_CONTENT,
+          TWITTER_HASHTAGS
+        )}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="user_profile__summary__req-card__x-share__svg"
+          >
+            <path d="M18.2048 2.25H21.5128L14.2858 10.51L22.7878 21.75H16.1308L10.9168 14.933L4.95084 21.75H1.64084L9.37084 12.915L1.21484 2.25H8.04084L12.7538 8.481L18.2048 2.25ZM17.0438 19.77H18.8768L7.04484 4.126H5.07784L17.0438 19.77Z"></path>
+          </svg>
+        </span>
+        <span className="text-xs sub-title-color">Share</span>
+      </a>
+
+    )
+  }
+
   if (isUserProfileLoading) return <PageLoader />;
 
   return (
@@ -146,7 +202,7 @@ function Profile() {
                 </div>
 
                 <div className="profile__body__roles">
-                  <div className="d-flex align-items-center gap-2">
+                  <div style={{ minHeight: "38px" }} className="d-flex align-items-center gap-2">
                     <p>{t("profile.roles")}</p>
                     <p className="d-flex gap-2">
                       <Badge bg="secondary">
@@ -161,63 +217,9 @@ function Profile() {
                       )}
                     </p>
                   </div>
-                  <div>
-          {isUserRequestLoading ? (
-            <Spinner />
-          ) : (
-            userRequest?.map(request => (
-                <div className="d-flex justify-content-between align-items-center">
-                  <p
-                    className={`user_profile__summary__req-card__tag ${getColor(
-                      Object.keys(request.status).join(",")
-                    )} `}
-                  >
-                    {Object.keys(request.status).join(",")}
-                  </p>
-                  {isDeveloper && (
-                    <a
-                      className="btn btn-secondary user_profile__summary__req-card__x-share"
-                      href={generateTwitterShareLink(
-                        TWITTER_SHARE_CONTENT,
-                        TWITTER_HASHTAGS
-                      )}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <span>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          className="user_profile__summary__req-card__x-share__svg"
-                        >
-                          <path d="M18.2048 2.25H21.5128L14.2858 10.51L22.7878 21.75H16.1308L10.9168 14.933L4.95084 21.75H1.64084L9.37084 12.915L1.21484 2.25H8.04084L12.7538 8.481L18.2048 2.25ZM17.0438 19.77H18.8768L7.04484 4.126H5.07784L17.0438 19.77Z"></path>
-                        </svg>
-                      </span>
-                      <span className="text-xs sub-title-color">Share</span>
-                    </a>
-                  )}
-                </div>
-            ))
-          )}
-        </div>
-
-                  <div className="d-flex align-items-center profile__body__roles__button">
-                    {!isDeveloper && (
-                      <Button variant="outline">
-                        <Link
-                          to="/my-space/request/developer"
-                          className="profile__body__roles__button-link"
-                        >
-                          <i className="ri-code-box-fill"></i>
-                          {t("profile.requestDevAccess")}
-                        </Link>
-                      </Button>
-                    )}
-                  </div>
+                  {renderDeveloperStatus()}
                 </div>
                 <hr />
-
 
                 <FormikInput
                   name="alias"
