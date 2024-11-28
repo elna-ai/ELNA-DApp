@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import LoadingButton from "components/common/LoadingButton";
 import PageLoader from "components/common/PageLoader";
 import Spinner from "react-bootstrap/Spinner";
@@ -36,6 +37,8 @@ function Profile() {
   const { mutate: updateProfile, isPending: isUpdateProfileLoading } = useUpdateUserProfile();
   const { data: isDeveloper, isFetching: isLoading } = useIsDeveloper();
   const { data: userRequest, isFetching: isUserRequestLoading } = useGetUserRequest();
+
+  const [formActive, setFormActive] = useState(false);
 
   const getColor = (status: string) => {
     if (status === "approved") return "bg-primary";
@@ -145,6 +148,10 @@ function Profile() {
     )
   }
 
+  useEffect(() => {
+    console.log("formActive", formActive)
+  }, [formActive])
+
   if (isUserProfileLoading) return <PageLoader />;
 
   return (
@@ -179,15 +186,12 @@ function Profile() {
                   />
                 </div>
                 <div className="profile__header__button">
-                  <LoadingButton
-                    label={"Edit Profile"}
-                    isDisabled={
-                      isAddProfileLoading || isUpdateProfileLoading || !dirty
-                    }
-                    isLoading={isAddProfileLoading || isUpdateProfileLoading}
-                    type="submit"
+                  <Button
+                    onClick={() => setFormActive(!formActive)}
                     variant="secondary"
-                  />
+                  >
+                    Edit Profile
+                  </Button>
                 </div>
               </div>
 
@@ -220,42 +224,66 @@ function Profile() {
                   {renderDeveloperStatus()}
                 </div>
                 <hr />
-
-                <FormikInput
-                  name="alias"
-                  placeholder={t("profile.update.form.aliasPlaceHolder")}
-                  label={
-                    <Trans
-                      i18nKey="profile.update.form.aliasLabel"
-                      components={{
-                        span: <span className="add-profile__form__label" />
-                      }}
-                    />
-                  }
-                />
-                <FormikInput
-                  name="xHandle"
-                  placeholder={t("profile.update.form.xHandlePlaceHolder")}
-                  label={
-                    <Trans
-                      i18nKey="profile.update.form.xHandleLabel"
-                      components={{
-                        span: <span className="add-profile__form__label" />
-                      }}
-                    />
-                  }
-                />
-                <FormikInput
-                  name="bio"
-                  as="textarea"
-                  label={
-                    <span className="add-profile__form__label">
-                      {t("profile.update.form.bioLabel")}
-                    </span>
-                  }
-                  placeholder={t("profile.update.form.bioPlaceHolder")}
-                />
+                <fieldset disabled>
+                  <FormikInput
+                    name="alias"
+                    placeholder={t("profile.update.form.aliasPlaceHolder")}
+                    label={
+                      <Trans
+                        i18nKey="profile.update.form.aliasLabel"
+                        components={{
+                          span: <span className="add-profile__form__label" />
+                        }}
+                      />
+                    }
+                  />
+                </fieldset>
+                <fieldset disabled={!formActive}>
+                  <FormikInput
+                    name="xHandle"
+                    placeholder={t("profile.update.form.xHandlePlaceHolder")}
+                    label={
+                      <Trans
+                        i18nKey="profile.update.form.xHandleLabel"
+                        components={{
+                          span: <span className="add-profile__form__label" />
+                        }}
+                      />
+                    }
+                  />
+                  <FormikInput
+                    name="bio"
+                    as="textarea"
+                    label={
+                      <span className="add-profile__form__label">
+                        {t("profile.update.form.bioLabel")}
+                      </span>
+                    }
+                    placeholder={t("profile.update.form.bioPlaceHolder")}
+                  />
+                </fieldset>
               </div>
+              {
+                formActive && (
+                  <div className="d-flex gap-2 justify-content-end">
+                    <Button
+                      onClick={() => handleReset()}
+                      variant="secondary"
+                    >
+                      Clear
+                    </Button>
+                    <LoadingButton
+                      label={"Save"}
+                      isDisabled={
+                        isAddProfileLoading || isUpdateProfileLoading || !dirty
+                      }
+                      isLoading={isAddProfileLoading || isUpdateProfileLoading}
+                      type="submit"
+                      variant="secondary"
+                    />
+                  </div>
+                )
+              }
             </Form>
           )}
         </Formik>
