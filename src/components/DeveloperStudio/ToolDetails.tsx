@@ -52,17 +52,19 @@ function ToolDetails() {
             </p>
           </div>
         </div>
-        <Button
-          className="tooldetail__header__demobtn"
-          onClick={() => {
-            if (tool?.demoUrl[0]) navigate(tool?.demoUrl[0]);
-          }}
-          disabled={!tool?.demoUrl[0]}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Try Now
-        </Button>
+        {tool?.demoUrl[0] && (
+          <Button
+            className="tooldetail__header__demobtn"
+            onClick={() => {
+              if (tool?.demoUrl[0]) navigate(tool?.demoUrl[0]);
+            }}
+            disabled={!tool?.demoUrl[0]}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Try Now
+          </Button>
+        )}
       </div>
       <div className="tooldetail__img">
         <picture>
