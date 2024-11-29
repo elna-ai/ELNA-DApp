@@ -75,7 +75,6 @@ function App() {
                           path="/admin/*"
                           element={<PrivateRoute component={AdminDashboard} />}
                         />
-                        <Route path="/profile/*" element={<Profile />} />
                         <Route path="/profile/add" element={<AddProfile />} />
                         <Route path="*" element={<Page404 />} />
                       </Routes>

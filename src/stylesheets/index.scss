@@ -720,3 +720,8 @@ textarea.form-control {
 textarea.form-control::placeholder {
   color: var(--placeholder-text-w);
 }
+
+.form-control:disabled {
+  background: var(--color-bg1);
+  border-color: blueviolet;
+}

@@ -1,12 +1,14 @@
+import { useState } from "react";
 import LoadingButton from "components/common/LoadingButton";
 import PageLoader from "components/common/PageLoader";
+import Spinner from "react-bootstrap/Spinner";
 import { Formik } from "formik";
 import {
   useAddUserProfile,
   useGetUserProfile,
   useUpdateUserProfile,
 } from "hooks/reactQuery/useUser";
-import { useIsDeveloper } from "hooks/reactQuery/useDeveloper";
+import { useIsDeveloper, useGetUserRequest } from "hooks/reactQuery/useDeveloper";
 import { Button, Form, Badge } from "react-bootstrap";
 import FormikInput from "components/common/FormikInput";
 import { Trans, useTranslation } from "react-i18next";
@@ -15,7 +17,10 @@ import AvatarImg from "images/avatar.png";
 import {
   USER_PROFILE_FORM_INITIAL,
   USER_PROFILE_FORM_VALIDATION,
+  TWITTER_SHARE_CONTENT,
+  TWITTER_HASHTAGS,
 } from "./constant";
+import { generateTwitterShareLink } from "utils/index";
 import { toast } from "react-toastify";
 import { useWallet } from "hooks/useWallet";
 import { UserProfile } from "declarations/backend/backend.did";
@@ -31,6 +36,15 @@ function Profile() {
   const { mutate: addUserProfile, isPending: isAddProfileLoading } = useAddUserProfile();
   const { mutate: updateProfile, isPending: isUpdateProfileLoading } = useUpdateUserProfile();
   const { data: isDeveloper, isFetching: isLoading } = useIsDeveloper();
+  const { data: userRequest, isFetching: isUserRequestLoading } = useGetUserRequest();
+
+  const [formActive, setFormActive] = useState(false);
+
+  const getColor = (status: string) => {
+    if (status === "approved") return "bg-primary";
+    if (status === "rejected") return "bg-danger";
+    if (status === "pending") return "bg-secondary";
+  };
 
   const displayAddress = useGetDisplayAddress();
   //make reusable component in utils
@@ -78,6 +92,62 @@ function Profile() {
     }
   };
 
+  const renderDeveloperStatus = () => {
+    if (isLoading) return <Spinner size="sm" />;
+    if (!isLoading && !isDeveloper) {
+      if (!isUserRequestLoading && userRequest) {
+        if (Object.keys(userRequest[0]?.status)[0] === "pending") {
+          return (
+            <p
+              className={`user_profile__summary__req-card__tag ${getColor(
+                Object.keys(userRequest[0].status).join(",")
+              )} `}
+            >
+              {Object.keys(userRequest[0].status).join(",")}
+            </p>
+          )
+        }
+      }
+      else return (
+        <div className="d-flex align-items-center profile__body__roles__button">
+          <Button variant="outline">
+            <Link
+              to="/my-space/request/developer"
+              className="profile__body__roles__button-link"
+            >
+              <i className="ri-code-box-fill"></i>
+              {t("profile.requestDevAccess")}
+            </Link>
+          </Button>
+        </div>
+      );
+    }
+    if (isDeveloper) return (
+      <a
+        className="btn btn-secondary user_profile__summary__req-card__x-share"
+        href={generateTwitterShareLink(
+          TWITTER_SHARE_CONTENT,
+          TWITTER_HASHTAGS
+        )}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="user_profile__summary__req-card__x-share__svg"
+          >
+            <path d="M18.2048 2.25H21.5128L14.2858 10.51L22.7878 21.75H16.1308L10.9168 14.933L4.95084 21.75H1.64084L9.37084 12.915L1.21484 2.25H8.04084L12.7538 8.481L18.2048 2.25ZM17.0438 19.77H18.8768L7.04484 4.126H5.07784L17.0438 19.77Z"></path>
+          </svg>
+        </span>
+        <span className="text-xs sub-title-color">Share</span>
+      </a>
+
+    )
+  }
+
   if (isUserProfileLoading) return <PageLoader />;
 
   return (
@@ -112,15 +182,15 @@ function Profile() {
                   />
                 </div>
                 <div className="profile__header__button">
-                  <LoadingButton
-                    label={"Edit Profile"}
-                    isDisabled={
-                      isAddProfileLoading || isUpdateProfileLoading || !dirty
-                    }
-                    isLoading={isAddProfileLoading || isUpdateProfileLoading}
-                    type="submit"
+                  <Button
+                    onClick={() => {
+                      handleReset()
+                      setFormActive(!formActive)
+                    }}
                     variant="secondary"
-                  />
+                  >
+                    Edit Profile
+                  </Button>
                 </div>
               </div>
 
@@ -135,7 +205,7 @@ function Profile() {
                 </div>
 
                 <div className="profile__body__roles">
-                  <div className="d-flex align-items-center gap-2">
+                  <div style={{ minHeight: "38px" }} className="d-flex align-items-center gap-2">
                     <p>{t("profile.roles")}</p>
                     <p className="d-flex gap-2">
                       <Badge bg="secondary">
@@ -150,59 +220,72 @@ function Profile() {
                       )}
                     </p>
                   </div>
-
-                  <div className="d-flex align-items-center profile__body__roles__button">
-                    {!isDeveloper && (
-                      <Button variant="outline">
-                        <Link
-                          to="/my-space/request/developer"
-                          className="profile__body__roles__button-link"
-                        >
-                          <i className="ri-code-box-fill"></i>
-                          {t("profile.requestDevAccess")}
-                        </Link>
-                      </Button>
-                    )}
-                  </div>
+                  {renderDeveloperStatus()}
                 </div>
                 <hr />
-
-
-                <FormikInput
-                  name="alias"
-                  placeholder={t("profile.update.form.aliasPlaceHolder")}
-                  label={
-                    <Trans
-                      i18nKey="profile.update.form.aliasLabel"
-                      components={{
-                        span: <span className="add-profile__form__label" />
-                      }}
-                    />
-                  }
-                />
-                <FormikInput
-                  name="xHandle"
-                  placeholder={t("profile.update.form.xHandlePlaceHolder")}
-                  label={
-                    <Trans
-                      i18nKey="profile.update.form.xHandleLabel"
-                      components={{
-                        span: <span className="add-profile__form__label" />
-                      }}
-                    />
-                  }
-                />
-                <FormikInput
-                  name="bio"
-                  as="textarea"
-                  label={
-                    <span className="add-profile__form__label">
-                      {t("profile.update.form.bioLabel")}
-                    </span>
-                  }
-                  placeholder={t("profile.update.form.bioPlaceHolder")}
-                />
+                <fieldset disabled>
+                  <FormikInput
+                    name="alias"
+                    placeholder={t("profile.update.form.aliasPlaceHolder")}
+                    label={
+                      <Trans
+                        i18nKey="profile.update.form.aliasLabel"
+                        components={{
+                          span: <span className="add-profile__form__label" />
+                        }}
+                      />
+                    }
+                  />
+                </fieldset>
+                <fieldset disabled={!formActive}>
+                  <FormikInput
+                    name="xHandle"
+                    placeholder={t("profile.update.form.xHandlePlaceHolder")}
+                    label={
+                      <Trans
+                        i18nKey="profile.update.form.xHandleLabel"
+                        components={{
+                          span: <span className="add-profile__form__label" />
+                        }}
+                      />
+                    }
+                  />
+                  <FormikInput
+                    name="bio"
+                    as="textarea"
+                    label={
+                      <span className="add-profile__form__label">
+                        {t("profile.update.form.bioLabel")}
+                      </span>
+                    }
+                    placeholder={t("profile.update.form.bioPlaceHolder")}
+                  />
+                </fieldset>
               </div>
+              {
+                formActive && (
+                  <div className="d-flex gap-2 justify-content-end">
+                    <Button
+                      onClick={() => {
+                        handleReset()
+                        setFormActive(false)
+                      }}
+                      variant="secondary"
+                    >
+                      Cancel
+                    </Button>
+                    <LoadingButton
+                      label={"Save"}
+                      isDisabled={
+                        isAddProfileLoading || isUpdateProfileLoading || !dirty
+                      }
+                      isLoading={isAddProfileLoading || isUpdateProfileLoading}
+                      type="submit"
+                      variant="secondary"
+                    />
+                  </div>
+                )
+              }
             </Form>
           )}
         </Formik>
