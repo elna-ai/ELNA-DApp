@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import classNames from "classnames";
 import NoToolImg from "images/no-tool.png";
 
@@ -44,7 +45,7 @@ function ToolCard({
   )[0] as ExtractKeysFromVariant<DeveloperToolStatus>;
 
   return (
-    <div className="tool-card">
+    <Link to={`/tool-details/${tool.id}`} className="tool-card">
       <div className="tool-card__cover">
         <img
           className="tool-card__cover__img img-fluid"
@@ -84,7 +85,7 @@ function ToolCard({
           {tool.category}
         </p>
       </div>
-    </div>
+    </Link>
   );
 }
 

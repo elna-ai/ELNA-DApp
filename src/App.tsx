@@ -23,7 +23,7 @@ import "stylesheets/index.scss";
 import "remixicon/fonts/remixicon.css";
 import "react-toastify/dist/ReactToastify.css";
 import MySpace from "components/MySpace";
-import Profile from "components/MySpace/Profile";
+import ToolDetails from "components/DeveloperStudio/ToolDetails";
 import CreateAgent from "components/CreateAgent";
 import AddProfile from "components/MySpace/Profile/AddProfile";
 import PopularWizards from "components/ViewAgents/PopularWizards";
@@ -76,6 +76,7 @@ function App() {
                           element={<PrivateRoute component={AdminDashboard} />}
                         />
                         <Route path="/profile/add" element={<AddProfile />} />
+                        <Route path="/tool-details/:id?" element={<ToolDetails />} />
                         <Route path="*" element={<Page404 />} />
                       </Routes>
                     )}
