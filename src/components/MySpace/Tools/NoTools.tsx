@@ -14,7 +14,7 @@ function NoTools() {
         <p>craft and fine tune...</p>
         <Button variant="outline">
           <Link
-            to="/my-space/my-tools/create-tool"
+            to="create-tool"
             className="profile__body__roles__button-link"
           >
             List a Tool

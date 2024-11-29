@@ -183,7 +183,10 @@ function Profile() {
                 </div>
                 <div className="profile__header__button">
                   <Button
-                    onClick={() => setFormActive(!formActive)}
+                    onClick={() => {
+                      handleReset()
+                      setFormActive(!formActive)
+                    }}
                     variant="secondary"
                   >
                     Edit Profile
@@ -263,10 +266,13 @@ function Profile() {
                 formActive && (
                   <div className="d-flex gap-2 justify-content-end">
                     <Button
-                      onClick={() => handleReset()}
+                      onClick={() => {
+                        handleReset()
+                        setFormActive(false)
+                      }}
                       variant="secondary"
                     >
-                      Clear
+                      Cancel
                     </Button>
                     <LoadingButton
                       label={"Save"}
