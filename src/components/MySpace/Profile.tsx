@@ -95,7 +95,7 @@ function Profile() {
   const renderDeveloperStatus = () => {
     if (isLoading) return <Spinner size="sm" />;
     if (!isLoading && !isDeveloper) {
-      if (!isUserRequestLoading && userRequest) {
+      if (!isUserRequestLoading && userRequest && userRequest?.length > 0) {
         if (Object.keys(userRequest[0]?.status)[0] === "pending") {
           return (
             <p
