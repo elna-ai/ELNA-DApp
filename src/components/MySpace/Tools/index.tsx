@@ -28,7 +28,7 @@ function UserTools() {
         {userTools && userTools?.length > 0 && (
           <Button
             disabled={!isDeveloper}
-            onClick={() => navigate("my-space/my-tools/create-tool")}
+            onClick={() => navigate("create-tool")}
           >
             {t("developerStudio.createBanner.listATool")}
           </Button>
