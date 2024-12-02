@@ -1,6 +1,7 @@
 import Buffer "mo:base/Buffer";
 import Error "mo:base/Error";
 import Principal "mo:base/Principal";
+import Text "mo:base/Text";
 
 import Types "./Types";
 import Utils "./Utils";
@@ -134,6 +135,18 @@ actor class DeveloperStudio(initialArgs : Types.InitialArgs) {
 
   public shared query ({ caller }) func getUserTools() : async [Types.DeveloperTool] {
     Utils.getUserTool(developerTools, caller);
+  };
+
+  public query func getTool(toolId : Text) : async Types.DeveloperTool {
+    let tool = Utils.getTool(developerTools, toolId);
+    switch (tool) {
+      case (?tool) {
+        return tool;
+      };
+      case null {
+        throw Error.reject("Tool not found");
+      };
+    };
   };
 
   system func preupgrade() {
