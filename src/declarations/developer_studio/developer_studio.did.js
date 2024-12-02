@@ -33,6 +33,7 @@ export const idlFactory = ({ IDL }) => {
   const DeveloperStudio = IDL.Service({
     'approvePendingDeveloperTool' : IDL.Func([IDL.Text], [IDL.Text], []),
     'getApprovedTools' : IDL.Func([], [IDL.Vec(DeveloperToolWithCreator)], []),
+    'getTool' : IDL.Func([IDL.Text], [DeveloperTool], ['query']),
     'getTools' : IDL.Func([], [IDL.Vec(DeveloperTool)], []),
     'getUserTools' : IDL.Func([], [IDL.Vec(DeveloperTool)], ['query']),
     'rejectDeveloperTool' : IDL.Func([IDL.Text], [IDL.Text], []),
