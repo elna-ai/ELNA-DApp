@@ -113,6 +113,7 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
             else {
               const addPayload: WizardDetails = {
                 ...values,
+                avatar: response.Ok,
                 id: uuidv4(),
                 userId,
                 name: wizardName,
