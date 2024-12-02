@@ -721,7 +721,11 @@ textarea.form-control::placeholder {
   color: var(--placeholder-text-w);
 }
 
-.form-control:disabled {
+.form-control:disabled,
+textarea.form-control:disabled {
   background: var(--color-bg1);
-  border-color: blueviolet;
+  border-color: var(--color-bg1);
+  resize: none;
+  opacity: 0.75;
+  cursor: not-allowed;
 }

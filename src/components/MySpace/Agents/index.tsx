@@ -17,6 +17,7 @@ import NoWizards from "./NoWizards";
 import Card from "../../ViewAgents/Card";
 import { useNavigate } from "react-router-dom";
 import { useDeleteCollections } from "hooks/reactQuery/useRag";
+import { t } from "i18next";
 
 function MyWizards() {
   const [isDeleteWizard, setIsDeleteWizard] = useState(false);
@@ -79,19 +80,18 @@ function MyWizards() {
 
   const Title = () => {
     return (
-      <div>
-        <div>
-          <h5>Agents</h5>
-          <p>
-            Each skilled in their own field - a Travel Guide, a Fitness Coach, a
-            Masterful Storyteller, et al.
-          </p>
+      <div className="myagents">
+        <div className="myagents__header">
+          <div>
+            <h5>{t("mySpace.myAgents.agentsHeader")}</h5>
+            <p>{t("mySpace.myAgents.agentsHeaderDesc")}</p>
+          </div>
+          {!isUserWizardsLoading && (userWizards?.length || 0) > 0 && (
+            <CheckWizardNameCreateModal>
+              <Button className="myagents__header__btn">Create Agent</Button>
+            </CheckWizardNameCreateModal>
+          )}
         </div>
-        {!isUserWizardsLoading && (userWizards?.length || 0) > 0 && (
-          <CheckWizardNameCreateModal>
-            <Button>Create Agent</Button>
-          </CheckWizardNameCreateModal>
-        )}
       </div>
     );
   };

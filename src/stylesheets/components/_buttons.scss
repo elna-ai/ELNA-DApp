@@ -48,3 +48,20 @@
   text-decoration: none;
   background-color: var(--el-btn-bg-secondary-hover);
 }
+.btn-primary a,
+.btn-primary a:hover,
+.btn-primary a:active {
+  color: var(--title-color-dark);
+}
+.btn-outline {
+  color: var(--elna-primar-color);
+  border: 1px solid var(--elna-primary-color);
+}
+.btn-outline:hover {
+  color: var(--title-color-dark);
+  border: 1px solid var(--elna-primary-color);
+  background-color: var(--elna-primary-color);
+}
+.btn-outline:hover a {
+  color: var(--title-color-dark);
+}
