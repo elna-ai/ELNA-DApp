@@ -67,7 +67,6 @@
         .btn-outline {
           display: flex;
           align-items: center;
-          gap: 4px;
           color: var(--primary-color);
           border: 1px solid var(--primary-color);
           padding: 8px 16px;
@@ -77,6 +76,10 @@
               color: var(--elna-primary-text-color) !important;
             }
           }
+        }
+        &-link {
+          gap: 4px;
+          display: flex;
         }
       }
     }
