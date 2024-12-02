@@ -182,6 +182,24 @@
       "listATool": "List A tool"
     }
   },
+  "mySpace": {
+    "myAgents": {
+      "agentsHeader": "Agents",
+      "agentsHeaderDesc": "Each skilled in their own field - a Travel Guide, a Fitness Coach, a Masterful Storyteller, et al.",
+      "noWizardsHeader":"You don't have any created agents",
+      "noWizardsDesc":"Craft and fine tune your agent",
+      "createAgentBtn":"Create Agent"
+    },
+    "myTools": {
+      "toolsHeader": "Tools",
+      "toolsHeaderDesc": "List Your tools and integrate with agents.",
+      "noAccessHeader":"You don't have Access to upload tools",
+      "noAccessDesc":"Complete Developer Profile and upload your tools and integratewith agents",
+      "noToolsHeader": "You don't Publish or List any tools",
+      "noToolsHeaderDesc": "List your tools and Integrate with agents",
+      "createToolBtn":"Create Tool"
+    }
+  },
   "common": {
     "elna": "ELNA",
     "eywa": "Eywa",
