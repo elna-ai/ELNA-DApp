@@ -20,19 +20,22 @@ function UserTools() {
 
   const Title = () => {
     return (
-      <div>
-        <div>
-          <h5>Tools</h5>
-          <p>Each skilled......</p>
+      <div className="mytools">
+        <div className="mytools__header">
+          <div>
+            <h5>{t("mySpace.myTools.toolsHeader")}</h5>
+            <p>{t("mySpace.myTools.toolsHeaderDesc")}</p>
+          </div>
+          {userTools && userTools?.length > 0 && (
+            <Button
+              className="mytools__header__btn"
+              disabled={!isDeveloper}
+              onClick={() => navigate("create-tool")}
+            >
+              {t("developerStudio.createBanner.listATool")}
+            </Button>
+          )}
         </div>
-        {userTools && userTools?.length > 0 && (
-          <Button
-            disabled={!isDeveloper}
-            onClick={() => navigate("create-tool")}
-          >
-            {t("developerStudio.createBanner.listATool")}
-          </Button>
-        )}
       </div>
     );
   };

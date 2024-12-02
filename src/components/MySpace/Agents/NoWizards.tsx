@@ -10,10 +10,10 @@ function NoWizards() {
     <>
       <div className="w-100 py-5 text-center">
         <img className="d-inline" src={NoChatWizardImg} alt="no wizard" />
-        <h5>{t("wizards.noWizards")}</h5>
-        <p>Craft and fine tune your agent</p>
+        <h5>{t("mySpace.myAgents.noWizardsHeader")}</h5>
+        <p>{t("mySpace.myAgents.noWizardsDesc")}</p>
         <CheckWizardNameCreateModal>
-          <Button>Create Agent</Button>
+          <Button>{t("mySpace.myAgents.createAgentBtn")}</Button>
         </CheckWizardNameCreateModal>
       </div>
     </>
