@@ -12,7 +12,7 @@ function ToolDetails() {
     data: tool,
     isFetching: isLoadingTool,
   } = useShowTool(id);
-
+  console.log(tool)
   const navigate = useNavigate();
 
   if(isLoadingTool){ return <PageLoader /> }
