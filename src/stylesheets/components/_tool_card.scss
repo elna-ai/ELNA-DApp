@@ -5,10 +5,15 @@
   gap: 0.25rem;
   border-radius: 12px;
   max-width: 340px;
-  background-color: var(--background-elevated-base);
-  border: 1px solid var(--color-line);
+  border: 1px solid var(--background-base-border);
   padding: 12px 16px;
   text-align: left;
+  cursor: pointer;
+  &:hover {
+    background-color: var(--background-elevated-base);
+
+    border: 1px solid var(--color-line);
+  }
 
   &__cover {
     max-width: 320px;
@@ -52,6 +57,148 @@
 
     &__creator {
       margin-bottom: 0;
+    }
+  }
+}
+
+.tooldetail {
+  display: flex;
+  flex-direction: column;
+  width: min(96%, 992px);
+  margin-top: 30px;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    align-items: flex-start;
+
+    &__details {
+      display: flex;
+      gap: 1rem;
+
+      &__img {
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+      }
+
+      &__content {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        h1 {
+          font-size: 2rem;
+        }
+        &__user {
+          display: flex;
+        }
+        &__category {
+          background-color: var(--background-base-border);
+          border: 1px solid #1e1e1e;
+          border-radius: 16px;
+          padding: 2px 12px;
+          width: fit-content;
+          margin-bottom: 0;
+        }
+      }
+    }
+    &__demobtn {
+      min-width: 100px;
+    }
+  }
+  &__img {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+
+    img {
+      border-radius: 8px;
+    }
+  }
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    &__btn {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+
+      &__link {
+        display: flex;
+        padding: 12px 24px;
+        border: 1px solid var(--elna-primary-color);
+        border-radius: 8px;
+        min-width: 180px;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+    }
+  }
+
+  &__back {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+
+    &__btn {
+      display: flex;
+      width: fit-content;
+      border: 1px solid var(--background-base-border);
+      background-color: var(--background-elevated-base);
+    }
+  }
+}
+
+// X-Small devices (portrait phones, less than 576px)
+@media (max-width: 699px) {
+  .tooldetail {
+    display: flex;
+    flex-direction: column;
+    width: min(96%, 992px);
+    margin-top: 30px;
+
+    &__header {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: stretch;
+
+      &__details {
+        display: flex;
+        gap: 1rem;
+
+        &__img {
+          width: 60px;
+          height: 60px;
+          border-radius: 8px;
+        }
+
+        &__content {
+          display: flex;
+          align-items: flex-start;
+          flex-direction: column;
+          h1 {
+            font-size: 1.35rem;
+          }
+        }
+      }
+    }
+    &__body {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      &__btn {
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        width: 100%;
+
+        &__link {
+          min-width: 220px;
+        }
+      }
     }
   }
 }

@@ -12,6 +12,12 @@
     "connectWallet": "Connect Wallet",
     "userProfile": "User Profile"
   },
+  "completeLogin": {
+    "modalHeaderTitle": "Login",
+    "modalTitle": "Connect Wallet to Login",
+    "modalDesc": "Not Logged in",
+    "modalBtn": "Connect Wallet to Continue"
+  },
   "sidebar": {
     "plusHeading": "Get more out of {{name}}+",
     "plusDescription": "Craft magical AI Agents and let your AI think how you think",
@@ -41,7 +47,7 @@
     "noWizards": "You don't have any created agents",
     "popularWizards": "Specialized AI agents ",
     "popularWizardsDesc": "Each skilled in their own field - a Travel Guide, a Fitness Coach, a Masterful Storyteller, et al.",
-    "myWizardsDesc": "A community-driven, secure <br /> and transparent AI agent creation platform."
+    "myWizardsDesc": "Community-driven, secure <br /> and transparent AI agent creation platform."
   },
   "signIn": {
     "connectWallet": "Connect your wallet",

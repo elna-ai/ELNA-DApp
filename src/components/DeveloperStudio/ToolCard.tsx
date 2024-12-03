@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import classNames from "classnames";
 import NoToolImg from "images/no-tool.png";
 
@@ -19,7 +19,7 @@ function ToolCard({
   ): tool is DeveloperToolWithCreator => {
     return (tool as DeveloperToolWithCreator).creator !== undefined;
   };
-
+  const navigate = useNavigate();
   const getStatusColor = (
     status: ExtractKeysFromVariant<DeveloperToolStatus>
   ) => {
@@ -45,7 +45,10 @@ function ToolCard({
   )[0] as ExtractKeysFromVariant<DeveloperToolStatus>;
 
   return (
-    <Link to={`/tool-details/${tool.id}`} className="tool-card">
+    <div
+      onClick={() => navigate(`/tool-details/${tool.id}`)}
+      className="tool-card"
+    >
       <div className="tool-card__cover">
         <img
           className="tool-card__cover__img img-fluid"
@@ -85,7 +88,7 @@ function ToolCard({
           {tool.category}
         </p>
       </div>
-    </Link>
+    </div>
   );
 }
 

@@ -1,51 +1,111 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import classNames from "classnames";
-import NoToolImg from "images/no-tool.png";
+import NoToolImg from "images/placeholder-tools.png";
+import NoToolIconImg from "images/placeholder-tool-icon.png";
 import { Button } from "react-bootstrap";
 
 function ToolDetails() {
+  const { id } = useParams();
 
-    const { id } = useParams();
-
-    const navigate = useNavigate();
-
+  const navigate = useNavigate();
 
   return (
-    <div className="d-flex flex-column">
-        <Button onClick={() => navigate(-1)}>Back</Button>
-        <div className="d-flex justify-content-between">
-            <div className="d-flex">
-                <img className="w-25" src={NoToolImg} alt="" />
-                <div>
-                    <h1>Nordpass</h1>
-                    <h2>
-                        Created by
-                        <p>@namotox</p>
-                    </h2>
-                </div>
-            </div>
-            <Button onClick={() => navigate(-1)}>Try Now</Button>
+    <div className="tooldetail">
+      <div className="tooldetail__back">
+        <Button
+          className="tooldetail__back__btn"
+          variant="outline"
+          onClick={() => navigate(-1)}
+        >
+          <i className="ri-arrow-left-s-line"></i>
+          Back
+        </Button>
+      </div>
+      <div className="tooldetail__header">
+        <div className="tooldetail__header__details">
+          <img
+            className="tooldetail__header__details__img"
+            src={NoToolIconImg}
+            alt=""
+          />
+          <div className="tooldetail__header__details__content">
+            <h1>NordPass® Password Manager & Digital Vault</h1>
+            <p className="tooldetail__header__details__content__user">
+              <span>Created by</span>
+              <span>
+                <Link to={"/"}>@namotox</Link>
+              </span>
+            </p>
+            <p className="tooldetail__header__details__content__category">
+              <i className="ri-honour-fill me-2"></i>
+              Password Manager
+            </p>
+          </div>
         </div>
-
-        <img
-          className="tool-card__cover__img img-fluid"
-          src={NoToolImg}
-          alt="no tool image"
-        />
-
-        <div className="d-flex justify-content-center align-items-center">
-            <Link to={"/"}>Presentation Link</Link>
-            <Link to={"/"}>Github Link</Link>
+        <Button
+          className="tooldetail__header__demobtn"
+          onClick={() => navigate(-1)}
+        >
+          Try Now
+        </Button>
+      </div>
+      <div className="tooldetail__img">
+        <img className="img-fluid" src={NoToolImg} alt="no tool image" />
+      </div>
+      <div className="tooldetail__body">
+        <div className="tooldetail__body__btn">
+          <Link className="tooldetail__body__btn__link" to={"/"}>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M13 18V20H17V22H7V20H11V18H3C2.44772 18 2 17.5523 2 17V4C2 3.44772 2.44772 3 3 3H21C21.5523 3 22 3.44772 22 4V17C22 17.5523 21.5523 18 21 18H13ZM10 7.5V13.5L15 10.5L10 7.5Z"
+                fill="#55E6A5"
+              />
+            </svg>
+            Presentation Link
+          </Link>
+          <Link className="tooldetail__body__btn__link" to={"/"}>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12.001 2C6.47598 2 2.00098 6.475 2.00098 12C2.00098 16.425 4.86348 20.1625 8.83848 21.4875C9.33848 21.575 9.52598 21.275 9.52598 21.0125C9.52598 20.775 9.51348 19.9875 9.51348 19.15C7.00098 19.6125 6.35098 18.5375 6.15098 17.975C6.03848 17.6875 5.55098 16.8 5.12598 16.5625C4.77598 16.375 4.27598 15.9125 5.11348 15.9C5.90098 15.8875 6.46348 16.625 6.65098 16.925C7.55098 18.4375 8.98848 18.0125 9.56348 17.75C9.65098 17.1 9.91348 16.6625 10.201 16.4125C7.97598 16.1625 5.65098 15.3 5.65098 11.475C5.65098 10.3875 6.03848 9.4875 6.67598 8.7875C6.57598 8.5375 6.22598 7.5125 6.77598 6.1375C6.77598 6.1375 7.61348 5.875 9.52598 7.1625C10.326 6.9375 11.176 6.825 12.026 6.825C12.876 6.825 13.726 6.9375 14.526 7.1625C16.4385 5.8625 17.276 6.1375 17.276 6.1375C17.826 7.5125 17.476 8.5375 17.376 8.7875C18.0135 9.4875 18.401 10.375 18.401 11.475C18.401 15.3125 16.0635 16.1625 13.8385 16.4125C14.201 16.725 14.5135 17.325 14.5135 18.2625C14.5135 19.6 14.501 20.675 14.501 21.0125C14.501 21.275 14.6885 21.5875 15.1885 21.4875C19.259 20.1133 21.9999 16.2963 22.001 12C22.001 6.475 17.526 2 12.001 2Z"
+                fill="#55E6A5"
+              />
+            </svg>
+            Github Link
+          </Link>
         </div>
 
         <div>
-            <h2>Description</h2>
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos
-                pariatur, eum quae quia quod, voluptate quibusdam voluptas
-            </p>
+          <h4>Description</h4>
+          <p>
+            NordPass is your freedom from password stress. Generate and securely
+            store strong passwords and autofill them with a single click.
+            Designed by the security experts behind NordVPN, the NordPass
+            password manager offers a refined yet user-friendly approach to
+            password management. Effortlessly generate strong passwords,
+            identify weak passwords, discover whether your data has appeared in
+            a data breach, and benefit from the convenience of our autosave and
+            autofill features. But there’s more to NordPass than meets the eye.
+            Beyond passwords, trust NordPass to store your passkeys, credit
+            cards, personal notes, and even files with 3GB of storage reserved
+            just for that. Never compromise on security. Keep your passwords
+            safe with NordPass. Here’s more of what you get when you choose
+            NordPass:
+          </p>
         </div>
+      </div>
     </div>
   );
 }
