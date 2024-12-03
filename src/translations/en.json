@@ -200,7 +200,7 @@
       "toolsHeader": "Tools",
       "toolsHeaderDesc": "List Your tools and integrate with agents.",
       "noAccessHeader":"You don't have Access to upload tools",
-      "noAccessDesc":"Complete Developer Profile and upload your tools and integratewith agents",
+      "noAccessDesc":"Complete Developer Profile and upload your tools and integrate with agents",
       "noToolsHeader": "You don't Publish or List any tools",
       "noToolsHeaderDesc": "List your tools and Integrate with agents",
       "createToolBtn":"Create Tool"
