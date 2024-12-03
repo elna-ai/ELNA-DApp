@@ -11,6 +11,7 @@ import { Button } from "react-bootstrap";
 
 //check and make common
 import ToolCard from "../../DeveloperStudio/ToolCard";
+import { use } from "i18next";
 
 function UserTools() {
   const { t } = useTranslation();
@@ -48,22 +49,18 @@ function UserTools() {
 
     if (!isLoading && !isDeveloper) {
       if (!isUserRequestLoading && userRequest && userRequest?.length > 0) {
-        if (Object.keys(userRequest[0]?.status)[0] !== "approved") {
-          return (
-            <p className={``}>
-              {Object.keys(userRequest[0].status).join(",")}
-            </p>
-          )
+        if (Object.keys(userRequest[userRequest?.length - 1]?.status)[0] !== "approved") {
+          return <NoDeveloperAccess access={Object.keys(userRequest[userRequest?.length - 1]?.status)[0]} />
         }
       }
       else return <NoDeveloperAccess />
     }
 
-    if (userTools?.length === 0 || !userTools) {
+    if (userTools?.length === 0) {
       return <NoTools />;
     }
 
-    if (userTools?.length > 0 && !isUserToolsLoading) {
+    if (userTools && userTools?.length > 0 && !isUserToolsLoading) {
       return (
         <div className="d-flex flex-wrap gap-3">
           {userTools?.map(tool => (
