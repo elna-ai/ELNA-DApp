@@ -13,6 +13,14 @@ import { useWallet } from "hooks/useWallet";
 import { QUERY_KEYS } from "src/constants/query";
 import queryClient from "utils/queryClient";
 
+type useShowToolProps = string | undefined;
+export const useShowTool = (toolId: useShowToolProps) =>
+  useQuery({
+    queryFn: () => developerStudio.getTool(toolId!),
+    queryKey: [QUERY_KEYS.PUBLIC_TOOLS_LIST, toolId],
+    enabled: !!toolId,
+  });
+
 export const useGetApprovedTools = () =>
   useQuery({
     queryKey: [QUERY_KEYS.APPROVED_DEVELOPER_TOOLS],

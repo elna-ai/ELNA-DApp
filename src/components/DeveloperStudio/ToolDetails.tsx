@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { useShowTool } from "hooks/reactQuery/useDeveloperTools";
 import classNames from "classnames";
 import NoToolImg from "images/placeholder-tools.png";
 import NoToolIconImg from "images/placeholder-tool-icon.png";
@@ -7,8 +8,15 @@ import { Button } from "react-bootstrap";
 
 function ToolDetails() {
   const { id } = useParams();
-
   const navigate = useNavigate();
+  const {
+    data: tool,
+    isFetching: isLoadingTool,
+    error,
+    isError,
+  } = useShowTool(id);
+
+  console.log(tool);
 
   return (
     <div className="tooldetail">
