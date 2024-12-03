@@ -25,9 +25,9 @@ function WizardPlaceholder() {
       </div>
       <div className="my-wizards__footer">
         <div>
-          <div className="my-wizards__footer__title">Create an Ai Agent</div>
+          <div className="my-wizards__footer__title">Bring your Ai to Life</div>
           <div className="my-wizards__footer__description">
-            Craft and fine tune your agent
+            with simple no-code steps
           </div>
         </div>
         <CheckWizardNameCreateModal>
@@ -35,7 +35,6 @@ function WizardPlaceholder() {
         </CheckWizardNameCreateModal>
       </div>
     </div>
-
   );
 }
 
