@@ -1,7 +1,7 @@
 import { Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
-import { useIsDeveloper } from "hooks/reactQuery/useDeveloper";
+import { useIsDeveloper, useGetUserRequest } from "hooks/reactQuery/useDeveloper";
 import { useGetUserTools } from "hooks/reactQuery/useDeveloperTools";
 import { useNavigate } from "react-router-dom";
 
@@ -15,6 +15,7 @@ import ToolCard from "../../DeveloperStudio/ToolCard";
 function UserTools() {
   const { t } = useTranslation();
   const { data: isDeveloper, isFetching: isLoading } = useIsDeveloper();
+  const { data: userRequest, isFetching: isUserRequestLoading } = useGetUserRequest();
   const { data: userTools, isFetching: isUserToolsLoading } = useGetUserTools();
   const navigate = useNavigate();
 
@@ -41,12 +42,21 @@ function UserTools() {
   };
 
   const renderBody = () => {
-    if (isUserToolsLoading) {
+    if (isLoading) {
       return <Spinner size="sm" />;
     }
 
-    if (!isDeveloper) {
-      return <NoDeveloperAccess />;
+    if (!isLoading && !isDeveloper) {
+      if (!isUserRequestLoading && userRequest && userRequest?.length > 0) {
+        if (Object.keys(userRequest[0]?.status)[0] !== "approved") {
+          return (
+            <p className={``}>
+              {Object.keys(userRequest[0].status).join(",")}
+            </p>
+          )
+        }
+      }
+      else return <NoDeveloperAccess />
     }
 
     if (userTools?.length === 0 || !userTools) {

@@ -12,6 +12,7 @@ export const QUERY_KEYS = {
   USER_PENDING_REQUEST: "user-pending-request",
   APPROVED_DEVELOPER_TOOLS: "approved-developer-tools",
   DEVELOPER_TOOLS: "developer-tools",
+  PUBLIC_TOOLS_LIST: "public-tools-list",
   USER_PROFILE: "user-profile",
   AVATAR_IMAGE: "avatar-image",
 };
