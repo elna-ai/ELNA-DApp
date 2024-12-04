@@ -7,12 +7,14 @@ type FormikInputProps = {
   label: ReactElement | string;
   placeholder?: string;
   as?: ElementType<any>;
+  rows?: number;
 };
 function FormikInput({
   name,
   label,
   placeholder,
   as = "input",
+  rows,
 }: FormikInputProps) {
   const { values, errors, handleChange, touched } =
     useFormikContext<FormikValues>();
@@ -29,6 +31,7 @@ function FormikInput({
         placeholder={placeholder}
         isInvalid={hasError}
         style={as === "input" ? { color: "#fff" } : undefined}
+        rows={rows}
       />
       <Form.Control.Feedback type="invalid">
         {hasError &&

@@ -4,7 +4,6 @@ import { Button, Form } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import toolicon from "src/images/tools-list.svg";
 
 import LoadingButton from "components/common/LoadingButton";
@@ -15,12 +14,19 @@ import {
   CREATE_TOOL_FORM_INITIAL,
   CREATE_TOOL_FORM_VALIDATION,
 } from "../constant";
+import { convertToMotokoOptional } from "utils/index";
+import FormikInput from "components/common/FormikInput";
+import ImageUploader from "components/common/ImageUploader";
 
 type CreateToolForm = {
   name: string;
   description: string;
   projectUrl: string;
   category: string;
+  icon: { fileName: string; image: string };
+  coverImage: { fileName: string; image: string };
+  presentationUrl: string;
+  demoUrl: string;
 };
 
 function CreateTool() {
@@ -29,23 +35,47 @@ function CreateTool() {
   const navigate = useNavigate();
   const { mutate: requestDeveloperTool, isPending } = useRequestDeveloperTool();
 
+  // const handleFileChange = (
+  //   event: React.ChangeEvent<HTMLInputElement>,
+  // ) => {
+  //   const file = event.target.files?.[0];
+
+  //   if (file && file.size <= 500 * 1024) {
+  //     const reader = new FileReader();
+  //     // customImageNameRef.current = file.name;
+
+  //     reader.onload = () => {
+  //       const base64String = reader.result as string;
+  //       setFieldValue("icon", { fileName: file.name, image: base64String });
+  //     };
+  //     reader.readAsDataURL(file);
+  //   } else {
+  //     toast("Image size exceeds 500 KB. Please upload a smaller image.");
+  //   }
+  // };
+
   const handleSubmit = (values: CreateToolForm) => {
     const request = {
+      ...values,
       id: uuidv4(),
       principal: Principal.fromText(wallet!.principalId),
       status: { pending: null },
-      ...values,
+      icon: convertToMotokoOptional(values.icon),
+      coverImage: convertToMotokoOptional(values.coverImage),
+      presentationUrl: convertToMotokoOptional(values.presentationUrl),
+      demoUrl: convertToMotokoOptional(values.demoUrl),
     };
-    requestDeveloperTool(request, {
-      onSuccess: () => {
-        toast.success("Request submitted");
-        navigate("/my-space/my-tools");
-      },
-      onError: e => {
-        console.error(e);
-        toast.error(e.message);
-      },
-    });
+    console.log(request);
+    // requestDeveloperTool(request, {
+    //   onSuccess: () => {
+    //     toast.success("Request submitted");
+    //     navigate("/my-space/my-tools");
+    //   },
+    //   onError: e => {
+    //     console.error(e);
+    //     toast.error(e.message);
+    //   },
+    // });
   };
   return (
     <div className="row justify-content-center">
@@ -69,91 +99,70 @@ function CreateTool() {
             validationSchema={CREATE_TOOL_FORM_VALIDATION}
             onSubmit={handleSubmit}
           >
-            {({
-              dirty,
-              values,
-              errors,
-              handleChange,
-              handleSubmit,
-              handleReset,
-            }) => (
+            {({ values, dirty, handleSubmit, handleReset }) => (
               <Form
                 className="tool-listing__form"
                 onSubmit={handleSubmit}
                 noValidate
               >
-                <Form.Group>
-                  <Form.Label className="fs-7">Tool Name</Form.Label>
-                  <Form.Control
-                    required
-                    name="name"
-                    as="input"
-                    style={{
-                      color: "#fff",
-                    }}
-                    placeholder="Enter Tool Name"
-                    value={values.name}
-                    onChange={handleChange}
-                    isInvalid={!!errors.name}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.name}
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label className="fs-7">Tools Description</Form.Label>
-                  <Form.Control
-                    required
-                    name="description"
-                    rows={5}
-                    as="textarea"
-                    placeholder="Describe your tool "
-                    style={{
-                      color: "#fff",
-                    }}
-                    value={values.description}
-                    onChange={handleChange}
-                    isInvalid={!!errors.description}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.description}
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label className="fs-7">Tool Repository Link</Form.Label>
-                  <Form.Control
-                    required
-                    name="projectUrl"
-                    placeholder="Repository URL"
-                    as="input"
-                    style={{
-                      color: "#fff",
-                    }}
-                    value={values.projectUrl}
-                    onChange={handleChange}
-                    isInvalid={!!errors.projectUrl}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.projectUrl}
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label className="fs-7">Category</Form.Label>
-                  <Form.Control
-                    required
-                    name="category"
-                    as="input"
-                    style={{
-                      color: "#fff",
-                    }}
-                    value={values.category}
-                    onChange={handleChange}
-                    isInvalid={!!errors.category}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.category}
-                  </Form.Control.Feedback>
-                </Form.Group>
+                <FormikInput
+                  name="name"
+                  placeholder="Enter Tool Name"
+                  label={<span className="fs-7">Tool Name</span>}
+                />
+                <div className="d-flex flex gap-2">
+                  <div>
+                    <Form.Label>
+                      <span className="fs-7">Upload icon tool</span>
+                    </Form.Label>
+                    <ImageUploader<CreateToolForm>
+                      id="iconUploader"
+                      value={values.icon}
+                      name="icon"
+                      maxSize={500}
+                    />
+                    <span className="fs-7">
+                      Tool image icon resolution
+                      <br />
+                      (96 x 96px)
+                    </span>
+                  </div>
+                  <div>
+                    <Form.Label>
+                      <span className="fs-7">Upload tool cover image</span>
+                    </Form.Label>
+                    <ImageUploader<CreateToolForm>
+                      id="coverUploader"
+                      value={values.coverImage}
+                      name="icon"
+                      maxSize={500}
+                    />
+                    <span className="fs-7">
+                      Cover image resolution
+                      <br />
+                      (800 x 500px)
+                    </span>
+                  </div>
+                </div>
+                <FormikInput
+                  name="description"
+                  as="textarea"
+                  placeholder="Describe your tool"
+                  label={<span className="fs-7">Tools Description</span>}
+                  rows={5}
+                />
+                <FormikInput
+                  name="projectUrl"
+                  label={<span className="fs-7">Tool Repository Link</span>}
+                  placeholder="Repository URL"
+                />
+                <FormikInput
+                  name="category"
+                  label={<span className="fs-7">Category</span>}
+                  placeholder="Enter category"
+                />
+                <FormikInput name="demoUrl" label="Demo Url" />
+                <FormikInput name="presentationUrl" label="Presentation Url" />
                 <div className="mt-2 justify-content-end d-flex gap-2">
                   <Button
                     className="el-btn-secondary"

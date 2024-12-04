@@ -64,3 +64,10 @@ export const generateTwitterShareLink = (content: string, hashtags: string) =>
   `https://twitter.com/intent/tweet?text=${encodeURI(
     content
   )}&hashtags=${hashtags}`;
+
+export const convertToMotokoOptional = <T>(value: T | undefined): [T] | [] =>
+  !!value ? [value] : [];
+
+export const convertFromMotokoOptional = <T>(value: [T] | []) => {
+  return value.length > 0 ? value[0] : undefined;
+};
