@@ -96,14 +96,14 @@ function Profile() {
     if (isLoading) return <Spinner size="sm" />;
     if (!isLoading && !isDeveloper) {
       if (!isUserRequestLoading && userRequest && userRequest?.length > 0) {
-        if (Object.keys(userRequest[0]?.status)[0] === "pending") {
+        if (Object.keys(userRequest[userRequest?.length - 1]?.status)[0] !== "approved") {
           return (
             <p
               className={`user_profile__summary__req-card__tag ${getColor(
-                Object.keys(userRequest[0].status).join(",")
+                Object.keys(userRequest[userRequest?.length - 1].status).join(",")
               )} `}
             >
-              {Object.keys(userRequest[0].status).join(",")}
+              {Object.keys(userRequest[userRequest?.length - 1].status).join(",")}
             </p>
           )
         }

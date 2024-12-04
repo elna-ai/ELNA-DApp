@@ -18,6 +18,7 @@ import Card from "../../ViewAgents/Card";
 import { useNavigate } from "react-router-dom";
 import { useDeleteCollections } from "hooks/reactQuery/useRag";
 import { t } from "i18next";
+import { useDeleteCustomImage } from "hooks/reactQuery/useElnaImages";
 
 function MyWizards() {
   const [isDeleteWizard, setIsDeleteWizard] = useState(false);
@@ -42,6 +43,7 @@ function MyWizards() {
   const { mutate: publishUnpublishWizard } = usePublishUnpublishWizard();
   const { mutate: deleteIndex } = useDeleteCollections();
   const { data: analytics } = useGetAllAnalytics();
+  const { mutate: deleteCustomImage, isPending: isDeletingCustomImage } = useDeleteCustomImage();
 
   const handleDeletePopup = (id: string, name: string) => {
     setIsDeleteWizard(true);
@@ -49,6 +51,20 @@ function MyWizards() {
   };
 
   const handleDelete = async (id: string) => {
+    const wizard = userWizards?.find(wizard => wizard.id === id)
+    if(!wizard) throw new Error("Wizard not found");
+    deleteCustomImage(wizard.avatar, {
+      onSuccess: (data) => {
+        if("Err" in data) {
+          console.error(data.Err)
+          toast.error("Unable to delete avatar");
+        }
+      },
+      onError: e => {
+        toast.error("Unable to delete avatar");
+        console.error(e);
+      }
+    });
     deleteMyWizard(
       { wizardId: id },
       {

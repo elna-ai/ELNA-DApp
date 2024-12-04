@@ -1,7 +1,7 @@
 import { Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
-import { useIsDeveloper } from "hooks/reactQuery/useDeveloper";
+import { useIsDeveloper, useGetUserRequest } from "hooks/reactQuery/useDeveloper";
 import { useGetUserTools } from "hooks/reactQuery/useDeveloperTools";
 import { useNavigate } from "react-router-dom";
 
@@ -11,10 +11,12 @@ import { Button } from "react-bootstrap";
 
 //check and make common
 import ToolCard from "../../DeveloperStudio/ToolCard";
+import { use } from "i18next";
 
 function UserTools() {
   const { t } = useTranslation();
   const { data: isDeveloper, isFetching: isLoading } = useIsDeveloper();
+  const { data: userRequest, isFetching: isUserRequestLoading } = useGetUserRequest();
   const { data: userTools, isFetching: isUserToolsLoading } = useGetUserTools();
   const navigate = useNavigate();
 
@@ -41,19 +43,24 @@ function UserTools() {
   };
 
   const renderBody = () => {
-    if (isUserToolsLoading) {
+    if (isLoading) {
       return <Spinner size="sm" />;
     }
 
-    if (!isDeveloper) {
-      return <NoDeveloperAccess />;
+    if (!isLoading && !isDeveloper) {
+      if (!isUserRequestLoading && userRequest && userRequest?.length > 0) {
+        if (Object.keys(userRequest[userRequest?.length - 1]?.status)[0] !== "approved") {
+          return <NoDeveloperAccess access={Object.keys(userRequest[userRequest?.length - 1]?.status)[0]} />
+        }
+      }
+      else return <NoDeveloperAccess />
     }
 
-    if (userTools?.length === 0 || !userTools) {
+    if (userTools?.length === 0) {
       return <NoTools />;
     }
 
-    if (userTools?.length > 0 && !isUserToolsLoading) {
+    if (userTools && userTools?.length > 0 && !isUserToolsLoading) {
       return (
         <div className="d-flex flex-wrap gap-3">
           {userTools?.map(tool => (
