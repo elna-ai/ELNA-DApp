@@ -24,7 +24,7 @@ function NoDeveloperAccess({ access }: { access?: string }) {
         </>
       )
     }
-    else return (
+    return (
       <>
         <p>{t("mySpace.myTools.noAccessDesc")}</p>
         <Button>
