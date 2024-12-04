@@ -38,6 +38,14 @@ function UserTools() {
             </Button>
           )}
         </div>
+        {userTools && userTools?.length > 0 && (
+          <Button
+            disabled={!isDeveloper}
+            onClick={() => navigate("create-tool")}
+          >
+            {t("developerStudio.createBanner.listATool")}
+          </Button>
+        )}
       </div>
     );
   };

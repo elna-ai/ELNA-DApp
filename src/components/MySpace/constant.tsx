@@ -65,13 +65,28 @@ export const CREATE_TOOL_FORM_INITIAL = {
   description: "",
   projectUrl: "",
   category: "",
+  icon: { fileName: "", image: "" },
+  coverImage: { fileName: "", image: "" },
+  presentationUrl: "",
+  demoUrl: "",
 };
 
 export const CREATE_TOOL_FORM_VALIDATION = yup.object().shape({
-  name: yup.string().trim().required(),
-  description: yup.string().trim().required(),
-  projectUrl: yup.string().url().trim().required(),
-  category: yup.string().trim().required(),
+  // name: yup.string().trim().required(),
+  // description: yup.string().trim().required(),
+  // projectUrl: yup.string().url().trim().required(),
+  // category: yup.string().trim().required(),
+  icon: yup.object().shape({
+    fileName: yup.string().trim().required(),
+    image: yup.string().trim().required(),
+  }),
+  coverImage: yup.object().shape({
+    fileName: yup.string().trim().required(),
+    image: yup.string().trim().required(),
+  }),
+  // coverImage: yup.string().trim(),
+  // presentationUrl: yup.string().url().trim(),
+  // demoUrl: yup.string().url().trim(),
 });
 
 export const TWITTER_SHARE_CONTENT = `Check this out! I'm a Developer at ELNA.ai - World's 1st Decentralised AI Agent creation platform.
