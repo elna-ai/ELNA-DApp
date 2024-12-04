@@ -16,7 +16,7 @@ function ToolDetails() {
     error,
     isError,
   } = useShowTool(id);
-  console.log(tool)
+
   const navigate = useNavigate();
 
   return (
