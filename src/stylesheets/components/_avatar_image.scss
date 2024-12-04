@@ -37,6 +37,30 @@
   }
 }
 
+.avatar-image-rectangle {
+  width: 160px;
+  height: 100px;
+  border-radius: 5px;
+
+  &-wrapper {
+    border-radius: 5px !important;
+    width: 160px;
+    height: 100px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    position: relative;
+  }
+
+  &--selected {
+    border: 4px solid #8ecb58;
+  }
+
+  &--loading {
+    background-color: var(--background-btn-secondary);
+  }
+}
+
 .custom-avatar-parent {
   border: (var(--primary-hover-color) 1px solid);
 

@@ -1,15 +1,21 @@
 import { useFormikContext } from "formik";
 import { InputGroup } from "react-bootstrap";
 import { toast } from "react-toastify";
+import classNames from "classnames";
+
+type ImageUploadShape = "circle" | "rectangle";
 
 type ImageUploaderProps<T> = {
   id: string;
   value: { fileName: string; image: string };
   name: keyof T;
+  shapeType: ImageUploadShape;
   maxSize: number;
+  height: number;
+  width: number;
 };
-function ImageUploader<T>({ id, value, name, maxSize }: ImageUploaderProps<T>) {
-  const { setFieldValue, errors } = useFormikContext();
+function ImageUploader<T>({ id, value, name, shapeType, maxSize, height, width }: ImageUploaderProps<T>) {
+  const { setFieldValue, errors, setFieldError } = useFormikContext();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -18,10 +24,19 @@ function ImageUploader<T>({ id, value, name, maxSize }: ImageUploaderProps<T>) {
       const reader = new FileReader();
       reader.onload = () => {
         const base64String = reader.result as string;
-        setFieldValue(name as string, {
-          fileName: file.name,
-          image: base64String,
-        });
+        var image = new Image();
+        image.src = base64String;
+
+        image.onload = function () {
+          if (image.height === height && image.width === width) {
+            setFieldValue(name as string, {
+              fileName: file.name,
+              image: base64String,
+            });
+          } else {
+            setFieldError(`${name as string}.image`, `Height and Width must not exceed ${height} and ${width} respectively.`);
+          }
+        };
       };
       reader.readAsDataURL(file);
     } else {
@@ -33,7 +48,12 @@ function ImageUploader<T>({ id, value, name, maxSize }: ImageUploaderProps<T>) {
 
   return (
     <InputGroup>
-      <div className="avatar-image-wrapper">
+      <div
+        className={classNames({
+          "avatar-image-rectangle-wrapper": shapeType === "rectangle",
+          "avatar-image-wrapper": shapeType === "circle",
+        })}
+      >
         <input
           onChange={handleFileChange}
           type="file"
@@ -42,17 +62,19 @@ function ImageUploader<T>({ id, value, name, maxSize }: ImageUploaderProps<T>) {
           id={id}
         />
         <label
-          className="custom-avatar-parent btn avatar-image bg-dark d-flex align-items-center justify-content-center"
+          className={classNames("custom-avatar-parent btn bg-dark d-flex align-items-center justify-content-center", {
+            "avatar-image-rectangle": shapeType === "rectangle",
+            "avatar-image": shapeType === "circle",
+          })}
           htmlFor={id}
         >
           {value.image ? (
             <img
               src={value.image}
-              style={{
-                width: "50px",
-                height: "50px",
-                borderRadius: "100%",
-              }}
+              className={classNames({
+                "avatar-image-rectangle": shapeType === "rectangle",
+                "avatar-image": shapeType === "circle",
+              })}
             />
           ) : (
             <i className="ri-upload-2-fill custom-avatar-parent__child text-white"></i>

@@ -30,7 +30,7 @@ function UserTools() {
           </div>
           {userTools && userTools?.length > 0 && (
             <Button
-              className="mytools__header__btn"
+              className="mytools__header__btn h-auto"
               disabled={!isDeveloper}
               onClick={() => navigate("create-tool")}
             >
@@ -38,14 +38,6 @@ function UserTools() {
             </Button>
           )}
         </div>
-        {userTools && userTools?.length > 0 && (
-          <Button
-            disabled={!isDeveloper}
-            onClick={() => navigate("create-tool")}
-          >
-            {t("developerStudio.createBanner.listATool")}
-          </Button>
-        )}
       </div>
     );
   };

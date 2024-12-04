@@ -35,47 +35,30 @@ function CreateTool() {
   const navigate = useNavigate();
   const { mutate: requestDeveloperTool, isPending } = useRequestDeveloperTool();
 
-  // const handleFileChange = (
-  //   event: React.ChangeEvent<HTMLInputElement>,
-  // ) => {
-  //   const file = event.target.files?.[0];
-
-  //   if (file && file.size <= 500 * 1024) {
-  //     const reader = new FileReader();
-  //     // customImageNameRef.current = file.name;
-
-  //     reader.onload = () => {
-  //       const base64String = reader.result as string;
-  //       setFieldValue("icon", { fileName: file.name, image: base64String });
-  //     };
-  //     reader.readAsDataURL(file);
-  //   } else {
-  //     toast("Image size exceeds 500 KB. Please upload a smaller image.");
-  //   }
-  // };
-
   const handleSubmit = (values: CreateToolForm) => {
+    
     const request = {
       ...values,
       id: uuidv4(),
       principal: Principal.fromText(wallet!.principalId),
       status: { pending: null },
-      icon: convertToMotokoOptional(values.icon),
-      coverImage: convertToMotokoOptional(values.coverImage),
+      icon: convertToMotokoOptional(values.icon.image),
+      coverImage: convertToMotokoOptional(values.coverImage.image),
       presentationUrl: convertToMotokoOptional(values.presentationUrl),
       demoUrl: convertToMotokoOptional(values.demoUrl),
     };
     console.log(request);
-    // requestDeveloperTool(request, {
-    //   onSuccess: () => {
-    //     toast.success("Request submitted");
-    //     navigate("/my-space/my-tools");
-    //   },
-    //   onError: e => {
-    //     console.error(e);
-    //     toast.error(e.message);
-    //   },
-    // });
+    requestDeveloperTool(request, {
+      onSuccess: () => {
+        // toast.success("Request submitted");
+        console.log("success");
+        navigate("/my-space/my-tools");
+      },
+      onError: e => {
+        console.error(e);
+        // toast.error(e.message);
+      },
+    });
   };
   return (
     <div className="row justify-content-center">
@@ -119,7 +102,10 @@ function CreateTool() {
                       id="iconUploader"
                       value={values.icon}
                       name="icon"
+                      shapeType="circle"
                       maxSize={500}
+                      height={96}
+                      width={96}
                     />
                     <span className="fs-7">
                       Tool image icon resolution
@@ -134,8 +120,11 @@ function CreateTool() {
                     <ImageUploader<CreateToolForm>
                       id="coverUploader"
                       value={values.coverImage}
-                      name="icon"
+                      name="coverImage"
+                      shapeType="rectangle"
                       maxSize={500}
+                      height={500}
+                      width={800}
                     />
                     <span className="fs-7">
                       Cover image resolution
