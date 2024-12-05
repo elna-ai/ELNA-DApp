@@ -42,8 +42,8 @@ function ToolDetails() {
             <h1>{tool?.name}</h1>
             <p className="tooldetail__header__details__content__user">
               <span>Created by</span>
-              <span>
-                <Link to={"/"}>@namotox</Link>
+              <span style={{ color: "var(--elna-primary-color)" }}>
+                &nbsp;@{tool?.creator}
               </span>
             </p>
             <p className="tooldetail__header__details__content__category">
@@ -56,7 +56,7 @@ function ToolDetails() {
           <Button
             className="tooldetail__header__demobtn"
             onClick={() => {
-              if (tool?.demoUrl[0]) navigate(tool?.demoUrl[0]);
+              if (tool?.demoUrl[0]) window.open(tool?.demoUrl[0]);
             }}
             disabled={!tool?.demoUrl[0]}
             target="_blank"
