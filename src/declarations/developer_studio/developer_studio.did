@@ -34,7 +34,7 @@ type DeveloperStudio =
  service {
    approvePendingDeveloperTool: (text) -> (text);
    getApprovedTools: () -> (vec DeveloperToolWithCreator);
-   getTool: (text) -> (DeveloperTool) query;
+   getTool: (text) -> (DeveloperToolWithCreator);
    getTools: () -> (vec DeveloperTool);
    getUserTools: () -> (vec DeveloperTool) query;
    rejectDeveloperTool: (text) -> (text);

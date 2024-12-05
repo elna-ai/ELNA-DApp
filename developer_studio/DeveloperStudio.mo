@@ -137,11 +137,21 @@ actor class DeveloperStudio(initialArgs : Types.InitialArgs) {
     Utils.getUserTool(developerTools, caller);
   };
 
-  public query func getTool(toolId : Text) : async Types.DeveloperTool {
+  public func getTool(toolId : Text) : async Types.DeveloperToolWithCreator {
     let tool = Utils.getTool(developerTools, toolId);
     switch (tool) {
       case (?tool) {
-        return tool;
+        let developerUsers = await UserManagementCanister.getDevelopers();
+        let creator = Utils.getToolOwner(developerUsers, tool.principal);
+        switch (creator) {
+          case (?user) {
+            Utils.getToolWithCreator(tool, user.alias);
+          };
+          case null {
+            Utils.getToolWithCreator(tool, "");
+          };
+          //
+        };
       };
       case null {
         throw Error.reject("Tool not found");
