@@ -32,8 +32,12 @@ export interface DeveloperToolWithCreator {
   'id' : string,
   'status' : DeveloperToolStatus,
   'creator' : string,
+  'icon' : [] | [string],
   'name' : string,
   'description' : string,
+  'coverImage' : [] | [string],
+  'presentationUrl' : [] | [string],
+  'demoUrl' : [] | [string],
   'category' : string,
   'projectUrl' : string,
 }

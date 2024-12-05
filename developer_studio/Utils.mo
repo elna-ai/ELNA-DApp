@@ -16,13 +16,7 @@ module {
 
   public func getToolWithCreator(tool : Types.DeveloperTool, creator : Text) : Types.DeveloperToolWithCreator {
     {
-      creator = creator;
-      id = tool.id;
-      name = tool.name;
-      description = tool.description;
-      projectUrl = tool.projectUrl;
-      category = tool.category;
-      status = tool.status;
+      tool with creator = creator;
     };
   };
 
@@ -53,7 +47,6 @@ module {
       },
     );
   };
-
 
   public func getUserTool(developerTools : Buffer.Buffer<Types.DeveloperTool>, principal : Principal) : [Types.DeveloperTool] {
     Array.filter(
