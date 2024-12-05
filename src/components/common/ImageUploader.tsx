@@ -34,7 +34,7 @@ function ImageUploader<T>({ id, value, name, shapeType, maxSize, height, width }
               image: base64String,
             });
           } else {
-            setFieldError(`${name as string}.image`, `Height and Width must not exceed ${height} and ${width} respectively.`);
+            setFieldError(`${name as string}.image`, `Height and Width must not exceed ${width} and ${height} respectively.`);
           }
         };
       };
@@ -80,7 +80,7 @@ function ImageUploader<T>({ id, value, name, shapeType, maxSize, height, width }
             <i className="ri-upload-2-fill custom-avatar-parent__child text-white"></i>
           )}
         </label>
-        <span style={{ color: "red" }}>{(errors?.[name] as any)?.image}</span>
+        <span style={{ color: "red", width: "180%", textAlign: "center" }}>{(errors?.[name] as any)?.image}</span>
       </div>
     </InputGroup>
   );

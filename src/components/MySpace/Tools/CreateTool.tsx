@@ -9,6 +9,7 @@ import toolicon from "src/images/tools-list.svg";
 import LoadingButton from "components/common/LoadingButton";
 import { useRequestDeveloperTool } from "hooks/reactQuery/useDeveloperTools";
 import { useWallet } from "hooks/useWallet";
+import { toast } from "react-toastify";
 
 import {
   CREATE_TOOL_FORM_INITIAL,
@@ -36,7 +37,7 @@ function CreateTool() {
   const { mutate: requestDeveloperTool, isPending } = useRequestDeveloperTool();
 
   const handleSubmit = (values: CreateToolForm) => {
-    
+
     const request = {
       ...values,
       id: uuidv4(),
@@ -47,16 +48,16 @@ function CreateTool() {
       presentationUrl: convertToMotokoOptional(values.presentationUrl),
       demoUrl: convertToMotokoOptional(values.demoUrl),
     };
-    console.log(request);
+
     requestDeveloperTool(request, {
       onSuccess: () => {
-        // toast.success("Request submitted");
+        toast.success("Request submitted");
         console.log("success");
         navigate("/my-space/my-tools");
       },
       onError: e => {
         console.error(e);
-        // toast.error(e.message);
+        toast.error("Submission failed");
       },
     });
   };
@@ -93,40 +94,44 @@ function CreateTool() {
                   placeholder="Enter Tool Name"
                   label={<span className="fs-7">Tool Name</span>}
                 />
-                <div className="d-flex flex gap-2">
-                  <div>
-                    <Form.Label>
-                      <span className="fs-7">Upload icon tool</span>
-                    </Form.Label>
-                    <ImageUploader<CreateToolForm>
-                      id="iconUploader"
-                      value={values.icon}
-                      name="icon"
-                      shapeType="circle"
-                      maxSize={500}
-                      height={96}
-                      width={96}
-                    />
-                    <span className="fs-7">
+                <div className="d-flex flex gap-5">
+                  <div className="d-flex flex-column justify-content-between align-items-center ">
+                    <div className="d-flex flex-column">
+                      <Form.Label>
+                        <span className="fs-7">Upload icon tool</span>
+                      </Form.Label>
+                      <ImageUploader<CreateToolForm>
+                        id="iconUploader"
+                        value={values.icon}
+                        name="icon"
+                        shapeType="circle"
+                        maxSize={500}
+                        height={96}
+                        width={96}
+                      />
+                    </div>
+                    <span className="fs-7 text-center">
                       Tool image icon resolution
                       <br />
                       (96 x 96px)
                     </span>
                   </div>
-                  <div>
-                    <Form.Label>
-                      <span className="fs-7">Upload tool cover image</span>
-                    </Form.Label>
-                    <ImageUploader<CreateToolForm>
-                      id="coverUploader"
-                      value={values.coverImage}
-                      name="coverImage"
-                      shapeType="rectangle"
-                      maxSize={500}
-                      height={500}
-                      width={800}
-                    />
-                    <span className="fs-7">
+                  <div className="d-flex flex-column justify-content-between align-items-center gap-5">
+                    <div className="d-flex flex-column">
+                      <Form.Label>
+                        <span className="fs-7">Upload tool cover image</span>
+                      </Form.Label>
+                      <ImageUploader<CreateToolForm>
+                        id="coverUploader"
+                        value={values.coverImage}
+                        name="coverImage"
+                        shapeType="rectangle"
+                        maxSize={500}
+                        height={500}
+                        width={800}
+                      />
+                    </div>
+                    <span className="fs-7 text-center">
                       Cover image resolution
                       <br />
                       (800 x 500px)
