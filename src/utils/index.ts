@@ -71,3 +71,12 @@ export const convertToMotokoOptional = <T>(value: T | undefined): [T] | [] =>
 export const convertFromMotokoOptional = <T>(value: [T] | []) => {
   return value.length > 0 ? value[0] : undefined;
 };
+  export const convertFromMotokoVariant = <T extends object>(status: T): string => {
+    return Object.keys(status)[0];
+  };
+  
+  export const convertToMotokoVariant = <T>(status: string): Record<string, null> => {
+    const variant: Record<string, null> = {};
+    variant[status] = null;
+    return variant;
+  };
