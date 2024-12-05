@@ -47,7 +47,11 @@ module {
     description : Text;
     projectUrl : Text;
     category : Text;
-    creator : Text;
     status : DeveloperToolStatus;
+    icon : ?Text;
+    coverImage : ?Text;
+    demoUrl : ?Text;
+    presentationUrl : ?Text;
+    creator : Text;
   };
 };
