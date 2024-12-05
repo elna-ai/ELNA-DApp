@@ -30,7 +30,7 @@ function UserTools() {
           </div>
           {userTools && userTools?.length > 0 && (
             <Button
-              className="mytools__header__btn h-auto"
+              className="mytools__header__btn"
               disabled={!isDeveloper}
               onClick={() => navigate("create-tool")}
             >
