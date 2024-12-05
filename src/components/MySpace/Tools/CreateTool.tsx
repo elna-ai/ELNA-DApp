@@ -52,7 +52,6 @@ function CreateTool() {
     requestDeveloperTool(request, {
       onSuccess: () => {
         toast.success("Request submitted");
-        console.log("success");
         navigate("/my-space/my-tools");
       },
       onError: e => {
