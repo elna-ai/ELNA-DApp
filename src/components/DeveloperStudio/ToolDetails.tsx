@@ -1,3 +1,4 @@
+import PageLoader from "components/common/PageLoader";
 import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useShowTool } from "hooks/reactQuery/useDeveloperTools";
@@ -5,18 +6,14 @@ import NoToolImg from "images/placeholder-tools.png";
 import NoToolIconImg from "images/placeholder-tool-icon.png";
 import { Button } from "react-bootstrap";
 
-import PresentationIcon from "../../assets/presentation_icon.svg?react";
-import GithubIcon from "../../assets/github_icon.svg?react";
-
 function ToolDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const {
-    data: tool,
-    isFetching: isLoadingTool,
-    error,
-    isError,
-  } = useShowTool(id);
+  const { data: tool, isFetching: isLoadingTool } = useShowTool(id);
+
+  if (isLoadingTool) {
+    return <PageLoader />;
+  }
 
   return (
     <div className="tooldetail">
@@ -83,7 +80,7 @@ function ToolDetails() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <PresentationIcon />
+              <i className="ri-slideshow-3-fill"></i>
               Presentation Link
             </Link>
           )}
@@ -94,7 +91,7 @@ function ToolDetails() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <GithubIcon />
+              <i className="ri-github-fill"></i>
               Github Link
             </Link>
           )}
