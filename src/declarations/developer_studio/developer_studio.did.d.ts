@@ -5,7 +5,7 @@ import type { IDL } from '@dfinity/candid';
 export interface DeveloperStudio {
   'approvePendingDeveloperTool' : ActorMethod<[string], string>,
   'getApprovedTools' : ActorMethod<[], Array<DeveloperToolWithCreator>>,
-  'getTool' : ActorMethod<[string], DeveloperTool>,
+  'getTool' : ActorMethod<[string], DeveloperToolWithCreator>,
   'getTools' : ActorMethod<[], Array<DeveloperTool>>,
   'getUserTools' : ActorMethod<[], Array<DeveloperTool>>,
   'rejectDeveloperTool' : ActorMethod<[string], string>,
