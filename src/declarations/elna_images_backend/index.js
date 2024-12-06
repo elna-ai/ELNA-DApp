@@ -9,7 +9,7 @@ export { idlFactory } from "./elna_images_backend.did.js";
  * process.env.CANISTER_ID_<CANISTER_NAME_UPPERCASE>
  * beginning in dfx 0.15.0
  */
-export const canisterId =import.meta.env.VITE_ELNA_IMAGE_CANISTER_ID;
+export const canisterId = import.meta.env.VITE_ELNA_IMAGE_CANISTER_ID;
 
 export const createActor = (canisterId, options = {}) => {
   const agent = options.agent || new HttpAgent({ ...options.agentOptions });
