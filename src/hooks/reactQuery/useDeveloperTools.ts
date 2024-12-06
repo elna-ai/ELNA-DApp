@@ -10,7 +10,7 @@ import {
   DeveloperTool,
 } from "declarations/developer_studio/developer_studio.did";
 import { useWallet } from "hooks/useWallet";
-import { QUERY_KEYS } from "src/constants/query";
+import { QUERY_KEYS, ONE_HOUR_STALE_TIME } from "src/constants/query";
 import queryClient from "utils/queryClient";
 
 type useShowToolProps = string | undefined;
@@ -25,6 +25,7 @@ export const useGetApprovedTools = () =>
   useQuery({
     queryKey: [QUERY_KEYS.APPROVED_DEVELOPER_TOOLS],
     queryFn: () => developerStudio.getApprovedTools(),
+    staleTime: ONE_HOUR_STALE_TIME,
   });
 
 export const useGetDeveloperTools = () => {
@@ -103,6 +104,7 @@ export const useGetUserTools = () => {
       return result;
     },
     enabled: !!wallet?.principalId,
+    staleTime: ONE_HOUR_STALE_TIME,
   });
 };
 
