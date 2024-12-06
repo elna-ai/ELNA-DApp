@@ -10,7 +10,7 @@ import { useIsUserAdmin } from "hooks/reactQuery/useUser";
 import useIsMobileScreen from "../../../hooks/useIsMobileScreen";
 // import useIsMobileScreen from "hooks/useIsMobileScreen";
 
-import BrandSm from "images/brandSm.svg?react";
+import brandSm from "images/brandSm.png";
 import ElanLogo from "images/logoElna.svg?react";
 import ExpandButton from "./ExpandButton";
 import SideBarLink from "./SideBarLink";
@@ -88,7 +88,11 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
             </Modal.Body>
           </Modal>
         ) : (
-          <BrandSm className="brand-img img-fluid" />
+          <img
+            src={brandSm}
+            className="brand-img img-fluid"
+            style={{ height: "41px" }}
+          />
         )}
       </div>
     );
@@ -107,8 +111,21 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
               <ElanLogo className="brand-img img-fluid" />
             </a> */}
           <Link to="/" className="navbar-brand d-flex align-items-center">
-            <BrandSm className="brand-img img-fluid" />
-            <ElanLogo className="brand-img img-fluid" />
+            {isExpanded ? (
+              <ElanLogo
+                className="brand-img img-fluid"
+                style={{ width: "200px" }}
+              />
+            ) : (
+              <>
+                <img
+                  src={brandSm}
+                  className="brand-img img-fluid"
+                  style={{ height: "41px" }}
+                />
+                <span></span>
+              </>
+            )}
           </Link>
         </span>
         <ExpandButton
