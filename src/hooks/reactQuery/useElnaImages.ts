@@ -6,7 +6,7 @@ import {
 } from "declarations/elna_images_backend";
 import { _SERVICE } from "declarations/elna_images_backend/elna_images_backend.did";
 import queryClient from "utils/queryClient";
-import { DEFAULT_STALE_TIME, QUERY_KEYS } from "src/constants/query";
+import { ONE_HOUR_STALE_TIME, QUERY_KEYS } from "src/constants/query";
 import { useWallet } from "hooks/useWallet";
 import { Principal } from "@dfinity/principal";
 import { toast } from "react-toastify";
@@ -22,7 +22,7 @@ export const useGetAsset = (id: string | undefined) =>
     queryFn: () => elnaImagesBackend.get_asset(id!),
     enabled: !!id,
     select: response => (response.length > 0 ? response[0] : undefined),
-    staleTime: DEFAULT_STALE_TIME,
+    staleTime: ONE_HOUR_STALE_TIME,
   });
 
 
