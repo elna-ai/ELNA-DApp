@@ -2,7 +2,7 @@ import { Principal } from "@dfinity/principal";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useUserStore } from "stores/useUser";
-import { DEFAULT_STALE_TIME, QUERY_KEYS } from "src/constants/query";
+import { ONE_HOUR_STALE_TIME, QUERY_KEYS } from "src/constants/query";
 import { useWallet } from "hooks/useWallet";
 import { Backend, UserProfile } from "declarations/backend/backend.did";
 import {
@@ -142,7 +142,7 @@ export const useGetUserProfile = (principal?: string) =>
     queryKey: [QUERY_KEYS.USER_PROFILE, principal],
     enabled: !!principal,
     retry: false,
-    staleTime: DEFAULT_STALE_TIME,
+    staleTime: ONE_HOUR_STALE_TIME,
   });
 
 export const useAddUserProfile = () => {

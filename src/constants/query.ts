@@ -18,5 +18,4 @@ export const QUERY_KEYS = {
 };
 
 /** 1 hour */
-export const DEFAULT_STALE_TIME = 3_600_000;
 export const ONE_HOUR_STALE_TIME = 60 * 60 * 1000;
