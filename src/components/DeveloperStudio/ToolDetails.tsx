@@ -39,9 +39,7 @@ function ToolDetails() {
             <h1>{tool?.name}</h1>
             <p className="tooldetail__header__details__content__user">
               <span>Created by</span>
-              <span>
-                <Link to={"/"}>@namotox</Link>
-              </span>
+              <span style={{ color: "var(--elna-primary-color)" }}>&nbsp;@{tool?.creator}</span>
             </p>
             <p className="tooldetail__header__details__content__category">
               <i className="ri-honour-fill me-2"></i>
@@ -49,16 +47,20 @@ function ToolDetails() {
             </p>
           </div>
         </div>
-        <Button
-          className="tooldetail__header__demobtn"
-          onClick={() => {
-            if (tool?.demoUrl[0]) navigate(tool?.demoUrl[0])
-          }}
-          disabled={!tool?.demoUrl[0]}
-          target="_blank" rel="noopener noreferrer"
-        >
-          Try Now
-        </Button>
+        {
+          tool?.demoUrl[0] && (
+            <Button
+              className="tooldetail__header__demobtn"
+              onClick={() => {
+                if (tool?.demoUrl[0]) window.open(tool?.demoUrl[0])
+              }}
+              disabled={!tool?.demoUrl[0]}
+              target="_blank" rel="noopener noreferrer"
+            >
+              Try Now
+            </Button>
+          )
+        }
       </div>
       <div className="tooldetail__img">
         <picture>
