@@ -43,7 +43,7 @@ function UserTools() {
   };
 
   const renderBody = () => {
-    if (isLoading || isUserToolsLoading || isUserRequestLoading) {
+    if (isLoading || isUserToolsLoading) {
       return <Spinner size="sm" />;
     }
 

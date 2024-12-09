@@ -15,6 +15,8 @@ import {
   DEVELOPER_REQUEST_FORM_INITIAL,
   DEVELOPER_REQUEST_FORM_VALIDATION,
 } from "./constant";
+import queryClient from "utils/queryClient";
+import { QUERY_KEYS } from "src/constants/query";
 
 function DeveloperRequest() {
   const { t } = useTranslation();
@@ -40,6 +42,7 @@ function DeveloperRequest() {
     requestDeveloperAccess(devDetails, {
       onSuccess: () => {
         toast.success("Request submitted");
+        queryClient.invalidateQueries({queryKey: [QUERY_KEYS.USER_PENDING_REQUEST]});
         navigate(-1);
       },
       onError: error => {
