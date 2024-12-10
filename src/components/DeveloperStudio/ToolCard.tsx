@@ -8,7 +8,7 @@ import {
   DeveloperTool,
   DeveloperToolWithCreator,
 } from "declarations/developer_studio/developer_studio.did";
-import { ExtractKeysFromVariant } from "src/types";
+import { VariantKeys } from "src/types";
 
 function ToolCard({
   tool,
@@ -22,7 +22,7 @@ function ToolCard({
   };
   const navigate = useNavigate();
   const getStatusColor = (
-    status: ExtractKeysFromVariant<DeveloperToolStatus>
+    status: VariantKeys<DeveloperToolStatus>
   ) => {
     switch (status) {
       case "pending":
@@ -43,7 +43,7 @@ function ToolCard({
   const isUserTool = !isDeveloperToolWithCreator(tool);
   const status = Object.keys(
     tool.status
-  )[0] as ExtractKeysFromVariant<DeveloperToolStatus>;
+  )[0] as VariantKeys<DeveloperToolStatus>;
 
   return (
     <div
@@ -53,7 +53,7 @@ function ToolCard({
       <div className="tool-card__cover">
         <img
           className="tool-card__cover__img img-fluid"
-          src={NoToolImg}
+          src={ tool.coverImage[0] || NoToolImg }
           alt="no tool image"
         />
       </div>

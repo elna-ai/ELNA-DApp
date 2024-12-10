@@ -118,6 +118,7 @@ export const useGetUserRequest = () => {
       const result = await backend.getUserRequests();
       return result;
     },
+    staleTime: ONE_HOUR_STALE_TIME,
   });
 };
 

@@ -63,14 +63,17 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
       else handleUploadCustomImage(values, userId, visibility);
     }
     else {
-      if(wizard.avatar.slice(0,11) === "default_img") {
-        if(values.avatar.slice(0,11) === "default_img") handleUpdateWizard(values, visibility);
-        else handleUploadCustomImage(values, userId, visibility);
-      }
+      if(wizard.avatar === values.avatar) handleUpdateWizard(values, visibility);
       else {
-        await handleDeleteCustomImage(wizard.avatar)
-        if(values.avatar.slice(0,11) === "default_img") handleUpdateWizard(values, visibility);
-        else handleUploadCustomImage(values, userId, visibility);
+        if(wizard.avatar.slice(0,11) === "default_img") {
+          if(values.avatar.slice(0,11) === "default_img") handleUpdateWizard(values, visibility);
+          else handleUploadCustomImage(values, userId, visibility);
+        }
+        else {
+          await handleDeleteCustomImage(wizard.avatar)
+          if(values.avatar.slice(0,11) === "default_img") handleUpdateWizard(values, visibility);
+          else handleUploadCustomImage(values, userId, visibility);
+        }
       }
     }
   };
@@ -101,7 +104,7 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
                 updatePayload,
                 {
                   onSuccess: () => {
-                    queryClient.invalidateQueries({ queryKey: [wizard.id] })
+                    queryClient.refetchQueries({ queryKey: [wizard.id] })
                   },
                   onError: error => {
                     console.error(error);

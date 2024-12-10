@@ -17,9 +17,15 @@ function NoLogin() {
     const navigate = useNavigate();
 
     const renderBody = () => {
-        if (isUserProfileLoading) return <Spinner animation="border" />
-        else if (!isUserLoggedIn) return <CompleteLogin />;
-        else if (!userProfile) return <CompleteProfile />
+        if (isUserProfileLoading) return (
+            <div className="ratio ratio-21x9">
+                <div className="d-flex align-items-center justify-content-center">
+                    <Spinner />
+                </div>
+            </div>
+        )
+        if (!isUserLoggedIn) return <CompleteLogin />;
+        if (!userProfile) return <CompleteProfile />
     }
 
     return (

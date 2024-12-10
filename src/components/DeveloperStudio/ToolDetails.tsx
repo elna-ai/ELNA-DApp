@@ -15,6 +15,9 @@ function ToolDetails() {
     return <PageLoader />;
   }
 
+  if (isLoadingTool) {
+    return <PageLoader />;
+  }
   return (
     <div className="tooldetail">
       <div className="tooldetail__back">
@@ -67,11 +70,11 @@ function ToolDetails() {
         )}
       </div>
       <div className="tooldetail__img">
-        <picture>
-          <source srcSet={tool?.coverImage[0]} type="image/webp" />
-          <source srcSet={NoToolImg} type="image/webp" />
-          <img className="img-fluid" src={NoToolImg} alt="no tool image" />
-        </picture>
+        <img
+          className="img-fluid"
+          src={tool?.coverImage[0] || NoToolImg}
+          alt="no tool image"
+        />
       </div>
       <div className="tooldetail__body">
         <div className="tooldetail__body__btn">

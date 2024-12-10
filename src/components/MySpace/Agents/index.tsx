@@ -115,7 +115,7 @@ function MyWizards() {
   // TODO: Refactor
   const renderBody = () => {
     if (isUserWizardsLoading) {
-      return <Spinner className="!flex mx-auto" />;
+      return <Spinner size="sm" />;
     }
 
     if ((userWizards?.length || 0) === 0) {

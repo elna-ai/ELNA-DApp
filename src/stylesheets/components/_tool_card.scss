@@ -17,6 +17,11 @@
 
   &__cover {
     max-width: 320px;
+    max-height: 133px;
+    object-fit: cover;
+    overflow: hidden;
+    object-position: center;
+    border-radius: 6px;
     &__img {
       border-radius: 6px;
       margin-bottom: 0.25rem;
