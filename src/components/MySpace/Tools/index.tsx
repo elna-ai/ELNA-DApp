@@ -8,10 +8,7 @@ import { useNavigate } from "react-router-dom";
 import NoTools from "./NoTools";
 import NoDeveloperAccess from "./NoDeveloperAccess";
 import { Button } from "react-bootstrap";
-
-//check and make common
 import ToolCard from "../../DeveloperStudio/ToolCard";
-import { use } from "i18next";
 
 function UserTools() {
   const { t } = useTranslation();
@@ -43,9 +40,9 @@ function UserTools() {
   };
 
   const renderBody = () => {
-    if (isLoading || isUserRequestLoading) {
-      return <Spinner size="sm" />;
-    }
+    if (isLoading || isUserRequestLoading) return <Spinner size="sm" />;
+
+    if(isDeveloper && isUserToolsLoading) return <Spinner size="sm" />
 
     if (!isLoading && !isDeveloper) {
       if (!isUserRequestLoading && userRequest && userRequest?.length > 0) {

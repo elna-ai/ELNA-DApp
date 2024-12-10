@@ -24,8 +24,8 @@ function NoLogin() {
                 </div>
             </div>
         )
-        else if (!isUserLoggedIn) return <CompleteLogin />;
-        else if (!userProfile) return <CompleteProfile />
+        if (!isUserLoggedIn) return <CompleteLogin />;
+        if (!userProfile) return <CompleteProfile />
     }
 
     return (

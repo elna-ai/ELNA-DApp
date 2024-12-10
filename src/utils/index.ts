@@ -5,7 +5,7 @@ import * as pdfJs from "pdfjs-dist";
 import pdfJsWorker from "pdfjs-dist/build/pdf.worker";
 import { History } from "declarations/elna_RAG_backend/elna_RAG_backend.did";
 
-import { Message } from "../types";
+import { Message, VariantKeys } from "../types";
 
 export const extractDocumentsFromPDF = async (file: File) => {
   const loader = new WebPDFLoader(file, {
@@ -71,16 +71,15 @@ export const convertToMotokoOptional = <T>(value: T | undefined): [T] | [] =>
 export const convertFromMotokoOptional = <T>(value: [T] | []) => {
   return value.length > 0 ? value[0] : undefined;
 };
-  export const convertFromMotokoVariant = <T extends object>(status: T): string => {
-    return Object.keys(status)[0];
-  };
-  
-  export const convertToMotokoVariant = <T>(status: string): Record<string, null> => {
-    const variant: Record<string, null> = {};
-    variant[status] = null;
-    return variant;
-  };
 
-  type VariantKeys<T> = T extends any ? keyof T : never;
+export const convertFromMotokoVariant = <T extends object>(status: T): VariantKeys<T> => {
+  return Object.keys(status)[0] as VariantKeys<T>;
+};
 
-  export const convertToIDLVariant = <T>(status: VariantKeys<T>) => { return { [status]: null } as T }
+export const convertToMotokoVariant = <T>(status: string): Record<string, null> => {
+  const variant: Record<string, null> = {};
+  variant[status] = null;
+  return variant;
+};
+
+export const convertToIDLVariant = <T>(status: VariantKeys<T>) => { return { [status]: null } as T }

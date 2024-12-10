@@ -15,7 +15,7 @@ function ToolDetails() {
 
   const navigate = useNavigate();
 
-  if(isLoadingTool){ return <PageLoader /> }
+  if (isLoadingTool) { return <PageLoader /> }
   return (
     <div className="tooldetail">
       <div className="tooldetail__back">
@@ -30,11 +30,7 @@ function ToolDetails() {
       </div>
       <div className="tooldetail__header">
         <div className="tooldetail__header__details">
-          <picture>
-            <source srcSet={tool?.icon[0]} type="image/webp" />
-            <source srcSet={NoToolIconImg} type="image/webp" />
-            <img src={tool?.icon[0]} className="tooldetail__header__details__img" alt="" />
-          </picture>
+          <img src={tool?.icon[0] || NoToolIconImg} className="tooldetail__header__details__img" alt="" />
           <div className="tooldetail__header__details__content">
             <h1>{tool?.name}</h1>
             <p className="tooldetail__header__details__content__user">
@@ -63,11 +59,7 @@ function ToolDetails() {
         }
       </div>
       <div className="tooldetail__img">
-        <picture>
-          <source srcSet={tool?.coverImage[0]} type="image/webp" />
-          <source srcSet={NoToolImg} type="image/webp" />
-          <img className="img-fluid" src={NoToolImg} alt="no tool image" />
-        </picture>
+        <img className="img-fluid" src={tool?.coverImage[0] || NoToolImg} alt="no tool image" />
       </div>
       <div className="tooldetail__body">
         <div className="tooldetail__body__btn">

@@ -19,6 +19,8 @@ import { convertToIDLVariant, convertToMotokoOptional } from "utils/index";
 import FormikInput from "components/common/FormikInput";
 import ImageUploader from "components/common/ImageUploader";
 import { DeveloperToolStatus } from "declarations/developer_studio/developer_studio.did";
+import queryClient from "utils/queryClient";
+import { QUERY_KEYS } from "src/constants/query";
 
 type CreateToolForm = {
   name: string;
@@ -53,6 +55,7 @@ function CreateTool() {
     requestDeveloperTool(request, {
       onSuccess: () => {
         toast.success("Request submitted");
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.DEVELOPER_TOOLS]});
         navigate("/my-space/my-tools");
       },
       onError: e => {

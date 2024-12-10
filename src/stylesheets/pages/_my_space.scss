@@ -97,6 +97,7 @@
   &__header {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
     margin-bottom: 1.25rem;
     &__btn {
       min-width: 124px;

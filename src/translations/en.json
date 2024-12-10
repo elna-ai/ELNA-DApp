@@ -14,9 +14,9 @@
   },
   "completeLogin": {
     "modalHeaderTitle": "Login",
-    "modalTitle": "Connect Wallet to Login",
-    "modalDesc": "Not Logged in",
-    "modalBtn": "Connect Wallet to Continue"
+    "modalTitle": "Start Your DeAi Journey Now!",
+    "modalDesc": "Choose Your Wallet",
+    "modalBtn": "Connect Wallet to Login"
   },
   "sidebar": {
     "plusHeading": "Get more out of {{name}}+",

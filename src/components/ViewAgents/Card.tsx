@@ -2,6 +2,7 @@ import { useGetAsset } from "hooks/reactQuery/useElnaImages";
 import { Dropdown } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import AvatarPlaceholder from "../../assets/avatar_placeholder.svg"
 
 interface CardProps {
   name: string;
@@ -83,7 +84,7 @@ function Card({
           </div>
           <div className="avatar avatar-xl avatar-rounded">
             <img
-              src={avatarData?.asset}
+              src={avatarData?.asset || AvatarPlaceholder}
               alt="avatar image"
               className="avatar-img"
             />
