@@ -9,7 +9,7 @@ type useChatPayload = {
   agentId: string;
   queryText: string;
   embeddings: [number];
-  history: History[];
+  history: [History,History][];
 };
 export const useChat = () =>
   useMutation({
@@ -20,7 +20,7 @@ export const useChat = () =>
 export const useGetFileNames = (agentId: string) =>
   useQuery({
     queryKey: [QUERY_KEYS.WIZARD_FILE_NAMES, agentId],
-    queryFn: () => elnaRagBackend.get_file_names(agentId),
+    queryFn: () => elnaRagBackend.get_db_file_names(agentId),
     enabled: !!agentId,
     select: response => {
       if (isErrGetFileNames(response)) {
@@ -35,5 +35,5 @@ export const useGetFileNames = (agentId: string) =>
 export const useDeleteCollections = () =>
   useMutation({
     mutationFn: (wizardID: string) =>
-      elnaRagBackend.delete_collections_(wizardID),
+      elnaRagBackend.delete_collection_from_db(wizardID),
   });

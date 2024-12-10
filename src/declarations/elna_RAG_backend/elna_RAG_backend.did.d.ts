@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Principal } from '@dfinity/principal';
 import type { ActorMethod } from '@dfinity/agent';
 import type { IDL } from '@dfinity/candid';
@@ -8,6 +7,7 @@ export interface Envs {
   'external_service_url' : string,
   'wizard_details_canister_id' : string,
   'vectordb_canister_id' : string,
+  'embedding_model_canister_id' : string,
 }
 export type Error = { 'CantParseHost' : null } |
   { 'BodyNonSerializable' : null } |
@@ -28,11 +28,13 @@ export type RejectionCode = { 'NoError' : null } |
   { 'SysFatal' : null } |
   { 'CanisterReject' : null };
 export interface Response { 'body' : Body, 'statusCode' : number }
-export type Result = { 'Ok' : Response } |
-  { 'Err' : Error };
-export type Result_1 = { 'Ok' : string } |
+export type Result = { 'Ok' : string } |
   { 'Err' : [RejectionCode, string] };
-export type Result_2 = { 'Ok' : Array<string> } |
+export type Result_1 = { 'Ok' : Response } |
+  { 'Err' : Error };
+export type Result_2 = { 'Ok' : Array<number> } |
+  { 'Err' : [RejectionCode, string] };
+export type Result_3 = { 'Ok' : Array<string> } |
   { 'Err' : [RejectionCode, string, string] };
 export type Roles = { 'System' : null } |
   { 'User' : null } |
@@ -42,13 +44,25 @@ export interface TransformArgs {
   'response' : HttpResponse,
 }
 export interface _SERVICE {
+  'build_index' : ActorMethod<[string], Result>,
   'chat' : ActorMethod<
-    [string, string, Array<number>, string, Array<History>],
+    [string, string, Array<number>, string, Array<[History, History]>],
+    Result_1
+  >,
+  'create_collection' : ActorMethod<[string, bigint], Result>,
+  'create_index' : ActorMethod<
+    [string, bigint, Array<string>, Array<Array<number>>, string],
     Result
   >,
-  'delete_collections_' : ActorMethod<[string], Result_1>,
-  'get_file_names' : ActorMethod<[string], Result_2>,
+  'delete_collection_from_db' : ActorMethod<[string], Result>,
+  'embedding_model' : ActorMethod<[string], Result_2>,
+  'get_db_file_names' : ActorMethod<[string], Result_3>,
+  'insert_data' : ActorMethod<
+    [string, Array<string>, Array<Array<number>>, string],
+    Result
+  >,
+  'search' : ActorMethod<[string, string, number], Result>,
   'transform' : ActorMethod<[TransformArgs], HttpResponse>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;
-export declare const init: ({ IDL }: { IDL: IDL }) => IDL.Type[];
+export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];
