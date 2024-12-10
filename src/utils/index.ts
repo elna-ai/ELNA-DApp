@@ -80,3 +80,7 @@ export const convertFromMotokoOptional = <T>(value: [T] | []) => {
     variant[status] = null;
     return variant;
   };
+
+  type VariantKeys<T> = T extends any ? keyof T : never;
+
+  export const convertToIDLVariant = <T>(status: VariantKeys<T>) => { return { [status]: null } as T }

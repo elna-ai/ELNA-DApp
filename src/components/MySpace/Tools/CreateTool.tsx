@@ -15,9 +15,10 @@ import {
   CREATE_TOOL_FORM_INITIAL,
   CREATE_TOOL_FORM_VALIDATION,
 } from "../constant";
-import { convertToMotokoOptional } from "utils/index";
+import { convertToIDLVariant, convertToMotokoOptional } from "utils/index";
 import FormikInput from "components/common/FormikInput";
 import ImageUploader from "components/common/ImageUploader";
+import { DeveloperToolStatus } from "declarations/developer_studio/developer_studio.did";
 
 type CreateToolForm = {
   name: string;
@@ -42,7 +43,7 @@ function CreateTool() {
       ...values,
       id: uuidv4(),
       principal: Principal.fromText(wallet!.principalId),
-      status: { pending: null },
+      status: convertToIDLVariant<DeveloperToolStatus>("pending"),
       icon: convertToMotokoOptional(values.icon.image),
       coverImage: convertToMotokoOptional(values.coverImage.image),
       presentationUrl: convertToMotokoOptional(values.presentationUrl),
