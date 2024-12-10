@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 import classNames from "classnames";
 import NoToolImg from "images/no-tool.png";
 
@@ -89,7 +88,7 @@ function ToolCard({
           {tool.category}
         </p>
       </div>
-    </Link>
+    </div>
   );
 }
 

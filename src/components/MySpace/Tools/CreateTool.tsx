@@ -55,7 +55,7 @@ function CreateTool() {
     requestDeveloperTool(request, {
       onSuccess: () => {
         toast.success("Request submitted");
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.DEVELOPER_TOOLS]});
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.DEVELOPER_TOOLS]});
         navigate("/my-space/my-tools");
       },
       onError: e => {

@@ -100,7 +100,7 @@ export const useGetUserTools = () => {
         developerStudioFactory,
         false
       );
-      const result = await developerStudio.getTools();
+      const result = await developerStudio.getUserTools();
       return result;
     },
     enabled: !!wallet?.principalId,
