@@ -41,9 +41,7 @@ function UserTools() {
 
   const renderBody = () => {
     if (isLoading || isUserRequestLoading) return <Spinner size="sm" />;
-
-    if(isDeveloper && isUserToolsLoading) return <Spinner size="sm" />
-
+    
     if (!isLoading && !isDeveloper) {
       if (!isUserRequestLoading && userRequest && userRequest?.length > 0) {
         if (Object.keys(userRequest[userRequest?.length - 1]?.status)[0] !== "approved") {
@@ -53,7 +51,9 @@ function UserTools() {
       else return <NoDeveloperAccess />
     }
 
-    if (userTools?.length === 0) {
+    if(isDeveloper && isUserToolsLoading) return <Spinner size="sm" />
+
+    if (userTools?.length === 0 || !userTools) {
       return <NoTools />;
     }
 
