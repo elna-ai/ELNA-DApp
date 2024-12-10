@@ -52,12 +52,19 @@ export const fixNewlines = (text: string): string =>
 export const removeMultipleNewlines = (text: string): string =>
   text.replace(/\n{2,}/g, "\n");
 
-export const transformHistory = (messages: Message[]): History[] => {
-  return messages.map(({ user, message }) =>
-    user.isBot
-      ? { role: { Assistant: null }, content: message }
-      : { role: { User: null }, content: message }
-  );
+const getHistory = (message: Message) =>
+  message.user.isBot
+    ? { role: { Assistant: null }, content: message.message }
+    : { role: { User: null }, content: message.message };
+
+export const transformHistory = (messages: Message[]): [History, History][] => {
+  const history: [History, History][] = [];
+
+  for (let i = 1; i < messages.length - 1; i++) {
+    history.push([getHistory(messages[i]), getHistory(messages[i + 1])]);
+  }
+
+  return history;
 };
 
 export const generateTwitterShareLink = (content: string, hashtags: string) =>
