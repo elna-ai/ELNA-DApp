@@ -19,6 +19,7 @@ export const useShowTool = (toolId: useShowToolProps) =>
     queryFn: () => developerStudio.getTool(toolId!),
     queryKey: [QUERY_KEYS.PUBLIC_TOOLS_LIST, toolId],
     enabled: !!toolId,
+    staleTime: ONE_HOUR_STALE_TIME,
   });
 
 export const useGetApprovedTools = () =>
