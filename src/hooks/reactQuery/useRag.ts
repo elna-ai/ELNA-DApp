@@ -2,14 +2,14 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { v4 as uuidv4 } from "uuid";
 import { elna_RAG_backend as elnaRagBackend } from "declarations/elna_RAG_backend";
 import { QUERY_KEYS } from "src/constants/query";
-import { isErrGetFileNames } from "utils/ragCanister";
+import { isRagErr } from "utils/ragCanister";
 import { History } from "declarations/elna_RAG_backend/elna_RAG_backend.did";
 
 type useChatPayload = {
   agentId: string;
   queryText: string;
   embeddings: [number];
-  history: [History,History][];
+  history: [History, History][];
 };
 export const useChat = () =>
   useMutation({
@@ -23,7 +23,7 @@ export const useGetFileNames = (agentId: string) =>
     queryFn: () => elnaRagBackend.get_db_file_names(agentId),
     enabled: !!agentId,
     select: response => {
-      if (isErrGetFileNames(response)) {
+      if (isRagErr(response)) {
         throw new Error(Object.keys(response.Err[0]).join());
       }
 

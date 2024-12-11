@@ -13,7 +13,7 @@ import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
 import { useUpdateMessagesReplied } from "hooks/reactQuery/wizards/useAnalytics";
 import { useCreatingQuestionEmbedding } from "hooks/reactQuery/useExternalService";
 import { useChat } from "hooks/reactQuery/useRag";
-import { isErr } from "utils/ragCanister";
+import { isRagErr } from "utils/ragCanister";
 import { useUserStore } from "stores/useUser";
 import { useGetAsset } from "hooks/reactQuery/useElnaImages";
 import { useGetUserProfile } from "hooks/reactQuery/useUser";
@@ -88,7 +88,7 @@ function Chat() {
           },
           {
             onSuccess: response => {
-              if (isErr(response)) {
+              if (isRagErr(response)) {
                 toast.error("something went wrong");
                 console.error(Object.keys(response.Err).join());
                 return;
