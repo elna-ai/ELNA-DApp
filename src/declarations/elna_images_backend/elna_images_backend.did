@@ -1,0 +1,22 @@
+type Asset = record { asset : text; owner : principal; file_name : text };
+type Error = variant {
+  UnableToReadLastId;
+  NotFound;
+  Unauthorized;
+  UnableToDelete;
+  UnableToUpdate;
+  UploaderMismatch;
+};
+type Result = variant { Ok : text; Err : Error };
+type Result_1 = variant { Ok : vec record { text; Asset }; Err : Error };
+type Result_2 = variant { Ok : nat64; Err : Error };
+service : (principal) -> {
+  add_asset : (Asset, opt text) -> (Result);
+  delete_asset : (text) -> (Result);
+  get_all_assets : () -> (Result_1) query;
+  get_asset : (text) -> (opt Asset) query;
+  get_assets_length : () -> (Result_2) query;
+  get_last_id : () -> (Result) query;
+  get_owner : () -> (text) query;
+  set_last_id : (text) -> (Result);
+}

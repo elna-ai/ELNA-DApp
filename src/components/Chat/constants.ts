@@ -5,6 +5,7 @@ import boxydudeimg from "images/avatar/04.png";
 import quantumcomputingimg from "images/avatar/05.png";
 import sathoshiimg from "images/avatar/06.png";
 import sonicimg from "images/avatar/07.png";
+import { X_Handle } from "src/constants";
 
 export const DEFAULT_AGENT_ID = "2";
 
@@ -20,12 +21,13 @@ export const AVATAR_DUMMY_IMAGE = [
 
 export const TWITTER_SHARE_CONTENT = (
   wizardName: string,
-  url: string
-) => `Check this out! I'm talking to this DeAI agent ${wizardName} built by ELNA.ai
+  url: string,
+  userXHandle: string
+) => `Check this out! I'm talking to DeAI agent ${wizardName} built ${userXHandle ? `by @${userXHandle} on` : "on"} ELNA.ai
 
 ${url}
 
-@elna_live is the world's 1st DeAI creation platform.\n\n
+${X_Handle} is the world's 1st DeAI creation platform!\n\n
 `;
 
 export const TWITTER_HASHTAGS =

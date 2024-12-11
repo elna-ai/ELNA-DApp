@@ -16,13 +16,7 @@ module {
 
   public func getToolWithCreator(tool : Types.DeveloperTool, creator : Text) : Types.DeveloperToolWithCreator {
     {
-      creator = creator;
-      id = tool.id;
-      name = tool.name;
-      description = tool.description;
-      projectUrl = tool.projectUrl;
-      category = tool.category;
-      status = tool.status;
+      tool with creator = creator;
     };
   };
 
@@ -52,18 +46,6 @@ module {
         item1.id == item2.id;
       },
     );
-  };
-
-  public func updateToolStatus(tool : Types.DeveloperTool, newStatus : Types.DeveloperToolStatus) : Types.DeveloperTool {
-    {
-      id = tool.id;
-      name = tool.name;
-      description = tool.description;
-      projectUrl = tool.projectUrl;
-      principal = tool.principal;
-      category = tool.category;
-      status = newStatus;
-    };
   };
 
   public func getUserTool(developerTools : Buffer.Buffer<Types.DeveloperTool>, principal : Principal) : [Types.DeveloperTool] {

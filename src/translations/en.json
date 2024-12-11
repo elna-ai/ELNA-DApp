@@ -12,12 +12,19 @@
     "connectWallet": "Connect Wallet",
     "userProfile": "User Profile"
   },
+  "completeLogin": {
+    "modalHeaderTitle": "Login",
+    "modalTitle": "Start Your DeAi Journey Now!",
+    "modalDesc": "Choose Your Wallet",
+    "modalBtn": "Connect Wallet to Login"
+  },
   "sidebar": {
     "plusHeading": "Get more out of {{name}}+",
     "plusDescription": "Craft magical AI Agents and let your AI think how you think",
     "upgradePlan": "Upgrade Plan",
     "home": "Home",
     "create": "Create",
+    "mySpace": "My Space",
     "myAgents": "My Agents",
     "agentMarketplace": "Agent Marketplace",
     "developerStudio": "Developer Studio",
@@ -40,7 +47,7 @@
     "noWizards": "You don't have any created agents",
     "popularWizards": "Specialized AI agents ",
     "popularWizardsDesc": "Each skilled in their own field - a Travel Guide, a Fitness Coach, a Masterful Storyteller, et al.",
-    "myWizardsDesc": "A community-driven, secure <br /> and transparent AI agent creation platform."
+    "myWizardsDesc": "Community-driven, secure <br /> and transparent AI agent creation platform."
   },
   "signIn": {
     "connectWallet": "Connect your wallet",
@@ -62,6 +69,7 @@
     "nameAgent": "Name your Agent",
     "persona": "Persona",
     "avatar": "Avatar",
+    "avatarDesc": "Choose an avatar or upload your own (Maximum size of 500kb)",
     "biography": "Biography",
     "biographyDesc": "A snapshot of your wizard, including their backstory, personality, and interest",
     "greeting": "Greeting",
@@ -101,9 +109,10 @@
         "visibility": "Please select a visibility option"
       }
     },
-    "noPermission": {
-      "title": "Oops! It seems you don't have permission to create agents.",
-      "gainAccess": "To gain access, simply join our whitelist.",
+    "completeProfile": {
+      "modalTitle": "Complete your profile",
+      "title": "Oops! It seems you have not completed your profile.",
+      "gainAccess": "To create agents, Please complete your profile.",
       "askAccess": "Click the link to fill out the form and <a><strong><u>Get started!</u></strong></a>"
     },
     "templateStore": {
@@ -132,12 +141,39 @@
     "principal": "Principal:",
     "roles": "Roles:",
     "requestDevAccess": "Request for Developer access",
+    "updateProfile": "Update profile details",
     "devRequest": {
       "form": {
         "alias": "Alias",
         "email": "Email",
         "github": "Github",
         "description": "Description"
+      }
+    },
+    "add": {
+      "title": "Complete Profile",
+      "description": "Complete your profile, create your agent, and publish it with ease.",
+      "form": {
+        "aliasPlaceHolder": "Enter alias",
+        "aliasLabel": "<span>Alias (Username)*</span><div>Pick a good one! You've got one shot</div>",
+        "principalIdLabel": "Principal ID",
+        "xHandlePlaceHolder": "xHandle",
+        "xHandleLabel": "<span>X handle (Optional)</span> <div>Note: your X handle is important to give credit when sharing your public agent with the ELNA community</div>",
+        "bioPlaceHolder": "Enter Bio",
+        "bioLabel": "Bio(optional)"
+      }
+    },
+    "update": {
+      "title": "Complete Profile",
+      "description": "Complete your profile, create your agent, and publish it with ease.",
+      "form": {
+        "aliasPlaceHolder": "Enter alias",
+        "aliasLabel": "<span>Alias (Username)*</span>",
+        "principalIdLabel": "Principal ID",
+        "xHandlePlaceHolder": "xHandle",
+        "xHandleLabel": "<span>X handle (Optional)</span>",
+        "bioPlaceHolder": "Enter Bio",
+        "bioLabel": "Bio(optional)"
       }
     }
   },
@@ -152,6 +188,24 @@
       "listATool": "List A tool"
     }
   },
+  "mySpace": {
+    "myAgents": {
+      "agentsHeader": "Agents",
+      "agentsHeaderDesc": "Each skilled in their own field - a Travel Guide, a Fitness Coach, a Masterful Storyteller, et al.",
+      "noWizardsHeader":"You don't have any created agents",
+      "noWizardsDesc":"Craft and fine tune your agent",
+      "createAgentBtn":"Create Agent"
+    },
+    "myTools": {
+      "toolsHeader": "Tools",
+      "toolsHeaderDesc": "List Your tools and integrate with agents.",
+      "noAccessHeader":"You don't have Access to upload tools",
+      "noAccessDesc":"Complete Developer Profile and upload your tools and integrate with agents",
+      "noToolsHeader": "You don't Publish or List any tools",
+      "noToolsHeaderDesc": "List your tools and Integrate with agents",
+      "createToolBtn":"Create Tool"
+    }
+  },
   "common": {
     "elna": "ELNA",
     "eywa": "Eywa",
@@ -161,12 +215,12 @@
     "viewAll": "View All",
     "logout": "Log out",
     "cancel": "Cancel",
+    "clear": "Clear",
     "ok": "Ok",
     "template": "Template",
     "scratch": "Scratch",
     "publish": "Publish",
     "loadingPage": "Loading page",
-    "noPermission": "No Permission",
     "next": "Next",
     "backToHome": "Back to home",
     "learning": "Learning",
@@ -178,6 +232,7 @@
     "free": "Free",
     "beta": "Beta",
     "chatter": "Chatter",
+    "creater": "Creator",
     "developer": "Developer",
     "update": "Update {{entity}}",
     "edit": "Edit {{entity}}",

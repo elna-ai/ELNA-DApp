@@ -10,7 +10,7 @@ import {
   WizardDetails,
   WizardUpdateDetails,
 } from "declarations/wizard_details/wizard_details.did";
-import { QUERY_KEYS } from "src/constants/query";
+import { ONE_HOUR_STALE_TIME, QUERY_KEYS } from "src/constants/query";
 import queryClient from "utils/queryClient";
 import { useWallet } from "hooks/useWallet";
 import { toast } from "react-toastify";
@@ -38,6 +38,7 @@ export const useFetchMyWizards = ({ userId }: useFetchMyWizardsProps) =>
     queryKey: [QUERY_KEYS.MY_WIZARDS_LIST, userId],
     queryFn: () => wizard_details.getUserWizards(userId!),
     enabled: !!userId,
+    staleTime: ONE_HOUR_STALE_TIME,
   });
 
 export const useDeleteMyWizard = () => {
@@ -70,7 +71,7 @@ export const useDeleteMyWizard = () => {
 
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MY_WIZARDS_LIST] });
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.POPULAR_WIZARDS_LIST],
+        queryKey: [QUERY_KEYS.PUBLIC_WIZARDS_LIST],
       });
       toast.success(response.message);
     },
@@ -166,7 +167,7 @@ export const usePublishUnpublishWizard = () => {
     onSuccess: response => {
       toast.success(response.message);
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.POPULAR_WIZARDS_LIST],
+        queryKey: [QUERY_KEYS.PUBLIC_WIZARDS_LIST],
       });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.MY_WIZARDS_LIST] });
     },

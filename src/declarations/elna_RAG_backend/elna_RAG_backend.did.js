@@ -3,16 +3,8 @@ export const idlFactory = ({ IDL }) => {
     'external_service_url' : IDL.Text,
     'wizard_details_canister_id' : IDL.Text,
     'vectordb_canister_id' : IDL.Text,
+    'embedding_model_canister_id' : IDL.Text,
   });
-  const Body = IDL.Record({ 'response' : IDL.Text });
-  const Response = IDL.Record({ 'body' : Body, 'statusCode' : IDL.Nat16 });
-  const Error = IDL.Variant({
-    'CantParseHost' : IDL.Null,
-    'BodyNonSerializable' : IDL.Null,
-    'ParseError' : IDL.Null,
-    'HttpError' : IDL.Text,
-  });
-  const Result = IDL.Variant({ 'Ok' : Response, 'Err' : Error });
   const RejectionCode = IDL.Variant({
     'NoError' : IDL.Null,
     'CanisterError' : IDL.Null,
@@ -22,13 +14,32 @@ export const idlFactory = ({ IDL }) => {
     'SysFatal' : IDL.Null,
     'CanisterReject' : IDL.Null,
   });
-  const Result_1 = IDL.Variant({
+  const Result = IDL.Variant({
     'Ok' : IDL.Text,
     'Err' : IDL.Tuple(RejectionCode, IDL.Text),
   });
+  const Roles = IDL.Variant({
+    'System' : IDL.Null,
+    'User' : IDL.Null,
+    'Assistant' : IDL.Null,
+  });
+  const History = IDL.Record({ 'content' : IDL.Text, 'role' : Roles });
+  const Body = IDL.Record({ 'response' : IDL.Text });
+  const Response = IDL.Record({ 'body' : Body, 'statusCode' : IDL.Nat16 });
+  const Error = IDL.Variant({
+    'CantParseHost' : IDL.Null,
+    'BodyNonSerializable' : IDL.Null,
+    'ParseError' : IDL.Null,
+    'HttpError' : IDL.Text,
+  });
+  const Result_1 = IDL.Variant({ 'Ok' : Response, 'Err' : Error });
   const Result_2 = IDL.Variant({
-    'Ok' : IDL.Vec(IDL.Text),
+    'Ok' : IDL.Vec(IDL.Float32),
     'Err' : IDL.Tuple(RejectionCode, IDL.Text),
+  });
+  const Result_3 = IDL.Variant({
+    'Ok' : IDL.Vec(IDL.Text),
+    'Err' : IDL.Tuple(RejectionCode, IDL.Text, IDL.Text),
   });
   const HttpHeader = IDL.Record({ 'value' : IDL.Text, 'name' : IDL.Text });
   const HttpResponse = IDL.Record({
@@ -41,13 +52,39 @@ export const idlFactory = ({ IDL }) => {
     'response' : HttpResponse,
   });
   return IDL.Service({
+    'build_index' : IDL.Func([IDL.Text], [Result], []),
     'chat' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Vec(IDL.Float32), IDL.Text],
+        [
+          IDL.Text,
+          IDL.Text,
+          IDL.Vec(IDL.Float32),
+          IDL.Text,
+          IDL.Vec(IDL.Tuple(History, History)),
+        ],
+        [Result_1],
+        [],
+      ),
+    'create_collection' : IDL.Func([IDL.Text, IDL.Nat64], [Result], []),
+    'create_index' : IDL.Func(
+        [
+          IDL.Text,
+          IDL.Nat64,
+          IDL.Vec(IDL.Text),
+          IDL.Vec(IDL.Vec(IDL.Float32)),
+          IDL.Text,
+        ],
         [Result],
         [],
       ),
-    'delete_collections_' : IDL.Func([IDL.Text], [Result_1], []),
-    'get_file_names' : IDL.Func([IDL.Text], [Result_2], []),
+    'delete_collection_from_db' : IDL.Func([IDL.Text], [Result], []),
+    'embedding_model' : IDL.Func([IDL.Text], [Result_2], []),
+    'get_db_file_names' : IDL.Func([IDL.Text], [Result_3], []),
+    'insert_data' : IDL.Func(
+        [IDL.Text, IDL.Vec(IDL.Text), IDL.Vec(IDL.Vec(IDL.Float32)), IDL.Text],
+        [Result],
+        [],
+      ),
+    'search' : IDL.Func([IDL.Text, IDL.Text, IDL.Int32], [Result], []),
     'transform' : IDL.Func([TransformArgs], [HttpResponse], ['query']),
   });
 };
@@ -56,6 +93,7 @@ export const init = ({ IDL }) => {
     'external_service_url' : IDL.Text,
     'wizard_details_canister_id' : IDL.Text,
     'vectordb_canister_id' : IDL.Text,
+    'embedding_model_canister_id' : IDL.Text,
   });
   return [Envs];
 };

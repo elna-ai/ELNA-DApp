@@ -8,7 +8,6 @@ import {
   useFetchMyWizards,
   usePublishUnpublishWizard,
 } from "hooks/reactQuery/wizards/useMyWizards";
-import { getAvatar } from "src/utils";
 import { useGetAllAnalytics } from "hooks/reactQuery/wizards/useAnalytics";
 import { useUserStore } from "stores/useUser";
 import CheckWizardNameCreateModal from "components/common/CheckWizardNameCreate";
@@ -17,8 +16,8 @@ import DeleteWizardModal from "./DeleteWizardModal";
 import NoWizards from "./NoWizards";
 import Title from "./Title";
 import Card from "../Card";
-import WizardNotLoggedIn from "./WizardNotLoggedIn";
-import { useNavigate } from "react-router-dom";
+import WizardPlaceholder from "../WizardPlaceholder";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDeleteCollections } from "hooks/reactQuery/useRag";
 
 function MyWizards() {
@@ -30,6 +29,7 @@ function MyWizards() {
 
   const wallet = useWallet();
   const navigate = useNavigate();
+  const location = useLocation();
   const isUserLoggedIn = useUserStore(state => state.isUserLoggedIn);
 
   const {
@@ -83,11 +83,13 @@ function MyWizards() {
 
   // TODO: Refactor
   const renderBody = () => {
+
     if (isUserWizardsLoading) {
       return <Spinner className="!flex mx-auto" />;
     }
+
     if (!isUserLoggedIn) {
-      return <WizardNotLoggedIn />;
+      return <WizardPlaceholder />;
     }
 
     if ((userWizards?.length || 0) === 0) {
@@ -99,7 +101,7 @@ function MyWizards() {
         <Title />
         <div className="my-wizards__card-wrapper">
           {userWizards?.map(
-            ({ id, name, description, avatar, isPublished }) => (
+            ({ id, name, description, avatar, isPublished, creatorName }) => (
               <div key={id} className="col">
                 <Card
                   name={name}
@@ -109,10 +111,11 @@ function MyWizards() {
                   handlePublish={(id, shouldPublish) =>
                     publishUnpublishWizard({ wizardId: id, shouldPublish })
                   }
-                  imageUrl={getAvatar(avatar)!.image}
+                  imageId={avatar}
                   handleDelete={handleDeletePopup}
                   messagesReplied={analytics?.[id]?.messagesReplied || 0n}
                   handleEdit={handleEdit}
+                  creatorName={creatorName}
                 />
               </div>
             )
@@ -120,6 +123,7 @@ function MyWizards() {
         </div>
       </>
     );
+
   };
 
   useEffect(() => {
@@ -129,26 +133,29 @@ function MyWizards() {
   }, [isError]);
 
   return (
-    <div className="my-wizards__wrapper">
-      {renderBody()}
-      <div className="my-wizards__footer">
+    <div>
+      <div>
         <div>
-          <div className="my-wizards__footer__title">Create an Ai Agent</div>
-          <div className="my-wizards__footer__description">
-            Craft and fine tune your agent
-          </div>
+          <h2>Agents</h2>
+          <h3>Each skilled......</h3>
         </div>
-        <CheckWizardNameCreateModal>
-          <Button>Create Agent</Button>
-        </CheckWizardNameCreateModal>
+        {
+          !isUserWizardsLoading && ((userWizards?.length || 0) > 0) &&
+          <CheckWizardNameCreateModal>
+            <Button>Create Agent</Button>
+          </CheckWizardNameCreateModal>
+        }
       </div>
-      <DeleteWizardModal
-        isDeleting={isDeletePending}
-        isOpen={isDeleteWizard}
-        wizardName={wizardToDelete?.name}
-        onHide={handleOnHide}
-        handleDelete={() => handleDelete(wizardToDelete!.id)}
-      />
+      <div>
+        {renderBody()}
+        <DeleteWizardModal
+          isDeleting={isDeletePending}
+          isOpen={isDeleteWizard}
+          wizardName={wizardToDelete?.name}
+          onHide={handleOnHide}
+          handleDelete={() => handleDelete(wizardToDelete!.id)}
+        />
+      </div>
     </div>
   );
 }

@@ -6,15 +6,16 @@ import {
 } from "declarations/wizard_details";
 import { Main } from "declarations/wizard_details/wizard_details.did";
 import { useWallet } from "hooks/useWallet";
-import { QUERY_KEYS } from "src/constants/query";
+import { QUERY_KEYS, ONE_HOUR_STALE_TIME } from "src/constants/query";
 
 type useShowWizardProps = string | undefined;
 export const useShowWizard = (wizardId: useShowWizardProps) =>
   useQuery({
     queryFn: () => wizardDetails.getWizard(wizardId!),
-    queryKey: [QUERY_KEYS.POPULAR_WIZARDS_LIST, wizardId],
+    queryKey: [wizardId],
     enabled: !!wizardId,
     select: data => data[0],
+    staleTime: ONE_HOUR_STALE_TIME,
   });
 
 export const useFetchAllWizards = () => {

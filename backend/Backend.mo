@@ -1,7 +1,5 @@
 import Text "mo:base/Text";
 import Nat "mo:base/Nat";
-import Map "mo:motoko-hash-map/Map";
-import { thash } "mo:motoko-hash-map/Map";
 import Bool "mo:base/Bool";
 import Buffer "mo:base/Buffer";
 import Principal "mo:base/Principal";
@@ -10,7 +8,6 @@ import Time "mo:base/Time";
 import Error "mo:base/Error";
 import Iter "mo:base/Iter";
 import Array "mo:base/Array";
-import Debug "mo:base/Debug";
 
 import Types "./Types";
 import Utils "./Utils";
@@ -20,9 +17,8 @@ actor class Backend(_owner : Principal) {
   private stable var owner : Principal = _owner;
   private stable var _whitelistedUsers : [Principal] = [];
   private stable var _adminUsers : [Principal] = [];
-  // TODO: check if userDetails requried?
-  stable var userDetails = Map.new<Types.UserAddress, Types.UserDetails>();
   stable var _userTokens : [(Principal, Types.UserToken)] = [];
+  private stable var _userProfiles : [(Principal, Types.UserProfile)] = [];
   private stable var _developerUsers : [Types.Developer] = [];
   private stable var _developerPendingApproval : [Types.DeveloperApproval] = [];
   // TODO: remove developer tools after new canister check
@@ -31,21 +27,11 @@ actor class Backend(_owner : Principal) {
   var whitelistedUsers = Buffer.Buffer<Principal>(5);
   var adminUsers = Buffer.Buffer<Principal>(5);
   var userTokens = HashMap.HashMap<Principal, Types.UserToken>(5, Principal.equal, Principal.hash);
+  var userProfiles = HashMap.HashMap<Principal, Types.UserProfile>(5, Principal.equal, Principal.hash);
   var developerUsers = Buffer.Buffer<Types.Developer>(10);
   var developerPendingApproval = Buffer.Buffer<Types.DeveloperApproval>(10);
   // TODO: remove developer tools after new canister check
   var developerTools = Buffer.Buffer<Types.DeveloperTool>(10);
-
-  public shared query (message) func isUserWhitelisted(principalId : ?Principal) : async Bool {
-    switch (principalId) {
-      case null {
-        return Utils.isUserWhitelisted(whitelistedUsers, message.caller);
-      };
-      case (?id) {
-        Utils.isUserWhitelisted(whitelistedUsers, id);
-      };
-    };
-  };
 
   public shared (message) func getWhitelistedUser() : async [Principal] {
 
@@ -64,7 +50,7 @@ actor class Backend(_owner : Principal) {
     if (not canUserWhitelist) {
       throw Error.reject("User not authorized for this action");
     };
-
+    // TODO: need to be removed
     let isAlreadyWhitelisted : Bool = Utils.isUserWhitelisted(whitelistedUsers, userId);
 
     switch (isAlreadyWhitelisted) {
@@ -370,6 +356,51 @@ actor class Backend(_owner : Principal) {
     };
   };
 
+  public query func getUserProfile(princial : Principal) : async Types.UserProfile {
+    switch (userProfiles.get(princial)) {
+      case (?userProfile) { return userProfile };
+      case null { throw Error.reject("User Profile not found") };
+    };
+  };
+
+  public query func getAllUserProfiles() : async [(Principal, Types.UserProfile)] {
+    Iter.toArray(userProfiles.entries());
+  };
+
+  public shared ({ caller }) func addUserProfile(profileDetails : Types.UserProfile) : async Text {
+    switch (userProfiles.get(caller)) {
+      case (?_userProfile) {
+        throw Error.reject("User profile Exist");
+      };
+      case null {
+        for (profile in userProfiles.vals()) {
+          if (profile.alias == profileDetails.alias) {
+            throw Error.reject("Alias already exist");
+          };
+        };
+        userProfiles.put(caller, profileDetails);
+        return "User Profile added";
+      };
+    };
+  };
+
+  public shared ({ caller }) func updateUserProfile(profileDetails : Types.UserProfile) : async Text {
+    switch (userProfiles.get(caller)) {
+      case (?_userProfile) {
+        for ((principal, profile) in userProfiles.entries()) {
+          if (profile.alias == profileDetails.alias and principal != caller) {
+            throw Error.reject("Alias already exist");
+          };
+        };
+        userProfiles.put(caller, profileDetails);
+        return "User Profile updated";
+      };
+      case null {
+        throw Error.reject("User profile dose not exist");
+      };
+    };
+  };
+
   func isOwner(callerId : Principal) : Bool {
     callerId == owner;
   };
@@ -378,6 +409,7 @@ actor class Backend(_owner : Principal) {
     _whitelistedUsers := Buffer.toArray(whitelistedUsers);
     _adminUsers := Buffer.toArray(adminUsers);
     _userTokens := Iter.toArray(userTokens.entries());
+    _userProfiles := Iter.toArray(userProfiles.entries());
     _developerUsers := Buffer.toArray(developerUsers);
     _developerPendingApproval := Buffer.toArray(developerPendingApproval);
     _developerTools := Buffer.toArray(developerTools);
@@ -388,6 +420,7 @@ actor class Backend(_owner : Principal) {
     whitelistedUsers := Buffer.fromArray(_whitelistedUsers);
     adminUsers := Buffer.fromArray(_adminUsers);
     userTokens := HashMap.fromIter<Principal, Types.UserToken>(_userTokens.vals(), 5, Principal.equal, Principal.hash);
+    userProfiles := HashMap.fromIter<Principal, Types.UserProfile>(_userProfiles.vals(), 5, Principal.equal, Principal.hash);
     developerUsers := Buffer.fromArray(_developerUsers);
     developerPendingApproval := Buffer.fromArray(_developerPendingApproval);
     developerTools := Buffer.fromArray(_developerTools);

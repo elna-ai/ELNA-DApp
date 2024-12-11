@@ -3,12 +3,9 @@ import { CharacterTextSplitter } from "langchain/text_splitter";
 import { WebPDFLoader } from "langchain/document_loaders/web/pdf";
 import * as pdfJs from "pdfjs-dist";
 import pdfJsWorker from "pdfjs-dist/build/pdf.worker";
+import { History } from "declarations/elna_RAG_backend/elna_RAG_backend.did";
 
-import { AVATAR_IMAGES } from "../constants";
-import { Message } from "../types";
-
-export const getAvatar = (id: string) =>
-  AVATAR_IMAGES.find(avatar => avatar.id === id);
+import { Message, VariantKeys } from "../types";
 
 export const extractDocumentsFromPDF = async (file: File) => {
   const loader = new WebPDFLoader(file, {
@@ -55,15 +52,47 @@ export const fixNewlines = (text: string): string =>
 export const removeMultipleNewlines = (text: string): string =>
   text.replace(/\n{2,}/g, "\n");
 
-export const transformHistory = (messages: Message[]) => {
-  return messages.map(({ user, message }) =>
-    user.isBot
-      ? { role: "assistant", content: message }
-      : { role: "user", content: message }
-  );
+const getHistory = (message: Message) =>
+  message.user.isBot
+    ? { role: { Assistant: null }, content: message.message }
+    : { role: { User: null }, content: message.message };
+
+export const transformHistory = (messages: Message[]): [History, History][] => {
+  const history: [History, History][] = [];
+
+  for (let i = 1; i < messages.length - 1; i++) {
+    history.push([getHistory(messages[i]), getHistory(messages[i + 1])]);
+  }
+
+  return history;
 };
 
 export const generateTwitterShareLink = (content: string, hashtags: string) =>
   `https://twitter.com/intent/tweet?text=${encodeURI(
     content
   )}&hashtags=${hashtags}`;
+
+export const convertToMotokoOptional = <T>(value: T | undefined): [T] | [] =>
+  !!value ? [value] : [];
+
+export const convertFromMotokoOptional = <T>(value: [T] | []) => {
+  return value.length > 0 ? value[0] : undefined;
+};
+
+export const convertFromMotokoVariant = <T extends object>(
+  status: T
+): VariantKeys<T> => {
+  return Object.keys(status)[0] as VariantKeys<T>;
+};
+
+export const convertToMotokoVariant = <T>(
+  status: string
+): Record<string, null> => {
+  const variant: Record<string, null> = {};
+  variant[status] = null;
+  return variant;
+};
+
+export const convertToIDLVariant = <T>(status: VariantKeys<T>) => {
+  return { [status]: null } as T;
+};

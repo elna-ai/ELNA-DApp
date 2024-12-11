@@ -15,7 +15,7 @@ function Footer() {
           <div className="col-xl-12">
             <p className="footer-text">
               <span className="copy-text">{t("footer.name")}</span>{" "}
-              <a href="#" className="" target="_blank">
+              <a href="#" target="_blank">
                 {t("footer.privacyPolicy")}
               </a>
               <span className="footer-link-sep mx-2">|</span>

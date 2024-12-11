@@ -36,6 +36,10 @@ module {
     updatedAt : Time.Time;
   };
 
+  public type WizardDetailsBasicWithCreatorName = WizardDetailsBasicWithTimeStamp and {
+    creatorName : Text;
+  };
+
   public type WizardDetails = WizardDetailsBasic and {
     greeting : Text;
     summary : ?Text;
@@ -45,6 +49,10 @@ module {
   public type WizardDetailsWithTimeStamp = WizardDetails and {
     createdAt : Time.Time;
     updatedAt : Time.Time;
+  };
+
+  public type WizardDetailsWithCreatorName = WizardDetailsWithTimeStamp and {
+    creatorName : Text;
   };
 
   public type WizardUpdateDetails = {
@@ -67,6 +75,12 @@ module {
 
   public type Analytics = {
     #v1 : Analytics_V1;
+  };
+
+  public type UserProfile = {
+    alias : Text;
+    xHandle : ?Text;
+    bio : ?Text;
   };
 
 };

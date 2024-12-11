@@ -1,20 +1,23 @@
 import classNames from "classnames";
+import { useGetAsset } from "hooks/reactQuery/useElnaImages";
 
 import tickSolid from "images/tickSolid.png";
 
 type AvatarImageProps = {
-  image: string;
+  assetId: string;
   selected: boolean;
   onClick?: () => void;
   preview?: boolean;
 };
 
 function AvatarImage({
-  image,
+  assetId,
   selected,
   onClick,
   preview = false,
 }: AvatarImageProps) {
+  const { data, isFetching: isLoading } = useGetAsset(assetId);
+
   return (
     <div
       onClick={onClick}
@@ -26,12 +29,17 @@ function AvatarImage({
       <img
         className={classNames("avatar-image", {
           "avatar-image--preview": preview,
+          "avatar-image--loading": isLoading,
         })}
-        src={image}
-        alt="Avatar"
+        src={data?.asset}
+        alt={isLoading ? "loading" : `avatar ${data?.file_name}`}
       />
       {selected && (
-        <img className="avatar-image__tick" src={tickSolid} alt="tick mark" />
+        <img
+          className="avatar-image__tick"
+          src={tickSolid}
+          alt="selected avatar"
+        />
       )}
     </div>
   );

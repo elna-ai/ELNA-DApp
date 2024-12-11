@@ -2,38 +2,50 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Dropdown, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
-import { getAvatar } from "src/utils";
 import { useGetAllAnalytics } from "hooks/reactQuery/wizards/useAnalytics";
 
 import Card from "./Card";
-import { useFetchPopularWizards } from "hooks/reactQuery/wizards/usePopularWizards";
-import { WizardDetailsBasicWithTimeStamp } from "declarations/wizard_details/wizard_details.did";
-import classNames from "classnames";
+import { useFetchPublicWizards } from "hooks/reactQuery/wizards/usePublicWizards";
+import { WizardDetailsBasicWithCreatorName } from "declarations/wizard_details/wizard_details.did";
+import SearchBarWizards from "./SearchBarWizards";
 
 type SortByOptions = "popularity" | "recentlyUpdated";
 
-function PopularWizards() {
+function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
   const [sortBy, setSortBy] = useState<SortByOptions>("recentlyUpdated");
   const { t } = useTranslation();
+
+  const [suggestionResults, setSuggestionResults] = useState<
+    Array<WizardDetailsBasicWithCreatorName>
+  >([]);
+  const [searchButtonActive, setSearchButtonActive] = useState(false); //When data is displayed somewhere other than suggestions on search button click
+
   const {
     data: popularWizards,
     isFetching: isLoadingPopularWizards,
     isError,
     error,
-  } = useFetchPopularWizards();
+  } = useFetchPublicWizards();
   const { data: analytics } = useGetAllAnalytics();
 
   const sortWizards = (
-    popularWizards: WizardDetailsBasicWithTimeStamp[] | undefined,
+    popularWizards: WizardDetailsBasicWithCreatorName[] | undefined,
     sortBy: SortByOptions
   ) => {
     if (popularWizards === undefined) return undefined;
 
-    let wizardsWithAnalytics = popularWizards.map(agent => ({
+    const chosenWizardArray =
+      searchButtonActive && suggestionResults.length
+        ? suggestionResults
+        : popularWizards;
+
+    let wizardsWithAnalytics = chosenWizardArray.map(agent => ({
       ...agent,
       messagesReplied: analytics?.[agent.id]?.messagesReplied || 0n,
     }));
+
     if (sortBy === "popularity") {
       return wizardsWithAnalytics?.sort(
         (a, b) => Number(b.messagesReplied) - Number(a.messagesReplied)
@@ -76,48 +88,57 @@ function PopularWizards() {
           <p>{t("wizards.popularWizardsDesc")}</p>
         </div>
         <div>
-          <a href="#" className="el-btn-secondary">
-            {t("common.viewAll")}
-          </a>
+          {
+            isHomePage && <Link to="/agent-marketplace" className="el-btn-secondary">
+              {t("common.viewAll")}
+            </Link>
+          }
         </div>
       </div>
-      {!isLoadingPopularWizards && popularWizards?.length && (
-        <Dropdown className="mb-2">
-          <Dropdown.Toggle variant="secondary">Sort</Dropdown.Toggle>
-
-          <Dropdown.Menu>
-            <Dropdown.Item
-              onClick={() => setSortBy("recentlyUpdated")}
-              active={sortBy === "recentlyUpdated"}
-            >
-              {t("common.recentlyUpdated")}
-            </Dropdown.Item>
-            <Dropdown.Item
-              onClick={() => setSortBy("popularity")}
-              active={sortBy === "popularity"}
-            >
-              {t("common.popularity")}
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+      {!isLoadingPopularWizards && popularWizards?.length && !isHomePage && (
+        <div className="mb-3 d-flex justify-content-between align-items-center gap-3">
+          <SearchBarWizards
+            popularWizards={popularWizards}
+            setSearchButtonActive={setSearchButtonActive}
+            suggestionResults={suggestionResults}
+            setSuggestionResults={setSuggestionResults}
+          />
+          <Dropdown>
+            <Dropdown.Toggle variant="secondary">Sort</Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item
+                onClick={() => setSortBy("recentlyUpdated")}
+                active={sortBy === "recentlyUpdated"}
+              >
+                {t("common.recentlyUpdated")}
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={() => setSortBy("popularity")}
+                active={sortBy === "popularity"}
+              >
+                {t("common.popularity")}
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
       )}
       <div className="row gx-3 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
         {isLoadingPopularWizards ? (
           <Spinner className="m-auto" />
         ) : (
           <>
-            {sortWizards(popularWizards, sortBy)?.map(
-              ({ id, name, userId, description, avatar }) => (
+            {sortWizards(popularWizards, sortBy)
+              ?.map(({ id, name, userId, description, avatar, creatorName }) => (
                 <Card
-                  {...{ name, description }}
+                  {...{ name, description, creatorName }}
                   id={id}
                   key={id}
-                  imageUrl={getAvatar(avatar)?.image}
+                  imageId={avatar}
                   userId={userId}
                   messagesReplied={analytics?.[id]?.messagesReplied || 0n}
                 />
-              )
-            )}
+              ))
+            }
           </>
         )}
       </div>

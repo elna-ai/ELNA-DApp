@@ -1,7 +1,7 @@
-import Array "mo:base/Array";
 import Buffer "mo:base/Buffer";
 import Error "mo:base/Error";
 import Principal "mo:base/Principal";
+import Text "mo:base/Text";
 
 import Types "./Types";
 import Utils "./Utils";
@@ -90,7 +90,7 @@ actor class DeveloperStudio(initialArgs : Types.InitialArgs) {
               throw Error.reject("Tool Already approved");
             };
 
-            let updatedTool = Utils.updateToolStatus(tool, #approved);
+            let updatedTool = { tool with status = #approved };
             developerTools.put(index, updatedTool);
             return "Request approved";
           };
@@ -121,7 +121,7 @@ actor class DeveloperStudio(initialArgs : Types.InitialArgs) {
               throw Error.reject("Tool already rejected");
             };
 
-            let updatedTool = Utils.updateToolStatus(tool, #rejected);
+            let updatedTool = { tool with status = #rejected };
             developerTools.put(index, updatedTool);
             return "Request rejected";
           };
@@ -135,6 +135,28 @@ actor class DeveloperStudio(initialArgs : Types.InitialArgs) {
 
   public shared query ({ caller }) func getUserTools() : async [Types.DeveloperTool] {
     Utils.getUserTool(developerTools, caller);
+  };
+
+  public func getTool(toolId : Text) : async Types.DeveloperToolWithCreator {
+    let tool = Utils.getTool(developerTools, toolId);
+    switch (tool) {
+      case (?tool) {
+        let developerUsers = await UserManagementCanister.getDevelopers();
+        let creator = Utils.getToolOwner(developerUsers, tool.principal);
+        switch (creator) {
+          case (?user) {
+            Utils.getToolWithCreator(tool, user.alias);
+          };
+          case null {
+            Utils.getToolWithCreator(tool, "");
+          };
+          //
+        };
+      };
+      case null {
+        throw Error.reject("Tool not found");
+      };
+    };
   };
 
   system func preupgrade() {

@@ -5,6 +5,7 @@ import type { IDL } from '@dfinity/candid';
 export interface DeveloperStudio {
   'approvePendingDeveloperTool' : ActorMethod<[string], string>,
   'getApprovedTools' : ActorMethod<[], Array<DeveloperToolWithCreator>>,
+  'getTool' : ActorMethod<[string], DeveloperToolWithCreator>,
   'getTools' : ActorMethod<[], Array<DeveloperTool>>,
   'getUserTools' : ActorMethod<[], Array<DeveloperTool>>,
   'rejectDeveloperTool' : ActorMethod<[string], string>,
@@ -14,8 +15,12 @@ export interface DeveloperTool {
   'id' : string,
   'status' : DeveloperToolStatus,
   'principal' : Principal,
+  'icon' : [] | [string],
   'name' : string,
   'description' : string,
+  'coverImage' : [] | [string],
+  'presentationUrl' : [] | [string],
+  'demoUrl' : [] | [string],
   'category' : string,
   'projectUrl' : string,
 }
@@ -27,12 +32,16 @@ export interface DeveloperToolWithCreator {
   'id' : string,
   'status' : DeveloperToolStatus,
   'creator' : string,
+  'icon' : [] | [string],
   'name' : string,
   'description' : string,
+  'coverImage' : [] | [string],
+  'presentationUrl' : [] | [string],
+  'demoUrl' : [] | [string],
   'category' : string,
   'projectUrl' : string,
 }
 export interface InitialArgs { 'userManagementCanisterId' : Principal }
 export interface _SERVICE extends DeveloperStudio {}
 export declare const idlFactory: IDL.InterfaceFactory;
-export declare const init: ({ IDL }: { IDL: IDL }) => IDL.Type[];
+export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

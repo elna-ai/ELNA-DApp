@@ -15,7 +15,6 @@ import Header from "components/common/Header";
 import Footer from "components/common/Footer";
 import PageLoader from "components/common/PageLoader";
 import PrivateRoute from "components/common/PrivateRoute";
-import CreateAgent from "components/CreateAgent";
 import Page404 from "common/Page404";
 import queryClient from "utils/queryClient";
 import "common/i18n";
@@ -23,7 +22,11 @@ import "common/i18n";
 import "stylesheets/index.scss";
 import "remixicon/fonts/remixicon.css";
 import "react-toastify/dist/ReactToastify.css";
-import Profile from "components/Profile";
+import MySpace from "components/MySpace";
+import ToolDetails from "components/DeveloperStudio/ToolDetails";
+import CreateAgent from "components/CreateAgent";
+import AddProfile from "components/MySpace/Profile/AddProfile";
+import PopularWizards from "components/ViewAgents/PopularWizards";
 import DeveloperStudio from "components/DeveloperStudio";
 
 function App() {
@@ -35,7 +38,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <div
-            className={classNames("hk-wrapper full-width", {
+            className={classNames("hk-wrapper w-100vw", {
               default: isExpanded,
               collapsed: !isExpanded,
             })}
@@ -53,8 +56,16 @@ function App() {
                         <Route path="/chat/:id?" element={<Chat />} />
                         <Route path="/" element={<ViewAgents />} />
                         <Route
+                          path="/my-space/*"
+                          element={<MySpace />}
+                        />
+                        <Route
                           path="/create-agent/*"
                           element={<CreateAgent />}
+                        />
+                        <Route
+                          path="/agent-marketplace/*"
+                          element={<PopularWizards isHomePage={false}/>}
                         />
                         <Route
                           path="/developer-studio/*"
@@ -64,7 +75,8 @@ function App() {
                           path="/admin/*"
                           element={<PrivateRoute component={AdminDashboard} />}
                         />
-                        <Route path="/profile/*" element={<Profile />} />
+                        <Route path="/profile/add" element={<AddProfile />} />
+                        <Route path="/tool-details/:id?" element={<ToolDetails />} />
                         <Route path="*" element={<Page404 />} />
                       </Routes>
                     )}

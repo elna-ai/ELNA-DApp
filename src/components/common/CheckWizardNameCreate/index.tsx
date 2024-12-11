@@ -2,9 +2,10 @@ import { ReactNode, useState } from "react";
 
 import Modal from "react-bootstrap/Modal";
 import { useUserStore } from "stores/useUser";
-import { useIsUserWhiteListed } from "hooks/reactQuery/useUser";
+import { useGetUserProfile } from "hooks/reactQuery/useUser";
+import { useWallet } from "hooks/useWallet";
 
-import NoPermission from "./NoPermission";
+import CompleteProfile from "./CompleteProfile";
 import CheckNameUnique from "./CheckNameUnique";
 import WalletList from "../Header/WalletList";
 import PageLoader from "../PageLoader";
@@ -17,9 +18,10 @@ function CheckWizardNameCreateModal({
   const [isCreate, setIsCreate] = useState(false);
   const [isWalletListOpen, setIsWalletListOpen] = useState(false);
 
+  const wallet = useWallet();
   const isUserLoggedIn = useUserStore(state => state.isUserLoggedIn);
-  const { data: isUserWhitelisted, isFetching: isUserWhitelistedLoading } =
-    useIsUserWhiteListed();
+  const { data: userProfile, isFetching: isUserProfileLoading } =
+    useGetUserProfile(wallet?.principalId);
 
   const handleCreate = async () => {
     if (!isUserLoggedIn) {
@@ -40,17 +42,17 @@ function CheckWizardNameCreateModal({
         centered
         show={isCreate}
         onHide={() => {
-          !isUserWhitelistedLoading && setIsCreate(false);
+          !isUserProfileLoading && setIsCreate(false);
         }}
       >
-        {isUserWhitelistedLoading ? (
+        {isUserProfileLoading ? (
           <Modal.Body style={{ height: "200px" }}>
             <PageLoader />
           </Modal.Body>
-        ) : isUserWhitelisted ? (
+        ) : userProfile ? (
           <CheckNameUnique setIsCreate={setIsCreate} />
         ) : (
-          <NoPermission />
+          <CompleteProfile />
         )}
       </Modal>
 

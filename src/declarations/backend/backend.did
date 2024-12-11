@@ -1,3 +1,9 @@
+type UserProfile = 
+ record {
+   alias: text;
+   bio: opt text;
+   xHandle: opt text;
+ };
 type DeveloperStatus = 
  variant {
    approved;
@@ -31,23 +37,29 @@ type Developer =
 type Backend = 
  service {
    addAdmin: (principal) -> (text);
+   addUserProfile: (UserProfile) -> (text);
    approvePendingDeveloper: (text) -> (text);
    enableDeveloperAccess: (text) -> (text);
    generateUserToken: () -> (text);
+   getAllUserProfiles: () -> (vec record {
+                                    principal;
+                                    UserProfile;
+                                  }) query;
    getDevelopers: () -> (vec Developer) query;
    getPendingDevelopers: () -> (vec DeveloperApproval);
+   getUserProfile: (principal) -> (UserProfile) query;
    getUserRequests: () -> (vec DeveloperApproval) query;
    getUserToken: (principal) -> (text);
    getWhitelistedUser: () -> (vec principal);
    isDeveloper: () -> (bool);
    isPrincipalAdmin: (principal) -> (bool) query;
    isUserAdmin: () -> (bool) query;
-   isUserWhitelisted: (opt principal) -> (bool) query;
    rejectPendingDeveloper: (text) -> (text);
    removeAdmin: (principal) -> (text);
    removeWhitelistedUser: (principal) -> (text);
    requestDeveloperAccess: (DeveloperApproval) -> (bool);
    revokeDeveloperAccess: (text) -> (text);
+   updateUserProfile: (UserProfile) -> (text);
    whitelistUser: (principal) -> (text);
  };
 service : (principal) -> Backend

@@ -1,15 +1,18 @@
+import { useGetAsset } from "hooks/reactQuery/useElnaImages";
 import { Dropdown } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import AvatarPlaceholder from "../../assets/avatar_placeholder.svg"
 
 interface CardProps {
   name: string;
   description: string;
-  imageUrl?: string;
+  imageId?: string;
   userId?: string;
   id: string;
   isPublished?: boolean;
   messagesReplied: bigint;
+  creatorName: string;
   price?: number;
   handleDelete?: (id: string, name: string) => void;
   handlePublish?: (id: string, isPublished: boolean) => void;
@@ -19,29 +22,26 @@ interface CardProps {
 function Card({
   name,
   description,
-  imageUrl,
+  imageId,
   userId,
   id,
   isPublished,
   messagesReplied,
+  creatorName,
   price = 0,
   handleDelete,
   handlePublish,
   handleEdit,
 }: CardProps) {
   const { t } = useTranslation();
+  const { data: avatarData } = useGetAsset(imageId);
 
   const displayAddress = (principal: string) => {
     const firstPart = principal.substring(0, 5);
     const lastPart = principal.substring(principal.length - 3);
     return `${firstPart}...${lastPart}`;
   };
-
-  const Avatar = ({ name }: { name: string }) => (
-    <div className="avatar avatar-xl avatar-soft-primary avatar-rounded bg-gray-300 text-green-700">
-      <span className="initial-wrap">{name[0].toUpperCase()}</span>
-    </div>
-  );
+  const creator = creatorName ? creatorName : displayAddress(userId || "");
 
   return (
     <div className="col">
@@ -83,11 +83,11 @@ function Card({
             )}
           </div>
           <div className="avatar avatar-xl avatar-rounded">
-            {imageUrl ? (
-              <img src={imageUrl} alt="user" className="avatar-img" />
-            ) : (
-              <Avatar {...{ name }} />
-            )}
+            <img
+              src={avatarData?.asset || AvatarPlaceholder}
+              alt="avatar image"
+              className="avatar-img"
+            />
           </div>
           <div className="user-name text-truncate">
             <Link to={`/chat/${id}`} className="btn-link stretched-link">
@@ -101,9 +101,7 @@ function Card({
             <i className="ri-chat-4-line"></i>
             <span>{messagesReplied.toString()}</span>
           </div>
-          <span className="fs-7 ms-auto lh-1">
-            {userId && displayAddress(userId)}
-          </span>
+          <span className="fs-7 ms-auto lh-1">{creator}</span>
         </div>
       </div>
     </div>

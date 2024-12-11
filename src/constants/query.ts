@@ -1,5 +1,5 @@
 export const QUERY_KEYS = {
-  POPULAR_WIZARDS_LIST: "popular-wizards-list",
+  PUBLIC_WIZARDS_LIST: "public-wizards-list",
   MY_WIZARDS_LIST: "my-wizards-list",
   WHITELISTED_USERS: "whitelisted-users-list",
   IS_USER_ADMIN: "is-user-admin",
@@ -12,6 +12,10 @@ export const QUERY_KEYS = {
   USER_PENDING_REQUEST: "user-pending-request",
   APPROVED_DEVELOPER_TOOLS: "approved-developer-tools",
   DEVELOPER_TOOLS: "developer-tools",
+  PUBLIC_TOOLS_LIST: "public-tools-list",
+  USER_PROFILE: "user-profile",
+  AVATAR_IMAGE: "avatar-image",
 };
 
-export const DEFAULT_STALE_TIME = 3_600_000; // 1 hour
+/** 1 hour */
+export const ONE_HOUR_STALE_TIME = 60 * 60 * 1000;

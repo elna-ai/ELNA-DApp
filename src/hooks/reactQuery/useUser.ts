@@ -2,12 +2,13 @@ import { Principal } from "@dfinity/principal";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useUserStore } from "stores/useUser";
-import { QUERY_KEYS } from "src/constants/query";
+import { ONE_HOUR_STALE_TIME, QUERY_KEYS } from "src/constants/query";
 import { useWallet } from "hooks/useWallet";
-import { Backend } from "declarations/backend/backend.did";
+import { Backend, UserProfile } from "declarations/backend/backend.did";
 import {
   canisterId as backendId,
   idlFactory as backendFactory,
+  backend,
 } from "declarations/backend";
 import queryClient from "utils/queryClient";
 
@@ -109,26 +110,6 @@ export const useAddWhitelistedUser = () => {
   });
 };
 
-export const useIsUserWhiteListed = () => {
-  const wallet = useWallet();
-
-  return useQuery({
-    queryFn: async () => {
-      if (wallet === undefined) throw Error("user not logged in");
-
-      const backend: Backend = await wallet.getCanisterActor(
-        backendId,
-        backendFactory,
-        false
-      );
-      const response = await backend.isUserWhitelisted([]);
-      return response;
-    },
-    queryKey: [QUERY_KEYS.WHITELISTED_USERS, wallet?.principalId],
-    enabled: !!wallet?.principalId,
-  });
-};
-
 export const useIsUserAdmin = () => {
   const wallet = useWallet();
 
@@ -146,5 +127,56 @@ export const useIsUserAdmin = () => {
     },
     queryKey: [wallet?.principalId, QUERY_KEYS.IS_USER_ADMIN],
     enabled: !!wallet?.principalId,
+  });
+};
+
+export const useGetUserProfile = (principal?: string) =>
+  useQuery({
+    queryFn: () => {
+      if (principal === undefined) {
+        throw new Error("principal not available");
+      }
+
+      return backend.getUserProfile(Principal.fromText(principal));
+    },
+    queryKey: [QUERY_KEYS.USER_PROFILE, principal],
+    enabled: !!principal,
+    retry: false,
+    staleTime: ONE_HOUR_STALE_TIME,
+  });
+
+export const useAddUserProfile = () => {
+  const wallet = useWallet();
+
+  return useMutation({
+    mutationFn: async (payload: UserProfile) => {
+      if (wallet === undefined) throw Error("user not logged in");
+
+      const backend: Backend = await wallet.getCanisterActor(
+        backendId,
+        backendFactory,
+        false
+      );
+      const response = await backend.addUserProfile(payload);
+      return response;
+    },
+  });
+};
+
+export const useUpdateUserProfile = () => {
+  const wallet = useWallet();
+
+  return useMutation({
+    mutationFn: async (payload: UserProfile) => {
+      if (wallet === undefined) throw Error("user not logged in");
+
+      const backend: Backend = await wallet.getCanisterActor(
+        backendId,
+        backendFactory,
+        false
+      );
+      const response = await backend.updateUserProfile(payload);
+      return response;
+    },
   });
 };

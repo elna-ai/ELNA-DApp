@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { wizard_details as wizardDetails } from "declarations/wizard_details";
-import { QUERY_KEYS } from "src/constants/query";
+import { ONE_HOUR_STALE_TIME, QUERY_KEYS } from "src/constants/query";
 
 export const useGetAllAnalytics = () =>
   useQuery({
@@ -17,6 +17,7 @@ export const useGetAllAnalytics = () =>
       });
       return analytics;
     },
+    staleTime: ONE_HOUR_STALE_TIME,
   });
 
 export const useUpdateMessagesReplied = () =>

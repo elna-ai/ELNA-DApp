@@ -74,16 +74,16 @@ export const SIDEBAR_LINK: SidebarLinkProps[][] = [
       isComingSoon: false,
     },
     {
-      to: "/create-agent",
+      to: "/my-space/profile",
       Icon: () => <i className="ri-lg ri-robot-2-fill"></i>,
-      key: "myAgents",
+      key: "mySpace",
       isComingSoon: false,
     },
     {
       to: "/agent-marketplace",
       Icon: () => <i className="ri-lg ri-store-3-fill"></i>,
       key: "agentMarketplace",
-      isComingSoon: true,
+      isComingSoon: false,
     },
     {
       to: "/developer-studio",

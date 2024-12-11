@@ -6,7 +6,7 @@ import {
   idlFactory as backendFactory,
   backend,
 } from "declarations/backend";
-import { QUERY_KEYS } from "src/constants/query";
+import { ONE_HOUR_STALE_TIME, QUERY_KEYS } from "src/constants/query";
 import queryClient from "utils/queryClient";
 
 export const useIsDeveloper = () => {
@@ -26,6 +26,7 @@ export const useIsDeveloper = () => {
     },
     queryKey: [QUERY_KEYS.IS_USER_DEVELOPER, wallet?.principalId],
     enabled: !!wallet?.principalId,
+    staleTime: ONE_HOUR_STALE_TIME,
   });
 };
 
@@ -117,6 +118,7 @@ export const useGetUserRequest = () => {
       const result = await backend.getUserRequests();
       return result;
     },
+    staleTime: ONE_HOUR_STALE_TIME,
   });
 };
 

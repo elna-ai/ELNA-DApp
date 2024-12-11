@@ -6,18 +6,17 @@ import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
 import PageLoader from "components/common/PageLoader";
-import {
-  generateTwitterShareLink,
-  getAvatar,
-  transformHistory,
-} from "src/utils";
+import { generateTwitterShareLink, transformHistory } from "src/utils";
 import useAutoSizeTextArea from "hooks/useAutoResizeTextArea";
 import { Message } from "src/types";
 import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
 import { useUpdateMessagesReplied } from "hooks/reactQuery/wizards/useAnalytics";
 import { useCreatingQuestionEmbedding } from "hooks/reactQuery/useExternalService";
 import { useChat } from "hooks/reactQuery/useRag";
-import { isErr } from "utils/ragCanister";
+import { isRagErr } from "utils/ragCanister";
+import { useUserStore } from "stores/useUser";
+import { useGetAsset } from "hooks/reactQuery/useElnaImages";
+import { useGetUserProfile } from "hooks/reactQuery/useUser";
 
 import Bubble from "./Bubble";
 import NoHistory from "./NoHistory";
@@ -32,6 +31,7 @@ function Chat() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const lastBubbleRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
+  const isUserLoggedIn = useUserStore(state => state.isUserLoggedIn);
   const {
     data: wizard,
     isFetching: isLoadingWizard,
@@ -42,6 +42,9 @@ function Chat() {
   const { mutate: createQuestionEmbedding } = useCreatingQuestionEmbedding();
   useAutoSizeTextArea(inputRef.current, messageInput);
   const { mutate: sendChat, isPending: isResponseLoading } = useChat();
+  const { data: avatar } = useGetAsset(wizard?.avatar);
+  const { data: userProfile, isFetching: isUserProfileLoading } =
+    useGetUserProfile(wizard?.userId);
 
   useEffect(() => {
     if (!isError) return;
@@ -71,8 +74,6 @@ function Chat() {
 
   const handleSubmit = async () => {
     const message = messageInput.trim();
-    // TODO: add history support to rag
-    // const history = transformHistory(messages);
     setMessages(prev => [...prev, { user: { name: "User" }, message }]);
     setMessageInput("");
     createQuestionEmbedding(message, {
@@ -83,10 +84,11 @@ function Chat() {
             agentId: wizard!.id,
             queryText: message,
             embeddings,
+            history: isUserLoggedIn ? [] : transformHistory(messages),
           },
           {
             onSuccess: response => {
-              if (isErr(response)) {
+              if (isRagErr(response)) {
                 toast.error("something went wrong");
                 console.error(Object.keys(response.Err).join());
                 return;
@@ -134,7 +136,7 @@ function Chat() {
                 <div className="chat-header__avatar">
                   <div className="avatar">
                     <img
-                      src={getAvatar(wizard.avatar)?.image}
+                      src={avatar?.asset}
                       alt="user"
                       className="avatar-img"
                     />
@@ -151,7 +153,8 @@ function Chat() {
                   href={generateTwitterShareLink(
                     `${TWITTER_SHARE_CONTENT(
                       wizard.name,
-                      `${window.location.origin}/chat/${id}`
+                      `${window.location.origin}/chat/${id}`,
+                      userProfile?.xHandle[0] || ""
                     )}`,
                     TWITTER_HASHTAGS
                   )}

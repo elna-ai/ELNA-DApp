@@ -13,11 +13,12 @@ type WizardUpdateDetails =
    name: text;
    visibility: WizardVisibility;
  };
-type WizardDetailsBasicWithTimeStamp = 
+type WizardDetailsBasicWithCreatorName = 
  record {
    avatar: text;
    biography: text;
    createdAt: Time;
+   creatorName: text;
    description: text;
    id: text;
    isPublished: bool;
@@ -54,14 +55,15 @@ type Main =
                                }) query;
    getAllWizards: () -> (vec WizardDetails);
    getAnalytics: (text) -> (Analytics_V1) query;
-   getUserWizards: (text) -> (vec WizardDetailsBasicWithTimeStamp) query;
+   getUserWizards: (text) -> (vec WizardDetailsBasicWithCreatorName);
    getWizard: (text) -> (opt WizardDetails) query;
-   getWizards: () -> (vec WizardDetailsBasicWithTimeStamp) query;
+   getWizards: () -> (vec WizardDetailsBasicWithCreatorName);
    isWizardNameValid: (text) -> (bool) query;
    publishWizard: (text) -> (Response);
    unpublishWizard: (text) -> (Response);
    updateMessageAnalytics: (text) -> ();
    updateWizard: (text, WizardUpdateDetails) -> (text);
+   updateWizardAdmin: (text, text) -> (text);
  };
 type InitalArgs = 
  record {
