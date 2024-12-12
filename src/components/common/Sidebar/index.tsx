@@ -10,7 +10,7 @@ import { useIsUserAdmin } from "hooks/reactQuery/useUser";
 import useIsMobileScreen from "../../../hooks/useIsMobileScreen";
 // import useIsMobileScreen from "hooks/useIsMobileScreen";
 
-import brandSm from "images/brandSm.svg"
+import BrandSm from "images/brandSm.svg?react"
 import ElanLogo from "images/logoElna.svg?react";
 import ExpandButton from "./ExpandButton";
 import SideBarLink from "./SideBarLink";
@@ -103,11 +103,7 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
             position: "fixed",
             zIndex: "1035",
           }}>
-          <img
-            src={brandSm}
-            className="brand-img img-fluid"
-            style={{ height: "41px" }}
-          />
+          <BrandSm className="brand-img img-fluid" style={{ height: "41px" }} />
         </Link>
       </>
     );
