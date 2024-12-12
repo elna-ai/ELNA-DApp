@@ -92,18 +92,8 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
             <i className="ri-menu-line" style={{ fontSize: "30px" }} />
           )}
         </div>
-        <Link to="/" className="navbar-brand"
-          style={{
-            height: "65px",
-            width: "72px",
-            marginLeft: "55px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "fixed",
-            zIndex: "1035",
-          }}>
-          <BrandSm className="brand-img img-fluid" style={{ height: "41px" }} />
+        <Link to="/" className="navbar-brand navbar-brand-homeBtn">
+          <BrandSm className="brand-img img-fluid" style={{ height: "41px", width: "41px" }} />
         </Link>
       </>
     );
