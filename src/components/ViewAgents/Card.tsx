@@ -3,6 +3,7 @@ import { Dropdown } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import AvatarPlaceholder from "../../assets/avatar_placeholder.svg"
+import classNames from "classnames";
 
 interface CardProps {
   name: string;
@@ -96,12 +97,17 @@ function Card({
           </div>
           <div className="user-desg text-truncate">{description}</div>
         </div>
-        <div className="d-flex card-footer position-relative align-items-center">
+        <div className="d-flex card-footer position-relative justify-content-between align-items-center">
           <div className="d-flex align-items-center gap-1">
             <i className="ri-chat-4-line"></i>
             <span>{messagesReplied.toString()}</span>
           </div>
-          <span className="fs-7 ms-auto lh-1">{creator}</span>
+          <span className={classNames(
+            "badge",
+            "tool-card__footer__badge",
+            "mb-0", { "bg-secondary": !isPublished, "bg-primary": isPublished },
+          )}>{isPublished ? "Published" : "Unpublished"}</span>
+          <span className="fs-7 lh-1">{creator}</span>
         </div>
       </div>
     </div>
