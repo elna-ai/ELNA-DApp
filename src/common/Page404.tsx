@@ -1,6 +1,6 @@
 import { Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import Image404 from "../images/404-error.png";
+import Image404 from "../images/404-error.webp";
 
 function Page404() {
   const { t } = useTranslation();
