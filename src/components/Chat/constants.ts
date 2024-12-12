@@ -1,7 +1,5 @@
 import { X_Handle } from "src/constants";
 
-export const DEFAULT_AGENT_ID = "2";
-
 export const TWITTER_SHARE_CONTENT = (
   wizardName: string,
   url: string,
