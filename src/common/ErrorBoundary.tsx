@@ -2,7 +2,7 @@ import React, { ErrorInfo, ReactNode } from "react";
 
 import { Button } from "react-bootstrap";
 import { t } from "i18next";
-import Image404 from "../images/404-error.png";
+import Image404 from "../images/404-error.webp";
 import { Trans } from "react-i18next";
 
 interface ErrorBoundaryProps {

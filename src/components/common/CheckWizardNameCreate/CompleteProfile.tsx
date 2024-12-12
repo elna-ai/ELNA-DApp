@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import Modal from "react-bootstrap/Modal";
-import NoAccessImage from "images/no-access.png";
+import NoAccessImage from "images/no-access.webp";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 

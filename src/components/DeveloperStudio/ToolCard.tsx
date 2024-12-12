@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import classNames from "classnames";
-import NoToolImg from "images/no-tool.png";
+import NoToolImg from "images/no-tool.webp";
 
 import {
   DeveloperToolStatus,
