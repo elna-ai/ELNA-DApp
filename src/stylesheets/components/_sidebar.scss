@@ -121,6 +121,17 @@
   white-space: nowrap;
 }
 
+.navbar-brand-homeBtn {
+  height: 65px;
+  width: 72px;
+  margin-left: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 1035;
+}
+
 .hk-wrapper .hk-menu .menu-header {
   position: relative;
   padding: 0.5rem 1.1875rem;
