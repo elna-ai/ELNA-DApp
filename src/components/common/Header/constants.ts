@@ -1,11 +1,11 @@
 import { t } from "i18next";
 
-import icp from "images/icp.png";
-import soticWallet from "images/soticWallet.png";
-import InfinityLogo from "images/InfinityLogo.png";
-import PlugIcon from "images/plug.png";
+import icp from "images/icp.webp";
+import soticWallet from "images/soticWallet.webp";
+import InfinityLogo from "images/InfinityLogo.webp";
+import PlugIcon from "images/plug.webp";
 import astroMeLogo from "images/astroMe.jpg";
-import nfidLogo from "images/nfid.png";
+import nfidLogo from "images/nfid.webp";
 import metaMaskLogo from "images/metaMaskWallet.svg";
 
 // TODO: Figure out why t() is not working
