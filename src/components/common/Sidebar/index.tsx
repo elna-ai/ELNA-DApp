@@ -10,7 +10,7 @@ import { useIsUserAdmin } from "hooks/reactQuery/useUser";
 import useIsMobileScreen from "../../../hooks/useIsMobileScreen";
 // import useIsMobileScreen from "hooks/useIsMobileScreen";
 
-import brandSm from "images/brandSm.png";
+import brandSm from "images/brandSm.svg"
 import ElanLogo from "images/logoElna.svg?react";
 import ExpandButton from "./ExpandButton";
 import SideBarLink from "./SideBarLink";
@@ -43,61 +43,73 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
 
   if (isMobile) {
     return (
-      <div
-        className="menu-header"
-        style={{
-          height: "65px",
-          width: "72px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "fixed",
-          zIndex: "999999",
-        }}
-        onClick={handleExpand}
-      >
-        {isExpanded ? (
-          <Modal show={true} fullscreen="xxl-down">
-            <Modal.Header closeButton />
-            <Modal.Body>
-              <ul className="navbar-nav flex-column">
-                {sideBarLink.map(linkGroup => (
-                  <div className="menu-sidebar-card">
-                    {linkGroup.map((link: SidebarLinkProps) => (
-                      <OverlayTrigger
-                        key={link.key}
-                        placement="right-end"
-                        overlay={
-                          link.isComingSoon ? (
-                            <Tooltip className="tooltip-menu">
-                              {t("common.comingSoon")}
-                            </Tooltip>
-                          ) : (
-                            <span></span>
-                          )
-                        }
-                      >
-                        <div>
-                          <SideBarLink link={link} />
-                        </div>
-                      </OverlayTrigger>
-                    ))}
-                  </div>
-                ))}
-              </ul>
-            </Modal.Body>
-          </Modal>
-        ) : (
-          <>
-            <img
-              src={brandSm}
-              className="brand-img img-fluid"
-              style={{ height: "41px" }}
-            />
-            <i className="ri-menu-line" style={{ fontSize: "24px" }} />
-          </>
-        )}
-      </div>
+      <>
+        <div
+          className="menu-header"
+          style={{
+            height: "65px",
+            width: "72px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "fixed",
+            zIndex: "999999",
+          }}
+          onClick={handleExpand}
+        >
+          {isExpanded ? (
+            <Modal show={true} fullscreen="xxl-down">
+              <Modal.Header closeButton />
+              <Modal.Body>
+                <ul className="navbar-nav flex-column">
+                  {sideBarLink.map(linkGroup => (
+                    <div className="menu-sidebar-card">
+                      {linkGroup.map((link: SidebarLinkProps) => (
+                        <OverlayTrigger
+                          key={link.key}
+                          placement="right-end"
+                          overlay={
+                            link.isComingSoon ? (
+                              <Tooltip className="tooltip-menu">
+                                {t("common.comingSoon")}
+                              </Tooltip>
+                            ) : (
+                              <span></span>
+                            )
+                          }
+                        >
+                          <div>
+                            <SideBarLink link={link} />
+                          </div>
+                        </OverlayTrigger>
+                      ))}
+                    </div>
+                  ))}
+                </ul>
+              </Modal.Body>
+            </Modal>
+          ) : (
+            <i className="ri-menu-line" style={{ fontSize: "30px" }} />
+          )}
+        </div>
+        <Link to="/" className="navbar-brand"
+          style={{
+            height: "65px",
+            width: "72px",
+            marginLeft: "55px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "fixed",
+            zIndex: "1035",
+          }}>
+          <img
+            src={brandSm}
+            className="brand-img img-fluid"
+            style={{ height: "41px" }}
+          />
+        </Link>
+      </>
     );
   }
 
@@ -120,14 +132,11 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
                 style={{ width: "200px" }}
               />
             ) : (
-              <>
-                <img
-                  src={brandSm}
-                  className="brand-img img-fluid"
-                  style={{ height: "41px" }}
-                />
-                <span></span>
-              </>
+              <img
+                src={brandSm}
+                className="brand-img img-fluid"
+                style={{ height: "41px" }}
+              />
             )}
           </Link>
         </span>
