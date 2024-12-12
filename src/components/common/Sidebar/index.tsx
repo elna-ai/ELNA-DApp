@@ -117,13 +117,7 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
                 className="brand-img img-fluid"
                 style={{ width: "200px" }}
               />
-            ) : (
-              <img
-                src={brandSm}
-                className="brand-img img-fluid"
-                style={{ height: "41px" }}
-              />
-            )}
+            ) : <BrandSm style={{ height: "41px", width: "41px" }} />}
           </Link>
         </span>
         <ExpandButton
