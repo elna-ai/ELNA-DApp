@@ -21,6 +21,7 @@ import { useGetUserProfile } from "hooks/reactQuery/useUser";
 import Bubble from "./Bubble";
 import NoHistory from "./NoHistory";
 import { TWITTER_HASHTAGS, TWITTER_SHARE_CONTENT } from "./constants";
+import { UseScrollToBottom } from "hooks/useScrollDownButton";
 
 function Chat() {
 
@@ -149,6 +150,7 @@ function Chat() {
 
   return (
     <div className="row chatapp-single-chat">
+      <UseScrollToBottom />
       <div className="container-fluid">
         <div>
           <header className="text-left">
