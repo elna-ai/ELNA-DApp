@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { Button } from "react-bootstrap";
+import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
@@ -144,7 +144,18 @@ function Chat() {
                 </div>
                 <div className="flex-grow-1 ms-3">
                   <h3 className="text-lg mt-2">{wizard.name}</h3>
-                  <p className="text-desc fs-8">{wizard.description}</p>
+                  <OverlayTrigger
+                    placement="bottom"
+                    overlay={
+                      <Tooltip className="">
+                        {wizard.description}
+                      </Tooltip>
+                    }
+                  >
+                    <div style={{ cursor: "pointer" }}>
+                      <p className="text-desc fs-8">{wizard.description}</p>
+                    </div>
+                  </OverlayTrigger>
                 </div>
               </div>
               <div>
