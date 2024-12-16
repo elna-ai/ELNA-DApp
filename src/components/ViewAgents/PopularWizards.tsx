@@ -128,13 +128,14 @@ function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
         ) : (
           <>
             {sortWizards(popularWizards, sortBy)
-              ?.map(({ id, name, userId, description, avatar, creatorName }) => (
+              ?.map(({ id, name, userId, description, avatar, creatorName, isPublished }) => (
                 <Card
                   {...{ name, description, creatorName }}
                   id={id}
                   key={id}
                   imageId={avatar}
                   userId={userId}
+                  isPublished={isPublished}
                   messagesReplied={analytics?.[id]?.messagesReplied || 0n}
                 />
               ))
