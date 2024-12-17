@@ -12,6 +12,7 @@ import {
   idlFactory as ragFactory,
 } from "declarations/elna_RAG_backend";
 import { useWallet } from "hooks/useWallet";
+import { convertToMotokoOptional } from "utils/index";
 
 type useChatPayload = {
   agentId: string;
@@ -32,7 +33,7 @@ export const useChat = () => {
         return elnaRagBackend.chat(
           agentId,
           queryText,
-          embeddings,
+          convertToMotokoOptional(embeddings),
           uuidv4(),
           history
         );
@@ -46,7 +47,7 @@ export const useChat = () => {
       const result = await elnaRag.chat(
         agentId,
         queryText,
-        embeddings,
+        convertToMotokoOptional(embeddings),
         uuidv4(),
         history
       );
@@ -55,6 +56,28 @@ export const useChat = () => {
     },
   });
 };
+
+export const useGetAgentChatHistory = (agentId: string | undefined) => {
+  const wallet = useWallet();
+  
+  const response = useQuery({
+    queryKey: [QUERY_KEYS.WIZARD_FILE_NAMES, agentId],
+    queryFn: () => elnaRagBackend.get_history(agentId!),
+    enabled: !!agentId && wallet !== undefined && !!wallet?.principalId,
+    select: response => response,
+    retry: 10,
+  });
+  return response;
+};
+
+export const useDeleteAgentChatHistory = () =>
+  useMutation({
+    mutationFn: (agentId: string | undefined) =>
+      elnaRagBackend.delete_history(agentId!),
+    onSuccess(data, variables, context) {
+      console.log(data, variables, context);
+    },
+  });
 
 export const useGetFileNames = (agentId: string) =>
   useQuery({
