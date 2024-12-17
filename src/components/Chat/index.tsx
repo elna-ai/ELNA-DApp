@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { Button } from "react-bootstrap";
+import { Button, Dropdown, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
@@ -12,7 +12,7 @@ import { Message } from "src/types";
 import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
 import { useUpdateMessagesReplied } from "hooks/reactQuery/wizards/useAnalytics";
 import { useCreatingQuestionEmbedding } from "hooks/reactQuery/useExternalService";
-import { useChat } from "hooks/reactQuery/useRag";
+import { useChat, useDeleteAgentChatHistory, useGetAgentChatHistory } from "hooks/reactQuery/useRag";
 import { isRagErr } from "utils/ragCanister";
 import { useUserStore } from "stores/useUser";
 import { useGetAsset } from "hooks/reactQuery/useElnaImages";
@@ -23,11 +23,13 @@ import NoHistory from "./NoHistory";
 import { TWITTER_HASHTAGS, TWITTER_SHARE_CONTENT } from "./constants";
 
 function Chat() {
+
+  const { id } = useParams();
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [messageInput, setMessageInput] = useState("");
   // const [isResponseLoading, setIsResponseLoading] = useState(false);
 
-  const { id } = useParams();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const lastBubbleRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
@@ -45,6 +47,16 @@ function Chat() {
   const { data: avatar } = useGetAsset(wizard?.avatar);
   const { data: userProfile, isFetching: isUserProfileLoading } =
     useGetUserProfile(wizard?.userId);
+  const { mutate: deleteChatHistory, isPending: isDeletingChatHistory } = useDeleteAgentChatHistory();
+
+  const {
+    data: agentHistory,
+    isFetching: isLoadingAgent,
+  } = useGetAgentChatHistory(id);
+
+  useEffect(() => {
+    if (!isLoadingAgent) console.log("agentHistory", agentHistory)
+  }, [isLoadingAgent, agentHistory])
 
   useEffect(() => {
     if (!isError) return;
@@ -148,30 +160,32 @@ function Chat() {
                 </div>
               </div>
               <div>
-                <a
-                  className="el-btn-secondary"
-                  href={generateTwitterShareLink(
-                    `${TWITTER_SHARE_CONTENT(
-                      wizard.name,
-                      `${window.location.origin}/chat/${id}`,
-                      userProfile?.xHandle[0] || ""
-                    )}`,
-                    TWITTER_HASHTAGS
-                  )}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
+                <Dropdown className="card-body-menu">
+                  <Dropdown.Toggle
+                    variant="dark"
+                    className="card-body-menu-button"
+                  >
+                    <i className="ri-more-line" />
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => deleteChatHistory(id)}>
+                      {isDeletingChatHistory ? <Spinner size="sm" /> : "Clear chat history"}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => window.open(generateTwitterShareLink(
+                        `${TWITTER_SHARE_CONTENT(
+                          wizard.name,
+                          `${window.location.origin}/chat/${id}`,
+                          userProfile?.xHandle[0] || ""
+                        )}`,
+                        TWITTER_HASHTAGS
+                      ))}
+                      className="card-dropdown-delete"
                     >
-                      <path d="M18.2048 2.25H21.5128L14.2858 10.51L22.7878 21.75H16.1308L10.9168 14.933L4.95084 21.75H1.64084L9.37084 12.915L1.21484 2.25H8.04084L12.7538 8.481L18.2048 2.25ZM17.0438 19.77H18.8768L7.04484 4.126H5.07784L17.0438 19.77Z"></path>
-                    </svg>
-                  </span>
-                  <span className="text-xs sub-title-color">Share</span>
-                </a>
+                      Share
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
               </div>
             </div>
 
