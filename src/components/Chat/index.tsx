@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
 import PageLoader from "components/common/PageLoader";
-import { generateTwitterShareLink, transformHistory } from "src/utils";
+import { convertFromMotokoVariant, generateTwitterShareLink, transformHistory } from "src/utils";
 import useAutoSizeTextArea from "hooks/useAutoResizeTextArea";
 import { Message } from "src/types";
 import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
@@ -22,9 +22,38 @@ import Bubble from "./Bubble";
 import NoHistory from "./NoHistory";
 import { TWITTER_HASHTAGS, TWITTER_SHARE_CONTENT } from "./constants";
 
+type OriginalMessage = {
+  content: string;
+  role: {
+    User?: null;
+    Assistant?: null;
+  };
+};
+
+function convertNestedArrayToMessages(nestedArray: OriginalMessage[][], agentName: string): Message[] {
+  return nestedArray.reduce<Message[]>((acc, conversation) => {
+    const transformedMessages = conversation.map((item) => {
+      const role = convertFromMotokoVariant(item.role)
+      return {
+        user: {
+          name: role === "User" ? "User" : agentName,
+          ...(role !== "User" && { isBot: true })
+        },
+        message: item.content
+      }
+    });
+    return acc.concat(transformedMessages);
+  }, []);
+}
+
 function Chat() {
 
   const { id } = useParams();
+
+  const {
+    data: agentHistory,
+    isFetching: isLoadingAgent,
+  } = useGetAgentChatHistory(id);
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [messageInput, setMessageInput] = useState("");
@@ -49,13 +78,11 @@ function Chat() {
     useGetUserProfile(wizard?.userId);
   const { mutate: deleteChatHistory, isPending: isDeletingChatHistory } = useDeleteAgentChatHistory();
 
-  const {
-    data: agentHistory,
-    isFetching: isLoadingAgent,
-  } = useGetAgentChatHistory(id);
-
   useEffect(() => {
-    if (!isLoadingAgent) console.log("agentHistory", agentHistory)
+    if (!isLoadingAgent) {
+      console.log("agentHistory", agentHistory)
+      const transformedMessages = convertNestedArrayToMessages(agentHistory, wizard!.name);
+    }
   }, [isLoadingAgent, agentHistory])
 
   useEffect(() => {
@@ -75,6 +102,7 @@ function Chat() {
   }, [wizard]);
 
   useEffect(() => {
+    console.log("messages", messages)
     if (lastBubbleRef.current) {
       lastBubbleRef.current.scrollIntoView({
         behavior: "smooth",

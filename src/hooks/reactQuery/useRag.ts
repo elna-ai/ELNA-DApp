@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { v4 as uuidv4 } from "uuid";
 import { elna_RAG_backend as elnaRagBackend } from "declarations/elna_RAG_backend";
-import { QUERY_KEYS } from "src/constants/query";
+import { ONE_HOUR_STALE_TIME, QUERY_KEYS } from "src/constants/query";
 import { isRagErr } from "utils/ragCanister";
 import {
   History,
@@ -60,24 +60,40 @@ export const useChat = () => {
 export const useGetAgentChatHistory = (agentId: string | undefined) => {
   const wallet = useWallet();
   
-  const response = useQuery({
-    queryKey: [QUERY_KEYS.WIZARD_FILE_NAMES, agentId],
-    queryFn: () => elnaRagBackend.get_history(agentId!),
-    enabled: !!agentId && wallet !== undefined && !!wallet?.principalId,
-    select: response => response,
-    retry: 10,
-  });
-  return response;
-};
-
-export const useDeleteAgentChatHistory = () =>
-  useMutation({
-    mutationFn: (agentId: string | undefined) =>
-      elnaRagBackend.delete_history(agentId!),
-    onSuccess(data, variables, context) {
-      console.log(data, variables, context);
+  return useQuery({
+    queryKey: [QUERY_KEYS.AGENT_CHATS, agentId],
+    queryFn: async () => {
+      if (wallet === undefined) throw Error("user not logged in");
+      
+      const elnaRag: _SERVICE = await wallet.getCanisterActor(
+        ragId,
+        ragFactory,
+        false
+      );
+      const result = await elnaRag.get_history(agentId!);
+      return result;
     },
   });
+};
+
+export const useDeleteAgentChatHistory = () => {
+  const wallet = useWallet();
+
+  return useMutation({
+    mutationFn: async (agentId: string | undefined) => {
+      if (wallet === undefined || !wallet?.principalId) return 
+
+      const elnaRag: _SERVICE = await wallet.getCanisterActor(
+        ragId,
+        ragFactory,
+        false
+      );
+      const result = await elnaRag.delete_history(agentId!);
+
+      return result;
+    },
+  });
+}
 
 export const useGetFileNames = (agentId: string) =>
   useQuery({
