@@ -34,10 +34,6 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result_1 = IDL.Variant({ 'Ok' : Response, 'Err' : Error });
   const Result_2 = IDL.Variant({
-    'Ok' : IDL.Vec(IDL.Float32),
-    'Err' : IDL.Tuple(RejectionCode, IDL.Text),
-  });
-  const Result_3 = IDL.Variant({
     'Ok' : IDL.Vec(IDL.Text),
     'Err' : IDL.Tuple(RejectionCode, IDL.Text, IDL.Text),
   });
@@ -57,7 +53,7 @@ export const idlFactory = ({ IDL }) => {
         [
           IDL.Text,
           IDL.Text,
-          IDL.Vec(IDL.Float32),
+          IDL.Opt(IDL.Vec(IDL.Float32)),
           IDL.Text,
           IDL.Vec(IDL.Tuple(History, History)),
         ],
@@ -77,14 +73,24 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'delete_collection_from_db' : IDL.Func([IDL.Text], [Result], []),
-    'embedding_model' : IDL.Func([IDL.Text], [Result_2], []),
-    'get_db_file_names' : IDL.Func([IDL.Text], [Result_3], []),
+    'delete_history' : IDL.Func([IDL.Text], [], []),
+    'embedding_model' : IDL.Func([IDL.Text], [IDL.Vec(IDL.Float32)], []),
+    'get_db_file_names' : IDL.Func([IDL.Text], [Result_2], []),
+    'get_history' : IDL.Func(
+        [IDL.Text],
+        [IDL.Vec(IDL.Tuple(History, History))],
+        ['query'],
+      ),
     'insert_data' : IDL.Func(
         [IDL.Text, IDL.Vec(IDL.Text), IDL.Vec(IDL.Vec(IDL.Float32)), IDL.Text],
         [Result],
         [],
       ),
-    'search' : IDL.Func([IDL.Text, IDL.Text, IDL.Int32], [Result], []),
+    'search' : IDL.Func(
+        [IDL.Text, IDL.Vec(IDL.Float32), IDL.Int32],
+        [Result],
+        [],
+      ),
     'transform' : IDL.Func([TransformArgs], [HttpResponse], ['query']),
   });
 };
