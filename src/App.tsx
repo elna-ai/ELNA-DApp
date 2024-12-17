@@ -28,6 +28,7 @@ import CreateAgent from "components/CreateAgent";
 import AddProfile from "components/MySpace/Profile/AddProfile";
 import PopularWizards from "components/ViewAgents/PopularWizards";
 import DeveloperStudio from "components/DeveloperStudio";
+import { HelmetProvider } from "react-helmet-async";
 
 function App() {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -35,61 +36,63 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <div
-            className={classNames("hk-wrapper w-100vw", {
-              default: isExpanded,
-              collapsed: !isExpanded,
-            })}
-          >
-            <Sidebar {...{ isExpanded, setIsExpanded }} />
-            <Header setIsLoading={setIsLoading} />
-            <div className="container-fluid p-0">
-              <div className="hk-pg-wrapper">
-                <div className="mx-4 pt-2">
-                  <div className="w-100 mt-2">
-                    {isLoading ? (
-                      <PageLoader />
-                    ) : (
-                      <Routes>
-                        <Route path="/chat/:id?" element={<Chat />} />
-                        <Route path="/" element={<ViewAgents />} />
-                        <Route
-                          path="/my-space/*"
-                          element={<MySpace />}
-                        />
-                        <Route
-                          path="/create-agent/*"
-                          element={<CreateAgent />}
-                        />
-                        <Route
-                          path="/agent-marketplace/*"
-                          element={<PopularWizards isHomePage={false}/>}
-                        />
-                        <Route
-                          path="/developer-studio/*"
-                          element={<DeveloperStudio />}
-                        />
-                        <Route
-                          path="/admin/*"
-                          element={<PrivateRoute component={AdminDashboard} />}
-                        />
-                        <Route path="/profile/add" element={<AddProfile />} />
-                        <Route path="/tool-details/:id?" element={<ToolDetails />} />
-                        <Route path="*" element={<Page404 />} />
-                      </Routes>
-                    )}
-                    <Footer />
+      <HelmetProvider>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <div
+              className={classNames("hk-wrapper w-100vw", {
+                default: isExpanded,
+                collapsed: !isExpanded,
+              })}
+            >
+              <Sidebar {...{ isExpanded, setIsExpanded }} />
+              <Header setIsLoading={setIsLoading} />
+              <div className="container-fluid p-0">
+                <div className="hk-pg-wrapper">
+                  <div className="mx-4 pt-2">
+                    <div className="w-100 mt-2">
+                      {isLoading ? (
+                        <PageLoader />
+                      ) : (
+                        <Routes>
+                          <Route path="/chat/:id?" element={<Chat />} />
+                          <Route path="/" element={<ViewAgents />} />
+                          <Route
+                            path="/my-space/*"
+                            element={<MySpace />}
+                          />
+                          <Route
+                            path="/create-agent/*"
+                            element={<CreateAgent />}
+                          />
+                          <Route
+                            path="/agent-marketplace/*"
+                            element={<PopularWizards isHomePage={false} />}
+                          />
+                          <Route
+                            path="/developer-studio/*"
+                            element={<DeveloperStudio />}
+                          />
+                          <Route
+                            path="/admin/*"
+                            element={<PrivateRoute component={AdminDashboard} />}
+                          />
+                          <Route path="/profile/add" element={<AddProfile />} />
+                          <Route path="/tool-details/:id?" element={<ToolDetails />} />
+                          <Route path="*" element={<Page404 />} />
+                        </Routes>
+                      )}
+                      <Footer />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </BrowserRouter>
-        <ToastContainer />
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
+          </BrowserRouter>
+          <ToastContainer />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </HelmetProvider>
     </ErrorBoundary>
   );
 }
