@@ -32,9 +32,7 @@ export type Result = { 'Ok' : string } |
   { 'Err' : [RejectionCode, string] };
 export type Result_1 = { 'Ok' : Response } |
   { 'Err' : Error };
-export type Result_2 = { 'Ok' : Array<number> } |
-  { 'Err' : [RejectionCode, string] };
-export type Result_3 = { 'Ok' : Array<string> } |
+export type Result_2 = { 'Ok' : Array<string> } |
   { 'Err' : [RejectionCode, string, string] };
 export type Roles = { 'System' : null } |
   { 'User' : null } |
@@ -46,7 +44,7 @@ export interface TransformArgs {
 export interface _SERVICE {
   'build_index' : ActorMethod<[string], Result>,
   'chat' : ActorMethod<
-    [string, string, Array<number>, string, Array<[History, History]>],
+    [string, string, [] | [Array<number>], string, Array<[History, History]>],
     Result_1
   >,
   'create_collection' : ActorMethod<[string, bigint], Result>,
@@ -55,13 +53,15 @@ export interface _SERVICE {
     Result
   >,
   'delete_collection_from_db' : ActorMethod<[string], Result>,
-  'embedding_model' : ActorMethod<[string], Result_2>,
-  'get_db_file_names' : ActorMethod<[string], Result_3>,
+  'delete_history' : ActorMethod<[string], undefined>,
+  'embedding_model' : ActorMethod<[string], Array<number>>,
+  'get_db_file_names' : ActorMethod<[string], Result_2>,
+  'get_history' : ActorMethod<[string], Array<[History, History]>>,
   'insert_data' : ActorMethod<
     [string, Array<string>, Array<Array<number>>, string],
     Result
   >,
-  'search' : ActorMethod<[string, string, number], Result>,
+  'search' : ActorMethod<[string, Array<number>, number], Result>,
   'transform' : ActorMethod<[TransformArgs], HttpResponse>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;
