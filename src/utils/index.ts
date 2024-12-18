@@ -77,7 +77,7 @@ export function transformHistoryToMessages(
       return {
         user: {
           name: role === "User" ? "User" : agentName,
-          ...(role !== "User" && { isBot: true }),
+          isBot: role !== "User",
         },
         message: item.content,
       };
