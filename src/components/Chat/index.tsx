@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
 import PageLoader from "components/common/PageLoader";
-import { convertFromMotokoVariant, generateTwitterShareLink, transformHistory } from "src/utils";
+import { generateTwitterShareLink, transformHistory, transformHistoryToMessages } from "src/utils";
 import useAutoSizeTextArea from "hooks/useAutoResizeTextArea";
 import { Message } from "src/types";
 import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
@@ -22,53 +22,29 @@ import Bubble from "./Bubble";
 import NoHistory from "./NoHistory";
 import { TWITTER_HASHTAGS, TWITTER_SHARE_CONTENT } from "./constants";
 
-type OriginalMessage = {
-  content: string;
-  role: {
-    User?: null;
-    Assistant?: null;
-  };
-};
-
-function convertNestedArrayToMessages(nestedArray: OriginalMessage[][], agentName: string): Message[] {
-  return nestedArray.reduce<Message[]>((acc, conversation) => {
-    const transformedMessages = conversation.map((item) => {
-      const role = convertFromMotokoVariant(item.role)
-      return {
-        user: {
-          name: role === "User" ? "User" : agentName,
-          ...(role !== "User" && { isBot: true })
-        },
-        message: item.content
-      }
-    });
-    return acc.concat(transformedMessages);
-  }, []);
-}
-
 function Chat() {
 
   const { id } = useParams();
 
   const {
     data: agentHistory,
-    isFetching: isLoadingAgent,
+    isFetching: isLoadingAgentHistory,
   } = useGetAgentChatHistory(id);
 
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [messageInput, setMessageInput] = useState("");
-  // const [isResponseLoading, setIsResponseLoading] = useState(false);
-
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-  const lastBubbleRef = useRef<HTMLDivElement>(null);
-  const { t } = useTranslation();
-  const isUserLoggedIn = useUserStore(state => state.isUserLoggedIn);
   const {
     data: wizard,
     isFetching: isLoadingWizard,
     error,
     isError,
   } = useShowWizard(id);
+
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [messageInput, setMessageInput] = useState("");
+
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const lastBubbleRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
+  const isUserLoggedIn = useUserStore(state => state.isUserLoggedIn);
   const { mutate: updateMessagesReplied } = useUpdateMessagesReplied();
   const { mutate: createQuestionEmbedding } = useCreatingQuestionEmbedding();
   useAutoSizeTextArea(inputRef.current, messageInput);
@@ -79,13 +55,6 @@ function Chat() {
   const { mutate: deleteChatHistory, isPending: isDeletingChatHistory } = useDeleteAgentChatHistory();
 
   useEffect(() => {
-    if (!isLoadingAgent) {
-      console.log("agentHistory", agentHistory)
-      const transformedMessages = convertNestedArrayToMessages(agentHistory, wizard!.name);
-    }
-  }, [isLoadingAgent, agentHistory])
-
-  useEffect(() => {
     if (!isError) return;
     toast.error(error.message);
   }, [isError]);
@@ -93,11 +62,11 @@ function Chat() {
   useEffect(() => {
     if (wizard?.greeting === undefined) return;
     if (messages.length > 0) return;
-
     const initialMessage = {
       user: { name: wizard.name, isBot: true },
       message: wizard.greeting,
     };
+    agentHistory !== undefined && wizard !== undefined && setMessages(transformHistoryToMessages(agentHistory, wizard?.name));
     setMessages(prev => [...prev, initialMessage]);
   }, [wizard]);
 
@@ -164,7 +133,7 @@ function Chat() {
 
   useEffect(() => inputRef?.current?.focus(), [wizard]);
 
-  if (isLoadingWizard || wizard === undefined) return <PageLoader />;
+  if (isLoadingWizard || wizard === undefined || isLoadingAgentHistory) return <PageLoader />;
 
   return (
     <div className="row chatapp-single-chat">
