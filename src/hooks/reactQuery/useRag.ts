@@ -61,7 +61,7 @@ export const useGetAgentChatHistory = (agentId: string | undefined) => {
   const wallet = useWallet();
 
   return useQuery({
-    queryKey: [`${QUERY_KEYS.AGENT_CHATS}-${agentId}`],
+    queryKey: [`${QUERY_KEYS.AGENT_CHATS}-${agentId}`, wallet?.principalId],
     queryFn: async () => {
       if (wallet === undefined) throw Error("user not logged in");
 
