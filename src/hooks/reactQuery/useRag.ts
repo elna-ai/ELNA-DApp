@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { v4 as uuidv4 } from "uuid";
 import { elna_RAG_backend as elnaRagBackend } from "declarations/elna_RAG_backend";
-import { QUERY_KEYS } from "src/constants/query";
+import { ONE_HOUR_STALE_TIME, QUERY_KEYS } from "src/constants/query";
 import { isRagErr } from "utils/ragCanister";
 import {
   History,
@@ -73,6 +73,7 @@ export const useGetAgentChatHistory = (agentId: string | undefined) => {
       const result = await elnaRag.get_history(agentId!);
       return result;
     },
+    staleTime: ONE_HOUR_STALE_TIME,
   });
 };
 
