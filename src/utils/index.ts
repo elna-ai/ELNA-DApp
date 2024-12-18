@@ -67,6 +67,25 @@ export const transformHistory = (messages: Message[]): [History, History][] => {
   return history;
 };
 
+export function transformHistoryToMessages(
+  nestedArray: [History, History][],
+  agentName: string
+): Message[] {
+  return nestedArray.reduce<Message[]>((acc, conversation) => {
+    const transformedMessages = conversation.map(item => {
+      const role = convertFromMotokoVariant(item.role);
+      return {
+        user: {
+          name: role === "User" ? "User" : agentName,
+          isBot: role !== "User",
+        },
+        message: item.content,
+      };
+    });
+    return acc.concat(transformedMessages);
+  }, []);
+}
+
 export const generateTwitterShareLink = (content: string, hashtags: string) =>
   `https://twitter.com/intent/tweet?text=${encodeURI(
     content
