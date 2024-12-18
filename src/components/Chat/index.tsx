@@ -54,24 +54,36 @@ function Chat() {
     useGetUserProfile(wizard?.userId);
   const { mutate: deleteChatHistory, isPending: isDeletingChatHistory } = useDeleteAgentChatHistory();
 
+  const setInitialMessage = () => {
+    if (wizard?.greeting === undefined) return;
+    const initialMessage = {
+      user: { name: wizard.name, isBot: true },
+      message: wizard.greeting,
+    };
+    setMessages([initialMessage]);
+  };
+
+  const clearChatFn = () => {
+    deleteChatHistory(wizard?.id);
+    setInitialMessage();
+  };
+
   useEffect(() => {
     if (!isError) return;
     toast.error(error.message);
   }, [isError]);
 
   useEffect(() => {
-    if (wizard?.greeting === undefined) return;
-    if (messages.length > 0) return;
-    const initialMessage = {
-      user: { name: wizard.name, isBot: true },
-      message: wizard.greeting,
-    };
-    agentHistory !== undefined && wizard !== undefined && setMessages(transformHistoryToMessages(agentHistory, wizard?.name));
-    setMessages(prev => [...prev, initialMessage]);
-  }, [wizard]);
+    if (!isLoadingAgentHistory && agentHistory !== undefined && wizard?.name !== undefined) {
+      if (agentHistory?.length > 0) {
+        setMessages(transformHistoryToMessages(agentHistory, wizard?.name));
+        return;
+      }
+    }
+    else setInitialMessage()
+  }, [wizard, isLoadingAgentHistory, agentHistory]);
 
   useEffect(() => {
-    console.log("messages", messages)
     if (lastBubbleRef.current) {
       lastBubbleRef.current.scrollIntoView({
         behavior: "smooth",
@@ -133,7 +145,7 @@ function Chat() {
 
   useEffect(() => inputRef?.current?.focus(), [wizard]);
 
-  if (isLoadingWizard || wizard === undefined || isLoadingAgentHistory) return <PageLoader />;
+  if (isLoadingWizard || !wizard || isLoadingAgentHistory || isDeletingChatHistory) return <PageLoader />;
 
   return (
     <div className="row chatapp-single-chat">
@@ -165,8 +177,8 @@ function Chat() {
                     <i className="ri-more-line" />
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => deleteChatHistory(id)}>
-                      {isDeletingChatHistory ? <Spinner size="sm" /> : "Clear chat history"}
+                    <Dropdown.Item onClick={() => clearChatFn()}>
+                      Clear chat history
                     </Dropdown.Item>
                     <Dropdown.Item
                       onClick={() => window.open(generateTwitterShareLink(
