@@ -1,4 +1,10 @@
 {
+  "meta": {
+    "home": {
+      "title": "ELNA.ai | Your Personal AI Workspace & Agent Platform",
+      "description": "Create, customize, and collaborate with AI agents."
+    }
+  },
   "chat": {
     "inputPlaceholder": "Send a message",
     "warning": "Ai agents may display inaccurate or offensive information about people, places and facts that doesn't represent Team ELNA's views"
@@ -192,18 +198,18 @@
     "myAgents": {
       "agentsHeader": "Agents",
       "agentsHeaderDesc": "Each skilled in their own field - a Travel Guide, a Fitness Coach, a Masterful Storyteller, et al.",
-      "noWizardsHeader":"You don't have any created agents",
-      "noWizardsDesc":"Craft and fine tune your agent",
-      "createAgentBtn":"Create Agent"
+      "noWizardsHeader": "You don't have any created agents",
+      "noWizardsDesc": "Craft and fine tune your agent",
+      "createAgentBtn": "Create Agent"
     },
     "myTools": {
       "toolsHeader": "Tools",
       "toolsHeaderDesc": "List Your tools and integrate with agents.",
-      "noAccessHeader":"You don't have Access to upload tools",
-      "noAccessDesc":"Complete Developer Profile and upload your tools and integrate with agents",
+      "noAccessHeader": "You don't have Access to upload tools",
+      "noAccessDesc": "Complete Developer Profile and upload your tools and integrate with agents",
       "noToolsHeader": "You don't Publish or List any tools",
       "noToolsHeaderDesc": "List your tools and Integrate with agents",
-      "createToolBtn":"Create Tool"
+      "createToolBtn": "Create Tool"
     }
   },
   "common": {
