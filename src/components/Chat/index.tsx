@@ -152,7 +152,7 @@ function Chat() {
     <>
       <MetaTags
         title={`${t("meta.agentChat.title")}${wizard.name}`}
-        description={`${t("meta.agentChat.description")}${wizard.description}`}
+        description={`${t("meta.agentChat.description")}`}
       />
       <div className="row chatapp-single-chat">
         <div className="container-fluid">
