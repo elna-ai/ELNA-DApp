@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { useDeleteCollections } from "hooks/reactQuery/useRag";
 import { t } from "i18next";
 import { useDeleteCustomImage } from "hooks/reactQuery/useElnaImages";
+import MetaTags from "components/common/MetaHelmet";
 
 function MyWizards() {
   const [isDeleteWizard, setIsDeleteWizard] = useState(false);
@@ -52,10 +53,10 @@ function MyWizards() {
 
   const handleDelete = async (id: string) => {
     const wizard = userWizards?.find(wizard => wizard.id === id)
-    if(!wizard) throw new Error("Wizard not found");
+    if (!wizard) throw new Error("Wizard not found");
     deleteCustomImage(wizard.avatar, {
       onSuccess: (data) => {
-        if("Err" in data) {
+        if ("Err" in data) {
           console.error(data.Err)
           toast.error("Unable to delete avatar");
         }
@@ -124,6 +125,10 @@ function MyWizards() {
 
     return (
       <>
+        <MetaTags
+          title={t("meta.myAgents.title")}
+          description={t("meta.myAgents.description")}
+        />
         <div className="my-wizards__card-wrapper">
           {userWizards?.map(
             ({ id, name, description, avatar, isPublished, creatorName }) => (

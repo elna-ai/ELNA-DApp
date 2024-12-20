@@ -21,6 +21,7 @@ import { useGetUserProfile } from "hooks/reactQuery/useUser";
 import Bubble from "./Bubble";
 import NoHistory from "./NoHistory";
 import { TWITTER_HASHTAGS, TWITTER_SHARE_CONTENT } from "./constants";
+import MetaTags from "components/common/MetaHelmet";
 
 function Chat() {
 
@@ -148,110 +149,116 @@ function Chat() {
   if (isLoadingWizard || !wizard || isLoadingAgentHistory || isDeletingChatHistory) return <PageLoader />;
 
   return (
-    <div className="row chatapp-single-chat">
-      <div className="container-fluid">
-        <div>
-          <header className="text-left">
-            <div className="d-flex justify-content-between align-items-center">
-              <div className="d-flex align-items-center">
-                <div className="chat-header__avatar">
-                  <div className="avatar">
-                    <img
-                      src={avatar?.asset}
-                      alt="user"
-                      className="avatar-img"
-                    />
+    <>
+      <MetaTags
+        title={`${t("meta.agentChat.title")}${wizard.name}`}
+        description={`${t("meta.agentChat.description")}${wizard.description}`}
+      />
+      <div className="row chatapp-single-chat">
+        <div className="container-fluid">
+          <div>
+            <header className="text-left">
+              <div className="d-flex justify-content-between align-items-center">
+                <div className="d-flex align-items-center">
+                  <div className="chat-header__avatar">
+                    <div className="avatar">
+                      <img
+                        src={avatar?.asset}
+                        alt="user"
+                        className="avatar-img"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex-grow-1 ms-3">
+                    <h3 className="text-lg mt-2">{wizard.name}</h3>
+                    <p className="text-desc fs-8">{wizard.description}</p>
                   </div>
                 </div>
-                <div className="flex-grow-1 ms-3">
-                  <h3 className="text-lg mt-2">{wizard.name}</h3>
-                  <p className="text-desc fs-8">{wizard.description}</p>
+                <div>
+                  <Dropdown className="card-body-menu">
+                    <Dropdown.Toggle
+                      variant="dark"
+                      className="card-body-menu-button"
+                    >
+                      <i className="ri-more-line" />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item onClick={() => clearChatFn()}>
+                        Clear chat history
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={() => window.open(generateTwitterShareLink(
+                          `${TWITTER_SHARE_CONTENT(
+                            wizard.name,
+                            `${window.location.origin}/chat/${id}`,
+                            userProfile?.xHandle[0] || ""
+                          )}`,
+                          TWITTER_HASHTAGS
+                        ))}
+                        className="card-dropdown-delete"
+                      >
+                        Share
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
                 </div>
               </div>
-              <div>
-                <Dropdown className="card-body-menu">
-                  <Dropdown.Toggle
-                    variant="dark"
-                    className="card-body-menu-button"
-                  >
-                    <i className="ri-more-line" />
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => clearChatFn()}>
-                      Clear chat history
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      onClick={() => window.open(generateTwitterShareLink(
-                        `${TWITTER_SHARE_CONTENT(
-                          wizard.name,
-                          `${window.location.origin}/chat/${id}`,
-                          userProfile?.xHandle[0] || ""
-                        )}`,
-                        TWITTER_HASHTAGS
-                      ))}
-                      className="card-dropdown-delete"
-                    >
-                      Share
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </div>
-            </div>
 
-            <hr className="mt-2" />
-          </header>
-        </div>
-        <div className="chat-body">
-          {/* TODO: media query to be converted to scss */}
-          <div className="sm:mx-2 chat-body--wrapper">
-            {messages.length > 0 ? (
-              <>
-                {messages.map(({ user, message }, index) => (
-                  <Bubble
-                    key={uuidv4()}
-                    user={user}
-                    message={message}
-                    ref={index === messages.length - 1 ? lastBubbleRef : null}
-                  />
-                ))}
-                {isResponseLoading && (
-                  <Bubble
-                    key={uuidv4()}
-                    user={{ name: wizard.name, isBot: true }}
-                    isLoading
-                  />
-                )}
-              </>
-            ) : (
-              <NoHistory />
-            )}
+              <hr className="mt-2" />
+            </header>
           </div>
-        </div>
-        <div className="hk-footer chatfooter">
-          <div className="chatfooter-bg">
-            <div className="input-position-set">
-              <textarea
-                placeholder={t("chat.inputPlaceholder")}
-                className="chat-input-area"
-                value={messageInput}
-                ref={inputRef}
-                onKeyDown={handleKeyDown}
-                onChange={event => setMessageInput(event.target.value)}
-                rows={1}
-              ></textarea>
-              <Button
-                onClick={handleSubmit}
-                className="absolute right-2 bottom-1.5"
-                disabled={!messageInput.trim() || isResponseLoading}
-              >
-                {t("common.send")}
-              </Button>
+          <div className="chat-body">
+            {/* TODO: media query to be converted to scss */}
+            <div className="sm:mx-2 chat-body--wrapper">
+              {messages.length > 0 ? (
+                <>
+                  {messages.map(({ user, message }, index) => (
+                    <Bubble
+                      key={uuidv4()}
+                      user={user}
+                      message={message}
+                      ref={index === messages.length - 1 ? lastBubbleRef : null}
+                    />
+                  ))}
+                  {isResponseLoading && (
+                    <Bubble
+                      key={uuidv4()}
+                      user={{ name: wizard.name, isBot: true }}
+                      isLoading
+                    />
+                  )}
+                </>
+              ) : (
+                <NoHistory />
+              )}
             </div>
-            <p className="fs-8 text-center">{t("chat.warning")}</p>
+          </div>
+          <div className="hk-footer chatfooter">
+            <div className="chatfooter-bg">
+              <div className="input-position-set">
+                <textarea
+                  placeholder={t("chat.inputPlaceholder")}
+                  className="chat-input-area"
+                  value={messageInput}
+                  ref={inputRef}
+                  onKeyDown={handleKeyDown}
+                  onChange={event => setMessageInput(event.target.value)}
+                  rows={1}
+                ></textarea>
+                <Button
+                  onClick={handleSubmit}
+                  className="absolute right-2 bottom-1.5"
+                  disabled={!messageInput.trim() || isResponseLoading}
+                >
+                  {t("common.send")}
+                </Button>
+              </div>
+              <p className="fs-8 text-center">{t("chat.warning")}</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

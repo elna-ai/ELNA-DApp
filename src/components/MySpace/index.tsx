@@ -12,6 +12,8 @@ import CreateTool from "./Tools/CreateTool";
 import DeveloperRequest from "./DeveloperRequest";
 import MySpaceMenuLink from "./MySpaceMenuLink";
 import { MY_SPACE_LINK, MySpaceMenuProps } from "./constant";
+import MetaTags from "components/common/MetaHelmet";
+import { t } from "i18next";
 
 function MySpace() {
 
@@ -21,6 +23,10 @@ function MySpace() {
 
     return (
         <>
+            <MetaTags
+                title={t("meta.mySpace.title")}
+                description={t("meta.mySpace.description")}
+            />
             {(!isUserLoggedIn || !userProfile) && <NoLogin />}
             <div className="d-flex align-items-top justify-content-between mt-4 mb-2">
                 <div className="myspace__title">

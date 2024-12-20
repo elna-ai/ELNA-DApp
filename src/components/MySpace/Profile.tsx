@@ -28,6 +28,7 @@ import { Link } from "react-router-dom";
 import useGetDisplayAddress from "hooks/useGetDisplayAddress";
 import queryClient from "utils/queryClient";
 import { QUERY_KEYS } from "src/constants/query";
+import MetaTags from "components/common/MetaHelmet";
 
 function Profile() {
   const { t } = useTranslation();
@@ -151,146 +152,152 @@ function Profile() {
   if (isUserProfileLoading) return <PageLoader />;
 
   return (
-    <div className="row">
-      <div className="profile">
-        <Formik
-          initialValues={
-            userProfile
-              ? {
-                bio: userProfile.bio[0] || "",
-                alias: userProfile.alias,
-                xHandle: userProfile.xHandle[0] || "",
-              }
-              : USER_PROFILE_FORM_INITIAL
-          }
-          validationSchema={USER_PROFILE_FORM_VALIDATION}
-          onSubmit={handleSubmit}
-        >
-          {({ dirty, handleSubmit, handleReset }) => (
-            <Form
-              onSubmit={handleSubmit}
-              noValidate
-              className="add-profile__form"
-            >
-              <div className="profile__header">
-                <div className="profile__header__img">
-                  <img
-                    className="rounded-circle d-inline me-2"
-                    src={AvatarImg}
-                    alt="profile-avatar"
-                    width={144}
-                  />
-                </div>
-                <div className="profile__header__button">
-                  <Button
-                    onClick={() => {
-                      handleReset()
-                      setFormActive(!formActive)
-                    }}
-                    variant="secondary"
-                  >
-                    Edit Profile
-                  </Button>
-                </div>
-              </div>
-
-              <div className="profile__body">
-                <div className="profile__body__alias">
-                  <h2 className="profile__body__alias__heading">{userProfile?.alias}</h2>
-                </div>
-
-                <div onClick={copyToClipBoard} className="profile__body__principal">
-                  <i className="ri-file-copy-line"></i>
-                  Principal Id {displayAddress}
-                </div>
-
-                <div className="profile__body__roles">
-                  <div style={{ minHeight: "38px" }} className="d-flex align-items-center gap-2">
-                    <p>{t("profile.roles")}</p>
-                    <p className="d-flex gap-2">
-                      <Badge bg="secondary">
-                        <i className="ri-sparkling-fill"></i>
-                        {t("common.creater")}
-                      </Badge>
-                      {isDeveloper && (
-                        <Badge bg="success">
-                          <i className="ri-code-box-fill"></i>
-                          {t("common.developer")}
-                        </Badge>
-                      )}
-                    </p>
+    <>
+      <MetaTags
+        title={t("meta.myProfile.title")}
+        description={t("meta.myProfile.description")}
+      />
+      <div className="row">
+        <div className="profile">
+          <Formik
+            initialValues={
+              userProfile
+                ? {
+                  bio: userProfile.bio[0] || "",
+                  alias: userProfile.alias,
+                  xHandle: userProfile.xHandle[0] || "",
+                }
+                : USER_PROFILE_FORM_INITIAL
+            }
+            validationSchema={USER_PROFILE_FORM_VALIDATION}
+            onSubmit={handleSubmit}
+          >
+            {({ dirty, handleSubmit, handleReset }) => (
+              <Form
+                onSubmit={handleSubmit}
+                noValidate
+                className="add-profile__form"
+              >
+                <div className="profile__header">
+                  <div className="profile__header__img">
+                    <img
+                      className="rounded-circle d-inline me-2"
+                      src={AvatarImg}
+                      alt="profile-avatar"
+                      width={144}
+                    />
                   </div>
-                  {renderDeveloperStatus()}
-                </div>
-                <hr />
-                <fieldset disabled>
-                  <FormikInput
-                    name="alias"
-                    placeholder={t("profile.update.form.aliasPlaceHolder")}
-                    label={
-                      <Trans
-                        i18nKey="profile.update.form.aliasLabel"
-                        components={{
-                          span: <span className="add-profile__form__label" />
-                        }}
-                      />
-                    }
-                  />
-                </fieldset>
-                <fieldset disabled={!formActive}>
-                  <FormikInput
-                    name="xHandle"
-                    placeholder={t("profile.update.form.xHandlePlaceHolder")}
-                    label={
-                      <Trans
-                        i18nKey="profile.update.form.xHandleLabel"
-                        components={{
-                          span: <span className="add-profile__form__label" />
-                        }}
-                      />
-                    }
-                  />
-                  <FormikInput
-                    name="bio"
-                    as="textarea"
-                    label={
-                      <span className="add-profile__form__label">
-                        {t("profile.update.form.bioLabel")}
-                      </span>
-                    }
-                    placeholder={t("profile.update.form.bioPlaceHolder")}
-                  />
-                </fieldset>
-              </div>
-              {
-                formActive && (
-                  <div className="d-flex gap-2 justify-content-end">
+                  <div className="profile__header__button">
                     <Button
                       onClick={() => {
                         handleReset()
-                        setFormActive(false)
+                        setFormActive(!formActive)
                       }}
                       variant="secondary"
                     >
-                      Cancel
+                      Edit Profile
                     </Button>
-                    <LoadingButton
-                      label={"Save"}
-                      isDisabled={
-                        isAddProfileLoading || isUpdateProfileLoading || !dirty
-                      }
-                      isLoading={isAddProfileLoading || isUpdateProfileLoading}
-                      type="submit"
-                      variant="secondary"
-                    />
                   </div>
-                )
-              }
-            </Form>
-          )}
-        </Formik>
+                </div>
+
+                <div className="profile__body">
+                  <div className="profile__body__alias">
+                    <h2 className="profile__body__alias__heading">{userProfile?.alias}</h2>
+                  </div>
+
+                  <div onClick={copyToClipBoard} className="profile__body__principal">
+                    <i className="ri-file-copy-line"></i>
+                    Principal Id {displayAddress}
+                  </div>
+
+                  <div className="profile__body__roles">
+                    <div style={{ minHeight: "38px" }} className="d-flex align-items-center gap-2">
+                      <p>{t("profile.roles")}</p>
+                      <p className="d-flex gap-2">
+                        <Badge bg="secondary">
+                          <i className="ri-sparkling-fill"></i>
+                          {t("common.creater")}
+                        </Badge>
+                        {isDeveloper && (
+                          <Badge bg="success">
+                            <i className="ri-code-box-fill"></i>
+                            {t("common.developer")}
+                          </Badge>
+                        )}
+                      </p>
+                    </div>
+                    {renderDeveloperStatus()}
+                  </div>
+                  <hr />
+                  <fieldset disabled>
+                    <FormikInput
+                      name="alias"
+                      placeholder={t("profile.update.form.aliasPlaceHolder")}
+                      label={
+                        <Trans
+                          i18nKey="profile.update.form.aliasLabel"
+                          components={{
+                            span: <span className="add-profile__form__label" />
+                          }}
+                        />
+                      }
+                    />
+                  </fieldset>
+                  <fieldset disabled={!formActive}>
+                    <FormikInput
+                      name="xHandle"
+                      placeholder={t("profile.update.form.xHandlePlaceHolder")}
+                      label={
+                        <Trans
+                          i18nKey="profile.update.form.xHandleLabel"
+                          components={{
+                            span: <span className="add-profile__form__label" />
+                          }}
+                        />
+                      }
+                    />
+                    <FormikInput
+                      name="bio"
+                      as="textarea"
+                      label={
+                        <span className="add-profile__form__label">
+                          {t("profile.update.form.bioLabel")}
+                        </span>
+                      }
+                      placeholder={t("profile.update.form.bioPlaceHolder")}
+                    />
+                  </fieldset>
+                </div>
+                {
+                  formActive && (
+                    <div className="d-flex gap-2 justify-content-end">
+                      <Button
+                        onClick={() => {
+                          handleReset()
+                          setFormActive(false)
+                        }}
+                        variant="secondary"
+                      >
+                        Cancel
+                      </Button>
+                      <LoadingButton
+                        label={"Save"}
+                        isDisabled={
+                          isAddProfileLoading || isUpdateProfileLoading || !dirty
+                        }
+                        isLoading={isAddProfileLoading || isUpdateProfileLoading}
+                        type="submit"
+                        variant="secondary"
+                      />
+                    </div>
+                  )
+                }
+              </Form>
+            )}
+          </Formik>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

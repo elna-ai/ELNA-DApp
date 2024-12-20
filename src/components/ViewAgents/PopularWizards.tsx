@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { Dropdown, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
@@ -10,12 +9,13 @@ import Card from "./Card";
 import { useFetchPublicWizards } from "hooks/reactQuery/wizards/usePublicWizards";
 import { WizardDetailsBasicWithCreatorName } from "declarations/wizard_details/wizard_details.did";
 import SearchBarWizards from "./SearchBarWizards";
+import MetaTags from "components/common/MetaHelmet";
+import { t } from "i18next";
 
 type SortByOptions = "popularity" | "recentlyUpdated";
 
 function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
   const [sortBy, setSortBy] = useState<SortByOptions>("recentlyUpdated");
-  const { t } = useTranslation();
 
   const [suggestionResults, setSuggestionResults] = useState<
     Array<WizardDetailsBasicWithCreatorName>
@@ -66,6 +66,10 @@ function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
 
   return (
     <>
+      <MetaTags
+        title={t(`meta.${isHomePage ? "home" : "agentMarketplace"}.title`)}
+        description={t(`meta.${isHomePage ? "home" : "agentMarketplace"}.description`)}
+      />
       <div className="d-flex align-items-top justify-content-between mt-4 mb-2">
         <div>
           <h5 className="flex gap-2">
