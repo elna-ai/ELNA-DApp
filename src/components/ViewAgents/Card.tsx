@@ -44,8 +44,8 @@ function Card({
   const creator = creatorName ? creatorName : displayAddress(userId || "");
 
   return (
-    <div className="col">
-      <div className="card card-border contact-card elna-card">
+    <div className="d-flex justify-content-center align-content-center">
+      <div className="card card-border contact-card elna-card w-100">
         <div className="card-body text-center">
           <div className="d-flex">
             <div className="card-body__price">

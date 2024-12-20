@@ -129,7 +129,7 @@ function MyWizards() {
           title={t("meta.myAgents.title")}
           description={t("meta.myAgents.description")}
         />
-        <div className="my-wizards__card-wrapper">
+        <div className="row g-3 row-cols-xxl-5 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
           {userWizards?.map(
             ({ id, name, description, avatar, isPublished, creatorName }) => (
               <div key={id} className="col">

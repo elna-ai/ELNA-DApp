@@ -126,7 +126,7 @@ function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
           </Dropdown>
         </div>
       )}
-      <div className="row gx-3 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
+      <div className="row g-3 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mb-5">
         {isLoadingPopularWizards ? (
           <Spinner className="m-auto" />
         ) : (
