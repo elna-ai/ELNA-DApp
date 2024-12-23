@@ -22,6 +22,7 @@ import Bubble from "./Bubble";
 import NoHistory from "./NoHistory";
 import { TWITTER_HASHTAGS, TWITTER_SHARE_CONTENT } from "./constants";
 import MetaTags from "components/common/MetaHelmet";
+import OGPlaceholderImage from "images/placeholder-tool-icon.webp";
 
 function Chat() {
 
@@ -153,6 +154,9 @@ function Chat() {
       <MetaTags
         title={`${t("meta.agentChat.title")}${wizard.name}`}
         description={`${t("meta.agentChat.description")}`}
+        ogImage={OGPlaceholderImage}
+        ogTitle={`${t("meta.agentChat.title")}${wizard.name}`}
+        ogDescription={`${t("meta.agentChat.description")}`}
       />
       <div className="row chatapp-single-chat">
         <div className="container-fluid">

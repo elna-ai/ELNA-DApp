@@ -1,12 +1,12 @@
 {
   "meta": {
     "home": {
-      "title": "ELNA.ai | Your Personal AI Workspace & Agent Platform",
-      "description": "Create, customize, and collaborate with AI agents. ELNA.ai empowers you to build, discover and deploy intelligent solutions for your unique needs."
+      "title": "ELNA.ai | Interact with Intelligence",
+      "description": "Search and converse with AI agents made by creators from all over the world. ELNA.ai empowers you to build and deploy intelligent solutions for your unique needs, hence each agent is a highly customised/specialised one."
     },
     "mySpace": {
       "title": "ELNA.ai | My Space - Your AI Workspace Hub",
-      "description": "Manage and organize your AI-powered workspace, track your agents, tools, and creative projects all in one centralized dashboard."
+      "description": "Log in to create, customize, and collaborate with AI agents. Manage and organize your AI-powered workspace, track your agents, tools, and creative projects all in one centralized dashboard."
     },
     "myProfile": {
       "title": "ELNA.ai | User Profile - Personalize Your AI Experience",
@@ -18,15 +18,15 @@
     },
     "myTools": {
       "title": "ELNA.ai | My Tools - AI-Powered Productivity Toolkit",
-      "description": "Discover, organize, and leverage your curated suite of AI tools designed to streamline your work, boost creativity, and solve complex challenges."
+      "description": "For Developers to display, organize, and leverage your curated suite of AI tools designed to streamline work, boost creativity, and solve complex utility challenges."
     },
     "agentMarketplace": {
       "title": "ELNA.ai | Agent Marketplace - Find Your Perfect AI Assistant",
       "description": "Explore a diverse marketplace of specialized AI agents ready to tackle your unique tasks, from creative writing to complex problem-solving."
     },
     "developerStudio": {
-      "title": "ELNA.ai | Developer Studio - Build and Deploy AI Agents",
-      "description": "Create, train, and launch your custom AI agents. Access powerful development tools and resources to bring your AI innovations to life."
+      "title": "ELNA.ai | Developer Studio - The Tools Marketplace",
+      "description": "Search and access powerful development tools to bring your AI to life. Great place for Creators to access resources and bring your AI to life."
     },
     "agentChat": {
       "title": "ELNA.ai | Chat with ",

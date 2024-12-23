@@ -1,6 +1,5 @@
 import PageLoader from "components/common/PageLoader";
-import { Link, useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useShowTool } from "hooks/reactQuery/useDeveloperTools";
 import NoToolImg from "images/placeholder-tools.webp";
 import NoToolIconImg from "images/placeholder-tool-icon.webp";
