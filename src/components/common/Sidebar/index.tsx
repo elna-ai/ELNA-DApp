@@ -53,7 +53,7 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
             alignItems: "center",
             justifyContent: "center",
             position: "fixed",
-            zIndex: "999999",
+            zIndex: "1035",
           }}
           onClick={handleExpand}
         >
