@@ -1,21 +1,82 @@
 import { Document } from "langchain/dist/document";
 import { CharacterTextSplitter } from "langchain/text_splitter";
-import { WebPDFLoader } from "langchain/document_loaders/web/pdf";
-import * as pdfJs from "pdfjs-dist";
-import pdfJsWorker from "pdfjs-dist/build/pdf.worker";
+import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
+import * as pdfjsLib from 'pdfjs-dist';
+// Import the worker source properly for Vite
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker?url';
+import { TextLoader } from "langchain/document_loaders/fs/text";
+import { CSVLoader } from "@langchain/community/document_loaders/fs/csv";
+import { JSONLoader } from "langchain/document_loaders/fs/json";
+import { DocxLoader } from "@langchain/community/document_loaders/fs/docx";
 import { History } from "declarations/elna_RAG_backend/elna_RAG_backend.did";
 
 import { Message, VariantKeys } from "../types";
 
+type AllowedFileTypes = 
+  | "application/pdf"
+  | "text/plain"
+  | "text/csv"
+  | "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  | "application/json";
+
+export function isAllowedFileType(value: string): value is AllowedFileTypes {
+  const allowedTypes: AllowedFileTypes[] = [
+    "application/pdf",
+    "text/plain",
+    "text/csv",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/json",
+  ];
+  return allowedTypes.includes(value as AllowedFileTypes);
+}
+
 export const extractDocumentsFromPDF = async (file: File) => {
-  const loader = new WebPDFLoader(file, {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+  const loader = new PDFLoader(file, {
     //  TODO: ignore requried here?
     /* @ts-ignore */
-    pdfjs: () => {
-      pdfJs.GlobalWorkerOptions.workerSrc = pdfJsWorker;
-      return pdfJs;
-    },
+    pdfjs: () => pdfjsLib,
   });
+  try {
+    const docs = await loader.load();
+    return docs;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const extractDocumentsFromText = async (file: File) => {
+  const loader = new TextLoader(file);
+  try {
+    const docs = await loader.load();
+    return docs;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const extractDocumentsFromCSV = async (file: File) => {
+  const loader = new CSVLoader(file);
+  try {
+    const docs = await loader.load();
+    return docs;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const extractDocumentsFromDOCX = async (file: File) => {
+  const loader = new DocxLoader(file);
+  try {
+    const docs = await loader.load();
+    return docs;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const extractDocumentsFromJSON = async (file: File) => {
+  const loader = new JSONLoader(file);
   try {
     const docs = await loader.load();
     return docs;

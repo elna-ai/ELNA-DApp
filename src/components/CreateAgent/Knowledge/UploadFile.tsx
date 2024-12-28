@@ -10,9 +10,14 @@ import { toast } from "react-toastify";
 import {
   getChunks,
   extractDocumentsFromPDF,
+  extractDocumentsFromText,
+  extractDocumentsFromCSV,
   mergeHyphenatedWords,
   fixNewlines,
   removeMultipleNewlines,
+  extractDocumentsFromDOCX,
+  extractDocumentsFromJSON,
+  isAllowedFileType,
 } from "src/utils";
 import { useNavigate } from "react-router-dom";
 import {
@@ -20,8 +25,6 @@ import {
   useCreateIndex,
 } from "hooks/reactQuery/useExternalService";
 import LoadingButton from "components/common/LoadingButton";
-import queryClient from "utils/queryClient";
-import { QUERY_KEYS } from "src/constants/query";
 
 type UploadFileProps = {
   isOpen: boolean;
@@ -48,10 +51,14 @@ function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
   };
 
   const handleUpload = async () => {
-    const documents = await extractDocumentsFromPDF(selectedFiles[0]);
+    // const documents = await extractDocumentsFromPDF(selectedFiles[0]);
+    // const documents = await extractDocumentsFromText(selectedFiles[0]);
+    // const documents = await extractDocumentsFromCSV(selectedFiles[0]);
+    // const documents = await extractDocumentsFromDOCX(selectedFiles[0]);
+    const documents = await extractDocumentsFromJSON(selectedFiles[0]);
     if (documents === undefined) {
-      console.error("unable to extract text from pdf");
-      toast.error("unable to extract text from pdf");
+      console.error("unable to extract text from file");
+      toast.error("unable to extract text from file");
       return;
     }
 
@@ -66,26 +73,27 @@ function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
     });
 
     const chunks = await getChunks(cleanedDocuments);
-    createElnaDbIndex(
-      {
-        documents: chunks,
-        index_name: agentId,
-        file_name: selectedFiles[0].name,
-      },
-      {
-        onSuccess: () => {
-          toast.success("Uploaded successfully");
-          queryClient.invalidateQueries({
-            queryKey: [QUERY_KEYS.WIZARD_FILE_NAMES],
-          });
-          onClose();
-        },
-        onError: error => {
-          console.error(error);
-          toast.error(error.message);
-        },
-      }
-    );
+    console.log("chunks", chunks);
+    // createElnaDbIndex(
+    //   {
+    //     documents: chunks,
+    //     index_name: agentId,
+    //     file_name: selectedFiles[0].name,
+    //   },
+    //   {
+    //     onSuccess: () => {
+    //       toast.success("Uploaded successfully");
+    //       queryClient.invalidateQueries({
+    //         queryKey: [QUERY_KEYS.WIZARD_FILE_NAMES],
+    //       });
+    //       onClose();
+    //     },
+    //     onError: error => {
+    //       console.error(error);
+    //       toast.error(error.message);
+    //     },
+    //   }
+    // );
   };
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -95,9 +103,11 @@ function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
 
     const newFiles = Array.from(inputFiles);
     const validFiles = newFiles.filter(file => {
-      const isPDF = file.type === "application/pdf";
+      console.log("filetype", file.type);
+      // const isValidFileType = file.type === "application/pdf" || file.type === "text/plain" || file.type === "text/csv" || file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || file.type === "application/json";
+      const isValidFileType = isAllowedFileType(file.type);
       const isSizeValid = file.size <= 5 * 1024 * 1024; // 5MB in bytes
-      return isPDF && isSizeValid;
+      return isValidFileType && isSizeValid;
     });
 
     if (validFiles.length === 0) {

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import classNames from "classnames";
 import { toast } from "react-toastify";
+import AvatarPlaceholder from "../../../assets/avatar_placeholder.svg";
 
 import tickSolid from "images/tickSolid.png";
 
@@ -62,7 +63,7 @@ function UploadAvatarImage({
           })}
         > 
           <img
-          src={previewSrc} alt="Preview"
+          src={previewSrc || AvatarPlaceholder} alt="Preview"
           className="avatar-image"/>
           {selected && (
             <img
