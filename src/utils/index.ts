@@ -11,23 +11,76 @@ import { DocxLoader } from "@langchain/community/document_loaders/fs/docx";
 import { History } from "declarations/elna_RAG_backend/elna_RAG_backend.did";
 
 import { Message, VariantKeys } from "../types";
+import { toast } from "react-toastify";
 
-type AllowedFileTypes = 
-  | "application/pdf"
-  | "text/plain"
-  | "text/csv"
-  | "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-  | "application/json";
+const acceptableFileTypes: string[] = [
+  "application/pdf",
+  "text/plain",
+  "text/csv",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/json",
+];
 
-export function isAllowedFileType(value: string): value is AllowedFileTypes {
-  const allowedTypes: AllowedFileTypes[] = [
-    "application/pdf",
-    "text/plain",
-    "text/csv",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "application/json",
-  ];
-  return allowedTypes.includes(value as AllowedFileTypes);
+export const isAcceptableFileType = (fileType: string): boolean => {
+  return acceptableFileTypes.includes(fileType);
+}
+
+// export const extractDocuments = async (selectedFile: File) => {
+//   switch (selectedFile.type) {
+//     case "application/pdf":
+//       return await extractDocumentsFromPDF(selectedFile);
+//     case "text/plain":
+//       return await extractDocumentsFromText(selectedFile);
+//     case "text/csv":
+//       return await extractDocumentsFromCSV(selectedFile);
+//     case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+//       return await extractDocumentsFromDOCX(selectedFile);
+//     case "application/json":
+//       return await extractDocumentsFromJSON(selectedFile);
+//     default:
+//       console.error(`Unsupported file type: ${selectedFile.type}`);
+//       break;
+//   }
+// };
+
+export const extractDocuments = async (selectedFiles: File[]) => {
+  const extractedDocuments: Document<Record<string, any>>[] = [];
+
+  for (const file of selectedFiles) {
+    switch (file.type) {
+      case "application/pdf":
+        pushDocumentsToArray(await extractDocumentsFromPDF(file), extractedDocuments);
+        break;
+      case "text/plain":
+        pushDocumentsToArray(await extractDocumentsFromText(file), extractedDocuments);
+        break;
+      case "text/csv":
+        pushDocumentsToArray(await extractDocumentsFromCSV(file), extractedDocuments);
+        break;
+      case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+        pushDocumentsToArray(await extractDocumentsFromDOCX(file), extractedDocuments);
+        break;
+      case "application/json":
+        pushDocumentsToArray(await extractDocumentsFromJSON(file), extractedDocuments);
+        break;
+      default:
+        console.error(`Unsupported file type: ${file.type}`);
+        break;
+    }
+  }
+
+  return extractedDocuments;
+};
+
+export const pushDocumentsToArray = (documents: Document<Record<string, any>>[] | undefined, targetArray: Document<Record<string, any>>[]): void => {
+  if(documents === undefined) {
+    console.error("unable to extract text from file");
+    toast.error("unable to extract text from file");
+  } else{
+    for (const document of documents) {
+      targetArray.push(document);
+    }
+  }
 }
 
 export const extractDocumentsFromPDF = async (file: File) => {

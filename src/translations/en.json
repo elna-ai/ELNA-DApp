@@ -92,7 +92,7 @@
       "uploadFile": {
         "title": "Browse to select files",
         "maxSize": "Maximum upload size per file: <b>5MB</b> ",
-        "supportedType": "Supported file type: <b>PDF</b>"
+        "supportedType": "Supported file type: <b>PDF</b>, <b>DOCX</b>, <b>CSV</b>, <b>TXT</b>, <b>JSON</b>"
       }
     },
     "form": {

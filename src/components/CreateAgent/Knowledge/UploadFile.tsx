@@ -6,18 +6,15 @@ import Spinner from "react-bootstrap/Spinner";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { Trans, useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
 import {
   getChunks,
-  extractDocumentsFromPDF,
-  extractDocumentsFromText,
-  extractDocumentsFromCSV,
   mergeHyphenatedWords,
   fixNewlines,
   removeMultipleNewlines,
-  extractDocumentsFromDOCX,
-  extractDocumentsFromJSON,
-  isAllowedFileType,
+  extractDocuments,
+  isAcceptableFileType,
+  extractDocumentsFromPDF,
+  extractDocumentsFromText,
 } from "src/utils";
 import { useNavigate } from "react-router-dom";
 import {
@@ -51,17 +48,11 @@ function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
   };
 
   const handleUpload = async () => {
-    // const documents = await extractDocumentsFromPDF(selectedFiles[0]);
     // const documents = await extractDocumentsFromText(selectedFiles[0]);
-    // const documents = await extractDocumentsFromCSV(selectedFiles[0]);
+    // const documents = await extractDocumentsFromPDF(selectedFiles[0]);
     // const documents = await extractDocumentsFromDOCX(selectedFiles[0]);
-    const documents = await extractDocumentsFromJSON(selectedFiles[0]);
-    if (documents === undefined) {
-      console.error("unable to extract text from file");
-      toast.error("unable to extract text from file");
-      return;
-    }
-
+    const documents = await extractDocuments(selectedFiles);
+    console.log(documents)
     const cleanedDocuments = documents.map(document => {
       const mergeHyphenated = mergeHyphenatedWords(document.pageContent);
       const newlineFix = fixNewlines(mergeHyphenated);
@@ -72,8 +63,8 @@ function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
       });
     });
 
-    const chunks = await getChunks(cleanedDocuments);
-    console.log("chunks", chunks);
+    // const chunks = await getChunks(cleanedDocuments);
+    // console.log("chunks", chunks);
     // createElnaDbIndex(
     //   {
     //     documents: chunks,
@@ -103,9 +94,8 @@ function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
 
     const newFiles = Array.from(inputFiles);
     const validFiles = newFiles.filter(file => {
-      console.log("filetype", file.type);
-      // const isValidFileType = file.type === "application/pdf" || file.type === "text/plain" || file.type === "text/csv" || file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || file.type === "application/json";
-      const isValidFileType = isAllowedFileType(file.type);
+      const isValidFileType = isAcceptableFileType(file.type);
+      console.log("isValidFileType", file.type, isValidFileType);
       const isSizeValid = file.size <= 5 * 1024 * 1024; // 5MB in bytes
       return isValidFileType && isSizeValid;
     });
