@@ -13,8 +13,6 @@ import {
   removeMultipleNewlines,
   extractDocuments,
   isAcceptableFileType,
-  extractDocumentsFromPDF,
-  extractDocumentsFromText,
 } from "src/utils";
 import { useNavigate } from "react-router-dom";
 import {
@@ -32,6 +30,7 @@ type UploadFileProps = {
 function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [validationMessage, setValidationMessage] = useState("");
+  const [isConvertingFiles, setIsConvertingFiles] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
   const { t } = useTranslation();
@@ -48,8 +47,7 @@ function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
   };
 
   const handleUpload = async () => {
-    // const documents = await extractDocumentsFromText(selectedFiles[0]);
-    // const documents = await extractDocumentsFromPDF(selectedFiles[0]);
+    setIsConvertingFiles(true);
     // const documents = await extractDocumentsFromDOCX(selectedFiles[0]);
     const documents = await extractDocuments(selectedFiles);
     console.log(documents)
@@ -63,8 +61,9 @@ function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
       });
     });
 
-    // const chunks = await getChunks(cleanedDocuments);
-    // console.log("chunks", chunks);
+    const chunks = await getChunks(cleanedDocuments);
+    console.log("chunks", chunks);
+    setIsConvertingFiles(false);
     // createElnaDbIndex(
     //   {
     //     documents: chunks,
@@ -214,8 +213,8 @@ function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
           <LoadingButton
             onClick={handleUpload}
             label={t("common.ok")}
-            isLoading={isCreatingIndex || isCreatingElnaDbIndex}
-            isDisabled={isUploading || isCreatingIndex || isCreatingElnaDbIndex}
+            isLoading={isConvertingFiles ||isCreatingIndex || isCreatingElnaDbIndex}
+            isDisabled={isConvertingFiles || isUploading || isCreatingIndex || isCreatingElnaDbIndex}
           />
           <Button
             className="btn-light btn-modal-cancel"
