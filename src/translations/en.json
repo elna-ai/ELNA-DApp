@@ -1,4 +1,42 @@
 {
+  "meta": {
+    "home": {
+      "title": "ELNA.ai | Interact with Intelligence",
+      "description": "Search and converse with AI agents made by creators from all over the world. ELNA.ai empowers you to build and deploy intelligent solutions for your unique needs, hence each agent is a highly customised/specialised one."
+    },
+    "mySpace": {
+      "title": "ELNA.ai | My Space - Your AI Workspace Hub",
+      "description": "Log in to create, customize, and collaborate with AI agents. Manage and organize your AI-powered workspace, track your agents, tools, and creative projects all in one centralized dashboard."
+    },
+    "myProfile": {
+      "title": "ELNA.ai | User Profile - Personalize Your AI Experience",
+      "description": "Customize your ELNA.ai profile, manage account settings, and optimize your AI interactions and personal workflow."
+    },
+    "myAgents": {
+      "title": "ELNA.ai | My Agents - Your AI Companion Collection",
+      "description": "View, manage, and customize your personal collection of AI agents tailored to enhance productivity and creativity across various domains."
+    },
+    "myTools": {
+      "title": "ELNA.ai | My Tools - AI-Powered Productivity Toolkit",
+      "description": "For Developers to display, organize, and leverage your curated suite of AI tools designed to streamline work, boost creativity, and solve complex utility challenges."
+    },
+    "agentMarketplace": {
+      "title": "ELNA.ai | Agent Marketplace - Find Your Perfect AI Assistant",
+      "description": "Explore a diverse marketplace of specialized AI agents ready to tackle your unique tasks, from creative writing to complex problem-solving."
+    },
+    "developerStudio": {
+      "title": "ELNA.ai | Developer Studio - The Tools Marketplace",
+      "description": "Search and access powerful development tools to bring your AI to life. Great place for Creators to access resources and bring your AI to life."
+    },
+    "agentChat": {
+      "title": "ELNA.ai | Chat with ",
+      "description": "Powered by ELNA.ai's advanced AI technology."
+    },
+    "toolDetails": {
+      "title": "ELNA.ai | ",
+      "description": "Enhance your workflow with intelligent, purpose-built solutions."
+    }
+  },
   "chat": {
     "inputPlaceholder": "Send a message",
     "warning": "Ai agents may display inaccurate or offensive information about people, places and facts that doesn't represent Team ELNA's views"
@@ -179,7 +217,7 @@
   },
   "developerStudio": {
     "toolsMarketplace": "Tools Marketplace",
-    "toolsMarketplaceDesc": "Get started on creating an engaging agent with a pre-made template.",
+    "toolsMarketplaceDesc": "Get started on creating your Decentralised Ai Agent with pre-made tools.",
     "myTools": "My Tools",
     "noTools": "You have no Tools",
     "createBanner": {
@@ -192,18 +230,18 @@
     "myAgents": {
       "agentsHeader": "Agents",
       "agentsHeaderDesc": "Each skilled in their own field - a Travel Guide, a Fitness Coach, a Masterful Storyteller, et al.",
-      "noWizardsHeader":"You don't have any created agents",
-      "noWizardsDesc":"Craft and fine tune your agent",
-      "createAgentBtn":"Create Agent"
+      "noWizardsHeader": "You don't have any created agents",
+      "noWizardsDesc": "Craft and fine tune your agent",
+      "createAgentBtn": "Create Agent"
     },
     "myTools": {
       "toolsHeader": "Tools",
       "toolsHeaderDesc": "List Your tools and integrate with agents.",
-      "noAccessHeader":"You don't have Access to upload tools",
-      "noAccessDesc":"Complete Developer Profile and upload your tools and integrate with agents",
+      "noAccessHeader": "You don't have Access to upload tools",
+      "noAccessDesc": "Complete Developer Profile and upload your tools and integrate with agents",
       "noToolsHeader": "You don't Publish or List any tools",
       "noToolsHeaderDesc": "List your tools and Integrate with agents",
-      "createToolBtn":"Create Tool"
+      "createToolBtn": "Create Tool"
     }
   },
   "common": {
