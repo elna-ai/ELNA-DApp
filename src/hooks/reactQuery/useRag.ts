@@ -74,6 +74,7 @@ export const useGetAgentChatHistory = (agentId: string | undefined) => {
       return result;
     },
     staleTime: ONE_HOUR_STALE_TIME,
+    enabled: !!wallet?.principalId,
   });
 };
 
