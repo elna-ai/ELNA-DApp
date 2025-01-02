@@ -6,6 +6,7 @@ import pdfJsWorker from "pdfjs-dist/build/pdf.worker";
 import { History } from "declarations/elna_RAG_backend/elna_RAG_backend.did";
 
 import { Message, VariantKeys } from "../types";
+import { toast } from "react-toastify";
 
 export const extractDocumentsFromPDF = async (file: File) => {
   const loader = new WebPDFLoader(file, {
@@ -114,4 +115,13 @@ export const convertToMotokoVariant = <T>(
 
 export const convertToIDLVariant = <T>(status: VariantKeys<T>) => {
   return { [status]: null } as T;
+};
+
+export const copyToClipBoard = async (tag: string, text: string) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    toast.success(`${tag} copied`);
+  } catch (err) {
+    toast.error(`Failed to copy ${tag}`);
+  }
 };

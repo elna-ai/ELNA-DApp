@@ -5,8 +5,8 @@ import { useGetAsset } from "hooks/reactQuery/useElnaImages";
 import { Button } from "react-bootstrap";
 import classNames from "classnames";
 import { useState } from "react";
-import PackageInstall from "./PackageInstall";
-import ScriptInstall from "./ScriptInstall";
+import PackageInstall, { ScriptInstall } from "./InstallTypes";
+
 
 type InstallMethodType = "package" | "script"
 
