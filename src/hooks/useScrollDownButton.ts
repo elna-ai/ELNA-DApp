@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Button } from 'react-bootstrap';
-import classNames from 'classnames';
 
 export function UseScrollToBottom() {
     const [showButton, setShowButton] = useState(false);
@@ -13,7 +11,7 @@ export function UseScrollToBottom() {
             const documentHeight = document.documentElement.scrollHeight;
 
             const distanceFromBottom = documentHeight - (scrollTop + windowHeight);
-            const distanceBeforeAppear = Math.round(windowHeight/3);
+            const distanceBeforeAppear = Math.round(windowHeight / 3); // Height before the button appears
 
             setShowButton(distanceFromBottom > distanceBeforeAppear);
         }
@@ -31,18 +29,5 @@ export function UseScrollToBottom() {
         });
     };
 
-    return (
-        <Button
-            onClick={scrollToBottom}
-            className={classNames('',{ 'd-none': !showButton })}
-            style={{
-                position: 'fixed',
-                bottom: '150px',
-                right: '20px',
-                width: "fit-content",
-            }}
-        >
-            <i className="ri-arrow-down-line"></i>
-        </Button>
-    )
+    return { showButton, scrollToBottom };
 }

@@ -23,6 +23,7 @@ import Bubble from "./Bubble";
 import NoHistory from "./NoHistory";
 import { TWITTER_HASHTAGS, TWITTER_SHARE_CONTENT } from "./constants";
 import { UseScrollToBottom } from "hooks/useScrollDownButton";
+import classNames from "classnames";
 
 function Chat() {
 
@@ -60,6 +61,7 @@ function Chat() {
   const retrieveChat = useChatStore((state) => state.retrieveChat);
   const updateChat = useChatStore((state) => state.updateChat);
   const clearChat = useChatStore((state) => state.clearChat);
+  const { showButton, scrollToBottom } = UseScrollToBottom();
 
   const setInitialMessage = () => {
     if (wizard?.greeting === undefined) return;
@@ -166,7 +168,18 @@ function Chat() {
 
   return (
     <div className="row chatapp-single-chat">
-      <UseScrollToBottom />
+      <Button
+        onClick={scrollToBottom}
+        className={classNames('', { 'd-none': !showButton })}
+        style={{
+          position: 'fixed',
+          bottom: '150px',
+          right: '20px',
+          width: "fit-content",
+        }}
+      >
+        <i className="ri-arrow-down-line"></i>
+      </Button>
       <div className="container-fluid">
         <div>
           <header className="text-left">
@@ -186,7 +199,7 @@ function Chat() {
                   <OverlayTrigger
                     placement="bottom"
                     overlay={
-                      <Tooltip className="">
+                      <Tooltip>
                         {wizard.description}
                       </Tooltip>
                     }
