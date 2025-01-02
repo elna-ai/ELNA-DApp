@@ -228,6 +228,7 @@
     "uploading": "Uploading...",
     "delete": "Delete {{entity}}",
     "deleteConfirmation": "Are you sure you want to delete <bold>{{entity}}</bold>",
+    "integrate": "Integrate {{entity}}",
     "add": "Add {{entity}}",
     "free": "Free",
     "beta": "Beta",
