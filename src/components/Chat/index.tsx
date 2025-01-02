@@ -24,7 +24,6 @@ import NoHistory from "./NoHistory";
 import { TWITTER_HASHTAGS, TWITTER_SHARE_CONTENT } from "./constants";
 import { UseScrollToBottom } from "hooks/useScrollDownButton";
 import classNames from "classnames";
-import { useChatStore } from "stores/useChatStore";
 
 function Chat() {
 
@@ -63,6 +62,7 @@ function Chat() {
   const retrieveChat = useChatStore((state) => state.retrieveChat);
   const updateChat = useChatStore((state) => state.updateChat);
   const clearChat = useChatStore((state) => state.clearChat);
+  const { showButton, scrollToBottom } = UseScrollToBottom();
 
   const setInitialMessage = () => {
     if (wizard?.greeting === undefined) return;
