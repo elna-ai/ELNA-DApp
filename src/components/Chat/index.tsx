@@ -175,7 +175,7 @@ function Chat() {
                       </Tooltip>
                     }
                   >
-                    <div style={{ cursor: "pointer" }}>
+                    <div className="cursor-pointer">
                       <p className="text-desc fs-8">{wizard.description}</p>
                     </div>
                   </OverlayTrigger>
