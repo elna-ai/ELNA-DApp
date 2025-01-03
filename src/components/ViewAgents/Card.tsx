@@ -104,9 +104,8 @@ function Card({
           </div>
           {!!handleDelete && (
             <span className={classNames(
-              "badge",
-              "tool-card__footer__badge",
-              "mb-0", { "bg-secondary": !isPublished, "bg-primary": isPublished },
+              "badge tool-card__footer__badge mb-0", 
+              { "bg-secondary": !isPublished, "bg-primary": isPublished },
             )}>{isPublished ? "Published" : "Unpublished"}</span>
           )}
           <span className="fs-7 lh-1">{creator}</span>
