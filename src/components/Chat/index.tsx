@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { Button, Dropdown } from "react-bootstrap";
+import { Button, OverlayTrigger, Tooltip, Dropdown } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
@@ -21,6 +21,8 @@ import { useGetUserProfile } from "hooks/reactQuery/useUser";
 import Bubble from "./Bubble";
 import NoHistory from "./NoHistory";
 import { TWITTER_HASHTAGS, TWITTER_SHARE_CONTENT } from "./constants";
+import { UseScrollToBottom } from "hooks/useScrollDownButton";
+import classNames from "classnames";
 
 function Chat() {
 
@@ -53,6 +55,8 @@ function Chat() {
   const { data: userProfile, isFetching: isUserProfileLoading } =
     useGetUserProfile(wizard?.userId);
   const { mutate: deleteChatHistory, isPending: isDeletingChatHistory } = useDeleteAgentChatHistory();
+
+  const { showButton, scrollToBottom } = UseScrollToBottom();
 
   const setInitialMessage = () => {
     if (wizard?.greeting === undefined) return;
@@ -149,6 +153,18 @@ function Chat() {
 
   return (
     <div className="row chatapp-single-chat">
+      <Button
+        onClick={scrollToBottom}
+        className={classNames({ 'd-none': !showButton })}
+        style={{
+          position: 'fixed',
+          bottom: '150px',
+          right: '20px',
+          width: "fit-content",
+        }}
+      >
+        <i className="ri-arrow-down-line"></i>
+      </Button>
       <div className="container-fluid">
         <div>
           <header className="text-left">
@@ -165,7 +181,18 @@ function Chat() {
                 </div>
                 <div className="flex-grow-1 ms-3">
                   <h3 className="text-lg mt-2">{wizard.name}</h3>
-                  <p className="text-desc fs-8">{wizard.description}</p>
+                  <OverlayTrigger
+                    placement="bottom"
+                    overlay={
+                      <Tooltip>
+                        {wizard.description}
+                      </Tooltip>
+                    }
+                  >
+                    <div className="cursor-pointer">
+                      <p className="text-desc fs-8">{wizard.description}</p>
+                    </div>
+                  </OverlayTrigger>
                 </div>
               </div>
               <div>
