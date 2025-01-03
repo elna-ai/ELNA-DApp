@@ -170,7 +170,7 @@ function Chat() {
     <div className="row chatapp-single-chat">
       <Button
         onClick={scrollToBottom}
-        className={classNames('', { 'd-none': !showButton })}
+        className={classNames({ 'd-none': !showButton })}
         style={{
           position: 'fixed',
           bottom: '150px',
