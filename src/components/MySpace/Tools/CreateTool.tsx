@@ -21,6 +21,7 @@ import ImageUploader from "components/common/ImageUploader";
 import { DeveloperToolStatus } from "declarations/developer_studio/developer_studio.did";
 import queryClient from "utils/queryClient";
 import { QUERY_KEYS } from "src/constants/query";
+import { useUploadCustomImage } from "hooks/reactQuery/useElnaImages";
 
 type CreateToolForm = {
   name: string;
@@ -38,20 +39,23 @@ function CreateTool() {
   const wallet = useWallet();
   const navigate = useNavigate();
   const { mutate: requestDeveloperTool, isPending } = useRequestDeveloperTool();
+  const { mutate: uploadCustomImage, isPending: isUploadingCustomImage } = useUploadCustomImage();
 
-  const handleSubmit = (values: CreateToolForm) => {
-
+  const handleSubmit = async (values: CreateToolForm) => {
+    const icon = await handleUploadCustomImage(values.icon.fileName, values.icon.image);
+    const cover = await handleUploadCustomImage(values.coverImage.fileName, values.coverImage.image);
+    
     const request = {
       ...values,
       id: uuidv4(),
       principal: Principal.fromText(wallet!.principalId),
       status: convertToIDLVariant<DeveloperToolStatus>("pending"),
-      icon: convertToMotokoOptional(values.icon.image),
-      coverImage: convertToMotokoOptional(values.coverImage.image),
+      icon: convertToMotokoOptional(icon),
+      coverImage: convertToMotokoOptional(cover),
       presentationUrl: convertToMotokoOptional(values.presentationUrl),
       demoUrl: convertToMotokoOptional(values.demoUrl),
     };
-
+    
     requestDeveloperTool(request, {
       onSuccess: () => {
         toast.success("Request submitted");
@@ -64,6 +68,37 @@ function CreateTool() {
       },
     });
   };
+
+  const handleUploadCustomImage = async (
+    imageName: string,
+    imageBase64: string
+  ): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      uploadCustomImage(
+        {
+          fileName: imageName,
+          base64Image: imageBase64,
+        },
+        {
+          onSuccess: (response) => {
+            console.log(response);
+            if ("Ok" in response) {
+              resolve(response.Ok);
+            } else {
+              toast.error("Invalid response");
+              reject(new Error("Invalid response"));
+            }
+          },
+          onError: (error) => {
+            console.error(error);
+            reject(error);
+          },
+        }
+      );
+    });
+  };
+
+
   return (
     <div className="row justify-content-center">
       <div className="tool-listing">
@@ -172,7 +207,7 @@ function CreateTool() {
                   <LoadingButton
                     label={"Submit tool"}
                     isDisabled={!dirty}
-                    isLoading={isPending}
+                    isLoading={isUploadingCustomImage || isPending}
                     type="submit"
                   />
                 </div>

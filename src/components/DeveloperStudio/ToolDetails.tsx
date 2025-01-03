@@ -1,15 +1,17 @@
 import PageLoader from "components/common/PageLoader";
-import { Link, useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useShowTool } from "hooks/reactQuery/useDeveloperTools";
 import NoToolImg from "images/placeholder-tools.webp";
 import NoToolIconImg from "images/placeholder-tool-icon.webp";
 import { Button } from "react-bootstrap";
+import { useGetAsset } from "hooks/reactQuery/useElnaImages";
 
 function ToolDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: tool, isFetching: isLoadingTool } = useShowTool(id);
+  const { data: icon } = useGetAsset(tool?.icon[0]);
+  const { data: cover } = useGetAsset(tool?.coverImage[0]);
 
   if (isLoadingTool) {
     return <PageLoader />;
@@ -33,10 +35,10 @@ function ToolDetails() {
       <div className="tooldetail__header">
         <div className="tooldetail__header__details">
           <picture>
-            <source srcSet={tool?.icon[0]} type="image/webp" />
+            <source srcSet={icon?.asset} type="image/webp" />
             <source srcSet={NoToolIconImg} type="image/webp" />
             <img
-              src={tool?.icon[0]}
+              src={icon?.asset}
               className="tooldetail__header__details__img"
               alt=""
             />
@@ -72,7 +74,7 @@ function ToolDetails() {
       <div className="tooldetail__img">
         <img
           className="img-fluid"
-          src={tool?.coverImage[0] || NoToolImg}
+          src={cover?.asset || NoToolImg}
           alt="no tool image"
         />
       </div>
