@@ -39,65 +39,47 @@ function CreateTool() {
   const wallet = useWallet();
   const navigate = useNavigate();
   const { mutate: requestDeveloperTool, isPending } = useRequestDeveloperTool();
-  const { mutate: uploadCustomImage, isPending: isUploadingCustomImage } = useUploadCustomImage();
+  const { mutateAsync: uploadCustomImage, isPending: isUploadingCustomImage } = useUploadCustomImage();
 
   const handleSubmit = async (values: CreateToolForm) => {
-    const icon = await handleUploadCustomImage(values.icon.fileName, values.icon.image);
-    const cover = await handleUploadCustomImage(values.coverImage.fileName, values.coverImage.image);
-    
-    const request = {
-      ...values,
-      id: uuidv4(),
-      principal: Principal.fromText(wallet!.principalId),
-      status: convertToIDLVariant<DeveloperToolStatus>("pending"),
-      icon: convertToMotokoOptional(icon),
-      coverImage: convertToMotokoOptional(cover),
-      presentationUrl: convertToMotokoOptional(values.presentationUrl),
-      demoUrl: convertToMotokoOptional(values.demoUrl),
-    };
-    
-    requestDeveloperTool(request, {
-      onSuccess: () => {
-        toast.success("Request submitted");
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.DEVELOPER_TOOLS]});
-        navigate("/my-space/my-tools");
-      },
-      onError: e => {
-        console.error(e);
-        toast.error("Submission failed");
-      },
-    });
-  };
 
-  const handleUploadCustomImage = async (
-    imageName: string,
-    imageBase64: string
-  ): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      uploadCustomImage(
-        {
-          fileName: imageName,
-          base64Image: imageBase64,
+    const iconPromise = uploadCustomImage({ fileName: values.icon.fileName, base64Image: values.icon.image })
+    const coverPromise = uploadCustomImage({ fileName: values.coverImage.fileName, base64Image: values.coverImage.image })
+    const [icon, cover] = await Promise.all([iconPromise, coverPromise])
+
+    if ("Ok" in icon && "Ok" in cover) {
+      const request = {
+        ...values,
+        id: uuidv4(),
+        principal: Principal.fromText(wallet!.principalId),
+        status: convertToIDLVariant<DeveloperToolStatus>("pending"),
+        icon: convertToMotokoOptional(icon.Ok),
+        coverImage: convertToMotokoOptional(cover.Ok),
+        presentationUrl: convertToMotokoOptional(values.presentationUrl),
+        demoUrl: convertToMotokoOptional(values.demoUrl),
+      };
+
+      requestDeveloperTool(request, {
+        onSuccess: () => {
+          toast.success("Request submitted");
+          queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.DEVELOPER_TOOLS] });
+          navigate("/my-space/my-tools");
         },
-        {
-          onSuccess: (response) => {
-            console.log(response);
-            if ("Ok" in response) {
-              resolve(response.Ok);
-            } else {
-              toast.error("Invalid response");
-              reject(new Error("Invalid response"));
-            }
-          },
-          onError: (error) => {
-            console.error(error);
-            reject(error);
-          },
-        }
-      );
-    });
+        onError: e => {
+          console.error(e);
+          toast.error("Submission failed");
+        },
+      });
+    }
+    if("Err" in icon) {
+      console.error(icon.Err)
+      toast.error("Icon image could not be uploaded")
+    }
+    if("Err" in cover) {
+      console.error(cover.Err)
+      toast.error("Cover image could not be uploaded")
+    }
   };
-
 
   return (
     <div className="row justify-content-center">
