@@ -21,6 +21,7 @@ import { useGetUserProfile } from "hooks/reactQuery/useUser";
 import Bubble from "./Bubble";
 import NoHistory from "./NoHistory";
 import { TWITTER_HASHTAGS, TWITTER_SHARE_CONTENT } from "./constants";
+import { useChatStore } from "stores/useChatStore";
 
 function Chat() {
 
@@ -54,6 +55,10 @@ function Chat() {
     useGetUserProfile(wizard?.userId);
   const { mutate: deleteChatHistory, isPending: isDeletingChatHistory } = useDeleteAgentChatHistory();
 
+  const createChat = useChatStore((state) => state.createChat);
+  const updateChat = useChatStore((state) => state.updateChat);
+  const clearChat = useChatStore((state) => state.clearChat);
+
   const setInitialMessage = () => {
     if (wizard?.greeting === undefined) return;
     const initialMessage = {
@@ -61,6 +66,7 @@ function Chat() {
       message: wizard.greeting,
     };
     setMessages([initialMessage]);
+    createChat(wizard.id);
   };
 
   const clearChatFn = () => {
@@ -114,15 +120,13 @@ function Chat() {
                 console.error(Object.keys(response.Err).join());
                 return;
               }
-
+              const reply = {
+                user: { name: wizard!.name, isBot: true },
+                message: response?.Ok?.body?.response,
+              }
               updateMessagesReplied(wizard?.id || "");
-              setMessages(prev => [
-                ...prev,
-                {
-                  user: { name: wizard!.name, isBot: true },
-                  message: response?.Ok?.body?.response,
-                },
-              ]);
+              setMessages(prev => [...prev, reply]);
+              updateChat(wizard!.id, reply);
             },
             onError: e => {
               console.error(e);
