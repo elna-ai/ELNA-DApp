@@ -23,6 +23,7 @@ import NoHistory from "./NoHistory";
 import { TWITTER_HASHTAGS, TWITTER_SHARE_CONTENT } from "./constants";
 import { UseScrollToBottom } from "hooks/useScrollDownButton";
 import classNames from "classnames";
+import { useChatStore } from "stores/useChatStore";
 
 function Chat() {
 
@@ -57,6 +58,9 @@ function Chat() {
   const { mutate: deleteChatHistory, isPending: isDeletingChatHistory } = useDeleteAgentChatHistory();
 
   const { showButton, scrollToBottom } = UseScrollToBottom();
+  const createChat = useChatStore((state) => state.createChat);
+  const updateChat = useChatStore((state) => state.updateChat);
+  const clearChat = useChatStore((state) => state.clearChat);
 
   const setInitialMessage = () => {
     if (wizard?.greeting === undefined) return;
@@ -65,6 +69,7 @@ function Chat() {
       message: wizard.greeting,
     };
     setMessages([initialMessage]);
+    createChat(wizard.id);
   };
 
   const clearChatFn = () => {
@@ -118,15 +123,13 @@ function Chat() {
                 console.error(Object.keys(response.Err).join());
                 return;
               }
-
+              const reply = {
+                user: { name: wizard!.name, isBot: true },
+                message: response?.Ok?.body?.response,
+              }
               updateMessagesReplied(wizard?.id || "");
-              setMessages(prev => [
-                ...prev,
-                {
-                  user: { name: wizard!.name, isBot: true },
-                  message: response?.Ok?.body?.response,
-                },
-              ]);
+              setMessages(prev => [...prev, reply]);
+              updateChat(wizard!.id, reply);
             },
             onError: e => {
               console.error(e);
