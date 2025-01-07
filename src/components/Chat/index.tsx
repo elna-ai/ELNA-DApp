@@ -14,6 +14,7 @@ import { useUpdateMessagesReplied } from "hooks/reactQuery/wizards/useAnalytics"
 import { useCreatingQuestionEmbedding } from "hooks/reactQuery/useExternalService";
 import { useChat, useDeleteAgentChatHistory, useGetAgentChatHistory } from "hooks/reactQuery/useRag";
 import { isRagErr } from "utils/ragCanister";
+import { useChatStore } from "stores/useChatStore";
 import { useUserStore } from "stores/useUser";
 import { useGetAsset } from "hooks/reactQuery/useElnaImages";
 import { useGetUserProfile } from "hooks/reactQuery/useUser";
@@ -21,7 +22,6 @@ import { useGetUserProfile } from "hooks/reactQuery/useUser";
 import Bubble from "./Bubble";
 import NoHistory from "./NoHistory";
 import { TWITTER_HASHTAGS, TWITTER_SHARE_CONTENT } from "./constants";
-import { useChatStore } from "stores/useChatStore";
 
 function Chat() {
 
@@ -56,21 +56,28 @@ function Chat() {
   const { mutate: deleteChatHistory, isPending: isDeletingChatHistory } = useDeleteAgentChatHistory();
 
   const createChat = useChatStore((state) => state.createChat);
+  const retrieveChat = useChatStore((state) => state.retrieveChat);
   const updateChat = useChatStore((state) => state.updateChat);
   const clearChat = useChatStore((state) => state.clearChat);
 
   const setInitialMessage = () => {
+    // if(wizard?.id !== undefined) return clearChat(wizard?.id);
     if (wizard?.greeting === undefined) return;
-    const initialMessage = {
-      user: { name: wizard.name, isBot: true },
-      message: wizard.greeting,
-    };
-    setMessages([initialMessage]);
-    createChat(wizard.id);
+    const localStorageChat = retrieveChat(wizard.id);
+    if(localStorageChat !== undefined) setMessages(localStorageChat);
+    else {
+      const initialMessage = {
+        user: { name: wizard.name, isBot: true },
+        message: wizard.greeting,
+      };
+      setMessages([initialMessage]);
+      createChat(wizard.id);
+    }
   };
 
   const clearChatFn = () => {
     deleteChatHistory(wizard?.id);
+    clearChat(wizard!.id);
     setInitialMessage();
   };
 
@@ -102,6 +109,7 @@ function Chat() {
   const handleSubmit = async () => {
     const message = messageInput.trim();
     setMessages(prev => [...prev, { user: { name: "User" }, message }]);
+    updateChat(wizard!.id, { user: { name: "User" }, message });
     setMessageInput("");
     createQuestionEmbedding(message, {
       onSuccess(data) {
