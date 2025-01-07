@@ -57,16 +57,15 @@ function Chat() {
     useGetUserProfile(wizard?.userId);
   const { mutate: deleteChatHistory, isPending: isDeletingChatHistory } = useDeleteAgentChatHistory();
 
+  const { showButton, scrollToBottom } = UseScrollToBottom();
   const createChat = useChatStore((state) => state.createChat);
   const retrieveChat = useChatStore((state) => state.retrieveChat);
   const updateChat = useChatStore((state) => state.updateChat);
   const clearChat = useChatStore((state) => state.clearChat);
-  const { showButton, scrollToBottom } = UseScrollToBottom();
 
   const setInitialMessage = () => {
     if (wizard?.greeting === undefined) return;
     const localStorageChat = retrieveChat(wizard.id);
-    console.log("localStorageChat", localStorageChat);
     if(localStorageChat !== undefined && localStorageChat.length > 0) setMessages(localStorageChat);
     else {
       const initialMessage = {
