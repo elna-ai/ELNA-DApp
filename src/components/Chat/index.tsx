@@ -61,10 +61,10 @@ function Chat() {
   const clearChat = useChatStore((state) => state.clearChat);
 
   const setInitialMessage = () => {
-    // if(wizard?.id !== undefined) return clearChat(wizard?.id);
     if (wizard?.greeting === undefined) return;
     const localStorageChat = retrieveChat(wizard.id);
-    if(localStorageChat !== undefined) setMessages(localStorageChat);
+    console.log("localStorageChat", localStorageChat);
+    if(localStorageChat !== undefined && localStorageChat.length > 0) setMessages(localStorageChat);
     else {
       const initialMessage = {
         user: { name: wizard.name, isBot: true },
@@ -103,6 +103,10 @@ function Chat() {
         block: "end",
         inline: "nearest",
       });
+    }
+    if(messages.length <= 0) {
+      console.log("yaaah")
+      setInitialMessage();
     }
   }, [messages]);
 
@@ -216,7 +220,7 @@ function Chat() {
         <div className="chat-body">
           {/* TODO: media query to be converted to scss */}
           <div className="sm:mx-2 chat-body--wrapper">
-            {messages.length > 0 ? (
+            {messages.length > 0 && (
               <>
                 {messages.map(({ user, message }, index) => (
                   <Bubble
@@ -234,9 +238,11 @@ function Chat() {
                   />
                 )}
               </>
-            ) : (
-              <NoHistory />
-            )}
+            ) 
+            // : (
+            //   <NoHistory />
+            // )
+            }
           </div>
         </div>
         <div className="hk-footer chatfooter">
