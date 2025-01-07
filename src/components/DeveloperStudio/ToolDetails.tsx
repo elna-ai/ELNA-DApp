@@ -10,8 +10,8 @@ function ToolDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: tool, isFetching: isLoadingTool } = useShowTool(id);
-  const { data: icon } = useGetAsset(tool?.icon[0]);
-  const { data: cover } = useGetAsset(tool?.coverImage[0]);
+  const { data: icon } = useGetAsset(tool?.icon);
+  const { data: cover } = useGetAsset(tool?.coverImage);
 
   if (isLoadingTool) {
     return <PageLoader />;
@@ -57,13 +57,13 @@ function ToolDetails() {
             </p>
           </div>
         </div>
-        {tool?.demoUrl[0] && (
+        {tool?.demoUrl && (
           <Button
             className="tooldetail__header__demobtn"
             onClick={() => {
-              if (tool?.demoUrl[0]) window.open(tool?.demoUrl[0]);
+              if (tool?.demoUrl) window.open(tool?.demoUrl);
             }}
-            disabled={!tool?.demoUrl[0]}
+            disabled={!tool?.demoUrl}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -80,10 +80,10 @@ function ToolDetails() {
       </div>
       <div className="tooldetail__body">
         <div className="tooldetail__body__btn">
-          {tool?.presentationUrl[0] && (
+          {tool?.presentationUrl && (
             <Link
               className="tooldetail__body__btn__link"
-              to={tool?.presentationUrl[0]}
+              to={tool?.presentationUrl}
               target="_blank"
               rel="noopener noreferrer"
             >
