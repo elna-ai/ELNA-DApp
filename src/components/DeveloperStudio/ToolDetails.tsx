@@ -74,8 +74,8 @@ function ToolDetails() {
       <div className="tooldetail__img">
         <img
           className="img-fluid"
-          src={cover?.asset || NoToolImg}
-          alt="no tool image"
+          src={cover?.asset || tool?.coverImage || NoToolImg}
+          alt="Cover Image"
         />
       </div>
       <div className="tooldetail__body">

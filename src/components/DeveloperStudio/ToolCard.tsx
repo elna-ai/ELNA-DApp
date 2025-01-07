@@ -54,7 +54,7 @@ function ToolCard({
       <div className="tool-card__cover">
         <img
           className="tool-card__cover__img img-fluid"
-          src={ cover?.asset || tool.coverImage[0] || NoToolImg }
+          src={ cover?.asset || tool.coverImage || NoToolImg }
           alt="Card cover"
         />
       </div>
