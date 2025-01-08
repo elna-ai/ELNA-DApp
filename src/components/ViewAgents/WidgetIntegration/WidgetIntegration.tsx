@@ -5,12 +5,10 @@ import { useGetAsset } from "hooks/reactQuery/useElnaImages";
 import { Button } from "react-bootstrap";
 import classNames from "classnames";
 import { useState } from "react";
-import PackageInstall, { ScriptInstall } from "./InstallTypes";
+import { PackageInstall, ScriptInstall } from "./InstallTypes";
 
-
-type InstallMethodType = "package" | "script"
-
-const installMethods: InstallMethodType[] = ["package", "script"]
+const installMethods = ["package", "script"] as const;
+type InstallMethodType = typeof installMethods[number]
 
 function WidgetIntegration() {
     const { id } = useParams();
@@ -23,9 +21,6 @@ function WidgetIntegration() {
         return <PageLoader />;
     }
 
-    if (isLoadingAgent) {
-        return <PageLoader />;
-    }
     return (
         <div className="tooldetail">
             <div className="tooldetail__back">
