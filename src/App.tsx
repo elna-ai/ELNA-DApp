@@ -56,7 +56,7 @@ function App() {
                       <Routes>
                         <Route path="/chat/:id?" element={<Chat />} />
                         <Route path="/" element={<ViewAgents />} />
-                        <Route path="/integrate-widget/:id?/*" element={<WidgetIntegration />} />
+                        <Route path="/agents/:id/integrations/chat-widget" element={<WidgetIntegration />} />
                         <Route
                           path="/my-space/*"
                           element={<MySpace />}

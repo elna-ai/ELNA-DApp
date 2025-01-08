@@ -75,7 +75,7 @@ function Card({
                     {t("common.delete", { entity: "agent" })}
                   </Dropdown.Item>
                   <Dropdown.Item
-                    onClick={() => navigate(`/integrate-widget/${id}`)}
+                    onClick={() => navigate(`/agents/${id}/integrations/chat-widget`)}
                   >
                     {t("common.integrate", { entity: "agent" })}
                   </Dropdown.Item>
@@ -111,7 +111,7 @@ function Card({
           </div>
           {!!handleDelete && (
             <span className={classNames(
-              "badge tool-card__footer__badge mb-0", 
+              "badge tool-card__footer__badge mb-0",
               { "bg-secondary": !isPublished, "bg-primary": isPublished },
             )}>{isPublished ? "Published" : "Unpublished"}</span>
           )}

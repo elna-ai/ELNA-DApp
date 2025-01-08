@@ -1,8 +1,10 @@
 import { InputGroup, FormControl, Button } from "react-bootstrap";
 import { copyToClipBoard } from "utils/index";
 import { PACKAGE_INSTALL_EXAMPLE, PACKAGE_INSTALL_README, SCRIPT_INSTALL_EXAMPLE, SCRIPT_INSTALL_README } from "./constant";
+import { useParams } from "react-router-dom";
 
-export default function PackageInstall() {
+export function PackageInstall() {
+    const { id } = useParams();
     return (
         <div>
             <div>Choose and install package manager</div>
@@ -26,9 +28,9 @@ export default function PackageInstall() {
                 <div>Widget Integration</div>
                 <label htmlFor="package-install-example">Example</label>
                 <div className="d-flex">
-                    <textarea readOnly name="package-install-example" value={PACKAGE_INSTALL_EXAMPLE("AGENT_UUID_IN_ELNA", "LOGO_URL")} />
+                    <textarea readOnly name="package-install-example" value={PACKAGE_INSTALL_EXAMPLE(id ?? "", "LOGO_URL")} />
                     <Button
-                        onClick={() => copyToClipBoard("Example", PACKAGE_INSTALL_EXAMPLE("AGENT_UUID_IN_ELNA", "LOGO_URL"))}
+                        onClick={() => copyToClipBoard("Example", PACKAGE_INSTALL_EXAMPLE(id ?? "", "LOGO_URL"))}
                         className="position-absolute end-0" variant="outline-secondary"
                     >
                         <i className="ri-file-copy-line"></i>
@@ -40,6 +42,7 @@ export default function PackageInstall() {
 }
 
 export function ScriptInstall() {
+    const { id } = useParams();
     return (
         <div>
             <div>Add the following Script tag to your HTML page</div>
@@ -63,9 +66,9 @@ export function ScriptInstall() {
                 <div>Widget Integration</div>
                 <label htmlFor="package-install-example">Example</label>
                 <div className="d-flex">
-                    <textarea readOnly name="package-install-example" value={SCRIPT_INSTALL_EXAMPLE("AGENT_UUID_IN_ELNA", "LOGO_URL")} />
+                    <textarea readOnly name="package-install-example" value={SCRIPT_INSTALL_EXAMPLE(id ?? "", "LOGO_URL")} />
                     <Button
-                        onClick={() => copyToClipBoard("Example", SCRIPT_INSTALL_EXAMPLE("AGENT_UUID_IN_ELNA", "LOGO_URL"))}
+                        onClick={() => copyToClipBoard("Example", SCRIPT_INSTALL_EXAMPLE(id ?? "", "LOGO_URL"))}
                         className="position-absolute end-0" variant="outline-secondary"
                     >
                         <i className="ri-file-copy-line"></i>
