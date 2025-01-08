@@ -106,10 +106,7 @@ function Chat() {
         inline: "nearest",
       });
     }
-    if(messages.length <= 0) {
-      console.log("yaaah")
-      setInitialMessage();
-    }
+    if(messages.length <= 0) setInitialMessage();
   }, [messages]);
 
   const handleSubmit = async () => {
