@@ -28,6 +28,7 @@ import CreateAgent from "components/CreateAgent";
 import AddProfile from "components/MySpace/Profile/AddProfile";
 import PopularWizards from "components/ViewAgents/PopularWizards";
 import DeveloperStudio from "components/DeveloperStudio";
+import WidgetIntegration from "components/ViewAgents/WidgetIntegration/WidgetIntegration";
 
 function App() {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -55,6 +56,7 @@ function App() {
                       <Routes>
                         <Route path="/chat/:id?" element={<Chat />} />
                         <Route path="/" element={<ViewAgents />} />
+                        <Route path="/agents/:id/integrations/chat-widget" element={<WidgetIntegration />} />
                         <Route
                           path="/my-space/*"
                           element={<MySpace />}
@@ -65,7 +67,7 @@ function App() {
                         />
                         <Route
                           path="/agent-marketplace/*"
-                          element={<PopularWizards isHomePage={false}/>}
+                          element={<PopularWizards isHomePage={false} />}
                         />
                         <Route
                           path="/developer-studio/*"

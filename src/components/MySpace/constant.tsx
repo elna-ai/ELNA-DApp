@@ -22,17 +22,7 @@ export const MY_SPACE_LINK: MySpaceMenuProps[] = [
     to: "/my-space/my-tools",
     key: "My Tools",
     toolTip: "Your Tools",
-  },
-  // {
-  //   to: "/my-space/plans",
-  //   key: "Plans",
-  //   toolTip: "Your Subscription Plans",
-  // },
-  // {
-  //   to: "/my-space/settings",
-  //   key: "Settings",
-  //   toolTip: "Tweak your Settings",
-  // },
+  }
 ];
 
 export const DEVELOPER_REQUEST_FORM_INITIAL = {

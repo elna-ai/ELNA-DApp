@@ -1,7 +1,7 @@
 import { useGetAsset } from "hooks/reactQuery/useElnaImages";
 import { Dropdown } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AvatarPlaceholder from "../../assets/avatar_placeholder.svg"
 import classNames from "classnames";
 
@@ -44,6 +44,8 @@ function Card({
   };
   const creator = creatorName ? creatorName : displayAddress(userId || "");
 
+  const navigate = useNavigate();
+
   return (
     <div className="col">
       <div className="card card-border contact-card elna-card">
@@ -71,6 +73,11 @@ function Card({
                     className="card-dropdown-delete"
                   >
                     {t("common.delete", { entity: "agent" })}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => navigate(`/agents/${id}/integrations/chat-widget`)}
+                  >
+                    {t("common.integrate", { entity: "agent" })}
                   </Dropdown.Item>
                   {handlePublish && (
                     <Dropdown.Item
@@ -104,7 +111,7 @@ function Card({
           </div>
           {!!handleDelete && (
             <span className={classNames(
-              "badge tool-card__footer__badge mb-0", 
+              "badge tool-card__footer__badge mb-0",
               { "bg-secondary": !isPublished, "bg-primary": isPublished },
             )}>{isPublished ? "Published" : "Unpublished"}</span>
           )}
