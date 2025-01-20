@@ -21,6 +21,7 @@ import ImageUploader from "components/common/ImageUploader";
 import { DeveloperToolStatus } from "declarations/developer_studio/developer_studio.did";
 import queryClient from "utils/queryClient";
 import { QUERY_KEYS } from "src/constants/query";
+import { useUploadCustomImage } from "hooks/reactQuery/useElnaImages";
 
 type CreateToolForm = {
   name: string;
@@ -38,32 +39,48 @@ function CreateTool() {
   const wallet = useWallet();
   const navigate = useNavigate();
   const { mutate: requestDeveloperTool, isPending } = useRequestDeveloperTool();
+  const { mutateAsync: uploadCustomImage, isPending: isUploadingCustomImage } = useUploadCustomImage();
 
-  const handleSubmit = (values: CreateToolForm) => {
+  const handleSubmit = async (values: CreateToolForm) => {
 
-    const request = {
-      ...values,
-      id: uuidv4(),
-      principal: Principal.fromText(wallet!.principalId),
-      status: convertToIDLVariant<DeveloperToolStatus>("pending"),
-      icon: convertToMotokoOptional(values.icon.image),
-      coverImage: convertToMotokoOptional(values.coverImage.image),
-      presentationUrl: convertToMotokoOptional(values.presentationUrl),
-      demoUrl: convertToMotokoOptional(values.demoUrl),
-    };
+    const iconPromise = uploadCustomImage({ fileName: values.icon.fileName, base64Image: values.icon.image })
+    const coverPromise = uploadCustomImage({ fileName: values.coverImage.fileName, base64Image: values.coverImage.image })
+    const [icon, cover] = await Promise.all([iconPromise, coverPromise])
 
-    requestDeveloperTool(request, {
-      onSuccess: () => {
-        toast.success("Request submitted");
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.DEVELOPER_TOOLS]});
-        navigate("/my-space/my-tools");
-      },
-      onError: e => {
-        console.error(e);
-        toast.error("Submission failed");
-      },
-    });
+    if ("Ok" in icon && "Ok" in cover) {
+      const request = {
+        ...values,
+        id: uuidv4(),
+        principal: Principal.fromText(wallet!.principalId),
+        status: convertToIDLVariant<DeveloperToolStatus>("pending"),
+        icon: convertToMotokoOptional(icon.Ok),
+        coverImage: convertToMotokoOptional(cover.Ok),
+        presentationUrl: convertToMotokoOptional(values.presentationUrl),
+        demoUrl: convertToMotokoOptional(values.demoUrl),
+      };
+
+      requestDeveloperTool(request, {
+        onSuccess: () => {
+          toast.success("Request submitted");
+          queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.DEVELOPER_TOOLS] });
+          navigate("/my-space/my-tools");
+        },
+        onError: e => {
+          console.error(e);
+          toast.error("Submission failed");
+        },
+      });
+    }
+    if("Err" in icon) {
+      console.error(icon.Err)
+      toast.error("Icon image could not be uploaded")
+    }
+    if("Err" in cover) {
+      console.error(cover.Err)
+      toast.error("Cover image could not be uploaded")
+    }
   };
+
   return (
     <div className="row justify-content-center">
       <div className="tool-listing">
@@ -172,7 +189,7 @@ function CreateTool() {
                   <LoadingButton
                     label={"Submit tool"}
                     isDisabled={!dirty}
-                    isLoading={isPending}
+                    isLoading={isUploadingCustomImage || isPending}
                     type="submit"
                   />
                 </div>

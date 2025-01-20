@@ -11,6 +11,7 @@ import {
 } from "declarations/developer_studio/developer_studio.did";
 import { useWallet } from "hooks/useWallet";
 import { QUERY_KEYS, ONE_HOUR_STALE_TIME } from "src/constants/query";
+import { convertFromMotokoOptional } from "utils/index";
 import queryClient from "utils/queryClient";
 
 type useShowToolProps = string | undefined;
@@ -20,6 +21,13 @@ export const useShowTool = (toolId: useShowToolProps) =>
     queryKey: [QUERY_KEYS.PUBLIC_TOOLS_LIST, toolId],
     enabled: !!toolId,
     staleTime: ONE_HOUR_STALE_TIME,
+    select: data => ({ 
+      ...data, 
+      icon: convertFromMotokoOptional(data.icon), 
+      coverImage: convertFromMotokoOptional(data.coverImage) ,
+      demoUrl: convertFromMotokoOptional(data.demoUrl),
+      presentationUrl: convertFromMotokoOptional(data.presentationUrl)
+    }),
   });
 
 export const useGetApprovedTools = () =>

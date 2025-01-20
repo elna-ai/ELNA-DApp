@@ -8,6 +8,7 @@ import {
   DeveloperToolWithCreator,
 } from "declarations/developer_studio/developer_studio.did";
 import { VariantKeys } from "src/types";
+import { useGetAsset } from "hooks/reactQuery/useElnaImages";
 
 function ToolCard({
   tool,
@@ -19,6 +20,7 @@ function ToolCard({
   ): tool is DeveloperToolWithCreator => {
     return (tool as DeveloperToolWithCreator).creator !== undefined;
   };
+  const { data: cover } = useGetAsset(tool?.coverImage[0]);
   const navigate = useNavigate();
   const getStatusColor = (
     status: VariantKeys<DeveloperToolStatus>
@@ -52,8 +54,8 @@ function ToolCard({
       <div className="tool-card__cover">
         <img
           className="tool-card__cover__img img-fluid"
-          src={ tool.coverImage[0] || NoToolImg }
-          alt="no tool image"
+          src={ cover?.asset || tool.coverImage || NoToolImg }
+          alt="Card cover"
         />
       </div>
       <p className="tool-card__title text-left text-truncate">{tool.name}</p>

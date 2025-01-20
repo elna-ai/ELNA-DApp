@@ -4,11 +4,14 @@ import { useShowTool } from "hooks/reactQuery/useDeveloperTools";
 import NoToolImg from "images/placeholder-tools.webp";
 import NoToolIconImg from "images/placeholder-tool-icon.webp";
 import { Button } from "react-bootstrap";
+import { useGetAsset } from "hooks/reactQuery/useElnaImages";
 
 function ToolDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: tool, isFetching: isLoadingTool } = useShowTool(id);
+  const { data: icon } = useGetAsset(tool?.icon);
+  const { data: cover } = useGetAsset(tool?.coverImage);
 
   if (isLoadingTool) {
     return <PageLoader />;
@@ -32,10 +35,10 @@ function ToolDetails() {
       <div className="tooldetail__header">
         <div className="tooldetail__header__details">
           <picture>
-            <source srcSet={tool?.icon[0]} type="image/webp" />
+            <source srcSet={icon?.asset} type="image/webp" />
             <source srcSet={NoToolIconImg} type="image/webp" />
             <img
-              src={tool?.icon[0]}
+              src={icon?.asset}
               className="tooldetail__header__details__img"
               alt=""
             />
@@ -54,13 +57,13 @@ function ToolDetails() {
             </p>
           </div>
         </div>
-        {tool?.demoUrl[0] && (
+        {tool?.demoUrl && (
           <Button
             className="tooldetail__header__demobtn"
             onClick={() => {
-              if (tool?.demoUrl[0]) window.open(tool?.demoUrl[0]);
+              if (tool?.demoUrl) window.open(tool?.demoUrl);
             }}
-            disabled={!tool?.demoUrl[0]}
+            disabled={!tool?.demoUrl}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -71,16 +74,16 @@ function ToolDetails() {
       <div className="tooldetail__img">
         <img
           className="img-fluid"
-          src={tool?.coverImage[0] || NoToolImg}
-          alt="no tool image"
+          src={cover?.asset || tool?.coverImage || NoToolImg}
+          alt="Cover Image"
         />
       </div>
       <div className="tooldetail__body">
         <div className="tooldetail__body__btn">
-          {tool?.presentationUrl[0] && (
+          {tool?.presentationUrl && (
             <Link
               className="tooldetail__body__btn__link"
-              to={tool?.presentationUrl[0]}
+              to={tool?.presentationUrl}
               target="_blank"
               rel="noopener noreferrer"
             >
