@@ -127,7 +127,7 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
               addWizard(addPayload, {
                 onSuccess: () => {
                   setWizardId(addPayload.id);
-                  setCurrentNav("knowledge");
+                  // setCurrentNav("knowledge");
                 },
                 onError: error => toast.error(error.message),
               });
@@ -180,7 +180,7 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
     addWizard(payload, {
       onSuccess: () => {
         setWizardId(payload.id);
-        setCurrentNav("knowledge");
+        // setCurrentNav("knowledge");
       },
       onError: error => toast.error(error.message),
     });

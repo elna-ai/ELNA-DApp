@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import { toast } from "react-toastify";
@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { useDeleteCollections } from "hooks/reactQuery/useRag";
 import { t } from "i18next";
 import { useDeleteCustomImage } from "hooks/reactQuery/useElnaImages";
+import { XShareModal } from "components/ViewAgents/XShareModal";
 
 function MyWizards() {
   const [isDeleteWizard, setIsDeleteWizard] = useState(false);
@@ -26,6 +27,7 @@ function MyWizards() {
     id: string;
     name: string;
   }>();
+  const [shareModalOpen, setShareModalOpen] = useState(false);
 
   const wallet = useWallet();
   const navigate = useNavigate();
@@ -45,6 +47,11 @@ function MyWizards() {
   const { data: analytics } = useGetAllAnalytics();
   const { mutate: deleteCustomImage, isPending: isDeletingCustomImage } = useDeleteCustomImage();
 
+  const publishedAgentRef = useRef({
+    publishedAgentId: '',
+    publishedAgentName: '',
+  });
+
   const handleDeletePopup = (id: string, name: string) => {
     setIsDeleteWizard(true);
     setWizardIdToDelete({ id, name });
@@ -52,10 +59,10 @@ function MyWizards() {
 
   const handleDelete = async (id: string) => {
     const wizard = userWizards?.find(wizard => wizard.id === id)
-    if(!wizard) throw new Error("Wizard not found");
+    if (!wizard) throw new Error("Wizard not found");
     deleteCustomImage(wizard.avatar, {
       onSuccess: (data) => {
-        if("Err" in data) {
+        if ("Err" in data) {
           console.error(data.Err)
           toast.error("Unable to delete avatar");
         }
@@ -134,7 +141,15 @@ function MyWizards() {
                   id={id}
                   isPublished={isPublished}
                   handlePublish={(id, shouldPublish) =>
-                    publishUnpublishWizard({ wizardId: id, shouldPublish })
+                    publishUnpublishWizard({ wizardId: id, shouldPublish }, {
+                      onSuccess: () => {
+                        if (shouldPublish) {
+                          setShareModalOpen(true)
+                          publishedAgentRef.current.publishedAgentId = id;
+                          publishedAgentRef.current.publishedAgentName = name;
+                        }
+                      }
+                    })
                   }
                   imageId={avatar}
                   handleDelete={handleDeletePopup}
@@ -146,6 +161,12 @@ function MyWizards() {
             )
           )}
         </div>
+        <XShareModal
+          isPublishSuccessful={shareModalOpen}
+          handleClose={() => setShareModalOpen(false)}
+          agentId={publishedAgentRef.current.publishedAgentId}
+          agentName={publishedAgentRef.current.publishedAgentName}
+        />
       </>
     );
   };
