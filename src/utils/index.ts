@@ -87,10 +87,8 @@ export function transformHistoryToMessages(
   }, []);
 }
 
-export const generateTwitterShareLink = (content: string, hashtags: string) =>
-  `https://twitter.com/intent/tweet?text=${encodeURI(
-    content
-  )}&hashtags=${hashtags}`;
+export const generateTwitterShareLink = (content: string) =>
+  `https://twitter.com/intent/tweet?text=${encodeURI(content)}`;
 
 export const convertToMotokoOptional = <T>(value: T | undefined): [T] | [] =>
   !!value ? [value] : [];
