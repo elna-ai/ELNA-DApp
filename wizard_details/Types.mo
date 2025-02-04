@@ -51,7 +51,20 @@ module {
     updatedAt : Time.Time;
   };
 
-  public type WizardDetailsWithCreatorName = WizardDetailsWithTimeStamp and {
+  public type WizardDetailsV3 = WizardDetailsBasic and {
+    greeting : Text;
+    summary : ?Text;
+    visibility : WizardVisibility;
+    poolAddress : ?Text;
+    tokenAddress : ?Text;
+  };
+
+  public type WizardDetailsWithTimeV3 = WizardDetailsV3 and {
+    createdAt : Time.Time;
+    updatedAt : Time.Time;
+  };
+
+  public type WizardDetailsWithCreatorName = WizardDetailsWithTimeV3 and {
     creatorName : Text;
   };
 
