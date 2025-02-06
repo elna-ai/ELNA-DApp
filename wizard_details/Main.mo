@@ -9,6 +9,7 @@ import Iter "mo:base/Iter";
 import Time "mo:base/Time";
 import Debug "mo:base/Debug";
 import Int "mo:base/Int";
+import Result "mo:base/Result";
 
 import Types "./Types";
 import {
@@ -22,15 +23,21 @@ import {
   addTimeStamp;
   getWizardsWithCreator;
 } "./Utils";
+import ElnaImages "external_canisters/ElnaImagesBackend";
 
-actor class Main(initlaArgs : Types.InitalArgs) {
+actor class Main(initialArgs : Types.InitialArgs) {
   private stable var _wizardsNew : [Types.WizardDetails] = [];
   private stable var _wizardsV2 : [Types.WizardDetailsWithTimeStamp] = [];
   private stable var _wizardsV3 : [Types.WizardDetailsWithTimeV3] = [];
   private stable var _analytics : [(Text, Types.Analytics)] = [];
-  private stable var owner : Principal = initlaArgs.owner;
-  private stable var _userManagementCanisterId : Principal = initlaArgs.userManagementCanisterId;
-  private stable var launchpadOwner : Principal = initlaArgs.owner;
+
+  // Initial args
+  private stable var owner : Principal = initialArgs.owner;
+  private stable var _userManagementCanisterId : Principal = initialArgs.userManagementCanisterId;
+  private stable var _elnaImagesCanisterId : Principal = initialArgs.elnaImagesCanisterId;
+  private stable var launchpadOwner : Principal = initialArgs.owner;
+
+  // unstable memory
   var wizards = Buffer.Buffer<Types.WizardDetails>(10);
   var wizardsV2 = Buffer.Buffer<Types.WizardDetailsWithTimeStamp>(10);
   var wizardsV3 = Buffer.Buffer<Types.WizardDetailsWithTimeV3>(10);
@@ -40,11 +47,15 @@ actor class Main(initlaArgs : Types.InitalArgs) {
     callerId == owner;
   };
 
-  // TODO: better way to do and maintin this?
+  // TODO: better way to do and maintain this?
   let UserManagementCanister = actor (Principal.toText(_userManagementCanisterId)) : actor {
     isPrincipalAdmin : (Principal) -> async (Bool);
     getUserProfile : (Principal) -> async (Types.UserProfile);
     getAllUserProfiles : () -> async [(Principal, Types.UserProfile)];
+  };
+  // TODO: find a way to directly use the generated .mo file instead of defining custom actor
+  let ElnaImagesCanister = actor (Principal.toText(_elnaImagesCanisterId)) : actor {
+    add_asset : shared (ElnaImages.Asset, ?Text) -> async ElnaImages.Result;
   };
 
   public query func getAnalytics(wizardId : Text) : async Types.Analytics_V1 {
@@ -142,68 +153,73 @@ actor class Main(initlaArgs : Types.InitalArgs) {
     return Principal.toText(launchpadOwner);
   };
 
-  public shared ({ caller }) func addWizardLaunchpad(wizard : Types.WizardDetailsV3) : async Text {
+  // TODO: remove
+  public query func getElnaBackendUri() : async Text {
+    Principal.toText(_elnaImagesCanisterId);
+  };
+
+  public shared ({ caller }) func addWizardLaunchpad(wizard : Types.WizardDetailsV3) : async Result.Result<Text, Types.Error> {
     if (not (caller == launchpadOwner)) {
-      throw Error.reject("User not authorized");
+      return #err(#UserNotAuthorized);
     };
-    // todo avatar update from here
-    wizardsV3.add(addTimeStamp(wizard));
-    return "Created agent";
+
+    let avatar = {
+      asset = wizard.avatar;
+      owner = caller;
+      file_name = "aaaa";
+    };
+    try {
+      // TODO: IMAGE CANISTER CHECK OWNER DISABLED IN STAGING RN
+      switch (await ElnaImagesCanister.add_asset(avatar, null)) {
+        case (#Ok(avatarId)) {
+          wizardsV3.add(addTimeStamp({ wizard with avatar = avatarId }));
+          return #ok("Created agent");
+        };
+        case (#Err(err)) {
+          Debug.print("ERR: addWizardLaunchpad. unable to upload image Asset: " # debug_show (avatar) # "err: " # debug_show err);
+          return #err(#UnableToUploadAvatar);
+        };
+      };
+    } catch _ {
+      Debug.print("Image catch");
+      return #err(#UnableToUploadAvatar);
+
+    }
 
   };
 
-  public shared ({ caller }) func updateWizardLaunchpad(wizardId : Text, wizardDetails : Types.WizardUpdateDetails and { userId : Text }) : async Text {
+  public shared ({ caller }) func updateWizardLaunchpad(wizardId : Text, wizardDetails : { tokenAddress : Text; poolAddress : Text; agentId : Text; userId : Text }) : async Result.Result<Text, Types.Error> {
     if (not (caller == launchpadOwner)) {
-      throw Error.reject("User not authorized");
+      return #err(#UserNotAuthorized);
     };
 
     let wizard = findWizardById(wizardId, wizardsV3);
     switch (wizard) {
       case null {
-        throw Error.reject("Agent not found");
+        return #err(#AgentNotFound);
       };
       case (?wizard) {
         if (wizardDetails.userId != wizard.userId) {
-          throw Error.reject("User dose not have permission to edit agent");
+          return #err(#PrincipalIdMissMatch);
         };
         let wizardId = findWizardIndex(wizard, wizardsV3);
         switch (wizardId) {
           case null {
-            throw Error.reject("Agent not found");
+            return #err(#AgentNotFound);
           };
           case (?index) {
             let updatedWizardDetails = {
-              name = wizardDetails.name;
-              biography = wizardDetails.biography;
-              description = wizardDetails.description;
-              avatar = wizardDetails.avatar;
-              greeting = wizardDetails.greeting;
-              visibility = wizardDetails.visibility;
-              id = wizard.id;
-              userId = wizard.userId;
-              isPublished = wizard.isPublished;
-              summary = wizard.summary;
-              createdAt = wizard.createdAt;
+              wizard with
               tokenAddress = wizard.tokenAddress;
               poolAddress = wizard.poolAddress;
               updatedAt = Time.now();
             };
             wizardsV3.put(index, updatedWizardDetails);
-            return "Agent updated";
+            return #ok("Agent updated");
           };
         };
       };
     };
-  };
-
-  // TODO: remove
-  public query func getV31() : async [Types.WizardDetailsWithTimeV3] {
-    return Buffer.toArray(wizardsV3);
-  };
-
-  // TODO: remove
-  public query func getV2() : async [Types.WizardDetailsWithTimeStamp] {
-    return Buffer.toArray(wizardsV2);
   };
 
   public shared (message) func deleteWizard(wizardId : Text) : async Types.Response {
