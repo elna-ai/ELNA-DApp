@@ -4,16 +4,24 @@ import type { IDL } from '@dfinity/candid';
 
 export type Analytics = { 'v1' : Analytics_V1 };
 export interface Analytics_V1 { 'messagesReplied' : bigint }
-export interface InitalArgs {
+export type Error = { 'UnableToUploadAvatar' : null } |
+  { 'PrincipalIdMissMatch' : null } |
+  { 'AgentNotFound' : null } |
+  { 'UserNotAuthorized' : null };
+export interface InitialArgs {
   'owner' : Principal,
   'userManagementCanisterId' : Principal,
+  'elnaImagesCanisterId' : Principal,
 }
 export interface Main {
   'addWizard' : ActorMethod<[WizardDetails], Response>,
+  'addWizardLaunchpad' : ActorMethod<[WizardDetailsV3], Result>,
   'deleteWizard' : ActorMethod<[string], Response>,
   'getAllAnalytics' : ActorMethod<[], Array<[string, Analytics]>>,
-  'getAllWizards' : ActorMethod<[], Array<WizardDetails>>,
+  'getAllWizards' : ActorMethod<[], Array<WizardDetailsWithTimeStamp>>,
   'getAnalytics' : ActorMethod<[string], Analytics_V1>,
+  'getElnaBackendUri' : ActorMethod<[], string>,
+  'getLaunchpadOwner' : ActorMethod<[], string>,
   'getUserWizards' : ActorMethod<
     [string],
     Array<WizardDetailsBasicWithCreatorName>
@@ -23,11 +31,26 @@ export interface Main {
   'isWizardNameValid' : ActorMethod<[string], boolean>,
   'publishWizard' : ActorMethod<[string], Response>,
   'unpublishWizard' : ActorMethod<[string], Response>,
+  'updateLaunchpadOwner' : ActorMethod<[Principal], string>,
   'updateMessageAnalytics' : ActorMethod<[string], undefined>,
   'updateWizard' : ActorMethod<[string, WizardUpdateDetails], string>,
   'updateWizardAdmin' : ActorMethod<[string, string], string>,
+  'updateWizardLaunchpad' : ActorMethod<
+    [
+      string,
+      {
+        'tokenAddress' : string,
+        'userId' : string,
+        'agentId' : string,
+        'poolAddress' : string,
+      },
+    ],
+    Result
+  >,
 }
 export interface Response { 'status' : bigint, 'message' : string }
+export type Result = { 'ok' : string } |
+  { 'err' : Error };
 export type Time = bigint;
 export interface WizardDetails {
   'id' : string,
@@ -51,6 +74,34 @@ export interface WizardDetailsBasicWithCreatorName {
   'description' : string,
   'creatorName' : string,
   'updatedAt' : Time,
+  'avatar' : string,
+}
+export interface WizardDetailsV3 {
+  'id' : string,
+  'isPublished' : boolean,
+  'tokenAddress' : [] | [string],
+  'userId' : string,
+  'name' : string,
+  'biography' : string,
+  'greeting' : string,
+  'description' : string,
+  'summary' : [] | [string],
+  'poolAddress' : [] | [string],
+  'visibility' : WizardVisibility,
+  'avatar' : string,
+}
+export interface WizardDetailsWithTimeStamp {
+  'id' : string,
+  'isPublished' : boolean,
+  'userId' : string,
+  'name' : string,
+  'createdAt' : Time,
+  'biography' : string,
+  'greeting' : string,
+  'description' : string,
+  'summary' : [] | [string],
+  'updatedAt' : Time,
+  'visibility' : WizardVisibility,
   'avatar' : string,
 }
 export interface WizardUpdateDetails {
