@@ -6,9 +6,10 @@ import Time "mo:base/Time";
 
 module {
 
-  public type InitalArgs = {
+  public type InitialArgs = {
     owner : Principal;
     userManagementCanisterId : Principal;
+    elnaImagesCanisterId : Principal;
 
   };
 
@@ -96,4 +97,11 @@ module {
     bio : ?Text;
   };
 
+  public type Error = {
+    #UserNotAuthorized;
+    #UnableToUploadAvatar;
+    #AgentNotFound;
+    #PrincipalIdMissMatch;
+
+  };
 };
