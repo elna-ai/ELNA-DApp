@@ -6,9 +6,10 @@ import Time "mo:base/Time";
 
 module {
 
-  public type InitalArgs = {
+  public type InitialArgs = {
     owner : Principal;
     userManagementCanisterId : Principal;
+    elnaImagesCanisterId : Principal;
 
   };
 
@@ -51,7 +52,20 @@ module {
     updatedAt : Time.Time;
   };
 
-  public type WizardDetailsWithCreatorName = WizardDetailsWithTimeStamp and {
+  public type WizardDetailsV3 = WizardDetailsBasic and {
+    greeting : Text;
+    summary : ?Text;
+    visibility : WizardVisibility;
+    poolAddress : ?Text;
+    tokenAddress : ?Text;
+  };
+
+  public type WizardDetailsWithTimeV3 = WizardDetailsV3 and {
+    createdAt : Time.Time;
+    updatedAt : Time.Time;
+  };
+
+  public type WizardDetailsWithCreatorName = WizardDetailsWithTimeV3 and {
     creatorName : Text;
   };
 
@@ -83,4 +97,11 @@ module {
     bio : ?Text;
   };
 
+  public type Error = {
+    #UserNotAuthorized;
+    #UnableToUploadAvatar;
+    #AgentNotFound;
+    #PrincipalIdMissMatch;
+
+  };
 };
