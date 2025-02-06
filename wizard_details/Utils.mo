@@ -11,20 +11,20 @@ import Types "./Types";
 module {
 
   public func getWizardsByUser(
-    wizards : Buffer.Buffer<Types.WizardDetailsWithTimeV3>,
+    wizards : Buffer.Buffer<Types.WizardDetailsWithTimeStamp>,
     // TODO: make principal?
     userId : Text,
-  ) : [Types.WizardDetailsWithTimeV3] {
+  ) : [Types.WizardDetailsWithTimeStamp] {
     Array.filter(
       Buffer.toArray(wizards),
-      func(wizard : Types.WizardDetailsWithTimeV3) : Bool {
+      func(wizard : Types.WizardDetailsWithTimeStamp) : Bool {
         wizard.userId == userId;
       },
     );
   };
 
   public func isWizardNameTakenByUser(
-    wizards : Buffer.Buffer<Types.WizardDetailsWithTimeV3>,
+    wizards : Buffer.Buffer<Types.WizardDetailsWithTimeStamp>,
     // TODO: make principal?
     userId : Text,
     wizardName : Text,
@@ -32,7 +32,7 @@ module {
     let userWizards = getWizardsByUser(wizards, userId);
     Array.filter(
       userWizards,
-      func(userWizard : Types.WizardDetailsWithTimeV3) : Bool {
+      func(userWizard : Types.WizardDetails) : Bool {
         userWizard.name == wizardName;
       },
     ).size() == 0;
@@ -63,35 +63,45 @@ module {
     wizard.userId == Principal.toText(userId);
   };
 
-  public func findWizardById(wizardId : Text, wizards : Buffer.Buffer<Types.WizardDetailsWithTimeV3>) : ?Types.WizardDetailsWithTimeV3 {
+  public func findWizardById(wizardId : Text, wizards : Buffer.Buffer<Types.WizardDetailsWithTimeStamp>) : ?Types.WizardDetailsWithTimeStamp {
     Array.find(
       Buffer.toArray(wizards),
-      func(wizard : Types.WizardDetailsWithTimeV3) : Bool {
+      func(wizard : Types.WizardDetails) : Bool {
         wizard.id == wizardId;
       },
     );
   };
 
-  public func findWizardIndex(wizard : Types.WizardDetailsWithTimeV3, wizards : Buffer.Buffer<Types.WizardDetailsWithTimeV3>) : ?Nat {
+  public func findWizardIndex(wizard : Types.WizardDetailsWithTimeStamp, wizards : Buffer.Buffer<Types.WizardDetailsWithTimeStamp>) : ?Nat {
     Buffer.indexOf(
       wizard,
       wizards,
-      func(wizard1 : Types.WizardDetailsWithTimeV3, wizard2 : Types.WizardDetailsWithTimeV3) : Bool {
+      func(wizard1 : Types.WizardDetailsWithTimeStamp, wizard2 : Types.WizardDetailsWithTimeStamp) : Bool {
         return wizard1.id == wizard2.id;
       },
     );
   };
 
-  public func updatePublishState(wizard : Types.WizardDetailsWithTimeV3, isPublished : Bool) : Types.WizardDetailsWithTimeV3 {
+  public func updatePublishState(wizard : Types.WizardDetailsWithTimeStamp, isPublished : Bool) : Types.WizardDetailsWithTimeStamp {
     {
-      wizard with isPublished = isPublished;
+      isPublished = isPublished;
+      id = wizard.id;
+      name = wizard.name;
+      userId = wizard.userId;
+      biography = wizard.biography;
+      description = wizard.description;
+      avatar = wizard.avatar;
+      greeting = wizard.greeting;
+      summary = wizard.summary;
+      visibility = wizard.visibility;
+      createdAt = wizard.createdAt;
       updatedAt = Time.now();
     };
   };
 
   public func publishUnpublishWizard({
     wizardId : Text;
-    wizards : Buffer.Buffer<Types.WizardDetailsWithTimeV3>;
+    wizards : Buffer.Buffer<Types.WizardDetailsWithTimeStamp>;
     isPublish : Bool;
     caller : Principal;
   }) : Types.Response {
@@ -123,19 +133,28 @@ module {
     };
   };
 
-  public func addTimeStamp(wizard : Types.WizardDetailsV3) : Types.WizardDetailsWithTimeV3 {
+  public func addTimeStamp(wizard : Types.WizardDetails) : Types.WizardDetailsWithTimeStamp {
     {
-      wizard with
+      id = wizard.id;
+      name = wizard.name;
+      userId = wizard.userId;
+      biography = wizard.biography;
+      description = wizard.description;
+      avatar = wizard.avatar;
+      isPublished = wizard.isPublished;
+      greeting = wizard.greeting;
+      summary = wizard.summary;
+      visibility = wizard.visibility;
       createdAt = Time.now();
       updatedAt = Time.now();
     };
   };
 
-  public func getWizardsWithCreator(wizards : [Types.WizardDetailsWithTimeV3], creatorProfilesArray : [(Principal, Types.UserProfile)]) : [Types.WizardDetailsWithCreatorName] {
+  public func getWizardsWithCreator(wizards : [Types.WizardDetailsWithTimeStamp], creatorProfilesArray : [(Principal, Types.UserProfile)]) : [Types.WizardDetailsWithCreatorName] {
     let userProfiles = HashMap.fromIter<Principal, Types.UserProfile>(creatorProfilesArray.vals(), 5, Principal.equal, Principal.hash);
     let wizardsWithCreatorNames = Array.map(
       wizards,
-      func(wizard : Types.WizardDetailsWithTimeV3) : Types.WizardDetailsWithCreatorName {
+      func(wizard : Types.WizardDetailsWithTimeStamp) : Types.WizardDetailsWithCreatorName {
         let creatorProfile = userProfiles.get(Principal.fromText(wizard.userId));
         let alias = switch creatorProfile {
           case (?profile) { profile.alias };
