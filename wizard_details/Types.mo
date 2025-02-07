@@ -9,6 +9,8 @@ module {
   public type InitalArgs = {
     owner : Principal;
     userManagementCanisterId : Principal;
+    elnaImagesCanisterId : Principal;
+    capCanisterId : Principal;
 
   };
 

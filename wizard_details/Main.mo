@@ -7,6 +7,10 @@ import Error "mo:base/Error";
 import HashMap "mo:base/HashMap";
 import Iter "mo:base/Iter";
 import Time "mo:base/Time";
+import Debug "mo:base/Debug";
+import Int "mo:base/Int";
+import Result "mo:base/Result";
+import Option "mo:base/Option";
 
 import Types "./Types";
 import {
@@ -19,14 +23,24 @@ import {
   findWizardIndex;
   addTimeStamp;
   getWizardsWithCreator;
+  visibilityToText;
 } "./Utils";
+import ElnaImages "external_canisters/ElnaImagesBackend";
+import CapCanisterType "external_canisters/cap_backend";
 
 actor class Main(initlaArgs : Types.InitalArgs) {
   private stable var _wizardsNew : [Types.WizardDetails] = [];
   private stable var _wizardsV2 : [Types.WizardDetailsWithTimeStamp] = [];
   private stable var _analytics : [(Text, Types.Analytics)] = [];
-  private stable var owner : Principal = initlaArgs.owner;
-  private stable var _userManagementCanisterId : Principal = initlaArgs.userManagementCanisterId;
+
+  // Initial args
+  private stable var owner : Principal = initialArgs.owner;
+  private stable var _userManagementCanisterId : Principal = initialArgs.userManagementCanisterId;
+  private stable var _elnaImagesCanisterId : Principal = initialArgs.elnaImagesCanisterId;
+  private stable var _capCanisterId : Principal = initialArgs.capCanisterId;
+  private stable var launchpadOwner : Principal = initialArgs.owner;
+
+  // unstable memory
   var wizards = Buffer.Buffer<Types.WizardDetails>(10);
   var wizardsV2 = Buffer.Buffer<Types.WizardDetailsWithTimeStamp>(10);
   var analytics = HashMap.HashMap<Text, Types.Analytics>(5, Text.equal, Text.hash);
@@ -41,6 +55,11 @@ actor class Main(initlaArgs : Types.InitalArgs) {
     getUserProfile : (Principal) -> async (Types.UserProfile);
     getAllUserProfiles : () -> async [(Principal, Types.UserProfile)];
   };
+  // TODO: find a way to directly use the generated .mo file instead of defining custom actor
+  let ElnaImagesCanister = actor (Principal.toText(_elnaImagesCanisterId)) : actor {
+    add_asset : shared (ElnaImages.Asset, ?Text) -> async ElnaImages.Result;
+  };
+  let CapCanister : CapCanisterType.Log = actor (Principal.toText(_capCanisterId));
 
   public query func getAnalytics(wizardId : Text) : async Types.Analytics_V1 {
     switch (analytics.get(wizardId)) {
@@ -115,10 +134,139 @@ actor class Main(initlaArgs : Types.InitalArgs) {
     let isNewWizardName = isWizardNameTakenByUser(wizardsV2, Principal.toText(caller), wizard.name);
 
     if (isNewWizardName) {
-      wizardsV2.add(addTimeStamp(wizard));
+      wizardsV3.add(addTimeStamp({ wizard with poolAddress = null; tokenAddress = null }));
+      ignore CapCanister.addRecord(
+        caller,
+        "create_agent",
+        [
+          ("agentId", #Text(wizard.id)),
+          ("createdBy", #Text(wizard.userId)),
+        ],
+      );
       return { status = 200; message = "Created wizard" };
     } else {
       return { status = 422; message = "Wizard named already exist" };
+    };
+  };
+
+  public shared ({ caller }) func updateLaunchpadOwner(principal : Principal) : async Text {
+    if (not isOwner(caller)) {
+      throw Error.reject("User not authorized");
+    };
+    launchpadOwner := principal;
+    return "Updated launchpad owner";
+
+  };
+
+  // TODO:remove
+  public query func getLaunchpadOwner() : async Text {
+    Debug.print("In get launchpad owner");
+    return Principal.toText(launchpadOwner);
+  };
+
+  // TODO: remove
+  public query func getElnaBackendUri() : async Text {
+    Principal.toText(_elnaImagesCanisterId);
+  };
+
+  public shared ({ caller }) func addWizardLaunchpad(wizard : Types.WizardDetailsV3) : async Result.Result<Text, Types.Error> {
+    if (not (caller == launchpadOwner)) {
+      Debug.print("fn:addWizardLaunchpad,err:Not launchpad owner. caller: " # debug_show caller # ". owner: " # debug_show launchpadOwner);
+      return #err(#UserNotAuthorized);
+    };
+
+    let avatar = {
+      asset = wizard.avatar;
+      owner = caller;
+      file_name = "image";
+    };
+    try {
+      let a = await ElnaImagesCanister.add_asset(avatar, null);
+      // TODO: IMAGE CANISTER CHECK OWNER DISABLED IN STAGING RN
+      switch (a) {
+        case (#Ok(avatarId)) {
+          wizardsV3.add(addTimeStamp({ wizard with avatar = avatarId }));
+          let user = Principal.fromText(wizard.userId);
+          ignore CapCanister.addRecord(
+            user,
+            "create_token_agent",
+            [
+              ("agentId", #Text(wizard.id)),
+              ("createdBy", #Text(wizard.userId)),
+            ],
+          );
+          return #ok("Created agent");
+        };
+        case (#Err(err)) {
+          Debug.print("ERR: addWizardLaunchpad. unable to upload image Asset: " # debug_show (avatar) # "err: " # debug_show err);
+          return #err(#UnableToUploadAvatar);
+        };
+      };
+    } catch _ {
+      Debug.print("Image catch");
+      return #err(#UnableToUploadAvatar);
+
+    }
+
+  };
+
+  public shared ({ caller }) func updateWizardLaunchpad(wizardId : Text, wizardDetails : { tokenAddress : ?Text; poolAddress : ?Text; agentId : Text; userId : Text }) : async Result.Result<Text, Types.Error> {
+    if (not (caller == launchpadOwner)) {
+      return #err(#UserNotAuthorized);
+    };
+
+    let wizard = findWizardById(wizardId, wizardsV3);
+    switch (wizard) {
+      case null {
+        return #err(#AgentNotFound);
+      };
+      case (?wizard) {
+        if (wizardDetails.userId != wizard.userId) {
+          return #err(#PrincipalIdMissMatch);
+        };
+        let wizardId = findWizardIndex(wizard, wizardsV3);
+        switch (wizardId) {
+          case null {
+            return #err(#AgentNotFound);
+          };
+
+          case (?index) {
+            let updatedWizardDetails = {
+              wizard with
+              tokenAddress = if (Option.isNull(wizardDetails.tokenAddress)) {
+                wizard.tokenAddress;
+              } else { wizardDetails.tokenAddress };
+              poolAddress = if (Option.isNull(wizardDetails.poolAddress)) {
+                wizard.poolAddress;
+              } else { wizardDetails.poolAddress };
+              updatedAt = Time.now();
+            };
+            wizardsV3.put(index, updatedWizardDetails);
+            let logDetails = Buffer.Buffer<(Text, CapCanisterType.DetailValue)>(3);
+            logDetails.add(("agentId", #Text(wizard.id)));
+            switch (wizardDetails.tokenAddress) {
+              case (?tokenAddress) {
+                logDetails.add(("tokenAddress", #Text(tokenAddress)));
+              };
+              case null {};
+            };
+
+            switch (wizardDetails.poolAddress) {
+              case (?poolAddress) {
+                logDetails.add(("poolAddress", #Text(poolAddress)));
+              };
+              case null {};
+            };
+
+            ignore CapCanister.addRecord(
+              Principal.fromText(wizardDetails.userId),
+              "update_token_agent",
+              Buffer.toArray(logDetails),
+            );
+            return #ok("Agent updated");
+          };
+        };
+      };
     };
   };
 
@@ -142,6 +290,11 @@ actor class Main(initlaArgs : Types.InitalArgs) {
           case (?index) {
             ignore wizardsV2.remove(index);
             ignore analytics.remove(wizardId);
+            ignore CapCanister.addRecord(
+              message.caller,
+              "delete_agent",
+              [("agentId", #Text(wizard.id))],
+            );
             return { status = 200; message = "Wizard deleted" };
           };
         };
@@ -151,20 +304,22 @@ actor class Main(initlaArgs : Types.InitalArgs) {
   };
 
   public shared ({ caller }) func publishWizard(wizardId : Text) : async Types.Response {
-    publishUnpublishWizard({
+    await publishUnpublishWizard({
       caller;
       wizardId;
       wizards = wizardsV2;
       isPublish = true;
+      capCanister = CapCanister;
     });
   };
 
   public shared ({ caller }) func unpublishWizard(wizardId : Text) : async Types.Response {
-    publishUnpublishWizard({
+    await publishUnpublishWizard({
       caller;
       wizardId;
       wizards = wizardsV2;
       isPublish = false;
+      capCanister = CapCanister;
     });
   };
 
@@ -210,7 +365,35 @@ actor class Main(initlaArgs : Types.InitalArgs) {
               createdAt = wizard.createdAt;
               updatedAt = Time.now();
             };
-            wizardsV2.put(index, updatedWizardDetails);
+            wizardsV3.put(index, updatedWizardDetails);
+            let logDetails = Buffer.Buffer<(Text, CapCanisterType.DetailValue)>(5);
+            if (wizardDetails.name != wizard.name) {
+              logDetails.add(("before:wizardName", #Text(wizard.name)));
+              logDetails.add(("after:wizardName", #Text(wizardDetails.name)));
+            };
+            if (wizard.biography != wizard.biography) {
+              logDetails.add(("before:biography", #Text(wizard.biography)));
+              logDetails.add(("after:biography", #Text(wizardDetails.biography)));
+            };
+            if (wizard.description != wizard.description) {
+              logDetails.add(("before:description", #Text(wizard.description)));
+              logDetails.add(("after:description", #Text(wizardDetails.description)));
+            };
+            if (wizard.avatar != wizard.avatar) {
+              logDetails.add(("before:avatar", #Text(wizard.avatar)));
+              logDetails.add(("after:avatar", #Text(wizardDetails.avatar)));
+            };
+
+            if (wizard.greeting != wizard.greeting) {
+              logDetails.add(("before:greeting", #Text(wizard.greeting)));
+              logDetails.add(("after:greeting", #Text(wizardDetails.greeting)));
+            };
+            if (wizard.visibility != wizard.visibility) {
+              logDetails.add(("before:visibility", #Text(visibilityToText(wizard.visibility))));
+              logDetails.add(("after:visibility", #Text(visibilityToText(wizardDetails.visibility))));
+            };
+
+            ignore CapCanister.addRecord(caller, "update_agent", Buffer.toArray(logDetails));
             return "Agent updated";
           };
         };
