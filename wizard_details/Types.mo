@@ -10,6 +10,7 @@ module {
     owner : Principal;
     userManagementCanisterId : Principal;
     elnaImagesCanisterId : Principal;
+    capCanisterId : Principal;
 
   };
 

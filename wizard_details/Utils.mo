@@ -5,6 +5,7 @@ import Bool "mo:base/Bool";
 import Principal "mo:base/Principal";
 import Time "mo:base/Time";
 import HashMap "mo:base/HashMap";
+import CapBackend "external_canisters/cap_backend";
 
 import Types "./Types";
 
@@ -94,7 +95,8 @@ module {
     wizards : Buffer.Buffer<Types.WizardDetailsWithTimeV3>;
     isPublish : Bool;
     caller : Principal;
-  }) : Types.Response {
+    capCanister : CapBackend.Log;
+  }) : async Types.Response {
     let wizard = findWizardById(wizardId, wizards);
     switch (wizard) {
       case null {
@@ -113,6 +115,28 @@ module {
           case (?index) {
             wizards.put(index, updatePublishState(wizard, isPublish));
             let status = if (isPublish) "published" else "unpublished";
+            if (status == "published") {
+              ignore capCanister.addRecord(
+                caller,
+                "agent_update",
+                [
+                  ("before", #Text("agent unpublished")),
+                  ("after", #Text("agent published")),
+                  ("agentId", #Text(wizard.id)),
+                ],
+              );
+            } else {
+              ignore capCanister.addRecord(
+                caller,
+                "agent_update",
+                [
+                  ("before", #Text("agent published")),
+                  ("after", #Text("agent unpublished")),
+                  ("agentId", #Text(wizard.id)),
+                ],
+              );
+            };
+
             return {
               status = 200;
               message = "Agent " # status;
@@ -148,5 +172,13 @@ module {
     );
 
     return wizardsWithCreatorNames;
+  };
+
+  public func visibilityToText(visibility : Types.WizardVisibility) : Text {
+    switch (visibility) {
+      case (#publicVisibility) { return "public visibility" };
+      case (#privateVisibility) { return "private visibility" };
+      case (#unlistedVisibility) { return "unlisted visibility" };
+    };
   };
 };
