@@ -106,13 +106,14 @@ type Main =
    updateWizardLaunchpad: (text,
     record {
       agentId: text;
-      poolAddress: text;
-      tokenAddress: text;
+      poolAddress: opt text;
+      tokenAddress: opt text;
       userId: text;
     }) -> (Result);
  };
 type InitialArgs = 
  record {
+   capCanisterId: principal;
    elnaImagesCanisterId: principal;
    owner: principal;
    userManagementCanisterId: principal;

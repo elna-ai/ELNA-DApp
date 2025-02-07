@@ -1,5 +1,6 @@
 export const idlFactory = ({ IDL }) => {
   const InitialArgs = IDL.Record({
+    'capCanisterId' : IDL.Principal,
     'owner' : IDL.Principal,
     'userManagementCanisterId' : IDL.Principal,
     'elnaImagesCanisterId' : IDL.Principal,
@@ -115,10 +116,10 @@ export const idlFactory = ({ IDL }) => {
         [
           IDL.Text,
           IDL.Record({
-            'tokenAddress' : IDL.Text,
+            'tokenAddress' : IDL.Opt(IDL.Text),
             'userId' : IDL.Text,
             'agentId' : IDL.Text,
-            'poolAddress' : IDL.Text,
+            'poolAddress' : IDL.Opt(IDL.Text),
           }),
         ],
         [Result],
@@ -129,6 +130,7 @@ export const idlFactory = ({ IDL }) => {
 };
 export const init = ({ IDL }) => {
   const InitialArgs = IDL.Record({
+    'capCanisterId' : IDL.Principal,
     'owner' : IDL.Principal,
     'userManagementCanisterId' : IDL.Principal,
     'elnaImagesCanisterId' : IDL.Principal,

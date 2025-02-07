@@ -9,6 +9,7 @@ export type Error = { 'UnableToUploadAvatar' : null } |
   { 'AgentNotFound' : null } |
   { 'UserNotAuthorized' : null };
 export interface InitialArgs {
+  'capCanisterId' : Principal,
   'owner' : Principal,
   'userManagementCanisterId' : Principal,
   'elnaImagesCanisterId' : Principal,
@@ -39,10 +40,10 @@ export interface Main {
     [
       string,
       {
-        'tokenAddress' : string,
+        'tokenAddress' : [] | [string],
         'userId' : string,
         'agentId' : string,
-        'poolAddress' : string,
+        'poolAddress' : [] | [string],
       },
     ],
     Result
