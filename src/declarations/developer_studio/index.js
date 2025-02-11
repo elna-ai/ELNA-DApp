@@ -39,4 +39,4 @@ export const createActor = (canisterId, options = {}) => {
   });
 };
 
-export const developer_studio = canisterId ? createActor(canisterId) : undefined;
+export const developer_studio = canisterId ? createActor(canisterId,{agentOptions:{host:"https://icp0.io"}}) : undefined;
