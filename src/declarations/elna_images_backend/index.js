@@ -38,4 +38,4 @@ export const createActor = (canisterId, options = {}) => {
   });
 };
 
-export const elna_images_backend = canisterId ? createActor(canisterId) : undefined;
+export const elna_images_backend = canisterId ? createActor(canisterId,{agentOptions:{host:"https://icp0.io"}}) : undefined;
