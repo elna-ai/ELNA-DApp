@@ -40,6 +40,8 @@ module {
 
   public type WizardDetailsBasicWithCreatorName = WizardDetailsBasicWithTimeStamp and {
     creatorName : Text;
+    tokenAddress : ?Text;
+    poolAddress : ?Text;
   };
 
   public type WizardDetails = WizardDetailsBasic and {
@@ -99,4 +101,11 @@ module {
     bio : ?Text;
   };
 
+  public type Error = {
+    #UserNotAuthorized;
+    #UnableToUploadAvatar;
+    #AgentNotFound;
+    #PrincipalIdMissMatch;
+    #AgentIdExist;
+  };
 };
