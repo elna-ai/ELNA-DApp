@@ -4,23 +4,25 @@ import { Dropdown, Spinner } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 
+import WalletList from "components/common/Header/WalletList";
+import { WizardDetailsBasicWithCreatorName } from "declarations/wizard_details/wizard_details.did";
 import { useGetAllAnalytics } from "hooks/reactQuery/wizards/useAnalytics";
+import { useFetchPublicWizards } from "hooks/reactQuery/wizards/usePublicWizards";
 
 import Card from "./Card";
-import { useFetchPublicWizards } from "hooks/reactQuery/wizards/usePublicWizards";
-import { WizardDetailsBasicWithCreatorName } from "declarations/wizard_details/wizard_details.did";
 import SearchBarWizards from "./SearchBarWizards";
 
 type SortByOptions = "popularity" | "recentlyUpdated";
 
 function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
   const [sortBy, setSortBy] = useState<SortByOptions>("recentlyUpdated");
-  const { t } = useTranslation();
-
+  const [isWalletListOpen, setIsWalletListOpen] = useState(false);
   const [suggestionResults, setSuggestionResults] = useState<
     Array<WizardDetailsBasicWithCreatorName>
   >([]);
   const [searchButtonActive, setSearchButtonActive] = useState(false); //When data is displayed somewhere other than suggestions on search button click
+
+  const { t } = useTranslation();
 
   const {
     data: popularWizards,
@@ -88,11 +90,11 @@ function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
           <p>{t("wizards.popularWizardsDesc")}</p>
         </div>
         <div>
-          {
-            isHomePage && <Link to="/agent-marketplace" className="el-btn-secondary">
+          {isHomePage && (
+            <Link to="/agent-marketplace" className="el-btn-secondary">
               {t("common.viewAll")}
             </Link>
-          }
+          )}
         </div>
       </div>
       {!isLoadingPopularWizards && popularWizards?.length && !isHomePage && (
@@ -127,8 +129,16 @@ function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
           <Spinner className="m-auto" />
         ) : (
           <>
-            {sortWizards(popularWizards, sortBy)
-              ?.map(({ id, name, userId, description, avatar, creatorName, isPublished }) => (
+            {sortWizards(popularWizards, sortBy)?.map(
+              ({
+                id,
+                name,
+                userId,
+                description,
+                avatar,
+                creatorName,
+                isPublished,
+              }) => (
                 <Card
                   {...{ name, description, creatorName }}
                   id={id}
@@ -137,12 +147,17 @@ function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
                   userId={userId}
                   isPublished={isPublished}
                   messagesReplied={analytics?.[id]?.messagesReplied || 0n}
+                  onLoginUser={() => setIsWalletListOpen(true)}
                 />
-              ))
-            }
+              )
+            )}
           </>
         )}
       </div>
+      <WalletList
+        isOpen={isWalletListOpen}
+        onClose={() => setIsWalletListOpen(false)}
+      />
     </>
   );
 }

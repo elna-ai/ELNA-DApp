@@ -2,8 +2,10 @@ import { useGetAsset } from "hooks/reactQuery/useElnaImages";
 import { Dropdown } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
-import AvatarPlaceholder from "../../assets/avatar_placeholder.svg"
+import AvatarPlaceholder from "../../assets/avatar_placeholder.svg";
 import classNames from "classnames";
+import { useUserStore } from "stores/useUser";
+import { toast } from "react-toastify";
 
 interface CardProps {
   name: string;
@@ -18,6 +20,7 @@ interface CardProps {
   handleDelete?: (id: string, name: string) => void;
   handlePublish?: (id: string, isPublished: boolean) => void;
   handleEdit?: (id: string) => void;
+  onLoginUser?: () => void;
 }
 
 function Card({
@@ -33,9 +36,11 @@ function Card({
   handleDelete,
   handlePublish,
   handleEdit,
+  onLoginUser,
 }: CardProps) {
   const { t } = useTranslation();
   const { data: avatarData } = useGetAsset(imageId);
+  const isUserLoggedIn = useUserStore(state => state.isUserLoggedIn);
 
   const displayAddress = (principal: string) => {
     const firstPart = principal.substring(0, 5);
@@ -47,7 +52,16 @@ function Card({
   const navigate = useNavigate();
 
   return (
-    <div className="col">
+    <div
+      className="col"
+      onClick={() => {
+        if (isUserLoggedIn) return;
+        if (onLoginUser !== undefined) {
+          toast.info("Please login");
+          onLoginUser();
+        }
+      }}
+    >
       <div className="card card-border contact-card elna-card">
         <div className="card-body text-center">
           <div className="d-flex">
@@ -75,7 +89,9 @@ function Card({
                     {t("common.delete", { entity: "agent" })}
                   </Dropdown.Item>
                   <Dropdown.Item
-                    onClick={() => navigate(`/agents/${id}/integrations/chat-widget`)}
+                    onClick={() =>
+                      navigate(`/agents/${id}/integrations/chat-widget`)
+                    }
                   >
                     {t("common.integrate", { entity: "agent" })}
                   </Dropdown.Item>
@@ -98,9 +114,13 @@ function Card({
             />
           </div>
           <div className="user-name text-truncate">
-            <Link to={`/chat/${id}`} className="btn-link stretched-link">
-              {name}
-            </Link>
+            {isUserLoggedIn ? (
+              <Link to={`/chat/${id}`} className="btn-link stretched-link">
+                {name}
+              </Link>
+            ) : (
+              <div>{name}</div>
+            )}
           </div>
           <div className="user-desg text-truncate">{description}</div>
         </div>
@@ -110,10 +130,14 @@ function Card({
             <span>{messagesReplied.toString()}</span>
           </div>
           {!!handleDelete && (
-            <span className={classNames(
-              "badge tool-card__footer__badge mb-0",
-              { "bg-secondary": !isPublished, "bg-primary": isPublished },
-            )}>{isPublished ? "Published" : "Unpublished"}</span>
+            <span
+              className={classNames("badge tool-card__footer__badge mb-0", {
+                "bg-secondary": !isPublished,
+                "bg-primary": isPublished,
+              })}
+            >
+              {isPublished ? "Published" : "Unpublished"}
+            </span>
           )}
           <span className="fs-7 lh-1">{creator}</span>
         </div>

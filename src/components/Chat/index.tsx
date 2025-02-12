@@ -6,13 +6,21 @@ import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
 import PageLoader from "components/common/PageLoader";
-import { generateTwitterShareLink, transformHistory, transformHistoryToMessages } from "src/utils";
+import {
+  generateTwitterShareLink,
+  transformHistory,
+  transformHistoryToMessages,
+} from "src/utils";
 import useAutoSizeTextArea from "hooks/useAutoResizeTextArea";
 import { Message } from "src/types";
 import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
 import { useUpdateMessagesReplied } from "hooks/reactQuery/wizards/useAnalytics";
 import { useCreatingQuestionEmbedding } from "hooks/reactQuery/useExternalService";
-import { useChat, useDeleteAgentChatHistory, useGetAgentChatHistory } from "hooks/reactQuery/useRag";
+import {
+  useChat,
+  useDeleteAgentChatHistory,
+  useGetAgentChatHistory,
+} from "hooks/reactQuery/useRag";
 import { isRagErr } from "utils/ragCanister";
 import { useUserStore } from "stores/useUser";
 import { useGetAsset } from "hooks/reactQuery/useElnaImages";
@@ -23,15 +31,15 @@ import NoHistory from "./NoHistory";
 import { TWITTER_HASHTAGS, TWITTER_SHARE_CONTENT } from "./constants";
 import { UseScrollToBottom } from "hooks/useScrollDownButton";
 import classNames from "classnames";
+import WalletList from "components/common/Header/WalletList";
 
 function Chat() {
+  const [isWalletListOpen, setIsWalletListOpen] = useState(false);
 
   const { id } = useParams();
 
-  const {
-    data: agentHistory,
-    isFetching: isLoadingAgentHistory,
-  } = useGetAgentChatHistory(id);
+  const { data: agentHistory, isFetching: isLoadingAgentHistory } =
+    useGetAgentChatHistory(id);
 
   const {
     data: wizard,
@@ -54,7 +62,8 @@ function Chat() {
   const { data: avatar } = useGetAsset(wizard?.avatar);
   const { data: userProfile, isFetching: isUserProfileLoading } =
     useGetUserProfile(wizard?.userId);
-  const { mutate: deleteChatHistory, isPending: isDeletingChatHistory } = useDeleteAgentChatHistory();
+  const { mutate: deleteChatHistory, isPending: isDeletingChatHistory } =
+    useDeleteAgentChatHistory();
 
   const { showButton, scrollToBottom } = UseScrollToBottom();
 
@@ -78,13 +87,16 @@ function Chat() {
   }, [isError]);
 
   useEffect(() => {
-    if (!isLoadingAgentHistory && agentHistory !== undefined && wizard?.name !== undefined) {
+    if (
+      !isLoadingAgentHistory &&
+      agentHistory !== undefined &&
+      wizard?.name !== undefined
+    ) {
       if (agentHistory?.length > 0) {
         setMessages(transformHistoryToMessages(agentHistory, wizard?.name));
         return;
       }
-    }
-    else setInitialMessage()
+    } else setInitialMessage();
   }, [wizard, isLoadingAgentHistory, agentHistory]);
 
   useEffect(() => {
@@ -96,6 +108,13 @@ function Chat() {
       });
     }
   }, [messages]);
+
+  useEffect(() => {
+    if (!isUserLoggedIn) {
+      toast.info("Please login");
+      setIsWalletListOpen(true);
+    }
+  }, [isUserLoggedIn]);
 
   const handleSubmit = async () => {
     const message = messageInput.trim();
@@ -149,17 +168,23 @@ function Chat() {
 
   useEffect(() => inputRef?.current?.focus(), [wizard]);
 
-  if (isLoadingWizard || !wizard || isLoadingAgentHistory || isDeletingChatHistory) return <PageLoader />;
+  if (
+    isLoadingWizard ||
+    !wizard ||
+    isLoadingAgentHistory ||
+    isDeletingChatHistory
+  )
+    return <PageLoader />;
 
   return (
     <div className="row chatapp-single-chat">
       <Button
         onClick={scrollToBottom}
-        className={classNames({ 'd-none': !showButton })}
+        className={classNames({ "d-none": !showButton })}
         style={{
-          position: 'fixed',
-          bottom: '150px',
-          right: '20px',
+          position: "fixed",
+          bottom: "150px",
+          right: "20px",
           width: "fit-content",
         }}
       >
@@ -183,11 +208,7 @@ function Chat() {
                   <h3 className="text-lg mt-2">{wizard.name}</h3>
                   <OverlayTrigger
                     placement="bottom"
-                    overlay={
-                      <Tooltip>
-                        {wizard.description}
-                      </Tooltip>
-                    }
+                    overlay={<Tooltip>{wizard.description}</Tooltip>}
                   >
                     <div className="cursor-pointer">
                       <p className="text-desc fs-8">{wizard.description}</p>
@@ -208,14 +229,18 @@ function Chat() {
                       Clear chat history
                     </Dropdown.Item>
                     <Dropdown.Item
-                      onClick={() => window.open(generateTwitterShareLink(
-                        `${TWITTER_SHARE_CONTENT(
-                          wizard.name,
-                          `${window.location.origin}/chat/${id}`,
-                          userProfile?.xHandle[0] || ""
-                        )}`,
-                        TWITTER_HASHTAGS
-                      ))}
+                      onClick={() =>
+                        window.open(
+                          generateTwitterShareLink(
+                            `${TWITTER_SHARE_CONTENT(
+                              wizard.name,
+                              `${window.location.origin}/chat/${id}`,
+                              userProfile?.xHandle[0] || ""
+                            )}`,
+                            TWITTER_HASHTAGS
+                          )
+                        )
+                      }
                       className="card-dropdown-delete"
                     >
                       Share
@@ -278,6 +303,10 @@ function Chat() {
           </div>
         </div>
       </div>
+      <WalletList
+        isOpen={isWalletListOpen}
+        onClose={() => setIsWalletListOpen(false)}
+      />
     </div>
   );
 }
