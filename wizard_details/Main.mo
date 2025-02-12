@@ -431,8 +431,23 @@ actor class Main(initlaArgs : Types.InitalArgs) {
               createdAt = wizard.createdAt;
               updatedAt = Time.now();
             };
+
+            // update check for tokenized agents
+            if (Option.isSome(wizard.poolAddress) or Option.isSome(wizard.tokenAddress)) {
+              if (wizardDetails.name != wizard.name) {
+                throw Error.reject("Can't update name for tokenized agents");
+              };
+              if (wizardDetails.description != wizard.description) {
+                throw Error.reject("Can't update description for tokenized agents");
+              };
+              if (wizardDetails.avatar != wizard.avatar) {
+                throw Error.reject("Can't update avatar for tokenized agents");
+              };
+            };
+
             wizardsV3.put(index, updatedWizardDetails);
             let logDetails = Buffer.Buffer<(Text, CapCanisterType.DetailValue)>(5);
+            logDetails.add(("agentId", #Text(wizard.id)));
             if (wizardDetails.name != wizard.name) {
               logDetails.add(("before:wizardName", #Text(wizard.name)));
               logDetails.add(("after:wizardName", #Text(wizardDetails.name)));
