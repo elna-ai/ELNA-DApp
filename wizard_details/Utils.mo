@@ -54,6 +54,8 @@ module {
           createdAt = wizard.createdAt;
           updatedAt = wizard.updatedAt;
           creatorName = wizard.creatorName;
+          tokenAddress = wizard.tokenAddress;
+          poolAddress = wizard.poolAddress;
 
         };
       },
