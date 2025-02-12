@@ -181,20 +181,30 @@ actor class Main(initlaArgs : Types.InitalArgs) {
     let _userProfile = await UserManagementCanister.getUserProfile(caller);
     let isNewWizardName = isWizardNameTakenByUser(wizardsV2, Principal.toText(caller), wizard.name);
 
-    if (isNewWizardName) {
-      wizardsV3.add(addTimeStamp({ wizard with poolAddress = null; tokenAddress = null }));
-      ignore CapCanister.addRecord(
-        caller,
-        "create_agent",
-        [
-          ("agentId", #Text(wizard.id)),
-          ("createdBy", #Text(wizard.userId)),
-        ],
-      );
-      return { status = 200; message = "Created wizard" };
-    } else {
-      return { status = 422; message = "Wizard named already exist" };
+    let doesWizardIdExist = findWizardById(wizard.id, wizardsV3);
+
+    switch (doesWizardIdExist) {
+      case (?_) {
+        return { status = 422; message = " Wizard id exist" };
+      };
+      case (null) {
+        if (isNewWizardName) {
+          wizardsV3.add(addTimeStamp({ wizard with poolAddress = null; tokenAddress = null }));
+          ignore CapCanister.addRecord(
+            caller,
+            "create_agent",
+            [
+              ("agentId", #Text(wizard.id)),
+              ("createdBy", #Text(wizard.userId)),
+            ],
+          );
+          return { status = 200; message = "Created wizard" };
+        } else {
+          return { status = 422; message = "Wizard named already exist" };
+        };
+      };
     };
+
   };
 
   public shared ({ caller }) func updateLaunchpadOwner(principal : Principal) : async Text {
@@ -221,6 +231,14 @@ actor class Main(initlaArgs : Types.InitalArgs) {
     if (not (caller == launchpadOwner)) {
       Debug.print("fn:addWizardLaunchpad,err:Not launchpad owner. caller: " # debug_show caller # ". owner: " # debug_show launchpadOwner);
       return #err(#UserNotAuthorized);
+    };
+
+    let doesWizardIdExist = findWizardById(wizard.id, wizardsV3);
+    switch (doesWizardIdExist) {
+      case (?_) {
+        return #err(#AgentIdExist);
+      };
+      case (null) {};
     };
 
     let avatar = {
