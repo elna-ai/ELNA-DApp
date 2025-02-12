@@ -10,6 +10,7 @@ export interface Analytics_V2_External {
 export type Error = { 'UnableToUploadAvatar' : null } |
   { 'PrincipalIdMissMatch' : null } |
   { 'AgentNotFound' : null } |
+  { 'AgentIdExist' : null } |
   { 'UserNotAuthorized' : null };
 export interface InitialArgs {
   'capCanisterId' : Principal,
@@ -71,6 +72,7 @@ export interface WizardDetails {
 export interface WizardDetailsBasicWithCreatorName {
   'id' : string,
   'isPublished' : boolean,
+  'tokenAddress' : [] | [string],
   'userId' : string,
   'name' : string,
   'createdAt' : Time,
@@ -78,6 +80,7 @@ export interface WizardDetailsBasicWithCreatorName {
   'description' : string,
   'creatorName' : string,
   'updatedAt' : Time,
+  'poolAddress' : [] | [string],
   'avatar' : string,
 }
 export interface WizardDetailsV3 {

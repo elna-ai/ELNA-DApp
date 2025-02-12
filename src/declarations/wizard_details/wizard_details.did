@@ -53,6 +53,8 @@ type WizardDetailsBasicWithCreatorName =
    id: text;
    isPublished: bool;
    name: text;
+   poolAddress: opt text;
+   tokenAddress: opt text;
    updatedAt: Time;
    userId: text;
  };
@@ -120,6 +122,7 @@ type InitialArgs =
  };
 type Error = 
  variant {
+   AgentIdExist;
    AgentNotFound;
    PrincipalIdMissMatch;
    UnableToUploadAvatar;

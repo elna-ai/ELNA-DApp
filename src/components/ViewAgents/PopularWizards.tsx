@@ -138,6 +138,8 @@ function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
                 avatar,
                 creatorName,
                 isPublished,
+                tokenAddress,
+                poolAddress,
               }) => (
                 <Card
                   {...{ name, description, creatorName }}
@@ -148,6 +150,7 @@ function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
                   isPublished={isPublished}
                   messagesReplied={analytics?.[id]?.messagesReplied || 0n}
                   onLoginUser={() => setIsWalletListOpen(true)}
+                  tokenized={!!tokenAddress.length || !!poolAddress.length}
                 />
               )
             )}
