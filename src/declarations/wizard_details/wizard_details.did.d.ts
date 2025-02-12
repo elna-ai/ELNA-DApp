@@ -2,8 +2,11 @@ import type { Principal } from '@dfinity/principal';
 import type { ActorMethod } from '@dfinity/agent';
 import type { IDL } from '@dfinity/candid';
 
-export type Analytics = { 'v1' : Analytics_V1 };
-export interface Analytics_V1 { 'messagesReplied' : bigint }
+export interface Analytics_V2_External {
+  'modificationCount' : bigint,
+  'messagesReplied' : bigint,
+  'uniqueUsers' : bigint,
+}
 export type Error = { 'UnableToUploadAvatar' : null } |
   { 'PrincipalIdMissMatch' : null } |
   { 'AgentNotFound' : null } |
@@ -18,9 +21,9 @@ export interface Main {
   'addWizard' : ActorMethod<[WizardDetails], Response>,
   'addWizardLaunchpad' : ActorMethod<[WizardDetailsV3], Result>,
   'deleteWizard' : ActorMethod<[string], Response>,
-  'getAllAnalytics' : ActorMethod<[], Array<[string, Analytics]>>,
+  'getAllAnalytics' : ActorMethod<[], Array<[string, Analytics_V2_External]>>,
   'getAllWizards' : ActorMethod<[], Array<WizardDetailsWithTimeStamp>>,
-  'getAnalytics' : ActorMethod<[string], Analytics_V1>,
+  'getAnalytics' : ActorMethod<[string], Analytics_V2_External>,
   'getElnaBackendUri' : ActorMethod<[], string>,
   'getLaunchpadOwner' : ActorMethod<[], string>,
   'getUserWizards' : ActorMethod<
