@@ -87,10 +87,10 @@ type Main =
    deleteWizard: (text) -> (Response);
    getAllAnalytics: () -> (vec record {
                                  text;
-                                 Analytics;
+                                 Analytics_V2_External;
                                }) query;
    getAllWizards: () -> (vec WizardDetailsWithTimeStamp);
-   getAnalytics: (text) -> (Analytics_V1) query;
+   getAnalytics: (text) -> (Analytics_V2_External) query;
    getElnaBackendUri: () -> (text) query;
    getLaunchpadOwner: () -> (text) query;
    getUserWizards: (text) -> (vec WizardDetailsBasicWithCreatorName);
@@ -125,6 +125,10 @@ type Error =
    UnableToUploadAvatar;
    UserNotAuthorized;
  };
-type Analytics_V1 = record {messagesReplied: nat;};
-type Analytics = variant {v1: Analytics_V1;};
+type Analytics_V2_External = 
+ record {
+   messagesReplied: nat;
+   modificationCount: nat;
+   uniqueUsers: nat;
+ };
 service : (InitialArgs) -> Main
