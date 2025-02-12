@@ -16,7 +16,7 @@ interface CardProps {
   isPublished?: boolean;
   messagesReplied: bigint;
   creatorName: string;
-  price?: number;
+  tokenized?: boolean;
   handleDelete?: (id: string, name: string) => void;
   handlePublish?: (id: string, isPublished: boolean) => void;
   handleEdit?: (id: string) => void;
@@ -32,7 +32,7 @@ function Card({
   isPublished,
   messagesReplied,
   creatorName,
-  price = 0,
+  tokenized = false,
   handleDelete,
   handlePublish,
   handleEdit,
@@ -65,9 +65,11 @@ function Card({
       <div className="card card-border contact-card elna-card">
         <div className="card-body text-center">
           <div className="d-flex">
-            <div className="card-body__price">
-              {!price ? t("common.free") : price}
-            </div>
+            {tokenized ? (
+              <div className="card-body__tokenized badge">Tokenized</div>
+            ) : (
+              <div style={{ minHeight: "30px" }} />
+            )}
             {!!handleDelete && (
               <Dropdown className="card-body-menu">
                 <Dropdown.Toggle
