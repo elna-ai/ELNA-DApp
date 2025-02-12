@@ -41,6 +41,7 @@ export const idlFactory = ({ IDL }) => {
     'UnableToUploadAvatar' : IDL.Null,
     'PrincipalIdMissMatch' : IDL.Null,
     'AgentNotFound' : IDL.Null,
+    'AgentIdExist' : IDL.Null,
     'UserNotAuthorized' : IDL.Null,
   });
   const Result = IDL.Variant({ 'ok' : IDL.Text, 'err' : Error });
@@ -67,6 +68,7 @@ export const idlFactory = ({ IDL }) => {
   const WizardDetailsBasicWithCreatorName = IDL.Record({
     'id' : IDL.Text,
     'isPublished' : IDL.Bool,
+    'tokenAddress' : IDL.Opt(IDL.Text),
     'userId' : IDL.Text,
     'name' : IDL.Text,
     'createdAt' : Time,
@@ -74,6 +76,7 @@ export const idlFactory = ({ IDL }) => {
     'description' : IDL.Text,
     'creatorName' : IDL.Text,
     'updatedAt' : Time,
+    'poolAddress' : IDL.Opt(IDL.Text),
     'avatar' : IDL.Text,
   });
   const WizardUpdateDetails = IDL.Record({

@@ -25,9 +25,11 @@
   }
 }
 
-.card-body__price {
-  color: var(--primary-success);
+.card-body__tokenized {
+  color: var(--elna-primary-text-color);
   font-weight: 400;
+  background-color: var(--primary-color);
+  margin-bottom: 0.5rem;
 }
 
 .contact-card.elna-card .user-name,
