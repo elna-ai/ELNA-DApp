@@ -44,8 +44,11 @@ export const idlFactory = ({ IDL }) => {
     'UserNotAuthorized' : IDL.Null,
   });
   const Result = IDL.Variant({ 'ok' : IDL.Text, 'err' : Error });
-  const Analytics_V1 = IDL.Record({ 'messagesReplied' : IDL.Nat });
-  const Analytics = IDL.Variant({ 'v1' : Analytics_V1 });
+  const Analytics_V2_External = IDL.Record({
+    'modificationCount' : IDL.Nat,
+    'messagesReplied' : IDL.Nat,
+    'uniqueUsers' : IDL.Nat,
+  });
   const Time = IDL.Int;
   const WizardDetailsWithTimeStamp = IDL.Record({
     'id' : IDL.Text,
@@ -87,11 +90,11 @@ export const idlFactory = ({ IDL }) => {
     'deleteWizard' : IDL.Func([IDL.Text], [Response], []),
     'getAllAnalytics' : IDL.Func(
         [],
-        [IDL.Vec(IDL.Tuple(IDL.Text, Analytics))],
+        [IDL.Vec(IDL.Tuple(IDL.Text, Analytics_V2_External))],
         ['query'],
       ),
     'getAllWizards' : IDL.Func([], [IDL.Vec(WizardDetailsWithTimeStamp)], []),
-    'getAnalytics' : IDL.Func([IDL.Text], [Analytics_V1], ['query']),
+    'getAnalytics' : IDL.Func([IDL.Text], [Analytics_V2_External], ['query']),
     'getElnaBackendUri' : IDL.Func([], [IDL.Text], ['query']),
     'getLaunchpadOwner' : IDL.Func([], [IDL.Text], ['query']),
     'getUserWizards' : IDL.Func(

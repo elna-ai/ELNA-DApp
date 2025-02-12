@@ -63,30 +63,78 @@ actor class Main(initialArgs : Types.InitialArgs) {
   };
   let CapCanister : CapCanisterType.Log = actor (Principal.toText(_capCanisterId));
 
-  public query func getAnalytics(wizardId : Text) : async Types.Analytics_V1 {
+  public query func getAnalytics(wizardId : Text) : async Types.Analytics_V2_External {
     switch (analytics.get(wizardId)) {
       case null {
         throw Error.reject("wizard id not found");
       };
-      case (?anlyticsVarints) {
-        switch (anlyticsVarints) {
+      case (?analyticsVariants) {
+        switch (analyticsVariants) {
+          case (#v2(data)) {
+            return {
+              messagesReplied = data.messagesReplied;
+              uniqueUsers = data.uniqueUsers.size();
+              modificationCount = data.modificationCount;
+            };
+          };
           case (#v1(data)) {
-            return data;
+            return {
+              messagesReplied = data.messagesReplied;
+              uniqueUsers = 0;
+              modificationCount = 0;
+            };
           };
         };
       };
     };
   };
 
-  public func updateMessageAnalytics(wizardId : Text) : async () {
+  public shared ({ caller }) func updateMessageAnalytics(wizardId : Text) : async () {
     switch (analytics.get(wizardId)) {
       case (?value) {
         switch (value) {
+          case (#v2(data)) {
+            switch (
+              Array.find(
+                data.uniqueUsers,
+                func(user : Principal) : Bool {
+                  user == caller;
+                },
+              )
+            ) {
+              case (?_) {
+                analytics.put(
+                  wizardId,
+                  #v2 {
+                    messagesReplied = data.messagesReplied + 1;
+                    uniqueUsers = data.uniqueUsers;
+                    modificationCount = data.modificationCount;
+                  },
+                );
+              };
+              case (null) {
+                let users : Buffer.Buffer<Principal> = Buffer.fromArray(data.uniqueUsers);
+                users.add(caller);
+                analytics.put(
+                  wizardId,
+                  #v2 {
+                    messagesReplied = data.messagesReplied + 1;
+                    uniqueUsers = Buffer.toArray(users);
+                    modificationCount = data.modificationCount;
+                  },
+                );
+              };
+            };
+
+          };
+          // TODO: can we removed later?
           case (#v1(data)) {
             analytics.put(
               wizardId,
-              #v1 {
+              #v2 {
                 messagesReplied = data.messagesReplied + 1;
+                uniqueUsers = [caller];
+                modificationCount = 0;
               },
             );
           };
@@ -94,7 +142,7 @@ actor class Main(initialArgs : Types.InitialArgs) {
       };
 
       case (null) {
-        analytics.put(wizardId, #v1 { messagesReplied = 1 });
+        analytics.put(wizardId, #v2 { messagesReplied = 1; uniqueUsers = [caller]; modificationCount = 0 });
       };
     };
   };
@@ -445,8 +493,40 @@ actor class Main(initialArgs : Types.InitialArgs) {
     };
   };
 
-  public query func getAllAnalytics() : async [(Text, Types.Analytics)] {
-    Iter.toArray(analytics.entries());
+  public query func getAllAnalytics() : async [(
+    Text,
+    Types.Analytics_V2_External,
+  )] {
+    Array.map<(Text, Types.Analytics), (Text, Types.Analytics_V2_External)>(
+      Iter.toArray(analytics.entries()),
+      func((wizardId, analytic) : (Text, Types.Analytics)) : (
+        Text,
+        Types.Analytics_V2_External,
+      ) {
+        switch (analytic) {
+          case (#v2(data)) {
+            return (
+              wizardId,
+              {
+                messagesReplied = data.messagesReplied;
+                uniqueUsers = data.uniqueUsers.size();
+                modificationCount = data.modificationCount;
+              },
+            );
+          };
+          case (#v1(data)) {
+            return (
+              wizardId,
+              {
+                messagesReplied = data.messagesReplied;
+                uniqueUsers = 0;
+                modificationCount = 0;
+              },
+            );
+          };
+        };
+      },
+    );
   };
 
   system func preupgrade() {

@@ -84,12 +84,26 @@ module {
     message : Text;
   };
 
+  // TODO: can we removed?
   public type Analytics_V1 = {
     messagesReplied : Nat;
   };
 
+  public type Analytics_V2 = {
+    messagesReplied : Nat;
+    uniqueUsers : [Principal];
+    modificationCount : Nat;
+  };
+
+  public type Analytics_V2_External = {
+    messagesReplied : Nat;
+    uniqueUsers : Nat;
+    modificationCount : Nat;
+  };
+
   public type Analytics = {
     #v1 : Analytics_V1;
+    #v2 : Analytics_V2;
   };
 
   public type UserProfile = {
