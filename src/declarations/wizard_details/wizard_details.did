@@ -96,7 +96,7 @@ type Main =
    getElnaBackendUri: () -> (text) query;
    getLaunchpadOwner: () -> (text) query;
    getUserWizards: (text) -> (vec WizardDetailsBasicWithCreatorName);
-   getWizard: (text) -> (opt WizardDetails) query;
+   getWizard: (text) -> (opt WizardDetailsV3) query;
    getWizards: () -> (vec WizardDetailsBasicWithCreatorName);
    isWizardNameValid: (text) -> (bool) query;
    publishWizard: (text) -> (Response);

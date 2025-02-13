@@ -105,7 +105,7 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Vec(WizardDetailsBasicWithCreatorName)],
         [],
       ),
-    'getWizard' : IDL.Func([IDL.Text], [IDL.Opt(WizardDetails)], ['query']),
+    'getWizard' : IDL.Func([IDL.Text], [IDL.Opt(WizardDetailsV3)], ['query']),
     'getWizards' : IDL.Func(
         [],
         [IDL.Vec(WizardDetailsBasicWithCreatorName)],
