@@ -31,7 +31,7 @@ export interface Main {
     [string],
     Array<WizardDetailsBasicWithCreatorName>
   >,
-  'getWizard' : ActorMethod<[string], [] | [WizardDetails]>,
+  'getWizard' : ActorMethod<[string], [] | [WizardDetailsV3]>,
   'getWizards' : ActorMethod<[], Array<WizardDetailsBasicWithCreatorName>>,
   'isWizardNameValid' : ActorMethod<[string], boolean>,
   'publishWizard' : ActorMethod<[string], Response>,

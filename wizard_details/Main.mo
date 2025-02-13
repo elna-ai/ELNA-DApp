@@ -168,8 +168,8 @@ actor class Main(initlaArgs : Types.InitalArgs) {
     getWizardsBasicDetails(wizardsWithCreatorNames);
   };
 
-  public query func getWizard(id : Text) : async ?Types.WizardDetails {
-    findWizardById(id, wizardsV2);
+  public query func getWizard(id : Text) : async ?Types.WizardDetailsV3 {
+    findWizardById(id, wizardsV3);
   };
 
   public shared query (message) func isWizardNameValid(wizardName : Text) : async Bool {
