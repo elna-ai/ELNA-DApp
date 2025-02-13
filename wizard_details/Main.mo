@@ -170,7 +170,7 @@ actor class Main(initialArgs : Types.InitialArgs) {
     getWizardsBasicDetails(wizardsWithCreatorNames);
   };
 
-  public query func getWizard(id : Text) : async ?Types.WizardDetails {
+  public query func getWizard(id : Text) : async ?Types.WizardDetailsV3 {
     findWizardById(id, wizardsV3);
   };
 
