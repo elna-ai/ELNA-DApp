@@ -22,6 +22,10 @@
     height: 90px;
   }
 
+  &--disabled {
+    cursor: not-allowed;
+  }
+
   &--loading {
     background-color: var(--background-btn-secondary);
   }
@@ -71,7 +75,7 @@
   &:hover .custom-avatar-parent__child {
     opacity: 1;
   }
-  
+
   &__child {
     opacity: 0.7;
     transition: opacity 0.15s ease;

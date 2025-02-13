@@ -264,6 +264,7 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
                 <UploadAvatarImage
                   selected={values.avatar.slice(0, 11) !== "default_img"}
                   customImageNameRef={customImageNameRef}
+                  isDisabled={isTokenizedAgent}
                   onAvatarSelected={image => {
                     handleChange("avatar")(image);
                   }}
@@ -273,6 +274,7 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
                     key={avatar}
                     assetId={avatar}
                     selected={values.avatar === avatar}
+                    isDisabled={isTokenizedAgent}
                     onClick={() => handleChange("avatar")(avatar)}
                   />
                 ))}

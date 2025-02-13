@@ -43,7 +43,8 @@ function MyWizards() {
   const { mutate: publishUnpublishWizard } = usePublishUnpublishWizard();
   const { mutate: deleteIndex } = useDeleteCollections();
   const { data: analytics } = useGetAllAnalytics();
-  const { mutate: deleteCustomImage, isPending: isDeletingCustomImage } = useDeleteCustomImage();
+  const { mutate: deleteCustomImage, isPending: isDeletingCustomImage } =
+    useDeleteCustomImage();
 
   const handleDeletePopup = (id: string, name: string) => {
     setIsDeleteWizard(true);
@@ -51,19 +52,19 @@ function MyWizards() {
   };
 
   const handleDelete = async (id: string) => {
-    const wizard = userWizards?.find(wizard => wizard.id === id)
-    if(!wizard) throw new Error("Wizard not found");
+    const wizard = userWizards?.find(wizard => wizard.id === id);
+    if (!wizard) throw new Error("Wizard not found");
     deleteCustomImage(wizard.avatar, {
-      onSuccess: (data) => {
-        if("Err" in data) {
-          console.error(data.Err)
+      onSuccess: data => {
+        if ("Err" in data) {
+          console.error(data.Err);
           toast.error("Unable to delete avatar");
         }
       },
       onError: e => {
         toast.error("Unable to delete avatar");
         console.error(e);
-      }
+      },
     });
     deleteMyWizard(
       { wizardId: id },
@@ -126,7 +127,16 @@ function MyWizards() {
       <>
         <div className="my-wizards__card-wrapper">
           {userWizards?.map(
-            ({ id, name, description, avatar, isPublished, creatorName }) => (
+            ({
+              id,
+              name,
+              description,
+              avatar,
+              isPublished,
+              creatorName,
+              tokenAddress,
+              poolAddress,
+            }) => (
               <div key={id} className="col">
                 <Card
                   name={name}
@@ -141,6 +151,7 @@ function MyWizards() {
                   messagesReplied={analytics?.[id]?.messagesReplied || 0n}
                   handleEdit={handleEdit}
                   creatorName={creatorName}
+                  tokenized={!!tokenAddress.length || !!poolAddress.length}
                 />
               </div>
             )
