@@ -21,6 +21,7 @@ function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
     Array<WizardDetailsBasicWithCreatorName>
   >([]);
   const [searchButtonActive, setSearchButtonActive] = useState(false); //When data is displayed somewhere other than suggestions on search button click
+  const [filterTokenizedAgent, setFilterTokenizedAgent] = useState(false);
 
   const { t } = useTranslation();
 
@@ -47,6 +48,12 @@ function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
       ...agent,
       messagesReplied: analytics?.[agent.id]?.messagesReplied || 0n,
     }));
+
+    if (filterTokenizedAgent) {
+      wizardsWithAnalytics = wizardsWithAnalytics.filter(
+        wizard => !!wizard.tokenAddress.length || !!wizard.poolAddress.length
+      );
+    }
 
     if (sortBy === "popularity") {
       return wizardsWithAnalytics?.sort(
@@ -105,6 +112,17 @@ function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
             suggestionResults={suggestionResults}
             setSuggestionResults={setSuggestionResults}
           />
+          <div
+            onClick={() => setFilterTokenizedAgent(prev => !prev)}
+            className="badge d-flex gap-1 popular-wizards__filter-tokenized"
+          >
+            {filterTokenizedAgent ? (
+              <i className="ri-checkbox-blank-circle-fill popular-wizards__filter-tokenized--active" />
+            ) : (
+              <i className="ri-checkbox-blank-circle-line" />
+            )}
+            <span>Tokenized agents only</span>
+          </div>
           <Dropdown>
             <Dropdown.Toggle variant="secondary">Sort</Dropdown.Toggle>
             <Dropdown.Menu>
