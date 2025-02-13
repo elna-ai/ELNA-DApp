@@ -1,0 +1,10 @@
+.popular-wizards {
+  &__filter-tokenized {
+    padding: 0.5rem;
+    border: 1px solid var(--background-active-color);
+
+    &--active {
+      color: var(--primary-color);
+    }
+  }
+}
