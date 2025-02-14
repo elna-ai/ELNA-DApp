@@ -11,6 +11,7 @@ import { useFetchPublicWizards } from "hooks/reactQuery/wizards/usePublicWizards
 
 import Card from "./Card";
 import SearchBarWizards from "./SearchBarWizards";
+import FilterToggleButton from "./FilterToggleButton";
 
 type SortByOptions = "popularity" | "recentlyUpdated";
 
@@ -21,6 +22,7 @@ function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
     Array<WizardDetailsBasicWithCreatorName>
   >([]);
   const [searchButtonActive, setSearchButtonActive] = useState(false); //When data is displayed somewhere other than suggestions on search button click
+  const [filterTokenizedAgent, setFilterTokenizedAgent] = useState(false);
 
   const { t } = useTranslation();
 
@@ -47,6 +49,12 @@ function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
       ...agent,
       messagesReplied: analytics?.[agent.id]?.messagesReplied || 0n,
     }));
+
+    if (filterTokenizedAgent) {
+      wizardsWithAnalytics = wizardsWithAnalytics.filter(
+        wizard => !!wizard.tokenAddress.length || !!wizard.poolAddress.length
+      );
+    }
 
     if (sortBy === "popularity") {
       return wizardsWithAnalytics?.sort(
@@ -105,6 +113,23 @@ function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
             suggestionResults={suggestionResults}
             setSuggestionResults={setSuggestionResults}
           />
+
+          <div className="d-flex">
+            <FilterToggleButton
+              isActive={!filterTokenizedAgent}
+              label="All"
+              className="rounded-start"
+              onClick={() => setFilterTokenizedAgent(false)}
+              iconClass="ri-robot-2-fill"
+            />
+            <FilterToggleButton
+              isActive={filterTokenizedAgent}
+              label="Tokenized"
+              className="rounded-end"
+              onClick={() => setFilterTokenizedAgent(true)}
+              iconClass="ri-coin-fill"
+            />
+          </div>
           <Dropdown>
             <Dropdown.Toggle variant="secondary">Sort</Dropdown.Toggle>
             <Dropdown.Menu>
