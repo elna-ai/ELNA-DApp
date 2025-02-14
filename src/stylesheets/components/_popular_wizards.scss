@@ -1,6 +1,13 @@
 .popular-wizards {
   &__filter-tokenized {
-    padding: 0.5rem;
+    display: flex;
+    gap: 0.25rem;
+    padding: 6px 12px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 26px;
+    border-radius: unset;
+    cursor: pointer;
     border: 1px solid var(--background-active-color);
 
     &--active {
