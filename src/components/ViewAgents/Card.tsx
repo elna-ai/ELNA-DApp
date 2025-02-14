@@ -66,7 +66,10 @@ function Card({
         <div className="card-body text-center">
           <div className="d-flex">
             {tokenized ? (
-              <div className="card-body__tokenized badge">Tokenized</div>
+              <i
+                className="ri-coin-fill"
+                style={{ color: "var(--elna-primary-color)" }}
+              />
             ) : (
               <div style={{ minHeight: "30px" }} />
             )}
