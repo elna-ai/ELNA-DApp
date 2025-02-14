@@ -11,6 +11,7 @@ import { useFetchPublicWizards } from "hooks/reactQuery/wizards/usePublicWizards
 
 import Card from "./Card";
 import SearchBarWizards from "./SearchBarWizards";
+import FilterToggleButton from "./FilterToggleButton";
 
 type SortByOptions = "popularity" | "recentlyUpdated";
 
@@ -112,16 +113,22 @@ function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
             suggestionResults={suggestionResults}
             setSuggestionResults={setSuggestionResults}
           />
-          <div
-            onClick={() => setFilterTokenizedAgent(prev => !prev)}
-            className="badge d-flex gap-1 popular-wizards__filter-tokenized"
-          >
-            {filterTokenizedAgent ? (
-              <i className="ri-checkbox-blank-circle-fill popular-wizards__filter-tokenized--active" />
-            ) : (
-              <i className="ri-checkbox-blank-circle-line" />
-            )}
-            <span>Tokenized agents only</span>
+
+          <div className="d-flex">
+            <FilterToggleButton
+              isActive={!filterTokenizedAgent}
+              label="All"
+              className="rounded-start"
+              onClick={() => setFilterTokenizedAgent(false)}
+              iconClass="ri-robot-2-fill"
+            />
+            <FilterToggleButton
+              isActive={filterTokenizedAgent}
+              label="Tokenized"
+              className="rounded-end"
+              onClick={() => setFilterTokenizedAgent(true)}
+              iconClass="ri-coin-fill"
+            />
           </div>
           <Dropdown>
             <Dropdown.Toggle variant="secondary">Sort</Dropdown.Toggle>
