@@ -101,6 +101,7 @@ type Main =
    isWizardNameValid: (text) -> (bool) query;
    publishWizard: (text) -> (Response);
    unpublishWizard: (text) -> (Response);
+   updateKnowledgeAnalytics: (text) -> (text);
    updateLaunchpadOwner: (principal) -> (text);
    updateMessageAnalytics: (text) -> ();
    updateWizard: (text, WizardUpdateDetails) -> (text);
@@ -118,6 +119,7 @@ type InitialArgs =
    capCanisterId: principal;
    elnaImagesCanisterId: principal;
    owner: principal;
+   ragCanisterId: principal;
    userManagementCanisterId: principal;
  };
 type Error = 
