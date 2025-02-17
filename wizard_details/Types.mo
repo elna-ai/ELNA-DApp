@@ -11,6 +11,7 @@ module {
     userManagementCanisterId : Principal;
     elnaImagesCanisterId : Principal;
     capCanisterId : Principal;
+    ragCanisterId : Principal;
 
   };
 

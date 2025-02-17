@@ -5,6 +5,7 @@ import Bool "mo:base/Bool";
 import Principal "mo:base/Principal";
 import Time "mo:base/Time";
 import HashMap "mo:base/HashMap";
+import Nat "mo:base/Nat";
 import CapBackend "external_canisters/cap_backend";
 
 import Types "./Types";
@@ -183,4 +184,6 @@ module {
       case (#unlistedVisibility) { return "unlisted visibility" };
     };
   };
+
+
 };
