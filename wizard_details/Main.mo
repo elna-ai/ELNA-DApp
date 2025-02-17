@@ -39,6 +39,7 @@ actor class Main(initlaArgs : Types.InitalArgs) {
   private stable var _userManagementCanisterId : Principal = initialArgs.userManagementCanisterId;
   private stable var _elnaImagesCanisterId : Principal = initialArgs.elnaImagesCanisterId;
   private stable var _capCanisterId : Principal = initialArgs.capCanisterId;
+  private stable var _ragCanisterId : Principal = initialArgs.ragCanisterId;
   private stable var launchpadOwner : Principal = initialArgs.owner;
 
   // unstable memory
@@ -530,6 +531,17 @@ actor class Main(initlaArgs : Types.InitalArgs) {
         };
       };
     };
+  };
+
+  public shared ({ caller }) func updateKnowledgeAnalytics(wizardId : Text) : async Text {
+    let canUpdate = (caller == _ragCanisterId) or isOwner(caller);
+    if (not canUpdate) {
+      Debug.print("Error:updateKnowledgeAnalytics, not authorized,caller: " # debug_show (caller));
+      throw Error.reject("User not authorized");
+    };
+
+    AnalyticsUtils.updateModificationAnalytics(wizardId, 1, analytics);
+    return "Analytics updated";
   };
 
   public query func getAllAnalytics() : async [(
