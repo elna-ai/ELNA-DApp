@@ -16,6 +16,7 @@ export interface InitialArgs {
   'capCanisterId' : Principal,
   'owner' : Principal,
   'userManagementCanisterId' : Principal,
+  'ragCanisterId' : Principal,
   'elnaImagesCanisterId' : Principal,
 }
 export interface Main {
@@ -36,6 +37,7 @@ export interface Main {
   'isWizardNameValid' : ActorMethod<[string], boolean>,
   'publishWizard' : ActorMethod<[string], Response>,
   'unpublishWizard' : ActorMethod<[string], Response>,
+  'updateKnowledgeAnalytics' : ActorMethod<[string], string>,
   'updateLaunchpadOwner' : ActorMethod<[Principal], string>,
   'updateMessageAnalytics' : ActorMethod<[string], undefined>,
   'updateWizard' : ActorMethod<[string, WizardUpdateDetails], string>,

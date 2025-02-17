@@ -3,6 +3,7 @@ export const idlFactory = ({ IDL }) => {
     'capCanisterId' : IDL.Principal,
     'owner' : IDL.Principal,
     'userManagementCanisterId' : IDL.Principal,
+    'ragCanisterId' : IDL.Principal,
     'elnaImagesCanisterId' : IDL.Principal,
   });
   const WizardVisibility = IDL.Variant({
@@ -114,6 +115,7 @@ export const idlFactory = ({ IDL }) => {
     'isWizardNameValid' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
     'publishWizard' : IDL.Func([IDL.Text], [Response], []),
     'unpublishWizard' : IDL.Func([IDL.Text], [Response], []),
+    'updateKnowledgeAnalytics' : IDL.Func([IDL.Text], [IDL.Text], []),
     'updateLaunchpadOwner' : IDL.Func([IDL.Principal], [IDL.Text], []),
     'updateMessageAnalytics' : IDL.Func([IDL.Text], [], []),
     'updateWizard' : IDL.Func([IDL.Text, WizardUpdateDetails], [IDL.Text], []),
@@ -139,6 +141,7 @@ export const init = ({ IDL }) => {
     'capCanisterId' : IDL.Principal,
     'owner' : IDL.Principal,
     'userManagementCanisterId' : IDL.Principal,
+    'ragCanisterId' : IDL.Principal,
     'elnaImagesCanisterId' : IDL.Principal,
   });
   return [InitialArgs];
