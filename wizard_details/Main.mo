@@ -25,6 +25,7 @@ import {
   getWizardsWithCreator;
   visibilityToText;
 } "./Utils";
+import AnalyticsUtils "AnalyticsUtils";
 import ElnaImages "external_canisters/ElnaImagesBackend";
 import CapCanisterType "external_canisters/cap_backend";
 
@@ -448,32 +449,41 @@ actor class Main(initlaArgs : Types.InitalArgs) {
             wizardsV3.put(index, updatedWizardDetails);
             let logDetails = Buffer.Buffer<(Text, CapCanisterType.DetailValue)>(5);
             logDetails.add(("agentId", #Text(wizard.id)));
+            var changesCount = 0;
+
             if (wizardDetails.name != wizard.name) {
               logDetails.add(("before:wizardName", #Text(wizard.name)));
               logDetails.add(("after:wizardName", #Text(wizardDetails.name)));
+              changesCount := changesCount + 1;
             };
-            if (wizard.biography != wizard.biography) {
+            if (wizardDetails.biography != wizard.biography) {
               logDetails.add(("before:biography", #Text(wizard.biography)));
               logDetails.add(("after:biography", #Text(wizardDetails.biography)));
+              changesCount := changesCount + 1;
             };
-            if (wizard.description != wizard.description) {
+            if (wizardDetails.description != wizard.description) {
               logDetails.add(("before:description", #Text(wizard.description)));
               logDetails.add(("after:description", #Text(wizardDetails.description)));
+              changesCount := changesCount + 1;
             };
-            if (wizard.avatar != wizard.avatar) {
+            if (wizardDetails.avatar != wizard.avatar) {
               logDetails.add(("before:avatar", #Text(wizard.avatar)));
               logDetails.add(("after:avatar", #Text(wizardDetails.avatar)));
+              changesCount := changesCount + 1;
             };
 
-            if (wizard.greeting != wizard.greeting) {
+            if (wizardDetails.greeting != wizard.greeting) {
               logDetails.add(("before:greeting", #Text(wizard.greeting)));
               logDetails.add(("after:greeting", #Text(wizardDetails.greeting)));
+              changesCount := changesCount + 1;
             };
-            if (wizard.visibility != wizard.visibility) {
+            if (wizardDetails.visibility != wizard.visibility) {
               logDetails.add(("before:visibility", #Text(visibilityToText(wizard.visibility))));
               logDetails.add(("after:visibility", #Text(visibilityToText(wizardDetails.visibility))));
+              changesCount := changesCount + 1;
             };
 
+            AnalyticsUtils.updateModificationAnalytics(wizard.id, changesCount, analytics);
             ignore CapCanister.addRecord(caller, "update_agent", Buffer.toArray(logDetails));
             return "Agent updated";
           };
@@ -576,6 +586,26 @@ actor class Main(initlaArgs : Types.InitalArgs) {
   };
 
   system func postupgrade() {
+    let wizardsWithV3Data = Array.map(
+      _wizardsV2,
+      func(wizard : Types.WizardDetailsWithTimeStamp) : Types.WizardDetailsWithTimeV3 {
+        return { wizard with poolAddress = null; tokenAddress = null };
+      },
+    );
+
+    Debug.print("Start post_upgrade: " # Int.toText(Time.now()));
+    Debug.print("wizardsV3 size: " # debug_show wizardsV3.size() # "_wizardsV3 size:" # debug_show _wizardsV3.size());
+    Debug.print(debug_show wizardsWithV3Data);
+
+    if (_wizardsV3.size() > 0) {
+      Debug.print("used existing data");
+      wizardsV3 := Buffer.fromArray(_wizardsV3);
+    } else {
+      Debug.print("migrated data from _wizardsV2");
+      wizardsV3 := Buffer.fromArray(wizardsWithV3Data);
+    };
+    Debug.print(" END post_upgrade\n\n");
+
     wizards := Buffer.fromArray(_wizardsNew);
     wizardsV2 := Buffer.fromArray(_wizardsV2);
     analytics := HashMap.fromIter<Text, Types.Analytics>(_analytics.vals(), 5, Text.equal, Text.hash);
