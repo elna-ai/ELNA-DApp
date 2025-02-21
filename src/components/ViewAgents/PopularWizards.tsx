@@ -174,7 +174,6 @@ function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
                   userId={userId}
                   isPublished={isPublished}
                   messagesReplied={analytics?.[id]?.messagesReplied || 0n}
-                  onLoginUser={() => setIsWalletListOpen(true)}
                   tokenized={!!tokenAddress.length || !!poolAddress.length}
                 />
               )

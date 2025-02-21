@@ -5,7 +5,6 @@ import { Link, useNavigate } from "react-router-dom";
 import AvatarPlaceholder from "../../assets/avatar_placeholder.svg";
 import classNames from "classnames";
 import { useUserStore } from "stores/useUser";
-import { toast } from "react-toastify";
 
 interface CardProps {
   name: string;
@@ -20,7 +19,6 @@ interface CardProps {
   handleDelete?: (id: string, name: string) => void;
   handlePublish?: (id: string, isPublished: boolean) => void;
   handleEdit?: (id: string) => void;
-  onLoginUser?: () => void;
 }
 
 function Card({
@@ -36,7 +34,6 @@ function Card({
   handleDelete,
   handlePublish,
   handleEdit,
-  onLoginUser,
 }: CardProps) {
   const { t } = useTranslation();
   const { data: avatarData } = useGetAsset(imageId);
@@ -52,16 +49,11 @@ function Card({
   const navigate = useNavigate();
 
   return (
-    <div
-      className="col"
+    <div className="col"
       onClick={() => {
         if (isUserLoggedIn) return;
-        if (onLoginUser !== undefined) {
-          toast.info("Please login");
-          onLoginUser();
-        }
-      }}
-    >
+        navigate(`/chat/${id}`);
+      }}>
       <div className="card card-border contact-card elna-card">
         <div className="card-body text-center">
           <div className="d-flex">
@@ -124,7 +116,9 @@ function Card({
                 {name}
               </Link>
             ) : (
-              <div>{name}</div>
+              <Link to={`/login`} className="btn-link stretched-link">
+                {name}
+              </Link>
             )}
           </div>
           <div className="user-desg text-truncate">{description}</div>
