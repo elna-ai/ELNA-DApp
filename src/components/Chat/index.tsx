@@ -109,13 +109,6 @@ function Chat() {
     }
   }, [messages]);
 
-  useEffect(() => {
-    if (!isUserLoggedIn) {
-      toast.info("Please login");
-      setIsWalletListOpen(true);
-    }
-  }, [isUserLoggedIn]);
-
   const handleSubmit = async () => {
     const message = messageInput.trim();
     setMessages(prev => [...prev, { user: { name: "User" }, message }]);

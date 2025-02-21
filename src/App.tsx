@@ -29,6 +29,8 @@ import AddProfile from "components/MySpace/Profile/AddProfile";
 import PopularWizards from "components/ViewAgents/PopularWizards";
 import DeveloperStudio from "components/DeveloperStudio";
 import WidgetIntegration from "components/ViewAgents/WidgetIntegration/WidgetIntegration";
+import LoggedInRoute from "components/common/LoggedInRoute";
+import Login from "components/common/Login";
 
 function App() {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -54,16 +56,16 @@ function App() {
                       <PageLoader />
                     ) : (
                       <Routes>
-                        <Route path="/chat/:id?" element={<Chat />} />
+                        <Route path="/chat/:id?" element={<LoggedInRoute><Chat /></LoggedInRoute>} />
                         <Route path="/" element={<ViewAgents />} />
-                        <Route path="/agents/:id/integrations/chat-widget" element={<WidgetIntegration />} />
+                        <Route path="/agents/:id/integrations/chat-widget" element={<WidgetIntegration />} />{/* Incomplete feature, to be removed */}
                         <Route
                           path="/my-space/*"
-                          element={<MySpace />}
+                          element={<LoggedInRoute><MySpace /></LoggedInRoute>}
                         />
                         <Route
                           path="/create-agent/*"
-                          element={<CreateAgent />}
+                          element={<LoggedInRoute><CreateAgent /></LoggedInRoute>}
                         />
                         <Route
                           path="/agent-marketplace/*"
@@ -71,14 +73,15 @@ function App() {
                         />
                         <Route
                           path="/developer-studio/*"
-                          element={<DeveloperStudio />}
+                          element={<LoggedInRoute><DeveloperStudio /></LoggedInRoute>}
                         />
                         <Route
                           path="/admin/*"
                           element={<PrivateRoute component={AdminDashboard} />}
                         />
-                        <Route path="/profile/add" element={<AddProfile />} />
+                        <Route path="/profile/add" element={<LoggedInRoute><AddProfile /></LoggedInRoute>} />
                         <Route path="/tool-details/:id?" element={<ToolDetails />} />
+                        <Route path="/login" element={<Login />} />
                         <Route path="*" element={<Page404 />} />
                       </Routes>
                     )}
