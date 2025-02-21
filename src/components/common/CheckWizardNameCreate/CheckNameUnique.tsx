@@ -42,7 +42,7 @@ function CheckNameUnique({ setIsCreate }: CheckNameUniqueProps) {
 
   return (
     <>
-      <Modal.Header closeButton className="d-flex align-items-center">
+      <Modal.Header closeButton className="d-flex justify-content-between align-items-center">
         <Modal.Title>
           <h5 className="mb-0">
             <strong>{t("createAgent.nameAgent")}</strong>
