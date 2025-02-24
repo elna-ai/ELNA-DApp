@@ -64,7 +64,7 @@ function Chat() {
   const lastBubbleRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
   const { mutate: updateMessagesReplied } = useUpdateMessagesReplied();
-  const { mutate: createQuestionEmbedding } = useCreatingQuestionEmbedding();
+  const { mutate: createQuestionEmbedding, isPending: isCreatingQuestionEmbedding } = useCreatingQuestionEmbedding();
   useAutoSizeTextArea(inputRef.current, messageInput);
   const { mutate: sendChat, isPending: isResponseLoading } = useChat();
   const { data: avatar } = useGetAsset(wizard?.avatar);
@@ -262,7 +262,7 @@ function Chat() {
                 ref={index === messages.length - 1 ? lastBubbleRef : null}
               />
             ))}
-            {isResponseLoading && (
+            {(isResponseLoading || isCreatingQuestionEmbedding) && (
               <Bubble
                 key={uuidv4()}
                 user={{ name: wizard.name, isBot: true }}
