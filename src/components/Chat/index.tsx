@@ -12,7 +12,6 @@ import {
   transformHistoryToMessages,
 } from "src/utils";
 import useAutoSizeTextArea from "hooks/useAutoResizeTextArea";
-import { Message } from "src/types";
 import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
 import { useUpdateMessagesReplied } from "hooks/reactQuery/wizards/useAnalytics";
 import { useCreatingQuestionEmbedding } from "hooks/reactQuery/useExternalService";
@@ -22,24 +21,21 @@ import {
   useGetAgentChatHistory,
 } from "hooks/reactQuery/useRag";
 import { isRagErr } from "utils/ragCanister";
-import { useUserStore } from "stores/useUser";
 import { useGetAsset } from "hooks/reactQuery/useElnaImages";
 import { useGetUserProfile } from "hooks/reactQuery/useUser";
 
 import Bubble from "./Bubble";
-import NoHistory from "./NoHistory";
 import { TWITTER_HASHTAGS, TWITTER_SHARE_CONTENT } from "./constants";
 import { UseScrollToBottom } from "hooks/useScrollDownButton";
 import classNames from "classnames";
 import WalletList from "components/common/Header/WalletList";
+import { useChatStore } from "stores/useMessages";
+import { useWallet } from "hooks/useWallet";
 
 function Chat() {
   const [isWalletListOpen, setIsWalletListOpen] = useState(false);
 
   const { id } = useParams();
-
-  const { data: agentHistory, isFetching: isLoadingAgentHistory } =
-    useGetAgentChatHistory(id);
 
   const {
     data: wizard,
@@ -48,13 +44,26 @@ function Chat() {
     isError,
   } = useShowWizard(id);
 
-  const [messages, setMessages] = useState<Message[]>([]);
+  const wallet = useWallet();
+
+  const historyId: `${string}-${string}` | undefined =
+    wallet?.principalId === null || id === undefined
+      ? undefined
+      : `${wallet?.principalId}-${id}`;
+
+  const chats = useChatStore((state) => state.chats);
+  const updateMessage = useChatStore((state) => state.updateChat);
+  const resetChat = useChatStore((state) => state.resetChat);
+  const messages = historyId === undefined ? undefined : chats?.[historyId];
+
+  const { data: agentHistory, isFetching: isLoadingAgentHistory } =
+    useGetAgentChatHistory(id);
+
   const [messageInput, setMessageInput] = useState("");
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const lastBubbleRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
-  const isUserLoggedIn = useUserStore(state => state.isUserLoggedIn);
   const { mutate: updateMessagesReplied } = useUpdateMessagesReplied();
   const { mutate: createQuestionEmbedding } = useCreatingQuestionEmbedding();
   useAutoSizeTextArea(inputRef.current, messageInput);
@@ -65,19 +74,20 @@ function Chat() {
   const { mutate: deleteChatHistory, isPending: isDeletingChatHistory } =
     useDeleteAgentChatHistory();
 
+
   const { showButton, scrollToBottom } = UseScrollToBottom();
 
   const setInitialMessage = () => {
-    if (wizard?.greeting === undefined) return;
-    const initialMessage = {
+    if (wizard?.greeting === undefined || historyId === undefined) return;
+    updateMessage(historyId, {
       user: { name: wizard.name, isBot: true },
       message: wizard.greeting,
-    };
-    setMessages([initialMessage]);
+    });
   };
 
   const clearChatFn = () => {
     deleteChatHistory(wizard?.id);
+    historyId && resetChat(historyId)
     setInitialMessage();
   };
 
@@ -87,31 +97,30 @@ function Chat() {
   }, [isError]);
 
   useEffect(() => {
-    if (
-      !isLoadingAgentHistory &&
-      agentHistory !== undefined &&
-      wizard?.name !== undefined
-    ) {
-      if (agentHistory?.length > 0) {
-        setMessages(transformHistoryToMessages(agentHistory, wizard?.name));
-        return;
-      }
-    } else setInitialMessage();
-  }, [wizard, isLoadingAgentHistory, agentHistory]);
-
-  useEffect(() => {
-    if (lastBubbleRef.current) {
-      lastBubbleRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-        inline: "nearest",
+    if (wizard === undefined || historyId === undefined) return;
+    if (messages !== undefined) return;
+    if (isLoadingAgentHistory) return;
+    if (agentHistory === null || agentHistory === undefined) {
+      updateMessage(historyId, {
+        user: { name: wizard.name, isBot: true },
+        message: wizard.greeting,
       });
+    } else {
+      updateMessage(
+        historyId,
+        transformHistoryToMessages(agentHistory, wizard.name)
+      );
     }
-  }, [messages]);
+  }, [wizard, agentHistory, isLoadingAgentHistory, historyId]);
 
   const handleSubmit = async () => {
     const message = messageInput.trim();
-    setMessages(prev => [...prev, { user: { name: "User" }, message }]);
+    if (historyId === undefined) {
+      toast.error("historyId not available");
+      console.error("historyId not available", historyId);
+      return;
+    }
+    updateMessage(historyId, { user: { name: "User" }, message });
     setMessageInput("");
     createQuestionEmbedding(message, {
       onSuccess(data) {
@@ -121,7 +130,7 @@ function Chat() {
             agentId: wizard!.id,
             queryText: message,
             embeddings,
-            history: isUserLoggedIn ? [] : transformHistory(messages),
+            history: messages ? transformHistory(messages) : [],
           },
           {
             onSuccess: response => {
@@ -130,15 +139,10 @@ function Chat() {
                 console.error(Object.keys(response.Err).join());
                 return;
               }
-
-              updateMessagesReplied(wizard?.id || "");
-              setMessages(prev => [
-                ...prev,
-                {
-                  user: { name: wizard!.name, isBot: true },
-                  message: response?.Ok?.body?.response,
-                },
-              ]);
+              updateMessage(historyId, {
+                user: { name: wizard!.name, isBot: true },
+                message: response.Ok?.body?.response,
+              });
             },
             onError: e => {
               console.error(e);
@@ -249,26 +253,20 @@ function Chat() {
         <div className="chat-body">
           {/* TODO: media query to be converted to scss */}
           <div className="sm:mx-2 chat-body--wrapper">
-            {messages.length > 0 ? (
-              <>
-                {messages.map(({ user, message }, index) => (
-                  <Bubble
-                    key={uuidv4()}
-                    user={user}
-                    message={message}
-                    ref={index === messages.length - 1 ? lastBubbleRef : null}
-                  />
-                ))}
-                {isResponseLoading && (
-                  <Bubble
-                    key={uuidv4()}
-                    user={{ name: wizard.name, isBot: true }}
-                    isLoading
-                  />
-                )}
-              </>
-            ) : (
-              <NoHistory />
+            {messages?.map(({ user, message }, index) => (
+              <Bubble
+                key={uuidv4()}
+                user={user}
+                message={message}
+                ref={index === messages.length - 1 ? lastBubbleRef : null}
+              />
+            ))}
+            {isResponseLoading && (
+              <Bubble
+                key={uuidv4()}
+                user={{ name: wizard.name, isBot: true }}
+                isLoading
+              />
             )}
           </div>
         </div>
