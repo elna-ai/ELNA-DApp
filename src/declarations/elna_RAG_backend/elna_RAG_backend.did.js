@@ -20,12 +20,6 @@ export const idlFactory = ({ IDL }) => {
     'Ok' : IDL.Text,
     'Err' : IDL.Tuple(RejectionCode, IDL.Text),
   });
-  const Roles = IDL.Variant({
-    'System' : IDL.Null,
-    'User' : IDL.Null,
-    'Assistant' : IDL.Null,
-  });
-  const History = IDL.Record({ 'content' : IDL.Text, 'role' : Roles });
   const Body = IDL.Record({ 'response' : IDL.Text });
   const Response = IDL.Record({ 'body' : Body, 'statusCode' : IDL.Nat16 });
   const Error = IDL.Variant({
@@ -39,6 +33,12 @@ export const idlFactory = ({ IDL }) => {
     'Ok' : IDL.Vec(IDL.Text),
     'Err' : IDL.Tuple(RejectionCode, IDL.Text, IDL.Text),
   });
+  const Roles = IDL.Variant({
+    'System' : IDL.Null,
+    'User' : IDL.Null,
+    'Assistant' : IDL.Null,
+  });
+  const History = IDL.Record({ 'content' : IDL.Text, 'role' : Roles });
   const Result_3 = IDL.Variant({
     'Ok' : IDL.Vec(IDL.Tuple(History, History)),
     'Err' : Error,
@@ -73,13 +73,7 @@ export const idlFactory = ({ IDL }) => {
   return IDL.Service({
     'build_index' : IDL.Func([IDL.Text], [Result], []),
     'chat' : IDL.Func(
-        [
-          IDL.Text,
-          IDL.Text,
-          IDL.Opt(IDL.Vec(IDL.Float32)),
-          IDL.Text,
-          IDL.Vec(IDL.Tuple(History, History)),
-        ],
+        [IDL.Text, IDL.Text, IDL.Opt(IDL.Vec(IDL.Float32)), IDL.Text],
         [Result_1],
         [],
       ),

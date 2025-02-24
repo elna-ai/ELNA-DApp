@@ -9,8 +9,7 @@ export { idlFactory } from "./elna_RAG_backend.did.js";
  * process.env.CANISTER_ID_<CANISTER_NAME_UPPERCASE>
  * beginning in dfx 0.15.0
  */
-export const canisterId =
-  process.env.CANISTER_ID_ELNA_RAG_BACKEND;
+export const canisterId =  import.meta.env.VITE_ELNA_RAG_CANISTER_ID;
 
 export const createActor = (canisterId, options = {}) => {
   const agent = options.agent || new HttpAgent({ ...options.agentOptions });
@@ -39,4 +38,4 @@ export const createActor = (canisterId, options = {}) => {
   });
 };
 
-export const elna_RAG_backend = canisterId ? createActor(canisterId) : undefined;
+export const elna_RAG_backend = canisterId ? createActor(canisterId,{agentOptions:{host:"https://icp0.io"}}) : undefined;

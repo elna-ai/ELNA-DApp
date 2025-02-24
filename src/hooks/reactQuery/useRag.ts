@@ -1,13 +1,10 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { v4 as uuidv4 } from "uuid";
-import { elna_RAG_backend as elnaRagBackend } from "declarations/elna_RAG_backend";
 import { ONE_HOUR_STALE_TIME, QUERY_KEYS } from "src/constants/query";
 import { isRagErr } from "utils/ragCanister";
+import { _SERVICE } from "declarations/elna_RAG_backend/elna_RAG_backend.did";
 import {
-  History,
-  _SERVICE,
-} from "declarations/elna_RAG_backend/elna_RAG_backend.did";
-import {
+  elna_RAG_backend as elnaRagBackend,
   canisterId as ragId,
   idlFactory as ragFactory,
 } from "declarations/elna_RAG_backend";
@@ -18,26 +15,12 @@ type useChatPayload = {
   agentId: string;
   queryText: string;
   embeddings: [number];
-  history: [History, History][];
 };
 export const useChat = () => {
   const wallet = useWallet();
   return useMutation({
-    mutationFn: async ({
-      agentId,
-      queryText,
-      embeddings,
-      history,
-    }: useChatPayload) => {
-      if (wallet === undefined || !wallet?.principalId) {
-        return elnaRagBackend.chat(
-          agentId,
-          queryText,
-          convertToMotokoOptional(embeddings),
-          uuidv4(),
-          history
-        );
-      }
+    mutationFn: async ({ agentId, queryText, embeddings }: useChatPayload) => {
+      if (wallet === undefined || !wallet?.principalId) return;
 
       const elnaRag: _SERVICE = await wallet.getCanisterActor(
         ragId,
@@ -48,8 +31,7 @@ export const useChat = () => {
         agentId,
         queryText,
         convertToMotokoOptional(embeddings),
-        uuidv4(),
-        history
+        uuidv4()
       );
 
       return result;

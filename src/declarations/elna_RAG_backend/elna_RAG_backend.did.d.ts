@@ -58,7 +58,7 @@ export interface TransformArgs {
 export interface _SERVICE {
   'build_index' : ActorMethod<[string], Result>,
   'chat' : ActorMethod<
-    [string, string, [] | [Array<number>], string, Array<[History, History]>],
+    [string, string, [] | [Array<number>], string],
     Result_1
   >,
   'create_collection' : ActorMethod<[string, bigint], Result>,

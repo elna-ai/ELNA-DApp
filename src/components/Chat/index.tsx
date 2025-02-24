@@ -8,7 +8,6 @@ import { v4 as uuidv4 } from "uuid";
 import PageLoader from "components/common/PageLoader";
 import {
   generateTwitterShareLink,
-  transformHistory,
   transformHistoryToMessages,
 } from "src/utils";
 import useAutoSizeTextArea from "hooks/useAutoResizeTextArea";
@@ -106,9 +105,10 @@ function Chat() {
         message: wizard.greeting,
       });
     } else {
-      updateMessage(
+      if (isRagErr(agentHistory)) console.error(agentHistory?.Err)
+      else updateMessage(
         historyId,
-        transformHistoryToMessages(agentHistory, wizard.name)
+        transformHistoryToMessages(agentHistory?.Ok, wizard.name)
       );
     }
   }, [wizard, agentHistory, isLoadingAgentHistory, historyId]);
@@ -130,10 +130,10 @@ function Chat() {
             agentId: wizard!.id,
             queryText: message,
             embeddings,
-            history: messages ? transformHistory(messages) : [],
           },
           {
             onSuccess: response => {
+              if (response === undefined) return;
               if (isRagErr(response)) {
                 toast.error("something went wrong");
                 console.error(Object.keys(response.Err).join());
@@ -141,8 +141,9 @@ function Chat() {
               }
               updateMessage(historyId, {
                 user: { name: wizard!.name, isBot: true },
-                message: response.Ok?.body?.response,
+                message: response?.Ok?.body?.response,
               });
+              updateMessagesReplied(wizard!.id);
             },
             onError: e => {
               console.error(e);
