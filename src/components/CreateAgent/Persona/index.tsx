@@ -28,10 +28,11 @@ import queryClient from "utils/queryClient";
 import { PERSONA_VALIDATION_SCHEMA } from "../constants";
 import AvatarImage from "./AvatarImage";
 import UploadAvatarImage from "./UploadAvatarImage";
+import { CreateAgentNavTypes } from "src/types";
 
 type PersonaProps = {
   wizard: any;
-  setCurrentNav: React.Dispatch<React.SetStateAction<string>>;
+  setCurrentNav: React.Dispatch<React.SetStateAction<CreateAgentNavTypes>>;
   setWizardId: React.Dispatch<React.SetStateAction<string>>;
   isEdit: boolean;
 };
