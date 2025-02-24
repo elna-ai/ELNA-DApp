@@ -14,3 +14,5 @@ export type Message = {
 
 // Extract Key from Motoko Variants
 export type VariantKeys<T> = T extends any ? keyof T : never;
+
+export type CreateAgentNavTypes = "persona" | "knowledge" | "integrations";

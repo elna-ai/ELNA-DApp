@@ -13,10 +13,14 @@ import { v4 as uuidv4 } from "uuid";
 import Card from "./Card";
 import UploadFile from "./UploadFile";
 import DeleteKnowledgeModal from "./DeleteModal";
+import { CreateAgentNavTypes } from "src/types";
 
-type KnowledgeProps = { wizardId: string };
+type KnowledgeProps = {
+  wizardId: string;
+  setCurrentNav: React.Dispatch<React.SetStateAction<CreateAgentNavTypes>>;
+};
 
-function Knowledge({ wizardId }: KnowledgeProps) {
+function Knowledge({ wizardId, setCurrentNav }: KnowledgeProps) {
   const [isAddDocument, setIsAddDocument] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -90,16 +94,24 @@ function Knowledge({ wizardId }: KnowledgeProps) {
         {isDocumentsLoading ? (
           <Spinner className="mx-auto mt-2" />
         ) : (
-          documents !== undefined &&
-          documents?.length > 0 &&
-          documents.map((document: string) => (
-            <Card
-              key={uuidv4()}
-              title={document}
-              isLearning={false}
-              handleDelete={() => setIsDeleteModalOpen(true)}
-            />
-          ))
+          <>
+            {documents !== undefined &&
+              documents?.length > 0 &&
+              documents.map((document: string) => (
+                <Card
+                  key={uuidv4()}
+                  title={document}
+                  isLearning={false}
+                  handleDelete={() => setIsDeleteModalOpen(true)}
+                />
+              ))}
+            <Button
+              disabled={!documents?.length}
+              onClick={() => setCurrentNav("integrations")}
+            >
+              Next
+            </Button>
+          </>
         )}
       </div>
       <UploadFile
