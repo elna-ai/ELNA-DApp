@@ -13,6 +13,36 @@ type WizardUpdateDetails =
    name: text;
    visibility: WizardVisibility;
  };
+type WizardDetailsWithTimeStamp = 
+ record {
+   avatar: text;
+   biography: text;
+   createdAt: Time;
+   description: text;
+   greeting: text;
+   id: text;
+   isPublished: bool;
+   name: text;
+   summary: opt text;
+   updatedAt: Time;
+   userId: text;
+   visibility: WizardVisibility;
+ };
+type WizardDetailsV3 = 
+ record {
+   avatar: text;
+   biography: text;
+   description: text;
+   greeting: text;
+   id: text;
+   isPublished: bool;
+   name: text;
+   poolAddress: opt text;
+   summary: opt text;
+   tokenAddress: opt text;
+   userId: text;
+   visibility: WizardVisibility;
+ };
 type WizardDetailsBasicWithCreatorName = 
  record {
    avatar: text;
@@ -23,6 +53,8 @@ type WizardDetailsBasicWithCreatorName =
    id: text;
    isPublished: bool;
    name: text;
+   poolAddress: opt text;
+   tokenAddress: opt text;
    updatedAt: Time;
    userId: text;
  };
@@ -40,6 +72,11 @@ type WizardDetails =
    visibility: WizardVisibility;
  };
 type Time = int;
+type Result = 
+ variant {
+   err: Error;
+   ok: text;
+ };
 type Response = 
  record {
    message: text;
@@ -48,28 +85,55 @@ type Response =
 type Main = 
  service {
    addWizard: (WizardDetails) -> (Response);
+   addWizardLaunchpad: (WizardDetailsV3) -> (Result);
    deleteWizard: (text) -> (Response);
    getAllAnalytics: () -> (vec record {
                                  text;
-                                 Analytics;
+                                 Analytics_V2_External;
                                }) query;
-   getAllWizards: () -> (vec WizardDetails);
-   getAnalytics: (text) -> (Analytics_V1) query;
+   getAllWizards: () -> (vec WizardDetailsWithTimeStamp);
+   getAnalytics: (text) -> (Analytics_V2_External) query;
+   getElnaBackendUri: () -> (text) query;
+   getLaunchpadOwner: () -> (text) query;
    getUserWizards: (text) -> (vec WizardDetailsBasicWithCreatorName);
-   getWizard: (text) -> (opt WizardDetails) query;
+   getWizard: (text) -> (opt WizardDetailsV3) query;
    getWizards: () -> (vec WizardDetailsBasicWithCreatorName);
    isWizardNameValid: (text) -> (bool) query;
    publishWizard: (text) -> (Response);
    unpublishWizard: (text) -> (Response);
+   updateKnowledgeAnalytics: (text) -> (text);
+   updateLaunchpadOwner: (principal) -> (text);
    updateMessageAnalytics: (text) -> ();
    updateWizard: (text, WizardUpdateDetails) -> (text);
    updateWizardAdmin: (text, text) -> (text);
+   updateWizardLaunchpad: (text,
+    record {
+      agentId: text;
+      poolAddress: opt text;
+      tokenAddress: opt text;
+      userId: text;
+    }) -> (Result);
  };
-type InitalArgs = 
+type InitialArgs = 
  record {
+   capCanisterId: principal;
+   elnaImagesCanisterId: principal;
    owner: principal;
+   ragCanisterId: principal;
    userManagementCanisterId: principal;
  };
-type Analytics_V1 = record {messagesReplied: nat;};
-type Analytics = variant {v1: Analytics_V1;};
-service : (InitalArgs) -> Main
+type Error = 
+ variant {
+   AgentIdExist;
+   AgentNotFound;
+   PrincipalIdMissMatch;
+   UnableToUploadAvatar;
+   UserNotAuthorized;
+ };
+type Analytics_V2_External = 
+ record {
+   messagesReplied: nat;
+   modificationCount: nat;
+   uniqueUsers: nat;
+ };
+service : (InitialArgs) -> Main

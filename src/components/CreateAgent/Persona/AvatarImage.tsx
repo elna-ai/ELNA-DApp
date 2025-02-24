@@ -2,12 +2,14 @@ import classNames from "classnames";
 import { useGetAsset } from "hooks/reactQuery/useElnaImages";
 
 import tickSolid from "images/tickSolid.png";
+import { toast } from "react-toastify";
 
 type AvatarImageProps = {
   assetId: string;
   selected: boolean;
   onClick?: () => void;
   preview?: boolean;
+  isDisabled?: boolean;
 };
 
 function AvatarImage({
@@ -15,15 +17,21 @@ function AvatarImage({
   selected,
   onClick,
   preview = false,
+  isDisabled = false,
 }: AvatarImageProps) {
   const { data, isFetching: isLoading } = useGetAsset(assetId);
 
   return (
     <div
-      onClick={onClick}
+      onClick={() =>
+        isDisabled
+          ? toast.info("can't edit avatar for tokenized agent")
+          : onClick?.()
+      }
       className={classNames("avatar-image-wrapper", {
         "avatar-image--selected": selected && !preview,
         "avatar-image--preview": preview,
+        "avatar-image--disabled": isDisabled,
       })}
     >
       <img

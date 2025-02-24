@@ -6,6 +6,7 @@ import pdfJsWorker from "pdfjs-dist/build/pdf.worker";
 import { History } from "declarations/elna_RAG_backend/elna_RAG_backend.did";
 
 import { Message, VariantKeys } from "../types";
+import { toast } from "react-toastify";
 
 export const extractDocumentsFromPDF = async (file: File) => {
   const loader = new WebPDFLoader(file, {
@@ -67,6 +68,25 @@ export const transformHistory = (messages: Message[]): [History, History][] => {
   return history;
 };
 
+export function transformHistoryToMessages(
+  nestedArray: [History, History][],
+  agentName: string
+): Message[] {
+  return nestedArray.reduce<Message[]>((acc, conversation) => {
+    const transformedMessages = conversation.map(item => {
+      const role = convertFromMotokoVariant(item.role);
+      return {
+        user: {
+          name: role === "User" ? "User" : agentName,
+          isBot: role !== "User",
+        },
+        message: item.content,
+      };
+    });
+    return acc.concat(transformedMessages);
+  }, []);
+}
+
 export const generateTwitterShareLink = (content: string, hashtags: string) =>
   `https://twitter.com/intent/tweet?text=${encodeURI(
     content
@@ -95,4 +115,13 @@ export const convertToMotokoVariant = <T>(
 
 export const convertToIDLVariant = <T>(status: VariantKeys<T>) => {
   return { [status]: null } as T;
+};
+
+export const copyToClipBoard = async (tag: string, text: string) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    toast.success(`${tag} copied`);
+  } catch (err) {
+    toast.error(`Failed to copy ${tag}`);
+  }
 };

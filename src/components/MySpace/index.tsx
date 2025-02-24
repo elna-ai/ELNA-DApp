@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 
 import { useWallet } from "hooks/useWallet";
-import { useUserStore } from "stores/useUser";
 import { useGetUserProfile } from "hooks/reactQuery/useUser";
 
 import NoLogin from "./NoLogin";
@@ -13,15 +12,15 @@ import DeveloperRequest from "./DeveloperRequest";
 import MySpaceMenuLink from "./MySpaceMenuLink";
 import { MY_SPACE_LINK, MySpaceMenuProps } from "./constant";
 
+
 function MySpace() {
 
     const wallet = useWallet();
-    const isUserLoggedIn = useUserStore(state => state.isUserLoggedIn);
     const { data: userProfile, isFetching: isUserProfileLoading } = useGetUserProfile(wallet?.principalId);
 
     return (
         <>
-            {(!isUserLoggedIn || !userProfile) && <NoLogin />}
+            {(!userProfile) && <NoLogin />}
             <div className="d-flex align-items-top justify-content-between mt-4 mb-2">
                 <div className="myspace__title">
                     <h5 className="flex gap-2">

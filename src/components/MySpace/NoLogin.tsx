@@ -36,7 +36,7 @@ function NoLogin() {
                     size="lg"
                     aria-labelledby="contained-modal-title-vcenter"
                     centered
-                    show={!isUserLoggedIn || !userProfile}
+                    show={!userProfile}
                     onHide={() => {
                         if (userProfile && isUserLoggedIn) navigate("/my-space/profile");
                         else navigate("/");

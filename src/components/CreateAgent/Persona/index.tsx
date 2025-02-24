@@ -12,8 +12,14 @@ import {
   WizardUpdateDetails,
   WizardVisibility,
 } from "declarations/wizard_details/wizard_details.did";
-import { useAddWizard, useUpdateWizard } from "hooks/reactQuery/wizards/useMyWizards";
-import { useUploadCustomImage, useDeleteCustomImage } from "hooks/reactQuery/useElnaImages";
+import {
+  useAddWizard,
+  useUpdateWizard,
+} from "hooks/reactQuery/wizards/useMyWizards";
+import {
+  useUploadCustomImage,
+  useDeleteCustomImage,
+} from "hooks/reactQuery/useElnaImages";
 import { AVATAR_IMAGES } from "src/constants";
 import LoadingButton from "components/common/LoadingButton";
 import { useCreateWizardStore } from "stores/useCreateWizard";
@@ -34,12 +40,18 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
   const { t } = useTranslation();
   const wallet = useWallet();
   const wizardName = useCreateWizardStore(state => state.name);
-  const customImageNameRef = useRef('');
+  const customImageNameRef = useRef("");
 
   const { mutate: addWizard, isPending: isAddingWizard } = useAddWizard();
-  const { mutate: updateWizard, isPending: isUpdatingWizard } = useUpdateWizard();
-  const { mutate: uploadCustomImage, isPending: isUploadingCustomImage } = useUploadCustomImage();
-  const { mutate: deleteCustomImage, isPending: isDeletingCustomImage } = useDeleteCustomImage();
+  const { mutate: updateWizard, isPending: isUpdatingWizard } =
+    useUpdateWizard();
+  const { mutate: uploadCustomImage, isPending: isUploadingCustomImage } =
+    useUploadCustomImage();
+  const { mutate: deleteCustomImage, isPending: isDeletingCustomImage } =
+    useDeleteCustomImage();
+
+  const isTokenizedAgent =
+    !!wizard?.poolAddress?.length || !!wizard?.tokenAddress?.length;
 
   type Visibility = "public" | "private" | "unlisted";
   type PersonaValues = {
@@ -57,95 +69,100 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
     } as WizardVisibility;
     if (userId === undefined) return;
     if (wizardName === null) return;
-    
-    if(!isEdit) {
-      if(values.avatar.slice(0,11) === "default_img") handleAddWizard(values, userId, visibility);
+
+    if (!isEdit) {
+      if (values.avatar.slice(0, 11) === "default_img")
+        handleAddWizard(values, userId, visibility);
       else handleUploadCustomImage(values, userId, visibility);
-    }
-    else {
-      if(wizard.avatar === values.avatar) handleUpdateWizard(values, visibility);
+    } else {
+      if (wizard.avatar === values.avatar)
+        handleUpdateWizard(values, visibility);
       else {
-        if(wizard.avatar.slice(0,11) === "default_img") {
-          if(values.avatar.slice(0,11) === "default_img") handleUpdateWizard(values, visibility);
+        if (wizard.avatar.slice(0, 11) === "default_img") {
+          if (values.avatar.slice(0, 11) === "default_img")
+            handleUpdateWizard(values, visibility);
           else handleUploadCustomImage(values, userId, visibility);
-        }
-        else {
-          await handleDeleteCustomImage(wizard.avatar)
-          if(values.avatar.slice(0,11) === "default_img") handleUpdateWizard(values, visibility);
+        } else {
+          await handleDeleteCustomImage(wizard.avatar);
+          if (values.avatar.slice(0, 11) === "default_img")
+            handleUpdateWizard(values, visibility);
           else handleUploadCustomImage(values, userId, visibility);
         }
       }
     }
   };
 
-  const handleUploadCustomImage = async (values: PersonaValues, userId: string, visibility: WizardVisibility) => {
-    if (customImageNameRef.current === '') {
-      toast.error("Invalid Image name")
-    }
-    else uploadCustomImage(
-      {
-        fileName: customImageNameRef.current,
-        base64Image: values.avatar,
-      },
-      {
-        onSuccess: (response) => {
-          if ("Ok" in response) {
-            if(isEdit) {
-              const updatePayload = {
-                wizardId: wizard.id,
-                updatedWizardDetails: {
-                  ...values,
-                  avatar: response.Ok,
-                  name: wizardName ? wizardName : wizard.name,
-                  visibility,
-                } as WizardUpdateDetails,
-              }
-              updateWizard(
-                updatePayload,
-                {
+  const handleUploadCustomImage = async (
+    values: PersonaValues,
+    userId: string,
+    visibility: WizardVisibility
+  ) => {
+    if (customImageNameRef.current === "") {
+      toast.error("Invalid Image name");
+    } else
+      uploadCustomImage(
+        {
+          fileName: customImageNameRef.current,
+          base64Image: values.avatar,
+        },
+        {
+          onSuccess: response => {
+            if ("Ok" in response) {
+              if (isEdit) {
+                const updatePayload = {
+                  wizardId: wizard.id,
+                  updatedWizardDetails: {
+                    ...values,
+                    avatar: response.Ok,
+                    name: wizardName ? wizardName : wizard.name,
+                    visibility,
+                  } as WizardUpdateDetails,
+                };
+                updateWizard(updatePayload, {
                   onSuccess: () => {
-                    queryClient.refetchQueries({ queryKey: [wizard.id] })
+                    queryClient.refetchQueries({ queryKey: [wizard.id] });
                   },
                   onError: error => {
                     console.error(error);
                     toast.error(error.message);
                   },
-                }
-              );
-            }
-            else {
-              const addPayload: WizardDetails = {
-                ...values,
-                avatar: response.Ok,
-                id: uuidv4(),
-                userId,
-                name: wizardName,
-                visibility,
-                summary: [],
-                isPublished: false,
-              };
-              addWizard(addPayload, {
-                onSuccess: () => {
-                  setWizardId(addPayload.id);
-                  setCurrentNav("knowledge");
-                },
-                onError: error => toast.error(error.message),
-              });
-            }
-          } else toast.error("Invalid response")
-        },
-        onError: (error) => {
-          console.error(error);
-        },
-      }
-    );
-  }
+                });
+              } else {
+                const addPayload: WizardDetails = {
+                  ...values,
+                  avatar: response.Ok,
+                  id: uuidv4(),
+                  userId,
+                  name: wizardName,
+                  visibility,
+                  summary: [],
+                  isPublished: false,
+                };
+                addWizard(addPayload, {
+                  onSuccess: () => {
+                    setWizardId(addPayload.id);
+                    setCurrentNav("knowledge");
+                  },
+                  onError: error => toast.error(error.message),
+                });
+              }
+            } else toast.error("Invalid response");
+          },
+          onError: error => {
+            console.error(error);
+          },
+        }
+      );
+  };
 
   const handleDeleteCustomImage = async (customImageId: string) => {
     deleteCustomImage(customImageId);
-  }
+  };
 
-  const handleUpdateWizard = async (values: PersonaValues, visibility: WizardVisibility) => {
+  const handleUpdateWizard = async (
+    values: PersonaValues,
+    visibility: WizardVisibility
+  ) => {
     updateWizard(
       {
         wizardId: wizard.id,
@@ -157,7 +174,7 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
       },
       {
         onSuccess: () => {
-          queryClient.refetchQueries({ queryKey: [wizard.id] })
+          queryClient.refetchQueries({ queryKey: [wizard.id] });
         },
         onError: error => {
           console.error(error);
@@ -167,7 +184,11 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
     );
   };
 
-  const handleAddWizard = async (values: PersonaValues, userId: string, visibility: WizardVisibility) => {
+  const handleAddWizard = async (
+    values: PersonaValues,
+    userId: string,
+    visibility: WizardVisibility
+  ) => {
     const payload: WizardDetails = {
       ...values,
       id: uuidv4(),
@@ -184,7 +205,7 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
       },
       onError: error => toast.error(error.message),
     });
-  }
+  };
 
   return (
     <Formik
@@ -220,28 +241,32 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
               {t("createAgent.avatar")}
             </h3>
             <Form.Label className="fs-7">
-                {t("createAgent.avatarDesc")}
+              {t("createAgent.avatarDesc")}
             </Form.Label>
             <div className="persona__avatar">
-              {
-                values.avatar.slice(0,10) === "data:image" ?
+              {values.avatar.slice(0, 10) === "data:image" ? (
                 <div className="avatar-image-wrapper avatar-image--preview">
-                  <img src={values.avatar} className="avatar-image avatar-image--preview" alt="" />
+                  <img
+                    src={values.avatar}
+                    className="avatar-image avatar-image--preview"
+                    alt=""
+                  />
                 </div>
-                :
+              ) : (
                 <AvatarImage
-                key={values.avatar}
-                assetId={values.avatar}
-                selected={false}
-                preview={true}
+                  key={values.avatar}
+                  assetId={values.avatar}
+                  selected={false}
+                  preview={true}
                 />
-              }
+              )}
               <InputGroup className="persona__avatar__image-wrapper">
                 <UploadAvatarImage
-                  selected={values.avatar.slice(0,11) !== "default_img"}
+                  selected={values.avatar.slice(0, 11) !== "default_img"}
                   customImageNameRef={customImageNameRef}
-                  onAvatarSelected={(image) => {
-                    handleChange("avatar")(image)
+                  isDisabled={isTokenizedAgent}
+                  onAvatarSelected={image => {
+                    handleChange("avatar")(image);
                   }}
                 />
                 {AVATAR_IMAGES.map(avatar => (
@@ -249,6 +274,7 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
                     key={avatar}
                     assetId={avatar}
                     selected={values.avatar === avatar}
+                    isDisabled={isTokenizedAgent}
                     onClick={() => handleChange("avatar")(avatar)}
                   />
                 ))}
@@ -328,6 +354,7 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
                 as="textarea"
                 name="greeting"
                 placeholder="Enter Agent Greetings"
+                disabled={isTokenizedAgent}
                 rows={3}
                 value={values.greeting}
                 onChange={handleChange}
@@ -368,6 +395,7 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
                 value={values.description}
                 onChange={handleChange}
                 isInvalid={!!errors.description}
+                disabled={isTokenizedAgent}
               />
               <Form.Control.Feedback type="invalid">
                 {errors.description}
@@ -459,7 +487,9 @@ function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
                 }
                 className="ml-auto px-5"
                 isDisabled={!dirty}
-                isLoading={isAddingWizard || isUpdatingWizard || isUploadingCustomImage}
+                isLoading={
+                  isAddingWizard || isUpdatingWizard || isUploadingCustomImage
+                }
                 type="submit"
               />
             </div>

@@ -1,8 +1,10 @@
 import { useGetAsset } from "hooks/reactQuery/useElnaImages";
 import { Dropdown } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-import AvatarPlaceholder from "../../assets/avatar_placeholder.svg"
+import { Link, useNavigate } from "react-router-dom";
+import AvatarPlaceholder from "../../assets/avatar_placeholder.svg";
+import classNames from "classnames";
+import { useUserStore } from "stores/useUser";
 
 interface CardProps {
   name: string;
@@ -13,7 +15,7 @@ interface CardProps {
   isPublished?: boolean;
   messagesReplied: bigint;
   creatorName: string;
-  price?: number;
+  tokenized?: boolean;
   handleDelete?: (id: string, name: string) => void;
   handlePublish?: (id: string, isPublished: boolean) => void;
   handleEdit?: (id: string) => void;
@@ -28,13 +30,14 @@ function Card({
   isPublished,
   messagesReplied,
   creatorName,
-  price = 0,
+  tokenized = false,
   handleDelete,
   handlePublish,
   handleEdit,
 }: CardProps) {
   const { t } = useTranslation();
   const { data: avatarData } = useGetAsset(imageId);
+  const isUserLoggedIn = useUserStore(state => state.isUserLoggedIn);
 
   const displayAddress = (principal: string) => {
     const firstPart = principal.substring(0, 5);
@@ -43,14 +46,25 @@ function Card({
   };
   const creator = creatorName ? creatorName : displayAddress(userId || "");
 
+  const navigate = useNavigate();
+
   return (
-    <div className="col">
+    <div className="col"
+      onClick={() => {
+        if (isUserLoggedIn) return;
+        navigate(`/chat/${id}`);
+      }}>
       <div className="card card-border contact-card elna-card">
         <div className="card-body text-center">
           <div className="d-flex">
-            <div className="card-body__price">
-              {!price ? t("common.free") : price}
-            </div>
+            {tokenized ? (
+              <i
+                className="ri-coin-fill"
+                style={{ color: "var(--elna-primary-color)" }}
+              />
+            ) : (
+              <div style={{ minHeight: "30px" }} />
+            )}
             {!!handleDelete && (
               <Dropdown className="card-body-menu">
                 <Dropdown.Toggle
@@ -71,6 +85,13 @@ function Card({
                   >
                     {t("common.delete", { entity: "agent" })}
                   </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() =>
+                      navigate(`/agents/${id}/integrations/chat-widget`)
+                    }
+                  >
+                    {t("common.integrate", { entity: "agent" })}
+                  </Dropdown.Item>
                   {handlePublish && (
                     <Dropdown.Item
                       onClick={() => handlePublish(id, !isPublished)}
@@ -90,18 +111,34 @@ function Card({
             />
           </div>
           <div className="user-name text-truncate">
-            <Link to={`/chat/${id}`} className="btn-link stretched-link">
-              {name}
-            </Link>
+            {isUserLoggedIn ? (
+              <Link to={`/chat/${id}`} className="btn-link stretched-link">
+                {name}
+              </Link>
+            ) : (
+              <Link to={`/login`} className="btn-link stretched-link">
+                {name}
+              </Link>
+            )}
           </div>
           <div className="user-desg text-truncate">{description}</div>
         </div>
-        <div className="d-flex card-footer position-relative align-items-center">
+        <div className="d-flex card-footer position-relative justify-content-between align-items-center">
           <div className="d-flex align-items-center gap-1">
             <i className="ri-chat-4-line"></i>
             <span>{messagesReplied.toString()}</span>
           </div>
-          <span className="fs-7 ms-auto lh-1">{creator}</span>
+          {!!handleDelete && (
+            <span
+              className={classNames("badge tool-card__footer__badge mb-0", {
+                "bg-secondary": !isPublished,
+                "bg-primary": isPublished,
+              })}
+            >
+              {isPublished ? "Published" : "Unpublished"}
+            </span>
+          )}
+          <span className="fs-7 lh-1">{creator}</span>
         </div>
       </div>
     </div>

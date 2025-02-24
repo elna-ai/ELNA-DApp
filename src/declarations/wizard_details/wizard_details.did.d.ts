@@ -2,32 +2,62 @@ import type { Principal } from '@dfinity/principal';
 import type { ActorMethod } from '@dfinity/agent';
 import type { IDL } from '@dfinity/candid';
 
-export type Analytics = { 'v1' : Analytics_V1 };
-export interface Analytics_V1 { 'messagesReplied' : bigint }
-export interface InitalArgs {
+export interface Analytics_V2_External {
+  'modificationCount' : bigint,
+  'messagesReplied' : bigint,
+  'uniqueUsers' : bigint,
+}
+export type Error = { 'UnableToUploadAvatar' : null } |
+  { 'PrincipalIdMissMatch' : null } |
+  { 'AgentNotFound' : null } |
+  { 'AgentIdExist' : null } |
+  { 'UserNotAuthorized' : null };
+export interface InitialArgs {
+  'capCanisterId' : Principal,
   'owner' : Principal,
   'userManagementCanisterId' : Principal,
+  'ragCanisterId' : Principal,
+  'elnaImagesCanisterId' : Principal,
 }
 export interface Main {
   'addWizard' : ActorMethod<[WizardDetails], Response>,
+  'addWizardLaunchpad' : ActorMethod<[WizardDetailsV3], Result>,
   'deleteWizard' : ActorMethod<[string], Response>,
-  'getAllAnalytics' : ActorMethod<[], Array<[string, Analytics]>>,
-  'getAllWizards' : ActorMethod<[], Array<WizardDetails>>,
-  'getAnalytics' : ActorMethod<[string], Analytics_V1>,
+  'getAllAnalytics' : ActorMethod<[], Array<[string, Analytics_V2_External]>>,
+  'getAllWizards' : ActorMethod<[], Array<WizardDetailsWithTimeStamp>>,
+  'getAnalytics' : ActorMethod<[string], Analytics_V2_External>,
+  'getElnaBackendUri' : ActorMethod<[], string>,
+  'getLaunchpadOwner' : ActorMethod<[], string>,
   'getUserWizards' : ActorMethod<
     [string],
     Array<WizardDetailsBasicWithCreatorName>
   >,
-  'getWizard' : ActorMethod<[string], [] | [WizardDetails]>,
+  'getWizard' : ActorMethod<[string], [] | [WizardDetailsV3]>,
   'getWizards' : ActorMethod<[], Array<WizardDetailsBasicWithCreatorName>>,
   'isWizardNameValid' : ActorMethod<[string], boolean>,
   'publishWizard' : ActorMethod<[string], Response>,
   'unpublishWizard' : ActorMethod<[string], Response>,
+  'updateKnowledgeAnalytics' : ActorMethod<[string], string>,
+  'updateLaunchpadOwner' : ActorMethod<[Principal], string>,
   'updateMessageAnalytics' : ActorMethod<[string], undefined>,
   'updateWizard' : ActorMethod<[string, WizardUpdateDetails], string>,
   'updateWizardAdmin' : ActorMethod<[string, string], string>,
+  'updateWizardLaunchpad' : ActorMethod<
+    [
+      string,
+      {
+        'tokenAddress' : [] | [string],
+        'userId' : string,
+        'agentId' : string,
+        'poolAddress' : [] | [string],
+      },
+    ],
+    Result
+  >,
 }
 export interface Response { 'status' : bigint, 'message' : string }
+export type Result = { 'ok' : string } |
+  { 'err' : Error };
 export type Time = bigint;
 export interface WizardDetails {
   'id' : string,
@@ -44,6 +74,7 @@ export interface WizardDetails {
 export interface WizardDetailsBasicWithCreatorName {
   'id' : string,
   'isPublished' : boolean,
+  'tokenAddress' : [] | [string],
   'userId' : string,
   'name' : string,
   'createdAt' : Time,
@@ -51,6 +82,35 @@ export interface WizardDetailsBasicWithCreatorName {
   'description' : string,
   'creatorName' : string,
   'updatedAt' : Time,
+  'poolAddress' : [] | [string],
+  'avatar' : string,
+}
+export interface WizardDetailsV3 {
+  'id' : string,
+  'isPublished' : boolean,
+  'tokenAddress' : [] | [string],
+  'userId' : string,
+  'name' : string,
+  'biography' : string,
+  'greeting' : string,
+  'description' : string,
+  'summary' : [] | [string],
+  'poolAddress' : [] | [string],
+  'visibility' : WizardVisibility,
+  'avatar' : string,
+}
+export interface WizardDetailsWithTimeStamp {
+  'id' : string,
+  'isPublished' : boolean,
+  'userId' : string,
+  'name' : string,
+  'createdAt' : Time,
+  'biography' : string,
+  'greeting' : string,
+  'description' : string,
+  'summary' : [] | [string],
+  'updatedAt' : Time,
+  'visibility' : WizardVisibility,
   'avatar' : string,
 }
 export interface WizardUpdateDetails {

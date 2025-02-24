@@ -41,6 +41,9 @@ function Create() {
     uuid ? uuid : wizardId
   );
 
+  const isTokenizedAgent =
+    !!wizard?.poolAddress?.length || !!wizard?.tokenAddress?.length;
+
   const handlePublish = () => {
     publishWizard(
       { wizardId, shouldPublish: true },
@@ -113,8 +116,13 @@ function Create() {
                   )}
                   <span
                     onClick={() =>
-                      setFieldValue("isNameEdit", !values.isNameEdit)
+                      !isTokenizedAgent
+                        ? setFieldValue("isNameEdit", !values.isNameEdit)
+                        : toast.info("Can't edit name for tokenized agent")
                     }
+                    style={{
+                      cursor: isTokenizedAgent ? "not-allowed" : "pointer",
+                    }}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

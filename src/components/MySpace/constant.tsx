@@ -22,17 +22,7 @@ export const MY_SPACE_LINK: MySpaceMenuProps[] = [
     to: "/my-space/my-tools",
     key: "My Tools",
     toolTip: "Your Tools",
-  },
-  // {
-  //   to: "/my-space/plans",
-  //   key: "Plans",
-  //   toolTip: "Your Subscription Plans",
-  // },
-  // {
-  //   to: "/my-space/settings",
-  //   key: "Settings",
-  //   toolTip: "Tweak your Settings",
-  // },
+  }
 ];
 
 export const DEVELOPER_REQUEST_FORM_INITIAL = {
@@ -88,11 +78,12 @@ export const CREATE_TOOL_FORM_VALIDATION = yup.object().shape({
   demoUrl: yup.string().url().trim(),
 });
 
-export const TWITTER_SHARE_CONTENT = `Check this out! I'm a Developer at ELNA.ai - World's 1st Decentralised AI Agent creation platform.
-https://dapp.elna.ai/
-${X_Handle} is the world's 1st DeAI creation platform.\n\n
+export const TWITTER_SHARE_CONTENT = `Check this out! I'm a Developer at ELNA.ai
+${X_Handle} is the world's 1st Decentralised AI creation platform.
+Become one today by listing your tools
+👉 https://dapp.elna.ai/ \n
 `;
 
 // #AI on #Blockchain
 export const TWITTER_HASHTAGS =
-  "ELNA_Devs,ELNAai,DecentralizedAl,GenerativeAl,Alagents,DeAiHackELNA,DeAiBootcampELNA";
+  "ELNA_Devs,ELNAai,DecentralizedAI,GenerativeAI,AIagents,DeAiHackELNA";

@@ -15,10 +15,7 @@ import {
   removeMultipleNewlines,
 } from "src/utils";
 import { useNavigate } from "react-router-dom";
-import {
-  useCreateElnaVectorDbIndex,
-  useCreateIndex,
-} from "hooks/reactQuery/useExternalService";
+import { useCreateIndex } from "hooks/reactQuery/useExternalService";
 import LoadingButton from "components/common/LoadingButton";
 import queryClient from "utils/queryClient";
 import { QUERY_KEYS } from "src/constants/query";
@@ -37,8 +34,8 @@ function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { mutate: createIndex, isPending: isCreatingIndex } = useCreateIndex();
-  const { mutate: createElnaDbIndex, isPending: isCreatingElnaDbIndex } =
-    useCreateElnaVectorDbIndex();
+  // const { mutate: createElnaDbIndex, isPending: isCreatingElnaDbIndex } =
+  //   useCreateElnaVectorDbIndex();
 
   const handleClose = () => {
     setSelectedFiles([]);
@@ -66,7 +63,7 @@ function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
     });
 
     const chunks = await getChunks(cleanedDocuments);
-    createElnaDbIndex(
+    createIndex(
       {
         documents: chunks,
         index_name: agentId,
@@ -214,8 +211,8 @@ function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
           <LoadingButton
             onClick={handleUpload}
             label={t("common.ok")}
-            isLoading={isCreatingIndex || isCreatingElnaDbIndex}
-            isDisabled={isUploading || isCreatingIndex || isCreatingElnaDbIndex}
+            isLoading={isCreatingIndex}
+            isDisabled={isUploading || isCreatingIndex}
           />
           <Button
             className="btn-light btn-modal-cancel"
