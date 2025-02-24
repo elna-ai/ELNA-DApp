@@ -3,9 +3,19 @@ import type { ActorMethod } from '@dfinity/agent';
 import type { IDL } from '@dfinity/candid';
 
 export interface Body { 'response' : string }
+export type DetailValue = { 'I64' : bigint } |
+  { 'U64' : bigint } |
+  { 'Vec' : Array<DetailValue> } |
+  { 'Slice' : Uint8Array | number[] } |
+  { 'Text' : string } |
+  { 'True' : null } |
+  { 'False' : null } |
+  { 'Float' : number } |
+  { 'Principal' : Principal };
 export interface Envs {
   'external_service_url' : string,
   'wizard_details_canister_id' : string,
+  'cap_canister_id' : string,
   'vectordb_canister_id' : string,
   'embedding_model_canister_id' : string,
 }
@@ -34,6 +44,10 @@ export type Result_1 = { 'Ok' : Response } |
   { 'Err' : Error };
 export type Result_2 = { 'Ok' : Array<string> } |
   { 'Err' : [RejectionCode, string, string] };
+export type Result_3 = { 'Ok' : Array<[History, History]> } |
+  { 'Err' : Error };
+export type Result_4 = { 'Ok' : null } |
+  { 'Err' : [RejectionCode, string] };
 export type Roles = { 'System' : null } |
   { 'User' : null } |
   { 'Assistant' : null };
@@ -56,12 +70,17 @@ export interface _SERVICE {
   'delete_history' : ActorMethod<[string], undefined>,
   'embedding_model' : ActorMethod<[string], Array<number>>,
   'get_db_file_names' : ActorMethod<[string], Result_2>,
-  'get_history' : ActorMethod<[string], Array<[History, History]>>,
+  'get_history' : ActorMethod<[string], Result_3>,
   'insert_data' : ActorMethod<
     [string, Array<string>, Array<Array<number>>, string],
     Result
   >,
+  'log' : ActorMethod<
+    [Principal, string, Array<[string, DetailValue]>],
+    Result_4
+  >,
   'search' : ActorMethod<[string, Array<number>, number], Result>,
+  'test' : ActorMethod<[string], Result_4>,
   'transform' : ActorMethod<[TransformArgs], HttpResponse>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;
