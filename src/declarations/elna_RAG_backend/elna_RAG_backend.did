@@ -1,7 +1,19 @@
 type Body = record { response : text };
+type DetailValue = variant {
+  I64 : int64;
+  U64 : nat64;
+  Vec : vec DetailValue;
+  Slice : blob;
+  Text : text;
+  True;
+  False;
+  Float : float64;
+  Principal : principal;
+};
 type Envs = record {
   external_service_url : text;
   wizard_details_canister_id : text;
+  cap_canister_id : text;
   vectordb_canister_id : text;
   embedding_model_canister_id : text;
 };
@@ -34,25 +46,23 @@ type Result_2 = variant {
   Ok : vec text;
   Err : record { RejectionCode; text; text };
 };
+type Result_3 = variant { Ok : vec record { History; History }; Err : Error };
+type Result_4 = variant { Ok; Err : record { RejectionCode; text } };
 type Roles = variant { System; User; Assistant };
 type TransformArgs = record { context : blob; response : HttpResponse };
 service : (Envs) -> {
   build_index : (text) -> (Result);
-  chat : (
-      text,
-      text,
-      opt vec float32,
-      text,
-      vec record { History; History },
-    ) -> (Result_1);
+  chat : (text, text, opt vec float32, text) -> (Result_1);
   create_collection : (text, nat64) -> (Result);
   create_index : (text, nat64, vec text, vec vec float32, text) -> (Result);
   delete_collection_from_db : (text) -> (Result);
   delete_history : (text) -> ();
   embedding_model : (text) -> (vec float32);
   get_db_file_names : (text) -> (Result_2);
-  get_history : (text) -> (vec record { History; History }) query;
+  get_history : (text) -> (Result_3) query;
   insert_data : (text, vec text, vec vec float32, text) -> (Result);
+  log : (principal, text, vec record { text; DetailValue }) -> (Result_4);
   search : (text, vec float32, int32) -> (Result);
+  test : (text) -> (Result_4);
   transform : (TransformArgs) -> (HttpResponse) query;
 }

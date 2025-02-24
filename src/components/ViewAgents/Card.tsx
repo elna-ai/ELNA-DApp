@@ -85,13 +85,13 @@ function Card({
                   >
                     {t("common.delete", { entity: "agent" })}
                   </Dropdown.Item>
-                  <Dropdown.Item
+                  {/* <Dropdown.Item
                     onClick={() =>
                       navigate(`/agents/${id}/integrations/chat-widget`)
                     }
                   >
                     {t("common.integrate", { entity: "agent" })}
-                  </Dropdown.Item>
+                  </Dropdown.Item> */}
                   {handlePublish && (
                     <Dropdown.Item
                       onClick={() => handlePublish(id, !isPublished)}

@@ -18,26 +18,12 @@ type useChatPayload = {
   agentId: string;
   queryText: string;
   embeddings: [number];
-  history: [History, History][];
 };
 export const useChat = () => {
   const wallet = useWallet();
   return useMutation({
-    mutationFn: async ({
-      agentId,
-      queryText,
-      embeddings,
-      history,
-    }: useChatPayload) => {
-      if (wallet === undefined || !wallet?.principalId) {
-        return elnaRagBackend.chat(
-          agentId,
-          queryText,
-          convertToMotokoOptional(embeddings),
-          uuidv4(),
-          history
-        );
-      }
+    mutationFn: async ({ agentId, queryText, embeddings }: useChatPayload) => {
+      if (wallet === undefined || !wallet?.principalId) return;
 
       const elnaRag: _SERVICE = await wallet.getCanisterActor(
         ragId,
@@ -48,8 +34,7 @@ export const useChat = () => {
         agentId,
         queryText,
         convertToMotokoOptional(embeddings),
-        uuidv4(),
-        history
+        uuidv4()
       );
 
       return result;
