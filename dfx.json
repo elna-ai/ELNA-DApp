@@ -13,7 +13,6 @@
       "main": "developer_studio/DeveloperStudio.mo"
     },
     "frontend": {
-      "dependencies": ["backend", "wizard_details", "developer_studio"],
       "type": "assets",
       "source": ["dist/"]
     }

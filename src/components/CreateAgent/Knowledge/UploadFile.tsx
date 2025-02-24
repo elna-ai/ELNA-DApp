@@ -211,8 +211,8 @@ function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
           <LoadingButton
             onClick={handleUpload}
             label={t("common.ok")}
-            isLoading={isCreatingIndex || isCreatingElnaDbIndex}
-            isDisabled={isUploading || isCreatingIndex || isCreatingElnaDbIndex}
+            isLoading={isCreatingIndex}
+            isDisabled={isUploading || isCreatingIndex}
           />
           <Button
             className="btn-light btn-modal-cancel"
