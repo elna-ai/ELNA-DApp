@@ -33,14 +33,14 @@ import { CreateAgentNavTypes } from "src/types";
 type PersonaProps = {
   wizard: any;
   setCurrentNav: React.Dispatch<React.SetStateAction<CreateAgentNavTypes>>;
-  setWizardId: React.Dispatch<React.SetStateAction<string>>;
   isEdit: boolean;
 };
 
-function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
+function Persona({ wizard, setCurrentNav, isEdit }: PersonaProps) {
   const { t } = useTranslation();
   const wallet = useWallet();
-  const wizardName = useCreateWizardStore(state => state.name);
+  const setWizardId = useCreateWizardStore(state => state.setWizardId);
+  const wizardName = useCreateWizardStore(state => state.wizardName);
   const customImageNameRef = useRef("");
 
   const { mutate: addWizard, isPending: isAddingWizard } = useAddWizard();

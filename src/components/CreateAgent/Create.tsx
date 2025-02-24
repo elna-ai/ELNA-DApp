@@ -26,14 +26,14 @@ import { CreateAgentNavTypes } from "src/types";
 // type CreateAgentNavTypes = "persona" | "knowledge" | "integrations";
 function Create() {
   const [currentNav, setCurrentNav] = useState<CreateAgentNavTypes>("persona");
-  const [wizardId, setWizardId] = useState("");
   const [isPublishSuccessful, setIsPublishSuccessful] = useState(false);
 
   const { t } = useTranslation();
   const [urlSearchParams, _] = useSearchParams();
   const navigate = useNavigate();
   const { uuid } = useParams();
-  const wizardName = useCreateWizardStore(state => state.name);
+  const wizardName = useCreateWizardStore(state => state.wizardName);
+  const wizardId = useCreateWizardStore(state => state.wizardId);
   const setWizardName = useCreateWizardStore(state => state.setWizardName);
   const resetWizardName = useCreateWizardStore(state => state.resetWizardName);
   // const { data: documents } = useWizardGetFileNames(wizardId);
@@ -199,13 +199,10 @@ function Create() {
       </div>
       <hr className="mt-0" />
       {currentNav === "persona" && (
-        <Persona isEdit={!!uuid} {...{ wizard, setCurrentNav, setWizardId }} />
+        <Persona isEdit={!!uuid} {...{ wizard, setCurrentNav }} />
       )}
       {currentNav === "knowledge" && (
-        <Knowledge
-          wizardId={uuid ? uuid : wizardId}
-          setCurrentNav={setCurrentNav}
-        />
+        <Knowledge setCurrentNav={setCurrentNav} />
       )}
       {currentNav === "integrations" && <Integrations />}
       <Modal show={isPublishSuccessful} onHide={handleClose} centered>

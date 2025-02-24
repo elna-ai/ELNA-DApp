@@ -14,13 +14,18 @@ import Card from "./Card";
 import UploadFile from "./UploadFile";
 import DeleteKnowledgeModal from "./DeleteModal";
 import { CreateAgentNavTypes } from "src/types";
+import { useParams } from "react-router-dom";
+import { useCreateWizardStore } from "stores/useCreateWizard";
 
 type KnowledgeProps = {
-  wizardId: string;
   setCurrentNav: React.Dispatch<React.SetStateAction<CreateAgentNavTypes>>;
 };
 
-function Knowledge({ wizardId, setCurrentNav }: KnowledgeProps) {
+function Knowledge({ setCurrentNav }: KnowledgeProps) {
+
+  const { uuid } = useParams();
+  const wizardId = useCreateWizardStore(state => state.wizardId);
+
   const [isAddDocument, setIsAddDocument] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -31,7 +36,7 @@ function Knowledge({ wizardId, setCurrentNav }: KnowledgeProps) {
   const { mutate: loginExternalService } = useLogin();
   // const { data: documents } = useWizardGetFileNames(wizardId);
   const { data: documents, isFetching: isDocumentsLoading } =
-    useGetFileNames(wizardId);
+    useGetFileNames(uuid || wizardId);
 
   useEffect(() => {
     !userToken && generateUserToken();

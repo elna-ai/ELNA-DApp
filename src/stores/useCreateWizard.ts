@@ -1,13 +1,19 @@
 import { create } from "zustand";
 
 type CreateWizardStore = {
-  name: string;
-  setWizardName: (name: string) => void;
+  wizardName: string;
+  wizardId: string;
+  setWizardName: (wizardName: string) => void;
   resetWizardName: () => void;
+  setWizardId: (wizardName: string) => void;
+  resetWizardId: () => void;
 };
 
 export const useCreateWizardStore = create<CreateWizardStore>()(set => ({
-  name: "",
-  setWizardName: (name: string) => set(() => ({ name })),
-  resetWizardName: () => set({ name: "" }),
+  wizardName: "",
+  wizardId: "",
+  setWizardName: (wizardName: string) => set(() => ({ wizardName })),
+  resetWizardName: () => set({ wizardName: "" }),
+  setWizardId: (wizardId: string) => set(() => ({ wizardId })),
+  resetWizardId: () => set({ wizardId: "" }),
 }));
