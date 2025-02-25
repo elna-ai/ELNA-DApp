@@ -2,22 +2,24 @@ import classNames from "classnames";
 import { useState } from "react";
 import { Button } from "react-bootstrap";
 import TelegramIntegrationModal from "./TelegramIntegrationModal";
-import { AgentIntegrationData } from "src/types";
+// import { AgentIntegrationData } from "src/types";
 import { t } from "i18next";
 import Telegram from "../../../../assets/telegram.svg"
 
 export default function TelegramIntegration(
-    { integrationData }:
-        { integrationData?: AgentIntegrationData }
+    // { integrationData }:
+    //     { integrationData?: AgentIntegrationData }
 ) {
 
     const [telegramModalShow, setTelegramModalShow] = useState(false);
-    const [telegramToggle, setTelegramToggle] = useState(integrationData?.is_enabled || false);
+    const [telegramToggle, setTelegramToggle] = useState(
+        // integrationData?.is_enabled || 
+        false);
 
     return (
         <>
             <TelegramIntegrationModal
-                integrationData={integrationData}
+                // integrationData={integrationData}
                 toggleIntegration={telegramToggle}
                 show={telegramModalShow}
                 onHide={() => setTelegramModalShow(false)}
@@ -31,15 +33,15 @@ export default function TelegramIntegration(
                         <img src={Telegram} style={{ width: "25px" }} alt="" />
                         {t("createAgent.integrations.options.telegramLabel")}
                     </span>
-                    {integrationData?.is_enabled && (
+                    {/* {integrationData?.is_enabled && (
                         <span style={{ width: "fit-content" }} className={classNames(
                             "badge tool-card__footer__badge mb-0",
                             { "bg-primary": integrationData?.is_enabled },
                         )}>{"Connected"}</span>
-                    )}
+                    )} */}
                 </div>
                 <div className="d-flex align-items-center gap-3">
-                    {integrationData?.integration_id &&
+                    {/* {integrationData?.integration_id &&
                         <div className="toggle-switch">
                             <input
                                 name="is_cookie_fun_enabled"
@@ -50,13 +52,15 @@ export default function TelegramIntegration(
                             />
                             <label htmlFor="telegram-integration-toggle">Telegram Toggle Switch</label>
                         </div>
-                    }
+                    } */}
                     <Button
                         className="btn-knowledge"
                         onClick={() => setTelegramModalShow(true)}
                         variant="outline-info"
                     >
-                        {integrationData ? "Edit" : t("createAgent.integrations.options.connectBot")}
+                        {
+                            // integrationData ? "Edit" : 
+                            t("createAgent.integrations.options.connectBot")}
                     </Button>
                 </div>
             </div>

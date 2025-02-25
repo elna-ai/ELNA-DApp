@@ -10,21 +10,21 @@ import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from "uuid";
 import queryClient from 'utils/queryClient';
 import { QUERY_KEYS } from 'src/constants/query';
-import { AgentIntegrationData, TelegramAgentCredentials } from 'src/types';
+// import { AgentIntegrationData, TelegramAgentCredentials } from 'src/types';
 import { useEffect } from 'react';
 import { useWallet } from 'hooks/useWallet';
 import { useCreateWizardStore } from 'stores/useCreateWizard';
 import { useShowWizard } from 'hooks/reactQuery/wizards/useWizard';
 
 type IntegrationModalProps = {
-    integrationData?: AgentIntegrationData,
+    // integrationData?: AgentIntegrationData,
     toggleIntegration: boolean,
     show: boolean,
     onHide: () => void
 }
 
 function TelegramIntegrationModal({
-    integrationData,
+    // integrationData,
     toggleIntegration,
     show,
     onHide
@@ -42,63 +42,63 @@ function TelegramIntegrationModal({
         if (userId === undefined) return;
         const { ...credentials } = values;
 
-        if (integrationData?.integration_id) handleUpdateIntegration(integrationData, credentials)
-        else if (!!wizard?.name && !!wizard?.biography) {
-            const integration_id = uuidv4();
-            // addAgentIntegration(
-            //     {
-            //         agent_id: wizard?.id,
-            //         integration_id,
-            //         agent_owner: userId,
-            //         agent_name: wizard?.name,
-            //         agent_prompt: wizard?.biography,
-            //         integration_type: "TELEGRAM",
-            //         is_enabled: true,
-            //         credentials: {
-            //             telegram_api_key: credentials.telegramApiKey,
-            //         },
-            //     },
-            //     {
-            //         onSuccess: () => {
-            //             toast.success("Telegram Integration successful");
-            //             queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS, wizardId || uuid,] });
-            //         },
-            //     }
-            // );
-        }
-    };
-
-    const handleUpdateIntegration = async (integrationData: AgentIntegrationData, credentials: typeof TELEGRAM_INTEGRATION_INITIAL_VALUE) => {
-        // updateAgentIntegration(
+        // if (integrationData?.integration_id) handleUpdateIntegration(integrationData, credentials)
+        // else if (!!wizard?.name && !!wizard?.biography) {
+        const integration_id = uuidv4();
+        // addAgentIntegration(
         //     {
-        //         integration_id: integrationData.integration_id,
-        //         agent_name: integrationData?.agent_name,
-        //         agent_id: wizardId || uuid,
+        //         agent_id: wizard?.id,
+        //         integration_id,
+        //         agent_owner: userId,
+        //         agent_name: wizard?.name,
+        //         agent_prompt: wizard?.biography,
         //         integration_type: "TELEGRAM",
-        //         is_enabled: toggleIntegration,
+        //         is_enabled: true,
         //         credentials: {
         //             telegram_api_key: credentials.telegramApiKey,
         //         },
         //     },
         //     {
         //         onSuccess: () => {
-        //             toast.success("Telegram Integration successfully updated");
+        //             toast.success("Telegram Integration successful");
         //             queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS, wizardId || uuid,] });
         //         },
         //     }
-        // )
-    }
+        // );
+        // }
+    };
 
-    useEffect(() => {
-        if (toggleIntegration !== integrationData?.is_enabled) {
-            if (integrationData?.integration_id) {
-                const obj = {
-                    telegramApiKey: (integrationData.credentials as TelegramAgentCredentials).telegram_api_key,
-                }
-                handleUpdateIntegration(integrationData, obj)
-            }
-        }
-    }, [toggleIntegration])
+    // const handleUpdateIntegration = async (integrationData: AgentIntegrationData, credentials: typeof TELEGRAM_INTEGRATION_INITIAL_VALUE) => {
+    // updateAgentIntegration(
+    //     {
+    //         integration_id: integrationData.integration_id,
+    //         agent_name: integrationData?.agent_name,
+    //         agent_id: wizardId || uuid,
+    //         integration_type: "TELEGRAM",
+    //         is_enabled: toggleIntegration,
+    //         credentials: {
+    //             telegram_api_key: credentials.telegramApiKey,
+    //         },
+    //     },
+    //     {
+    //         onSuccess: () => {
+    //             toast.success("Telegram Integration successfully updated");
+    //             queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS, wizardId || uuid,] });
+    //         },
+    //     }
+    // )
+    // }
+
+    // useEffect(() => {
+    //     if (toggleIntegration !== integrationData?.is_enabled) {
+    //         if (integrationData?.integration_id) {
+    //             const obj = {
+    //                 telegramApiKey: (integrationData.credentials as TelegramAgentCredentials).telegram_api_key,
+    //             }
+    //             handleUpdateIntegration(integrationData, obj)
+    //         }
+    //     }
+    // }, [toggleIntegration])
 
     return (
         <Modal
@@ -116,14 +116,14 @@ function TelegramIntegrationModal({
             <Modal.Body>
                 <Formik
                     initialValues={
-                        integrationData === undefined ?
-                            TELEGRAM_INTEGRATION_INITIAL_VALUE
-                            : (() => {
-                                const creds = integrationData.credentials as TelegramAgentCredentials;
-                                return {
-                                    telegramApiKey: creds.telegram_api_key,
-                                };
-                            })()
+                        // integrationData === undefined ?
+                        TELEGRAM_INTEGRATION_INITIAL_VALUE
+                        // : (() => {
+                        //     const creds = integrationData.credentials as TelegramAgentCredentials;
+                        //     return {
+                        //         telegramApiKey: creds.telegram_api_key,
+                        //     };
+                        // })()
                     }
                     validationSchema={TELEGRAM_INTEGRATION_VALIDATION_SCHEMA}
                     onSubmit={handleSubmit}
@@ -150,7 +150,9 @@ function TelegramIntegrationModal({
 
                                 <div className="d-flex justify-content-end h-auto m-2">
                                     <LoadingButton
-                                        label={integrationData ? "Update" : "Submit"}
+                                        label={
+                                            // integrationData ? "Update" : 
+                                            "Submit"}
                                         className="ml-auto px-5 mt-3"
                                         isDisabled={!dirty}
                                         isLoading={false
