@@ -23,7 +23,6 @@ import PageLoader from "components/common/PageLoader";
 import Integrations from "./Integrations";
 import { CreateAgentNavTypes } from "src/types";
 
-// type CreateAgentNavTypes = "persona" | "knowledge" | "integrations";
 function Create() {
   const [currentNav, setCurrentNav] = useState<CreateAgentNavTypes>("persona");
   const [isPublishSuccessful, setIsPublishSuccessful] = useState(false);
