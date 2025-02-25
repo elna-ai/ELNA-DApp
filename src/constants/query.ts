@@ -2,6 +2,7 @@ export const QUERY_KEYS = {
   PUBLIC_WIZARDS_LIST: "public-wizards-list",
   MY_WIZARDS_LIST: "my-wizards-list",
   AGENT_CHATS: "agent-chats",
+  AGENT_INTEGRATIONS: "agent-integrations",
   WHITELISTED_USERS: "whitelisted-users-list",
   IS_USER_ADMIN: "is-user-admin",
   WIZARD_FILE_NAMES: "wizard-file-names",

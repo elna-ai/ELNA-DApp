@@ -20,17 +20,20 @@ import { toast } from "react-toastify";
 import { generateTwitterShareLink } from "utils/index";
 import { CREATE_BOT_MODAL_VALIDATION_SCHEMA } from "components/common/CheckWizardNameCreate/constants";
 import PageLoader from "components/common/PageLoader";
+import Integrations from "./Integrations";
+import { CreateAgentNavTypes } from "src/types";
 
+// type CreateAgentNavTypes = "persona" | "knowledge" | "integrations";
 function Create() {
-  const [currentNav, setCurrentNav] = useState<string>("persona");
-  const [wizardId, setWizardId] = useState("");
+  const [currentNav, setCurrentNav] = useState<CreateAgentNavTypes>("persona");
   const [isPublishSuccessful, setIsPublishSuccessful] = useState(false);
 
   const { t } = useTranslation();
   const [urlSearchParams, _] = useSearchParams();
   const navigate = useNavigate();
   const { uuid } = useParams();
-  const wizardName = useCreateWizardStore(state => state.name);
+  const wizardName = useCreateWizardStore(state => state.wizardName);
+  const wizardId = useCreateWizardStore(state => state.wizardId);
   const setWizardName = useCreateWizardStore(state => state.setWizardName);
   const resetWizardName = useCreateWizardStore(state => state.resetWizardName);
   // const { data: documents } = useWizardGetFileNames(wizardId);
@@ -155,7 +158,7 @@ function Create() {
           variant="pills"
           activeKey={currentNav}
           onSelect={eventKey => {
-            setCurrentNav(eventKey || "persona");
+            setCurrentNav((eventKey as CreateAgentNavTypes) || "persona");
           }}
         >
           <Nav.Item>
@@ -172,6 +175,15 @@ function Create() {
               {t("createAgent.knowledge.knowledge")}
             </Nav.Link>
           </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              className="btn nav-pill-chat"
+              eventKey="integrations"
+              disabled={uuid === undefined}
+            >
+              {t("createAgent.integrations.integrations")}
+            </Nav.Link>
+          </Nav.Item>
         </Nav>
 
         <div>
@@ -186,11 +198,13 @@ function Create() {
         </div>
       </div>
       <hr className="mt-0" />
-      {currentNav === "persona" ? (
-        <Persona isEdit={!!uuid} {...{ wizard, setCurrentNav, setWizardId }} />
-      ) : (
-        <Knowledge wizardId={uuid ? uuid : wizardId} />
+      {currentNav === "persona" && (
+        <Persona isEdit={!!uuid} {...{ wizard, setCurrentNav }} />
       )}
+      {currentNav === "knowledge" && (
+        <Knowledge setCurrentNav={setCurrentNav} />
+      )}
+      {currentNav === "integrations" && <Integrations />}
       <Modal show={isPublishSuccessful} onHide={handleClose} centered>
         <ModalBody>
           <div className="d-flex">

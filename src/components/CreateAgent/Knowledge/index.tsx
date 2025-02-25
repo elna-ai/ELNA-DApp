@@ -13,10 +13,19 @@ import { v4 as uuidv4 } from "uuid";
 import Card from "./Card";
 import UploadFile from "./UploadFile";
 import DeleteKnowledgeModal from "./DeleteModal";
+import { CreateAgentNavTypes } from "src/types";
+import { useParams } from "react-router-dom";
+import { useCreateWizardStore } from "stores/useCreateWizard";
 
-type KnowledgeProps = { wizardId: string };
+type KnowledgeProps = {
+  setCurrentNav: React.Dispatch<React.SetStateAction<CreateAgentNavTypes>>;
+};
 
-function Knowledge({ wizardId }: KnowledgeProps) {
+function Knowledge({ setCurrentNav }: KnowledgeProps) {
+
+  const { uuid } = useParams();
+  const wizardId = useCreateWizardStore(state => state.wizardId);
+
   const [isAddDocument, setIsAddDocument] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -27,7 +36,7 @@ function Knowledge({ wizardId }: KnowledgeProps) {
   const { mutate: loginExternalService } = useLogin();
   // const { data: documents } = useWizardGetFileNames(wizardId);
   const { data: documents, isFetching: isDocumentsLoading } =
-    useGetFileNames(wizardId);
+    useGetFileNames(uuid || wizardId);
 
   useEffect(() => {
     !userToken && generateUserToken();
@@ -90,17 +99,22 @@ function Knowledge({ wizardId }: KnowledgeProps) {
         {isDocumentsLoading ? (
           <Spinner className="mx-auto mt-2" />
         ) : (
-          documents !== undefined &&
-          documents?.length > 0 &&
-          documents.map((document: string) => (
-            <Card
-              key={uuidv4()}
-              title={document}
-              isLearning={false}
-              handleDelete={() => setIsDeleteModalOpen(true)}
-            />
-          ))
+          <>
+            {documents !== undefined &&
+              documents?.length > 0 &&
+              documents.map((document: string) => (
+                <Card
+                  key={uuidv4()}
+                  title={document}
+                  isLearning={false}
+                  handleDelete={() => setIsDeleteModalOpen(true)}
+                />
+              ))}
+          </>
         )}
+      </div>
+      <div className="d-flex justify-content-end">
+        <Button onClick={() => setCurrentNav("integrations")}>Next</Button>
       </div>
       <UploadFile
         isOpen={isAddDocument}
