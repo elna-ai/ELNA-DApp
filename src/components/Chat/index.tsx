@@ -73,7 +73,6 @@ function Chat() {
   const { mutate: deleteChatHistory, isPending: isDeletingChatHistory } =
     useDeleteAgentChatHistory();
 
-
   const { showButton, scrollToBottom } = UseScrollToBottom();
 
   const setInitialMessage = () => {
@@ -162,6 +161,10 @@ function Chat() {
       handleSubmit();
     }
   };
+
+  useEffect(() => {
+    if (!isLoadingWizard || !isLoadingAgentHistory) scrollToBottom();
+  }, [messages, isLoadingWizard, isLoadingAgentHistory]);
 
   useEffect(() => inputRef?.current?.focus(), [wizard]);
 
