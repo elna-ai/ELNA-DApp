@@ -67,6 +67,9 @@ function XIntegrationModal({
     };
 
     const handleUpdateIntegration = async (credentials: typeof XINTEGRATION_INITIAL_VALUE) => {
+        const regex = /PK#INTEGRATION_ID#(.*)/;
+        const match = integrationData?.PK.match(regex);
+        const integrationId = match ? match[1] : "";
         updateAgentIntegration(
             {
                 x_api_key: credentials.apiKey,
@@ -75,7 +78,7 @@ function XIntegrationModal({
                 x_access_token_secret: credentials.accessTokenSecret,
                 x_bearer_token: credentials.bearerToken,
                 user_id: credentials.userId,
-                agent_id: uuid ?? wizardId,
+                integration_id: integrationId,
             },
             {
                 onSuccess: () => {
