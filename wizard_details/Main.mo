@@ -42,6 +42,7 @@ actor class Main(initialArgs : Types.InitialArgs) {
   private stable var _capCanisterId : Principal = initialArgs.capCanisterId;
   private stable var _ragCanisterId : Principal = initialArgs.ragCanisterId;
   private stable var launchpadOwner : Principal = initialArgs.owner;
+  private var logMessages : [Text] = [];
 
   // unstable memory
   var wizards = Buffer.Buffer<Types.WizardDetails>(10);
@@ -230,8 +231,13 @@ actor class Main(initialArgs : Types.InitialArgs) {
   public query func getElnaBackendUri() : async Text {
     Principal.toText(_elnaImagesCanisterId);
   };
+  // TODO: test fn
+  public query func logMessageGet() : async [Text] {
+    return logMessages;
+  };
 
   public shared ({ caller }) func addWizardLaunchpad(wizard : Types.WizardDetailsV3) : async Result.Result<Text, Types.Error> {
+    logMessages := Array.append(logMessages, ["Wizard from launchpad: ", debug_show (wizard)]);
     if (not (caller == launchpadOwner)) {
       Debug.print("fn:addWizardLaunchpad,err:Not launchpad owner. caller: " # debug_show caller # ". owner: " # debug_show launchpadOwner);
       return #err(#UserNotAuthorized);
@@ -250,12 +256,15 @@ actor class Main(initialArgs : Types.InitialArgs) {
       owner = caller;
       file_name = "image";
     };
+    logMessages := Array.append(logMessages, ["Before image upload: "]);
     try {
       let a = await ElnaImagesCanister.add_asset(avatar, null);
       // TODO: IMAGE CANISTER CHECK OWNER DISABLED IN STAGING RN
       switch (a) {
         case (#Ok(avatarId)) {
+          logMessages := Array.append(logMessages, ["avatar uploaded,before V3 Add "]);
           wizardsV3.add(addTimeStamp({ wizard with avatar = avatarId }));
+          logMessages := Array.append(logMessages, ["after V3 Add "]);
           let user = Principal.fromText(wizard.userId);
           ignore CapCanister.addRecord(
             user,
