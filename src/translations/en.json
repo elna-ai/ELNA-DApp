@@ -95,6 +95,23 @@
         "supportedType": "Supported file type: <b>PDF</b>"
       }
     },
+    "integrations": {
+      "integrations": "Integrations",
+      "options": {
+        "title": "Available Integrations",
+        "xLabel": "X (Twitter)",
+        "telegramLabel": "Telegram",
+        "discordLabel": "Discord",
+        "tradingBotLabel": "Trading Bot",
+        "connectBot": "Connect"
+      },
+      "comingSoonOptions": {
+        "title": "Coming Soon",
+        "discordLabel": "Discord",
+        "tradingBotsLabel": "Trading Bots",
+        "connectBot": "Coming Soon"
+      }
+    },
     "form": {
       "label": {
         "name": "Name"

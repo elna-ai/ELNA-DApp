@@ -28,18 +28,19 @@ import queryClient from "utils/queryClient";
 import { PERSONA_VALIDATION_SCHEMA } from "../constants";
 import AvatarImage from "./AvatarImage";
 import UploadAvatarImage from "./UploadAvatarImage";
+import { CreateAgentNavTypes } from "src/types";
 
 type PersonaProps = {
   wizard: any;
-  setCurrentNav: React.Dispatch<React.SetStateAction<string>>;
-  setWizardId: React.Dispatch<React.SetStateAction<string>>;
+  setCurrentNav: React.Dispatch<React.SetStateAction<CreateAgentNavTypes>>;
   isEdit: boolean;
 };
 
-function Persona({ wizard, setCurrentNav, setWizardId, isEdit }: PersonaProps) {
+function Persona({ wizard, setCurrentNav, isEdit }: PersonaProps) {
   const { t } = useTranslation();
   const wallet = useWallet();
-  const wizardName = useCreateWizardStore(state => state.name);
+  const setWizardId = useCreateWizardStore(state => state.setWizardId);
+  const wizardName = useCreateWizardStore(state => state.wizardName);
   const customImageNameRef = useRef("");
 
   const { mutate: addWizard, isPending: isAddingWizard } = useAddWizard();
