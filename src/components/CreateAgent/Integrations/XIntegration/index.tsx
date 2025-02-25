@@ -20,7 +20,7 @@ export default function XIntegration({ integrationData }: { integrationData?: XA
             />
             <div
                 className="d-flex justify-content-between align-content-center w-100 rounded-3 p-3"
-                style={{ backgroundColor: "#171D36" }}
+                style={{ backgroundColor: "#181A20" }}
             >
                 <div className="d-flex flex-column justify-content-center gap-2">
                     <span className="d-flex flex-wrap align-items-center gap-2">
@@ -57,7 +57,6 @@ export default function XIntegration({ integrationData }: { integrationData?: XA
                     <Button
                         className="btn-knowledge"
                         onClick={() => setXModalShow(true)}
-                        variant="outline-info"
                     >
                         {integrationData ? "Edit" : t("createAgent.integrations.options.connectBot")}
                     </Button>

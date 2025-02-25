@@ -101,6 +101,8 @@
         "title": "Available Integrations",
         "xLabel": "X (Twitter)",
         "telegramLabel": "Telegram",
+        "discordLabel": "Discord",
+        "tradingBotLabel": "Trading Bot",
         "connectBot": "Connect"
       },
       "comingSoonOptions": {

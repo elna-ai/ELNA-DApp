@@ -149,7 +149,6 @@ function XIntegrationModal({
                                 <h3 className="sub-title-bot">X API Key</h3>
                                 <Form.Group>
                                     <Form.Control
-                                        className="form-control"
                                         as="input"
                                         placeholder="Enter API key"
                                         name="apiKey"
@@ -165,7 +164,6 @@ function XIntegrationModal({
                                 <h3 className="sub-title-bot">X API Key Secret</h3>
                                 <Form.Group>
                                     <Form.Control
-                                        className="form-control"
                                         as="input"
                                         placeholder="Enter API key secret"
                                         name="apiKeySecret"
@@ -181,7 +179,6 @@ function XIntegrationModal({
                                 <h3 className="sub-title-bot">Access Token</h3>
                                 <Form.Group>
                                     <Form.Control
-                                        className="form-control"
                                         as="input"
                                         placeholder="Enter access token"
                                         name="accessToken"
@@ -197,7 +194,6 @@ function XIntegrationModal({
                                 <h3 className="sub-title-bot">Access Token Secret</h3>
                                 <Form.Group>
                                     <Form.Control
-                                        className="form-control"
                                         as="input"
                                         placeholder="Enter access token secret"
                                         name="accessTokenSecret"
@@ -213,7 +209,6 @@ function XIntegrationModal({
                                 <h3 className="sub-title-bot">Bearer Token</h3>
                                 <Form.Group>
                                     <Form.Control
-                                        className="form-control"
                                         as="input"
                                         placeholder="Enter bearer token"
                                         name="bearerToken"
@@ -229,7 +224,6 @@ function XIntegrationModal({
                                 <h3 className="sub-title-bot">Twitter Handle (Username)</h3>
                                 <Form.Group>
                                     <Form.Control
-                                        className="form-control"
                                         as="input"
                                         placeholder="Twitter username"
                                         name="owner"

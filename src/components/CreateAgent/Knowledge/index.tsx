@@ -110,14 +110,11 @@ function Knowledge({ setCurrentNav }: KnowledgeProps) {
                   handleDelete={() => setIsDeleteModalOpen(true)}
                 />
               ))}
-            <Button
-              disabled={!documents?.length}
-              onClick={() => setCurrentNav("integrations")}
-            >
-              Next
-            </Button>
           </>
         )}
+      </div>
+      <div className="d-flex justify-content-end">
+        <Button onClick={() => setCurrentNav("integrations")}>Next</Button>
       </div>
       <UploadFile
         isOpen={isAddDocument}
