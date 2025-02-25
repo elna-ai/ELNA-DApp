@@ -11,21 +11,21 @@ import { toast } from 'react-toastify';
 import { useCreateWizardStore } from 'stores/useCreateWizard';
 import queryClient from 'utils/queryClient';
 import { QUERY_KEYS } from 'src/constants/query';
-import { AgentIntegrationData, XAgentCredentials } from 'src/types';
+import { XAgentIntegration, XAgentIntegrationResponse } from 'src/types';
 import { useEffect } from 'react';
-import { useShowWizard } from 'hooks/reactQuery/wizards/useWizard';
+import { useAddAgentIntegration, useShowWizard } from 'hooks/reactQuery/wizards/useWizard';
 import { useWallet } from 'hooks/useWallet';
 
 type IntegrationModalProps = {
-    integrationData?: AgentIntegrationData,
-    toggleIntegration: boolean,
+    integrationData?: XAgentIntegrationResponse,
+    // toggleIntegration: boolean,
     show: boolean,
     onHide: () => void
 }
 
 function XIntegrationModal({
     integrationData,
-    toggleIntegration,
+    // toggleIntegration,
     show,
     onHide
 }: IntegrationModalProps) {
@@ -34,46 +34,40 @@ function XIntegrationModal({
     const { uuid } = useParams();
     const wizardId = useCreateWizardStore(state => state.wizardId);
     const { data: wizard } = useShowWizard(wizardId || uuid);
-    // const { mutate: addAgentIntegration, isPending: isUploadingAgentIntegration } = useAddAgentIntegration();
+    const { mutate: addAgentIntegration, isPending: isUploadingAgentIntegration } = useAddAgentIntegration();
     // const { mutate: updateAgentIntegration, isPending: isUpdatingAgentIntegration } = useUpdateAgentIntegration();
 
     const handleSubmit = async (values: typeof XINTEGRATION_INITIAL_VALUE) => {
         const userId = wallet?.principalId;
         if (userId === undefined) return;
-        const { ...credentials } = values;
 
-        if (integrationData?.integration_id) handleUpdateIntegration(integrationData, credentials)
+        // if (integrationData?.integration_id) handleUpdateIntegration(integrationData, credentials)
         else if (!!wizard?.name && !!wizard?.biography) {
             const integration_id = uuidv4();
-            // addAgentIntegration(
-            //     {
-            //         agent_id: wizard?.id,
-            //         integration_id,
-            //         agent_owner: userId,
-            //         agent_name: wizard?.name,
-            //         agent_prompt: wizard?.biography,
-            //         integration_type: "X",
-            //         is_enabled: true,
-            //         credentials: {
-            //             x_api_key: credentials.apiKey,
-            //             x_api_key_secret: credentials.apiKeySecret,
-            //             x_access_token: credentials.accessToken,
-            //             x_access_token_secret: credentials.accessTokenSecret,
-            //             x_bearer_token: credentials.bearerToken,
-            //             user_id: credentials.userId,
-            //         },
-            //     },
-            //     {
-            //         onSuccess: () => {
-            //             toast.success("X Integration successful");
-            //             queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS, wizardId ?? uuid] });
-            //         },
-            //     }
-            // );
+            addAgentIntegration(
+                {
+                    x_api_key: values.apiKey,
+                    x_api_key_secret: values.apiKeySecret,
+                    x_access_token: values.accessToken,
+                    x_access_token_secret: values.accessTokenSecret,
+                    x_bearer_token: values.bearerToken,
+                    agent_id: wizard?.id,
+                    owner: userId,
+                    prompt: wizard?.biography,
+                    integration_id,
+                    agent_name: wizard?.name,
+                },
+                {
+                    onSuccess: () => {
+                        toast.success("X Integration successful");
+                        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS, wizardId ?? uuid] });
+                    },
+                }
+            );
         }
     };
 
-    const handleUpdateIntegration = async (integrationData: AgentIntegrationData, credentials: typeof XINTEGRATION_INITIAL_VALUE) => {
+    const handleUpdateIntegration = async (integrationData: XAgentIntegration, credentials: typeof XINTEGRATION_INITIAL_VALUE) => {
         // updateAgentIntegration(
         //     {
         //         integration_id: integrationData.integration_id,
@@ -99,21 +93,21 @@ function XIntegrationModal({
         // )
     }
 
-    useEffect(() => {
-        if (toggleIntegration !== integrationData?.is_enabled) {
-            if (integrationData?.integration_id) {
-                const obj = {
-                    apiKey: (integrationData.credentials as XAgentCredentials).x_api_key,
-                    apiKeySecret: (integrationData.credentials as XAgentCredentials).x_api_key_secret,
-                    accessToken: (integrationData.credentials as XAgentCredentials).x_access_token,
-                    accessTokenSecret: (integrationData.credentials as XAgentCredentials).x_access_token_secret,
-                    bearerToken: (integrationData.credentials as XAgentCredentials).x_bearer_token,
-                    userId: (integrationData.credentials as XAgentCredentials).user_id,
-                }
-                handleUpdateIntegration(integrationData, obj)
-            }
-        }
-    }, [toggleIntegration])
+    // useEffect(() => {
+    //     if (toggleIntegration !== integrationData?.is_enabled) {
+    //         if (integrationData?.integration_id) {
+    //             const obj = {
+    //                 apiKey: (integrationData.credentials as XAgentCredentials).x_api_key,
+    //                 apiKeySecret: (integrationData.credentials as XAgentCredentials).x_api_key_secret,
+    //                 accessToken: (integrationData.credentials as XAgentCredentials).x_access_token,
+    //                 accessTokenSecret: (integrationData.credentials as XAgentCredentials).x_access_token_secret,
+    //                 bearerToken: (integrationData.credentials as XAgentCredentials).x_bearer_token,
+    //                 userId: (integrationData.credentials as XAgentCredentials).user_id,
+    //             }
+    //             handleUpdateIntegration(integrationData, obj)
+    //         }
+    //     }
+    // }, [toggleIntegration])
 
     return (
         <Modal
@@ -133,17 +127,18 @@ function XIntegrationModal({
                     initialValues={
                         integrationData === undefined ?
                             XINTEGRATION_INITIAL_VALUE
-                            : (() => {
-                                const creds = integrationData.credentials as XAgentCredentials;
-                                return {
-                                    apiKey: creds.x_api_key,
-                                    apiKeySecret: creds.x_api_key_secret,
-                                    accessToken: creds.x_access_token,
-                                    accessTokenSecret: creds.x_access_token_secret,
-                                    bearerToken: creds.x_bearer_token,
-                                    userId: creds.user_id,
-                                };
-                            })()
+                            :
+                            // (() => {
+                            //     return 
+                            {
+                                apiKey: integrationData.credentials.x_api_key,
+                                apiKeySecret: integrationData.credentials.x_api_key_secret,
+                                accessToken: integrationData.credentials.x_access_token,
+                                accessTokenSecret: integrationData.credentials.x_access_token_secret,
+                                bearerToken: integrationData.credentials.x_bearer_token,
+                                owner: "",
+                            }
+                        // })()
                     }
                     validationSchema={XINTEGRATION_VALIDATION_SCHEMA}
                     onSubmit={handleSubmit}
@@ -237,14 +232,14 @@ function XIntegrationModal({
                                         className="form-control"
                                         as="input"
                                         placeholder="Twitter username"
-                                        name="userId"
+                                        name="owner"
                                         maxLength={1000}
-                                        value={values.userId}
+                                        value={values.owner}
                                         onChange={handleChange}
-                                        isInvalid={!!errors.userId}
+                                        isInvalid={!!errors.owner}
                                     />
                                     <Form.Control.Feedback type="invalid">
-                                        {errors.userId}
+                                        {errors.owner}
                                     </Form.Control.Feedback>
                                 </Form.Group>
 

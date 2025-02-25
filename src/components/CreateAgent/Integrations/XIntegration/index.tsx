@@ -2,19 +2,19 @@ import classNames from "classnames";
 import { useState } from "react";
 import { Button } from "react-bootstrap";
 import XIntegrationModal from "./XIntegrationModal";
-import { AgentIntegrationData } from "src/types";
+import { XAgentIntegrationResponse } from "src/types";
 import { t } from "i18next";
 
-export default function XIntegration({ integrationData }: { integrationData?: AgentIntegrationData }) {
+export default function XIntegration({ integrationData }: { integrationData?: XAgentIntegrationResponse }) {
 
     const [xModalShow, setXModalShow] = useState(false);
-    const [xToggle, setXToggle] = useState(integrationData?.is_enabled || false);
+    // const [xToggle, setXToggle] = useState(integrationData?.is_enabled || false);
 
     return (
         <>
             <XIntegrationModal
                 integrationData={integrationData}
-                toggleIntegration={xToggle}
+                // toggleIntegration={xToggle}
                 show={xModalShow}
                 onHide={() => setXModalShow(false)}
             />
@@ -34,15 +34,15 @@ export default function XIntegration({ integrationData }: { integrationData?: Ag
                         </svg>
                         {t("createAgent.integrations.options.xLabel")}
                     </span>
-                    {integrationData?.is_enabled && (
+                    {/* {integrationData?.is_enabled && (
                         <span style={{ width: "fit-content" }} className={classNames(
                             "badge tool-card__footer__badge mb-0",
                             { "bg-primary": integrationData?.is_enabled },
                         )}>{"Connected"}</span>
-                    )}
+                    )} */}
                 </div>
                 <div className="d-flex align-items-center gap-3">
-                    {integrationData?.integration_id &&
+                    {/* {integrationData?.integration_id &&
                         <div className="toggle-switch">
                             <input
                                 name="is_cookie_fun_enabled"
@@ -53,7 +53,7 @@ export default function XIntegration({ integrationData }: { integrationData?: Ag
                             />
                             <label htmlFor="x-integration-toggle">X Toggle Switch</label>
                         </div>
-                    }
+                    } */}
                     <Button
                         className="btn-knowledge"
                         onClick={() => setXModalShow(true)}
