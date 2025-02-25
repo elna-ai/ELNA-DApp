@@ -6,25 +6,27 @@ import PageLoader from "components/common/PageLoader";
 import XIntegration from "./XIntegration";
 // import TelegramIntegration from "./TelegramIntegrations";
 import { Button } from "react-bootstrap";
-import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
+import { useGetAgentIntegrations, useShowWizard } from "hooks/reactQuery/wizards/useWizard";
 import { useCreateWizardStore } from "stores/useCreateWizard";
-import { XAgentIntegration } from "src/types";
+import { XAgentIntegration, XAgentIntegrationResponse } from "src/types";
 
-const integrationData: XAgentIntegration[] = [
-  {
-    x_api_key: "X_api_key",
-    x_api_key_secret: "X_API_SECRET",
+const integrationData: XAgentIntegrationResponse =
+{
+  PK: "PK#INTEGRATION_ID#AGENT_ID",
+  SK: "SK#INTEGRATION_TYPE#X",
+  agent_name: "agent name",
+  agent_owner: "principal-str",
+  agent_prompt: "agent prompt",
+  credentials: {
     x_access_token: "X_ACCESS_TOKEN",
     x_access_token_secret: "X_ACCESS_TOKEN_SECRET",
-    x_bearer_token: "BEARER_TOKEN",
-    agent_id: "AGENT_ID",
-    owner: "principal-str",
-    prompt: "agent prompt",
-    integration_id: "int_id",
-    agent_name: "agent name"
+    x_api_key: "X_api_key",
+    x_api_key_secret: "X_API_SECRET",
+    x_bearer_token: "BEARER_TOKEN"
   },
-];
-
+  integration_type: "X",
+  is_enabled: true
+};
 
 function Integrations() {
 
@@ -42,7 +44,8 @@ function Integrations() {
       <div>
         <h3 className="sub-title-bot">{t("createAgent.integrations.options.title")}</h3>
         <div className="d-flex flex-column gap-2 mt-4">
-          <XIntegration integrationData={integrationData?.find(integration => 'x_api_key' in integration)} />
+          <XIntegration integrationData={integrationData} />
+          {/* <XIntegration integrationData={integrationData?.find(integration => 'x_api_key' in integration)} /> */}
           {/* <TelegramIntegration integrationData={integrationData?.find(integration => integration?.integration_type === "TELEGRAM")} /> */}
         </div>
       </div>
