@@ -62,7 +62,19 @@
   }
 }
 
+.chat-header-wrapper {
+  position: sticky;
+  padding: 10px 0;
+  top: 64px;
+  background-color: var(--background-base);
+}
+
+.chat-header-wrapper * {
+  background-color: inherit;
+}
+
 .chat-header {
+  background-color: var(--background-base);
   text-align: left;
 
   &__avatar {
@@ -76,7 +88,7 @@
   margin-bottom: 120px;
 
   &--wrapper {
-    margin: 0 2rem;
+    margin: 90px 2rem 0 2rem;
   }
 }
 

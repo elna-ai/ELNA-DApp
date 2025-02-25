@@ -171,7 +171,7 @@ function Chat() {
     isLoadingAgentHistory ||
     isDeletingChatHistory
   )
-    return <PageLoader />;
+    return <div style={{ marginTop: '90px' }}><PageLoader /></div>;
 
   return (
     <div className="row chatapp-single-chat">
@@ -187,9 +187,9 @@ function Chat() {
       >
         <i className="ri-arrow-down-line"></i>
       </Button>
-      <div className="container-fluid">
-        <div>
-          <header className="text-left">
+      <div className="container-fluid" style={{ position: 'relative' }}>
+        <header className="text-left chat-header-wrapper">
+          <div className="d-flex flex-column">
             <div className="d-flex justify-content-between align-items-center">
               <div className="d-flex align-items-center">
                 <div className="chat-header__avatar">
@@ -248,8 +248,8 @@ function Chat() {
             </div>
 
             <hr className="mt-2" />
-          </header>
-        </div>
+          </div>
+        </header>
         <div className="chat-body">
           {/* TODO: media query to be converted to scss */}
           <div className="sm:mx-2 chat-body--wrapper">
