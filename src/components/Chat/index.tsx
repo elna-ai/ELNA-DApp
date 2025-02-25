@@ -97,20 +97,19 @@ function Chat() {
 
   useEffect(() => {
     if (wizard === undefined || historyId === undefined) return;
-    if (messages !== undefined) return;
+    if (messages !== undefined && messages.length > 0) return;
     if (isLoadingAgentHistory) return;
-    if (agentHistory === null || agentHistory === undefined) {
+    if (isRagErr(agentHistory)) console.error(agentHistory?.Err)
+    else if (agentHistory?.Ok === null || agentHistory?.Ok === undefined || agentHistory?.Ok.length === 0) {
       updateMessage(historyId, {
         user: { name: wizard.name, isBot: true },
         message: wizard.greeting,
       });
-    } else {
-      if (isRagErr(agentHistory)) console.error(agentHistory?.Err)
-      else updateMessage(
-        historyId,
-        transformHistoryToMessages(agentHistory?.Ok, wizard.name)
-      );
     }
+    else updateMessage(
+      historyId,
+      transformHistoryToMessages(agentHistory?.Ok, wizard.name)
+    );
   }, [wizard, agentHistory, isLoadingAgentHistory, historyId]);
 
   const handleSubmit = async () => {
