@@ -40,7 +40,7 @@ export type XAgentIntegrationUpdate = {
   x_access_token_secret: string;
   x_bearer_token: string;
   user_id: string;
-  agent_id: string;
+  integration_id: string;
 };
 
 export type XAgentIntegrationResponse = {
