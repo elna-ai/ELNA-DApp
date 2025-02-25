@@ -8,25 +8,6 @@ import XIntegration from "./XIntegration";
 import { Button } from "react-bootstrap";
 import { useGetAgentIntegrations, useShowWizard } from "hooks/reactQuery/wizards/useWizard";
 import { useCreateWizardStore } from "stores/useCreateWizard";
-import { XAgentIntegration, XAgentIntegrationResponse } from "src/types";
-
-// const integrationData: XAgentIntegrationResponse =
-// {
-//   PK: "PK#INTEGRATION_ID#AGENT_ID",
-//   SK: "SK#INTEGRATION_TYPE#X",
-//   agent_name: "agent name",
-//   agent_owner: "principal-str",
-//   agent_prompt: "agent prompt",
-//   credentials: {
-//     x_access_token: "X_ACCESS_TOKEN",
-//     x_access_token_secret: "X_ACCESS_TOKEN_SECRET",
-//     x_api_key: "X_api_key",
-//     x_api_key_secret: "X_API_SECRET",
-//     x_bearer_token: "BEARER_TOKEN"
-//   },
-//   integration_type: "X",
-//   is_enabled: true
-// };
 
 function Integrations() {
 

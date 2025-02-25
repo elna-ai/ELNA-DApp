@@ -11,9 +11,9 @@ import { toast } from 'react-toastify';
 import { useCreateWizardStore } from 'stores/useCreateWizard';
 import queryClient from 'utils/queryClient';
 import { QUERY_KEYS } from 'src/constants/query';
-import { XAgentIntegration, XAgentIntegrationResponse } from 'src/types';
+import { XAgentIntegrationResponse } from 'src/types';
 import { useEffect } from 'react';
-import { useAddAgentIntegration, useShowWizard } from 'hooks/reactQuery/wizards/useWizard';
+import { useAddAgentIntegration, useShowWizard, useUpdateAgentIntegration } from 'hooks/reactQuery/wizards/useWizard';
 import { useWallet } from 'hooks/useWallet';
 
 type IntegrationModalProps = {
@@ -29,19 +29,18 @@ function XIntegrationModal({
     show,
     onHide
 }: IntegrationModalProps) {
-
     const wallet = useWallet();
     const { uuid } = useParams();
     const wizardId = useCreateWizardStore(state => state.wizardId);
     const { data: wizard } = useShowWizard(wizardId || uuid);
     const { mutate: addAgentIntegration, isPending: isUploadingAgentIntegration } = useAddAgentIntegration();
-    // const { mutate: updateAgentIntegration, isPending: isUpdatingAgentIntegration } = useUpdateAgentIntegration();
+    const { mutate: updateAgentIntegration, isPending: isUpdatingAgentIntegration } = useUpdateAgentIntegration();
 
     const handleSubmit = async (values: typeof XINTEGRATION_INITIAL_VALUE) => {
         const principalId = wallet?.principalId;
         if (principalId === undefined) return;
 
-        // if (integrationData?.integration_id) handleUpdateIntegration(integrationData, credentials)
+        if (integrationData !== undefined) handleUpdateIntegration(values)
         else if (!!wizard?.name && !!wizard?.biography) {
             const integration_id = uuidv4();
             addAgentIntegration(
@@ -61,37 +60,31 @@ function XIntegrationModal({
                 {
                     onSuccess: () => {
                         toast.success("X Integration successful");
-                        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS, wizardId ?? uuid] });
+                        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS, uuid ?? wizardId] });
                     },
                 }
             );
         }
     };
 
-    const handleUpdateIntegration = async (integrationData: XAgentIntegration, credentials: typeof XINTEGRATION_INITIAL_VALUE) => {
-        // updateAgentIntegration(
-        //     {
-        //         integration_id: integrationData.integration_id,
-        //         agent_name: integrationData?.agent_name,
-        //         agent_id: wizardId || uuid,
-        //         integration_type: "X",
-        //         is_enabled: toggleIntegration,
-        //         credentials: {
-        //             x_api_key: credentials.apiKey,
-        //             x_api_key_secret: credentials.apiKeySecret,
-        //             x_access_token: credentials.accessToken,
-        //             x_access_token_secret: credentials.accessTokenSecret,
-        //             x_bearer_token: credentials.bearerToken,
-        //             user_id: credentials.userId,
-        //         },
-        //     },
-        //     {
-        //         onSuccess: () => {
-        //             toast.success("X Integration successfully updated");
-        //             queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS, wizardId ?? uuid] });
-        //         },
-        //     }
-        // )
+    const handleUpdateIntegration = async (credentials: typeof XINTEGRATION_INITIAL_VALUE) => {
+        updateAgentIntegration(
+            {
+                x_api_key: credentials.apiKey,
+                x_api_key_secret: credentials.apiKeySecret,
+                x_access_token: credentials.accessToken,
+                x_access_token_secret: credentials.accessTokenSecret,
+                x_bearer_token: credentials.bearerToken,
+                user_id: credentials.userId,
+                agent_id: uuid ?? wizardId,
+            },
+            {
+                onSuccess: () => {
+                    toast.success("X Integration successfully updated");
+                    queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS, uuid ?? wizardId] });
+                },
+            }
+        )
     }
 
     // useEffect(() => {
@@ -246,7 +239,7 @@ function XIntegrationModal({
                                         label={integrationData ? "Update" : "Submit"}
                                         className="ml-auto px-5 mt-3"
                                         isDisabled={!dirty}
-                                        isLoading={isUploadingAgentIntegration}
+                                        isLoading={isUploadingAgentIntegration || isUpdatingAgentIntegration}
                                         type="submit"
                                     />
                                 </div>
