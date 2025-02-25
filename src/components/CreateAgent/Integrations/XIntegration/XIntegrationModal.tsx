@@ -38,8 +38,8 @@ function XIntegrationModal({
     // const { mutate: updateAgentIntegration, isPending: isUpdatingAgentIntegration } = useUpdateAgentIntegration();
 
     const handleSubmit = async (values: typeof XINTEGRATION_INITIAL_VALUE) => {
-        const userId = wallet?.principalId;
-        if (userId === undefined) return;
+        const principalId = wallet?.principalId;
+        if (principalId === undefined) return;
 
         // if (integrationData?.integration_id) handleUpdateIntegration(integrationData, credentials)
         else if (!!wizard?.name && !!wizard?.biography) {
@@ -52,7 +52,8 @@ function XIntegrationModal({
                     x_access_token_secret: values.accessTokenSecret,
                     x_bearer_token: values.bearerToken,
                     agent_id: wizard?.id,
-                    owner: userId,
+                    owner: principalId,
+                    user_id: values.userId,
                     prompt: wizard?.biography,
                     integration_id,
                     agent_name: wizard?.name,
@@ -128,17 +129,14 @@ function XIntegrationModal({
                         integrationData === undefined ?
                             XINTEGRATION_INITIAL_VALUE
                             :
-                            // (() => {
-                            //     return 
                             {
                                 apiKey: integrationData.credentials.x_api_key,
                                 apiKeySecret: integrationData.credentials.x_api_key_secret,
                                 accessToken: integrationData.credentials.x_access_token,
                                 accessTokenSecret: integrationData.credentials.x_access_token_secret,
                                 bearerToken: integrationData.credentials.x_bearer_token,
-                                owner: "",
+                                userId: integrationData.credentials.user_id,
                             }
-                        // })()
                     }
                     validationSchema={XINTEGRATION_VALIDATION_SCHEMA}
                     onSubmit={handleSubmit}
@@ -156,6 +154,7 @@ function XIntegrationModal({
                                         value={values.apiKey}
                                         onChange={handleChange}
                                         isInvalid={!!errors.apiKey}
+                                        style={{ color: 'white' }}
                                     />
                                     <Form.Control.Feedback type="invalid">
                                         {errors.apiKey}
@@ -171,6 +170,7 @@ function XIntegrationModal({
                                         value={values.apiKeySecret}
                                         onChange={handleChange}
                                         isInvalid={!!errors.apiKeySecret}
+                                        style={{ color: 'white' }}
                                     />
                                     <Form.Control.Feedback type="invalid">
                                         {errors.apiKeySecret}
@@ -186,6 +186,7 @@ function XIntegrationModal({
                                         value={values.accessToken}
                                         onChange={handleChange}
                                         isInvalid={!!errors.accessToken}
+                                        style={{ color: 'white' }}
                                     />
                                     <Form.Control.Feedback type="invalid">
                                         {errors.accessToken}
@@ -201,6 +202,7 @@ function XIntegrationModal({
                                         value={values.accessTokenSecret}
                                         onChange={handleChange}
                                         isInvalid={!!errors.accessTokenSecret}
+                                        style={{ color: 'white' }}
                                     />
                                     <Form.Control.Feedback type="invalid">
                                         {errors.accessTokenSecret}
@@ -216,6 +218,7 @@ function XIntegrationModal({
                                         value={values.bearerToken}
                                         onChange={handleChange}
                                         isInvalid={!!errors.bearerToken}
+                                        style={{ color: 'white' }}
                                     />
                                     <Form.Control.Feedback type="invalid">
                                         {errors.bearerToken}
@@ -226,14 +229,15 @@ function XIntegrationModal({
                                     <Form.Control
                                         as="input"
                                         placeholder="Twitter username"
-                                        name="owner"
+                                        name="userId"
                                         maxLength={1000}
-                                        value={values.owner}
+                                        value={values.userId}
                                         onChange={handleChange}
-                                        isInvalid={!!errors.owner}
+                                        isInvalid={!!errors.userId}
+                                        style={{ color: 'white' }}
                                     />
                                     <Form.Control.Feedback type="invalid">
-                                        {errors.owner}
+                                        {errors.userId}
                                     </Form.Control.Feedback>
                                 </Form.Group>
 
@@ -242,9 +246,7 @@ function XIntegrationModal({
                                         label={integrationData ? "Update" : "Submit"}
                                         className="ml-auto px-5 mt-3"
                                         isDisabled={!dirty}
-                                        isLoading={false
-                                            // isUploadingAgentIntegration || isUpdatingAgentIntegration
-                                        }
+                                        isLoading={isUploadingAgentIntegration}
                                         type="submit"
                                     />
                                 </div>

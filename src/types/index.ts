@@ -25,6 +25,7 @@ export type XAgentIntegration = {
   x_api_key_secret: string;
   x_access_token_secret: string;
   x_bearer_token: string;
+  user_id: string;
   agent_id: string;
   owner: string;
   prompt: string;
@@ -44,6 +45,7 @@ export type XAgentIntegrationResponse = {
     x_api_key: string;
     x_api_key_secret: string;
     x_bearer_token: string;
+    user_id: string;
   };
   integration_type: string;
   is_enabled: boolean;

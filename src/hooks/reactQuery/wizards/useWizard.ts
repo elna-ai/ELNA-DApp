@@ -46,10 +46,7 @@ export const useGetAgentIntegrations = (agent_id?: string) =>
     queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS, agent_id],
     queryFn: () =>
       axios.get<any, AxiosResponse<XAgentIntegrationResponse>>(
-        `https://ldlm4nwk5yh6i3zeunvst46shu0rtmxs.lambda-url.eu-north-1.on.aws/integrate/x/AGENT_ID`
-        // {
-        //   params: { agent_id: id },
-        // }
+        `https://ldlm4nwk5yh6i3zeunvst46shu0rtmxs.lambda-url.eu-north-1.on.aws/integrate/x/${agent_id}`
       ),
     select: response => response.data,
     enabled: !!agent_id,

@@ -33,7 +33,7 @@ export const XINTEGRATION_VALIDATION_SCHEMA = yup.object().shape({
     .trim()
     .required("Invalid Access Token Secret entered"),
   bearerToken: yup.string().trim().required("Invalid Bearer Token entered"),
-  owner: yup
+  userId: yup
     .string()
     .matches(/^[^@].*$/, "Twitter handle cannot start with '@'")
     .required("Twitter handle is required"),
@@ -45,7 +45,7 @@ export const XINTEGRATION_INITIAL_VALUE = {
   accessToken: "",
   accessTokenSecret: "",
   bearerToken: "",
-  owner: "",
+  userId: "",
 };
 
 export const TELEGRAM_INTEGRATION_VALIDATION_SCHEMA = yup.object().shape({
