@@ -168,13 +168,8 @@ function Chat() {
 
   useEffect(() => inputRef?.current?.focus(), [wizard]);
 
-  if (
-    isLoadingWizard ||
-    !wizard ||
-    isLoadingAgentHistory ||
-    isDeletingChatHistory
-  )
-    return <div style={{ marginTop: '90px' }}><PageLoader /></div>;
+  if (isLoadingWizard || !wizard || isLoadingAgentHistory || isDeletingChatHistory)
+    return <PageLoader />;
 
   return (
     <div className="row chatapp-single-chat">
