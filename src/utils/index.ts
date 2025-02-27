@@ -125,3 +125,39 @@ export const copyToClipBoard = async (tag: string, text: string) => {
     toast.error(`Failed to copy ${tag}`);
   }
 };
+
+export const returnTimeRemaining = (unixTimestamp: number) => {
+  const now = Date.now() / 1000;
+  const targetTime = unixTimestamp;
+  const remainingTime = targetTime - now;
+
+  if (remainingTime <= 0 || unixTimestamp === 0) return null;
+
+  const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+
+  const years = Math.floor(remainingTime / (365 * 24 * 3600));
+  const months = Math.floor(
+    (remainingTime % (365 * 24 * 3600)) / (30 * 24 * 3600)
+  );
+  const days = Math.floor((remainingTime % (30 * 24 * 3600)) / (24 * 3600));
+  const hours = Math.floor((remainingTime % (24 * 3600)) / 3600);
+  const minutes = Math.floor((remainingTime % 3600) / 60);
+  const seconds = Math.floor(remainingTime % 60);
+
+  let formattedTime;
+  if (years > 0) {
+    formattedTime = rtf.format(years, "year");
+  } else if (months > 0) {
+    formattedTime = rtf.format(months, "month");
+  } else if (days > 0) {
+    formattedTime = rtf.format(days, "day");
+  } else if (hours > 0) {
+    formattedTime = rtf.format(hours, "hour");
+  } else if (minutes > 0) {
+    formattedTime = rtf.format(minutes, "minute");
+  } else {
+    formattedTime = rtf.format(seconds, "second");
+  }
+
+  return formattedTime;
+};

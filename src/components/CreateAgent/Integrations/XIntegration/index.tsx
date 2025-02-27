@@ -4,6 +4,7 @@ import { Button } from "react-bootstrap";
 import XIntegrationModal from "./XIntegrationModal";
 import { XAgentIntegrationResponse } from "src/types";
 import { t } from "i18next";
+import { returnTimeRemaining } from "utils/index";
 
 export default function XIntegration({ integrationData }: { integrationData?: XAgentIntegrationResponse }) {
 
@@ -34,6 +35,15 @@ export default function XIntegration({ integrationData }: { integrationData?: XA
                         </svg>
                         {t("createAgent.integrations.options.xLabel")}
                     </span>
+                    {
+                        integrationData?.x_rate_limit_remaining && returnTimeRemaining(integrationData?.x_rate_limit_remaining) &&
+                        <span
+                            style={{ width: "fit-content" }}
+                            className="badge tool-card__footer__badge mb-0 bg-secondary"
+                        >
+                            Rate Limit reached, will be reset: <br /> {returnTimeRemaining(integrationData?.x_rate_limit_remaining)}
+                        </span>
+                    }
                     {/* {integrationData?.is_enabled && (
                         <span style={{ width: "fit-content" }} className={classNames(
                             "badge tool-card__footer__badge mb-0",
