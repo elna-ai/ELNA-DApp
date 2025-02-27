@@ -4,11 +4,35 @@ import { Button } from "react-bootstrap";
 import XIntegrationModal from "./XIntegrationModal";
 import { XAgentIntegrationResponse } from "src/types";
 import { t } from "i18next";
+import * as dayjs from 'dayjs'
 
 export default function XIntegration({ integrationData }: { integrationData?: XAgentIntegrationResponse }) {
 
     const [xModalShow, setXModalShow] = useState(false);
     // const [xToggle, setXToggle] = useState(integrationData?.is_enabled || false);
+
+    const returnTimeRemaining = (unixSeconds: number) => {
+        const unixTime = unixSeconds * 1000;
+        const currentTime = dayjs();
+        const targetTime = dayjs(unixTime);
+
+        const remainingTime = targetTime.diff(currentTime);
+
+        const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+        if (remainingTime <= 0 || unixSeconds === 0) return null
+        return (
+            <span
+                style={{ width: "fit-content" }}
+                className="badge tool-card__footer__badge mb-0 bg-secondary"
+            >
+                Rate Limit reached, will be reset: <br /> {days} days, {hours} hours, <br />{minutes} minutes, {seconds} seconds remaining
+            </span>
+        );
+    }
 
     return (
         <>
@@ -34,6 +58,7 @@ export default function XIntegration({ integrationData }: { integrationData?: XA
                         </svg>
                         {t("createAgent.integrations.options.xLabel")}
                     </span>
+                    {returnTimeRemaining(integrationData?.x_rate_limit_remaining || 0)}
                     {/* {integrationData?.is_enabled && (
                         <span style={{ width: "fit-content" }} className={classNames(
                             "badge tool-card__footer__badge mb-0",
