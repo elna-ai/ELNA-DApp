@@ -36,12 +36,12 @@ export default function XIntegration({ integrationData }: { integrationData?: XA
                         {t("createAgent.integrations.options.xLabel")}
                     </span>
                     {
-                        integrationData?.x_rate_limit_remaining && returnTimeRemaining(integrationData?.x_rate_limit_remaining) &&
+                        returnTimeRemaining({ unixTimestamp: integrationData?.x_rate_limit_remaining }) &&
                         <span
                             style={{ width: "fit-content" }}
                             className="badge tool-card__footer__badge mb-0 bg-secondary"
                         >
-                            Rate Limit reached, will be reset: <br /> {returnTimeRemaining(integrationData?.x_rate_limit_remaining)}
+                            Rate Limit reached, will be reset: <br /> {returnTimeRemaining({ unixTimestamp: integrationData?.x_rate_limit_remaining })}
                         </span>
                     }
                     {/* {integrationData?.is_enabled && (

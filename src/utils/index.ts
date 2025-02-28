@@ -126,7 +126,11 @@ export const copyToClipBoard = async (tag: string, text: string) => {
   }
 };
 
-export const returnTimeRemaining = (unixTimestamp: number) => {
+export const returnTimeRemaining = ({
+  unixTimestamp = 0,
+}: {
+  unixTimestamp?: number;
+}) => {
   const now = Date.now() / 1000;
   const targetTime = unixTimestamp;
   const remainingTime = targetTime - now;
@@ -135,29 +139,21 @@ export const returnTimeRemaining = (unixTimestamp: number) => {
 
   const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
 
-  const years = Math.floor(remainingTime / (365 * 24 * 3600));
-  const months = Math.floor(
-    (remainingTime % (365 * 24 * 3600)) / (30 * 24 * 3600)
-  );
-  const days = Math.floor((remainingTime % (30 * 24 * 3600)) / (24 * 3600));
-  const hours = Math.floor((remainingTime % (24 * 3600)) / 3600);
-  const minutes = Math.floor((remainingTime % 3600) / 60);
-  const seconds = Math.floor(remainingTime % 60);
+  const timeUnits = [
+    { unit: "year", seconds: 31536000 }, // 365 * 24 * 3600
+    { unit: "month", seconds: 2592000 }, // 30 * 24 * 3600
+    { unit: "day", seconds: 86400 }, // 24 * 3600
+    { unit: "hour", seconds: 3600 },
+    { unit: "minute", seconds: 60 },
+    { unit: "second", seconds: 1 },
+  ];
 
-  let formattedTime;
-  if (years > 0) {
-    formattedTime = rtf.format(years, "year");
-  } else if (months > 0) {
-    formattedTime = rtf.format(months, "month");
-  } else if (days > 0) {
-    formattedTime = rtf.format(days, "day");
-  } else if (hours > 0) {
-    formattedTime = rtf.format(hours, "hour");
-  } else if (minutes > 0) {
-    formattedTime = rtf.format(minutes, "minute");
-  } else {
-    formattedTime = rtf.format(seconds, "second");
+  for (const { unit, seconds } of timeUnits) {
+    const value = Math.floor(remainingTime / seconds);
+    if (Math.abs(value) > 0) {
+      return rtf.format(value, unit as Intl.RelativeTimeFormatUnit);
+    }
   }
 
-  return formattedTime;
+  return rtf.format(0, "second");
 };
