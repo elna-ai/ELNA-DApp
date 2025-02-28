@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { useGetAsset } from "hooks/reactQuery/useElnaImages";
-import AvatarPlaceholder from "../../../assets/avatar_placeholder.svg";
+import AvatarPlaceholder from "src/assets/avatar_placeholder.svg";
 
 import tickSolid from "images/tickSolid.png";
 import { toast } from "react-toastify";
