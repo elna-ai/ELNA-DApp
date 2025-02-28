@@ -1,3 +1,4 @@
+import PageLoader from "components/common/PageLoader";
 import { useState } from "react";
 
 import classNames from "classnames";
@@ -13,7 +14,6 @@ import ViewAgents from "components/ViewAgents";
 import Sidebar from "components/common/Sidebar";
 import Header from "components/common/Header";
 import Footer from "components/common/Footer";
-import PageLoader from "components/common/PageLoader";
 import PrivateRoute from "components/common/PrivateRoute";
 import Page404 from "common/Page404";
 import queryClient from "utils/queryClient";

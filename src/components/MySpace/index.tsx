@@ -1,3 +1,4 @@
+import PageLoader from "components/common/PageLoader";
 import { Routes, Route } from "react-router-dom";
 
 import { useWallet } from "hooks/useWallet";
@@ -18,6 +19,7 @@ function MySpace() {
     const wallet = useWallet();
     const { data: userProfile, isFetching: isUserProfileLoading } = useGetUserProfile(wallet?.principalId);
 
+    if (isUserProfileLoading) return <PageLoader />
     return (
         <>
             {(!userProfile) && <NoLogin />}
