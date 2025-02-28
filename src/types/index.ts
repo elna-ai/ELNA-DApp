@@ -59,4 +59,5 @@ export type XAgentIntegrationResponse = {
   };
   integration_type: string;
   is_enabled: boolean;
+  x_rate_limit_remaining: number;
 };
