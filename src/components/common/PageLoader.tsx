@@ -1,14 +1,11 @@
-import { Spinner } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
+import ElnaSvg from "images/BrandSm.svg?react"
 
 function PageLoader() {
-  const { t } = useTranslation();
 
   return (
-    <div className="page-loader">
-      <div className="page-loader__content">
-        <Spinner />
-        <div>{t("common.loadingPage")}</div>
+    <div className="loader-spin m-auto" style={{ width: "fit-content" }} >
+      <div className="loader-pulse">
+        <ElnaSvg style={{ width: "6rem" }} />
       </div>
     </div>
   );

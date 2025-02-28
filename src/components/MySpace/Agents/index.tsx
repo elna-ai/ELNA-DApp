@@ -1,6 +1,6 @@
+import PageLoader from "components/common/PageLoader";
 import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
-import Spinner from "react-bootstrap/Spinner";
 import { toast } from "react-toastify";
 import { useWallet } from "hooks/useWallet";
 import {
@@ -116,7 +116,7 @@ function MyWizards() {
   // TODO: Refactor
   const renderBody = () => {
     if (isUserWizardsLoading) {
-      return <Spinner size="sm" />;
+      return <PageLoader />;
     }
 
     if ((userWizards?.length || 0) === 0) {
