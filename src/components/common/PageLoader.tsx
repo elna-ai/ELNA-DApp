@@ -1,4 +1,4 @@
-import ElnaSvg from "images/BrandSm.svg?react"
+import ElnaSvg from "images/brandSm.svg?react"
 
 function PageLoader() {
 
