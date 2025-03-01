@@ -1,3 +1,4 @@
+import PageLoader from "components/common/PageLoader";
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -5,7 +6,6 @@ import { Button, OverlayTrigger, Tooltip, Dropdown } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
-import PageLoader from "components/common/PageLoader";
 import {
   generateTwitterShareLink,
   transformHistoryToMessages,
@@ -168,13 +168,8 @@ function Chat() {
 
   useEffect(() => inputRef?.current?.focus(), [wizard]);
 
-  if (
-    isLoadingWizard ||
-    !wizard ||
-    isLoadingAgentHistory ||
-    isDeletingChatHistory
-  )
-    return <div style={{ marginTop: '90px' }}><PageLoader /></div>;
+  if (isLoadingWizard || !wizard || isLoadingAgentHistory || isDeletingChatHistory)
+    return <PageLoader />;
 
   return (
     <div className="row chatapp-single-chat">

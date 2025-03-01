@@ -1,4 +1,4 @@
-import { Modal } from "react-bootstrap";
+import { Modal, Spinner } from "react-bootstrap";
 import { useUserStore } from "stores/useUser";
 import { useWallet } from "hooks/useWallet";
 import CompleteLogin from "components/common/CompleteLogin";
@@ -6,7 +6,6 @@ import CompleteProfile from "components/common/CheckWizardNameCreate/CompletePro
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useGetUserProfile } from "hooks/reactQuery/useUser";
-import { Spinner } from "react-bootstrap";
 
 function NoLogin() {
     const { t } = useTranslation();

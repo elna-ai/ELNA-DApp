@@ -133,7 +133,7 @@ export const useIsUserAdmin = () => {
 export const useGetUserProfile = (principal?: string) =>
   useQuery({
     queryFn: () => {
-      if (principal === undefined) {
+      if (!principal) {
         throw new Error("principal not available");
       }
 

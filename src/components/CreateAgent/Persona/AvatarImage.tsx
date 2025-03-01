@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import { useGetAsset } from "hooks/reactQuery/useElnaImages";
+import AvatarPlaceholder from "src/assets/avatar_placeholder.svg";
 
 import tickSolid from "images/tickSolid.png";
 import { toast } from "react-toastify";
@@ -39,7 +40,7 @@ function AvatarImage({
           "avatar-image--preview": preview,
           "avatar-image--loading": isLoading,
         })}
-        src={data?.asset}
+        src={data?.asset || AvatarPlaceholder}
         alt={isLoading ? "loading" : `avatar ${data?.file_name}`}
       />
       {selected && (
