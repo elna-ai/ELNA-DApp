@@ -36,6 +36,10 @@ export interface Main {
   'getWizards' : ActorMethod<[], Array<WizardDetailsBasicWithCreatorName>>,
   'isWizardNameValid' : ActorMethod<[string], boolean>,
   'publishWizard' : ActorMethod<[string], Response>,
+  'transferAgentOwnership' : ActorMethod<
+    [{ 'newPrincipal' : Principal, 'agentId' : string }],
+    Result_1
+  >,
   'unpublishWizard' : ActorMethod<[string], Response>,
   'updateKnowledgeAnalytics' : ActorMethod<[string], string>,
   'updateLaunchpadOwner' : ActorMethod<[Principal], string>,
@@ -58,7 +62,11 @@ export interface Main {
 export interface Response { 'status' : bigint, 'message' : string }
 export type Result = { 'ok' : string } |
   { 'err' : Error };
+export type Result_1 = { 'ok' : string } |
+  { 'err' : TransferOwnershipError };
 export type Time = bigint;
+export type TransferOwnershipError = { 'AgentNotFound' : null } |
+  { 'UserNotAuthorized' : null };
 export interface WizardDetails {
   'id' : string,
   'isPublished' : boolean,
