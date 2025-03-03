@@ -122,4 +122,9 @@ module {
     #PrincipalIdMissMatch;
     #AgentIdExist;
   };
+
+  public type TransferOwnershipError = {
+    #AgentNotFound;
+    #UserNotAuthorized;
+  };
 };

@@ -393,6 +393,51 @@ actor class Main(initialArgs : Types.InitialArgs) {
     });
   };
 
+  public shared ({ caller }) func transferAgentOwnership({
+    newPrincipal : Principal;
+    agentId : Text;
+  }) : async Result.Result<Text, Types.TransferOwnershipError> {
+    let wizard = findWizardById(agentId, wizardsV3);
+
+    switch (wizard) {
+      case null {
+        return #err(#AgentNotFound);
+      };
+      case (?wizard) {
+        if ((wizard.userId != Principal.toText(caller)) and (not isOwner(caller))) {
+          Debug.print("user not authorized for transferAgentOwnership" # debug_show (caller));
+          return #err(#UserNotAuthorized);
+        };
+
+        let index = findWizardIndex(wizard, wizardsV3);
+
+        switch (index) {
+          case null {
+            return #err(#AgentNotFound);
+          };
+          case (?index) {
+            let updatedWizard = {
+              wizard with userId = Principal.toText(newPrincipal)
+            };
+            wizardsV3.put(index, updatedWizard);
+
+            ignore CapCanister.addRecord(
+              caller,
+              "transferOwnership",
+              [
+                ("agentId", #Text(wizard.id)),
+                ("from", #Text(wizard.userId)),
+                ("to", #Text(Principal.toText(newPrincipal))),
+              ],
+            );
+
+            return #ok("Owner transferred");
+          };
+        };
+      };
+    };
+  };
+
   public shared ({ caller }) func getAllWizards() : async [Types.WizardDetailsWithTimeStamp] {
     let isUserAdmin = await UserManagementCanister.isPrincipalAdmin(caller);
     switch (isUserAdmin) {
