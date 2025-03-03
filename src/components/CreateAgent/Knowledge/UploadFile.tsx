@@ -127,7 +127,7 @@ function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
             <Form.Label>
               <h6>{t("createAgent.knowledge.uploadFile.title")}</h6>
             </Form.Label>
-            <Form.Control type="file" onChange={handleFileChange} />
+            <Form.Control type="file" accept="application/pdf" onChange={handleFileChange} />
             <p className="mt-2">
               <small>
                 <span className="mr-2 info-text">

@@ -178,7 +178,7 @@ function Create() {
             <Nav.Link
               className="btn nav-pill-chat"
               eventKey="integrations"
-              disabled={uuid === undefined}
+              disabled={!wizard?.biography || !wizard?.greeting}
             >
               {t("createAgent.integrations.integrations")}
             </Nav.Link>
