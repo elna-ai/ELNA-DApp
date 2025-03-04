@@ -189,10 +189,20 @@ actor class Main(initialArgs : Types.InitialArgs) {
 
     switch (doesWizardIdExist) {
       case (?_) {
-        return { status = 422; message = " Wizard id exist" };
+        return { status = 422; message = "Agent id exist" };
       };
       case (null) {
         if (isNewWizardName) {
+          if (wizard.name.size() < 1) {
+            return { status = 422; message = "Agent name is too short" };
+          };
+          if (wizard.biography.size() < 30) {
+            return { status = 422; message = "Agent biography is too short" };
+          };
+          if (wizard.greeting.size() < 20) {
+            return { status = 422; message = "Agent greeting is too short" };
+          };
+
           wizardsV3.add(addTimeStamp({ wizard with poolAddress = null; tokenAddress = null }));
           ignore CapCanister.addRecord(
             caller,
