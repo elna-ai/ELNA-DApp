@@ -134,6 +134,8 @@ function XIntegrationModal({
                             }
                     }
                     validationSchema={XINTEGRATION_VALIDATION_SCHEMA}
+                    validateOnChange={false}
+                    validateOnBlur={true}
                     onSubmit={handleSubmit}
                 >
                     {({ dirty, errors, handleSubmit, handleReset, values, handleChange }) => (
