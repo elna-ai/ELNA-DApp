@@ -353,26 +353,31 @@ actor class Main(initialArgs : Types.InitialArgs) {
   public shared (message) func deleteWizard(wizardId : Text) : async Types.Response {
 
     switch (findWizardById(wizardId, wizardsV3)) {
-      case null { return { status = 422; message = "Wizard does not exist" } };
+      case null { return { status = 422; message = "Agent does not exist" } };
       case (?wizard) {
         let canUserDelete = isOwner(message.caller) or isUserBotCreator(message.caller, wizard);
 
         if (not canUserDelete) {
           return {
             status = 403;
-            message = "Wizard does not belong to user";
+            message = "Agent does not belong to user";
           };
         };
+
+        if (Option.isSome(wizard.poolAddress) or Option.isSome(wizard.tokenAddress)) {
+          return { status = 403; message = "Unable to delete tokenized agent" };
+        };
+
         switch (findWizardIndex(wizard, wizardsV3)) {
           case null {
-            return { status = 422; message = "Wizard does not exist" };
+            return { status = 422; message = "Agent does not exist" };
           };
           case (?index) {
             ignore wizardsV3.remove(index);
             ignore analytics.remove(wizardId);
             ignore CapCanister.addRecord(
               message.caller,
-              "delete_agent",
+              "deleteAgent",
               [("agentId", #Text(wizard.id))],
             );
             return { status = 200; message = "Wizard deleted" };
