@@ -83,7 +83,7 @@ function SearchBarWizards({
   }
 
   function searchButtonOnClick() {
-    if (searchQueryRef.current === null) return;
+    if (searchQueryRef.current === null || searchQueryRef.current?.value === "") return;
     noResultToast();
     setSearchButtonActive(true);
     setSuggestionActive(false);
@@ -124,19 +124,19 @@ function SearchBarWizards({
         <div className="suggestion__list">
           {suggestionActive
             ? suggestionResults?.slice(0, 15)?.map((wizard, index) => (
-                <Link
-                  to={`/chat/${wizard?.id}`}
-                  className={classNames("suggestion__item", {
-                    "suggestion__item--highlight": suggestionIndex === index,
-                  })}
-                  key={index}
-                >
-                  <div className="stroke-dark w-4 d-flex align-items-center">
-                    <SearchIcon />
-                  </div>
-                  {wizard?.name}
-                </Link>
-              ))
+              <Link
+                to={`/chat/${wizard?.id}`}
+                className={classNames("suggestion__item", {
+                  "suggestion__item--highlight": suggestionIndex === index,
+                })}
+                key={index}
+              >
+                <div className="stroke-dark w-4 d-flex align-items-center">
+                  <SearchIcon />
+                </div>
+                {wizard?.name}
+              </Link>
+            ))
             : null}
         </div>
       </div>
