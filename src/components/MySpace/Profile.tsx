@@ -164,6 +164,8 @@ function Profile() {
               : USER_PROFILE_FORM_INITIAL
           }
           validationSchema={USER_PROFILE_FORM_VALIDATION}
+          validateOnChange={false}
+          validateOnBlur={true}
           onSubmit={handleSubmit}
         >
           {({ dirty, handleSubmit, handleReset }) => (

@@ -126,6 +126,8 @@ function TelegramIntegrationModal({
                         // })()
                     }
                     validationSchema={TELEGRAM_INTEGRATION_VALIDATION_SCHEMA}
+                    validateOnChange={false}
+                    validateOnBlur={true}
                     onSubmit={handleSubmit}
                 >
                     {({ dirty, errors, handleSubmit, handleReset, values, handleChange }) => (

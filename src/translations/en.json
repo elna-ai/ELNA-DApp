@@ -19,9 +19,9 @@
     "modalBtn": "Connect Wallet to Login"
   },
   "sidebar": {
-    "plusHeading": "Get more out of {{name}}+",
-    "plusDescription": "Craft magical AI Agents and let your AI think how you think",
-    "upgradePlan": "Upgrade Plan",
+    "plusHeading": "HyperLaunch",
+    "plusDescription": "Tokenizing Agents faster than you can say \"To the Moon!\"",
+    "upgradePlan": "Tokenize Now!",
     "home": "Home",
     "create": "Create",
     "mySpace": "My Space",
@@ -51,7 +51,7 @@
   },
   "signIn": {
     "connectWallet": "Connect your wallet",
-    "walletDescription": "If you don't have a wallet, you can select a provider and create one now. <a>Learn more</a>",
+    "walletDescription": "If you don't have a wallet, you can select a provider and create one now.",
     "connectingWallet": "Connecting to wallet..",
     "walletList": {
       "dfinity": "Internet Identity",
@@ -66,7 +66,7 @@
   "createAgent": {
     "title": "creating to your own agent",
     "fromStrach": "Create From Scratch",
-    "nameAgent": "Name your Agent",
+    "nameAgent": "Name Your Agent",
     "persona": "Persona",
     "avatar": "Avatar",
     "avatarDesc": "Choose an avatar or upload your own (Maximum size of 500kb).",
@@ -117,7 +117,7 @@
         "name": "Name"
       },
       "placeholder": {
-        "name": "Enter Bot name"
+        "name": "Enter Agent name"
       },
       "validations": {
         "name": "Name should have minimum 2 characters",
@@ -185,7 +185,7 @@
       "description": "Complete your profile, create your agent, and publish it with ease.",
       "form": {
         "aliasPlaceHolder": "Enter alias",
-        "aliasLabel": "<span>Alias (Username)*</span>",
+        "aliasLabel": "<span>Alias (Username)</span>",
         "principalIdLabel": "Principal ID",
         "xHandlePlaceHolder": "xHandle",
         "xHandleLabel": "<span>X handle (Optional)</span>",
