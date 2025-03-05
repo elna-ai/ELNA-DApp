@@ -137,7 +137,7 @@ function Persona({ wizard, setCurrentNav, isEdit }: PersonaProps) {
                   name: wizardName,
                   visibility,
                   summary: [],
-                  isPublished: false,
+                  isPublished: true,
                 };
                 addWizard(addPayload, {
                   onSuccess: () => {

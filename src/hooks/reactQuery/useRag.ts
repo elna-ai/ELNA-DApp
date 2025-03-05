@@ -96,6 +96,32 @@ export const useGetFileNames = (agentId: string) =>
     retry: 10,
   });
 
+// export const useGetFileNames = (agentId: string) => {
+//   const wallet = useWallet();
+
+//   return useQuery({
+//     queryKey: [QUERY_KEYS.WIZARD_FILE_NAMES, agentId],
+//     queryFn: async () => {
+//       if (wallet === undefined || !wallet?.principalId) return;
+
+//       const elnaRag: _SERVICE = await wallet.getCanisterActor(
+//         ragId,
+//         ragFactory,
+//         false
+//       );
+
+//       const result = await elnaRag.get_db_file_names(agentId);
+//       console.log("result", result);
+//       if (isRagErr(result)) {
+//         throw new Error(Object.keys(result.Err[0]).join());
+//       }
+//       return result.Ok;
+//     },
+//     enabled: !!agentId,
+//     retry: 10,
+//   });
+// };
+
 export const useDeleteCollections = () =>
   useMutation({
     mutationFn: (wizardID: string) =>
