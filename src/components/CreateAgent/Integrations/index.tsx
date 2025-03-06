@@ -31,9 +31,9 @@ function Integrations() {
           <XIntegration integrationData={integrationData} />
           {/* <XIntegration integrationData={integrationData?.find(integration => 'x_api_key' in integration)} /> */}
           <TelegramIntegration
-            integrationData={integrationData?.find(
-              integration => integration?.integration_type === "TELEGRAM"
-            )}
+          // integrationData={integrationData?.find(
+          //   integration => integration?.integration_type === "TELEGRAM"
+          // )}
           />
         </div>
       </div>
