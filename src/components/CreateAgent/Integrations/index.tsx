@@ -8,7 +8,10 @@ import TelegramIntegration from "./TelegramIntegrations";
 import { Button } from "react-bootstrap";
 import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
 import { useCreateWizardStore } from "stores/useCreateWizard";
-import { useGetAgentXIntegrations } from "hooks/reactQuery/wizards/useIntegrations";
+import {
+  useGetAgentXIntegrations,
+  useGetTelegramIntegration,
+} from "hooks/reactQuery/wizards/useIntegrations";
 
 function Integrations() {
   const { uuid } = useParams();
@@ -19,8 +22,13 @@ function Integrations() {
   );
   const { data: integrationData, isFetching: isLoadingIntegrationData } =
     useGetAgentXIntegrations(wizard?.id);
+  const { data: telegramData, isFetching: isLoadingTelegramData } =
+    useGetTelegramIntegration(wizard?.id);
 
-  if (isLoadingWizard || isLoadingIntegrationData) return <PageLoader />;
+  if (isLoadingWizard || isLoadingIntegrationData || isLoadingTelegramData) {
+    return <PageLoader />;
+  }
+
   return (
     <div>
       <div>
@@ -30,11 +38,7 @@ function Integrations() {
         <div className="d-flex flex-column gap-2 mt-4">
           <XIntegration integrationData={integrationData} />
           {/* <XIntegration integrationData={integrationData?.find(integration => 'x_api_key' in integration)} /> */}
-          <TelegramIntegration
-          // integrationData={integrationData?.find(
-          //   integration => integration?.integration_type === "TELEGRAM"
-          // )}
-          />
+          <TelegramIntegration integrationData={telegramData} />
         </div>
       </div>
       <div>

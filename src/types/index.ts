@@ -70,3 +70,18 @@ export type TelegramIntegrationCreate = {
   integration_id: string;
   agent_name: string;
 };
+
+export type TelegramAgentIntegrationResponse = {
+  agent_id: string;
+  agent_name: string;
+  agent_owner: string;
+  agent_prompt: string;
+  credentials: {
+    telegram_api_key: string;
+  };
+  integrations?: Array<{
+    integration_id: string;
+    integration_type: string;
+  }>;
+  integration_id?: string;
+};

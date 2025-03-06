@@ -14,7 +14,6 @@ import { useCreateWizardStore } from "stores/useCreateWizard";
 import queryClient from "utils/queryClient";
 import { QUERY_KEYS } from "src/constants/query";
 import { XAgentIntegrationResponse } from "src/types";
-import { useEffect } from "react";
 import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
 import { useWallet } from "hooks/useWallet";
 import {
@@ -73,7 +72,10 @@ function XIntegrationModal({
           onSuccess: () => {
             toast.success("X Integration successful");
             queryClient.invalidateQueries({
-              queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS, uuid ?? wizardId],
+              queryKey: [
+                QUERY_KEYS.AGENT_INTEGRATIONS_TELEGRAM,
+                uuid ?? wizardId,
+              ],
             });
           },
         }

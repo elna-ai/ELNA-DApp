@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import axios, { AxiosResponse } from "axios";
 import { QUERY_KEYS, ONE_HOUR_STALE_TIME } from "src/constants/query";
 import {
+  TelegramAgentIntegrationResponse,
   TelegramIntegrationCreate,
   XAgentIntegrationCreate,
   XAgentIntegrationResponse,
@@ -45,4 +46,23 @@ export const useAddTelegramIntegration = () =>
         `${import.meta.env.VITE_TELEGRAM_INTEGRATIONS}/integrate/telegram`,
         payload
       ),
+  });
+
+export const useGetTelegramIntegration = (agentId?: string) =>
+  useQuery({
+    queryFn: () =>
+      axios.get<any, AxiosResponse<TelegramAgentIntegrationResponse>>(
+        `${
+          import.meta.env.VITE_TELEGRAM_INTEGRATIONS
+        }/integrate/telegram/${agentId}`
+      ),
+    queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS_TELEGRAM, agentId],
+    enabled: !!agentId,
+    select: response => {
+      const { integrations, ...data } = response.data;
+      let telegram = integrations?.find(
+        integration => integration.integration_type === "TELEGRAM"
+      );
+      return { ...data, integration_id: telegram?.integration_id };
+    },
   });
