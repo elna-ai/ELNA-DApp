@@ -73,3 +73,26 @@ export const useGetTelegramIntegration = (agentId?: string) =>
       return { ...data, integration_id: telegram?.integration_id };
     },
   });
+
+export const useUpdateTelegramIntegration = () =>
+  useMutation({
+    mutationFn: ({
+      integrationId,
+      payload,
+    }: {
+      integrationId: string;
+      payload: { telegram_api_key: string };
+    }) =>
+      axios.put(
+        `${
+          import.meta.env.VITE_TELEGRAM_INTEGRATIONS
+        }/integrate/telegram/${integrationId}`,
+        payload
+      ),
+    onError: (error: AxiosError<{ error?: string }>) => {
+      const errorMsg =
+        error.response?.data.error || error.message || "Something went wrong";
+      console.error(error);
+      toast.error(errorMsg);
+    },
+  });

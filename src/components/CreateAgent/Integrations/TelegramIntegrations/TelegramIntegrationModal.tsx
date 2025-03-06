@@ -18,7 +18,10 @@ import { useEffect } from "react";
 import { useWallet } from "hooks/useWallet";
 import { useCreateWizardStore } from "stores/useCreateWizard";
 import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
-import { useAddTelegramIntegration } from "hooks/reactQuery/wizards/useIntegrations";
+import {
+  useAddTelegramIntegration,
+  useUpdateTelegramIntegration,
+} from "hooks/reactQuery/wizards/useIntegrations";
 import { TelegramAgentIntegrationResponse } from "src/types";
 
 type IntegrationModalProps = {
@@ -40,7 +43,10 @@ function TelegramIntegrationModal({
   const { data: wizard } = useShowWizard(wizardId || uuid);
   const { mutate: addTelegramIntegration, isPending: isCreatingIntegration } =
     useAddTelegramIntegration();
-  // const { mutate: updateAgentIntegration, isPending: isUpdatingAgentIntegration } = useUpdateAgentIntegration();
+  const {
+    mutate: updateAgentIntegration,
+    isPending: isUpdatingAgentIntegration,
+  } = useUpdateTelegramIntegration();
 
   const handleSubmit = async (
     values: typeof TELEGRAM_INTEGRATION_INITIAL_VALUE
@@ -49,8 +55,11 @@ function TelegramIntegrationModal({
     if (userId === undefined) return;
     const { ...credentials } = values;
 
-    // if (integrationData?.integration_id) handleUpdateIntegration(integrationData, credentials)
-    // else if (!!wizard?.name && !!wizard?.biography) {
+    if (integrationData?.integration_id) {
+      handleUpdateIntegration(integrationData, credentials);
+      return;
+    }
+
     if (wizard?.id === undefined) {
       toast.error("unable to read wizard details");
       return;
@@ -78,29 +87,35 @@ function TelegramIntegrationModal({
         },
       }
     );
-    // }
   };
 
-  // const handleUpdateIntegration = async (integrationData: AgentIntegrationData, credentials: typeof TELEGRAM_INTEGRATION_INITIAL_VALUE) => {
-  // updateAgentIntegration(
-  //     {
-  //         integration_id: integrationData.integration_id,
-  //         agent_name: integrationData?.agent_name,
-  //         agent_id: wizardId || uuid,
-  //         integration_type: "TELEGRAM",
-  //         is_enabled: toggleIntegration,
-  //         credentials: {
-  //             telegram_api_key: credentials.telegramApiKey,
-  //         },
-  //     },
-  //     {
-  //         onSuccess: () => {
-  //             toast.success("Telegram Integration successfully updated");
-  //             queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS, wizardId || uuid,] });
-  //         },
-  //     }
-  // )
-  // }
+  const handleUpdateIntegration = async (
+    integrationData: TelegramAgentIntegrationResponse,
+    credentials: typeof TELEGRAM_INTEGRATION_INITIAL_VALUE
+  ) => {
+    if (!integrationData.integration_id) {
+      toast.error("Unable to get integration id");
+      return;
+    }
+
+    updateAgentIntegration(
+      {
+        integrationId: integrationData.integration_id,
+        payload: { telegram_api_key: credentials.telegramApiKey },
+      },
+      {
+        onSuccess: () => {
+          toast.success("Telegram Integration successfully updated");
+          queryClient.invalidateQueries({
+            queryKey: [
+              QUERY_KEYS.AGENT_INTEGRATIONS_TELEGRAM,
+              wizardId || uuid,
+            ],
+          });
+        },
+      }
+    );
+  };
 
   // useEffect(() => {
   //     if (toggleIntegration !== integrationData?.is_enabled) {
@@ -173,7 +188,9 @@ function TelegramIntegrationModal({
                     label={integrationData ? "Update" : "Submit"}
                     className="ml-auto px-5 mt-3"
                     isDisabled={!dirty}
-                    isLoading={isCreatingIntegration}
+                    isLoading={
+                      isCreatingIntegration || isUpdatingAgentIntegration
+                    }
                     type="submit"
                   />
                 </div>
