@@ -61,3 +61,12 @@ export type XAgentIntegrationResponse = {
   is_enabled: boolean;
   x_rate_limit_remaining: number;
 };
+
+export type TelegramIntegrationCreate = {
+  telegram_api_key: string;
+  owner: string;
+  prompt: string;
+  agent_id: string;
+  integration_id: string;
+  agent_name: string;
+};
