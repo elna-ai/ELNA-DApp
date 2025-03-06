@@ -80,6 +80,14 @@ export const idlFactory = ({ IDL }) => {
     'poolAddress' : IDL.Opt(IDL.Text),
     'avatar' : IDL.Text,
   });
+  const TransferOwnershipError = IDL.Variant({
+    'AgentNotFound' : IDL.Null,
+    'UserNotAuthorized' : IDL.Null,
+  });
+  const Result_1 = IDL.Variant({
+    'ok' : IDL.Text,
+    'err' : TransferOwnershipError,
+  });
   const WizardUpdateDetails = IDL.Record({
     'name' : IDL.Text,
     'biography' : IDL.Text,
@@ -114,6 +122,11 @@ export const idlFactory = ({ IDL }) => {
       ),
     'isWizardNameValid' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
     'publishWizard' : IDL.Func([IDL.Text], [Response], []),
+    'transferAgentOwnership' : IDL.Func(
+        [IDL.Record({ 'newPrincipal' : IDL.Principal, 'agentId' : IDL.Text })],
+        [Result_1],
+        [],
+      ),
     'unpublishWizard' : IDL.Func([IDL.Text], [Response], []),
     'updateKnowledgeAnalytics' : IDL.Func([IDL.Text], [IDL.Text], []),
     'updateLaunchpadOwner' : IDL.Func([IDL.Principal], [IDL.Text], []),

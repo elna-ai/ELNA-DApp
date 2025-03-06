@@ -219,7 +219,7 @@ function Chat() {
                   >
                     <i className="ri-more-line" />
                   </Dropdown.Toggle>
-                  <Dropdown.Menu>
+                  <Dropdown.Menu style={{ backgroundColor: "white" }}>
                     <Dropdown.Item onClick={() => clearChatFn()}>
                       Clear chat history
                     </Dropdown.Item>

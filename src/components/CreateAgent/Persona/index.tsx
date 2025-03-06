@@ -137,7 +137,7 @@ function Persona({ wizard, setCurrentNav, isEdit }: PersonaProps) {
                   name: wizardName,
                   visibility,
                   summary: [],
-                  isPublished: false,
+                  isPublished: true,
                 };
                 addWizard(addPayload, {
                   onSuccess: () => {
@@ -190,6 +190,10 @@ function Persona({ wizard, setCurrentNav, isEdit }: PersonaProps) {
     userId: string,
     visibility: WizardVisibility
   ) => {
+    if (wizardName.length <= 1) {
+      toast.error("Agent name is too short");
+      return;
+    }
     const payload: WizardDetails = {
       ...values,
       id: uuidv4(),
@@ -221,6 +225,8 @@ function Persona({ wizard, setCurrentNav, isEdit }: PersonaProps) {
         description: wizard?.description || "",
       }}
       validationSchema={PERSONA_VALIDATION_SCHEMA}
+      validateOnChange={false}
+      validateOnBlur={true}
       onSubmit={handleSubmit}
     >
       {({ dirty, errors, values, handleSubmit, handleChange }) => (
