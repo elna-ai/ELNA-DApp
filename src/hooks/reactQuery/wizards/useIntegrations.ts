@@ -1,7 +1,9 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { toast } from "react-toastify";
 import { QUERY_KEYS, ONE_HOUR_STALE_TIME } from "src/constants/query";
 import {
+  TelegramAgentIntegrationResponse,
   TelegramIntegrationCreate,
   XAgentIntegrationCreate,
   XAgentIntegrationResponse,
@@ -45,4 +47,29 @@ export const useAddTelegramIntegration = () =>
         `${import.meta.env.VITE_TELEGRAM_INTEGRATIONS}/integrate/telegram`,
         payload
       ),
+    onError: (error: AxiosError<{ error?: string }>) => {
+      const errorMsg =
+        error.response?.data.error || error.message || "Something went wrong";
+      console.log(error);
+      toast.error(errorMsg);
+    },
+  });
+
+export const useGetTelegramIntegration = (agentId?: string) =>
+  useQuery({
+    queryFn: () =>
+      axios.get<any, AxiosResponse<TelegramAgentIntegrationResponse>>(
+        `${
+          import.meta.env.VITE_TELEGRAM_INTEGRATIONS
+        }/integrate/telegram/${agentId}`
+      ),
+    queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS_TELEGRAM, agentId],
+    enabled: !!agentId,
+    select: response => {
+      const { integrations, ...data } = response.data;
+      let telegram = integrations?.find(
+        integration => integration.integration_type === "TELEGRAM"
+      );
+      return { ...data, integration_id: telegram?.integration_id };
+    },
   });

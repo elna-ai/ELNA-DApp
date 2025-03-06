@@ -5,11 +5,12 @@ import TelegramIntegrationModal from "./TelegramIntegrationModal";
 // import { AgentIntegrationData } from "src/types";
 import { t } from "i18next";
 import Telegram from "../../../../assets/telegram.svg";
+import { TelegramAgentIntegrationResponse } from "src/types";
 
 export default function TelegramIntegration({
   integrationData,
 }: {
-  integrationData?: any;
+  integrationData?: TelegramAgentIntegrationResponse;
 }) {
   const [telegramModalShow, setTelegramModalShow] = useState(false);
   const [telegramToggle, setTelegramToggle] = useState(
@@ -20,7 +21,7 @@ export default function TelegramIntegration({
   return (
     <>
       <TelegramIntegrationModal
-        // integrationData={integrationData}
+        integrationData={integrationData}
         toggleIntegration={telegramToggle}
         show={telegramModalShow}
         onHide={() => setTelegramModalShow(false)}
@@ -58,10 +59,9 @@ export default function TelegramIntegration({
             className="btn-knowledge"
             onClick={() => setTelegramModalShow(true)}
           >
-            {
-              // integrationData ? "Edit" :
-              t("createAgent.integrations.options.connectBot")
-            }
+            {integrationData
+              ? "Edit"
+              : t("createAgent.integrations.options.connectBot")}
           </Button>
         </div>
       </div>

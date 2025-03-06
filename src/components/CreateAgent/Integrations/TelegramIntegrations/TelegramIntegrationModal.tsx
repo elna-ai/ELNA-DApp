@@ -19,16 +19,17 @@ import { useWallet } from "hooks/useWallet";
 import { useCreateWizardStore } from "stores/useCreateWizard";
 import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
 import { useAddTelegramIntegration } from "hooks/reactQuery/wizards/useIntegrations";
+import { TelegramAgentIntegrationResponse } from "src/types";
 
 type IntegrationModalProps = {
-  // integrationData?: AgentIntegrationData,
+  integrationData?: TelegramAgentIntegrationResponse;
   toggleIntegration: boolean;
   show: boolean;
   onHide: () => void;
 };
 
 function TelegramIntegrationModal({
-  // integrationData,
+  integrationData,
   toggleIntegration,
   show,
   onHide,
@@ -128,14 +129,9 @@ function TelegramIntegrationModal({
       <Modal.Body>
         <Formik
           initialValues={
-            // integrationData === undefined ?
-            TELEGRAM_INTEGRATION_INITIAL_VALUE
-            // : (() => {
-            //     const creds = integrationData.credentials as TelegramAgentCredentials;
-            //     return {
-            //         telegramApiKey: creds.telegram_api_key,
-            //     };
-            // })()
+            integrationData === undefined
+              ? TELEGRAM_INTEGRATION_INITIAL_VALUE
+              : { telegramApiKey: integrationData.credentials.telegram_api_key }
           }
           validationSchema={TELEGRAM_INTEGRATION_VALIDATION_SCHEMA}
           validateOnChange={false}
@@ -174,10 +170,7 @@ function TelegramIntegrationModal({
 
                 <div className="d-flex justify-content-end h-auto m-2">
                   <LoadingButton
-                    label={
-                      // integrationData ? "Update" :
-                      "Submit"
-                    }
+                    label={integrationData ? "Update" : "Submit"}
                     className="ml-auto px-5 mt-3"
                     isDisabled={!dirty}
                     isLoading={isCreatingIntegration}
