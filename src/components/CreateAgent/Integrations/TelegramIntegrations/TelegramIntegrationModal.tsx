@@ -70,7 +70,7 @@ function TelegramIntegrationModal({
       {
         agent_id: wizard?.id,
         integration_id,
-        owner: userId,
+        agent_owner: userId,
         agent_name: wizard?.name,
         prompt: wizard?.biography,
         telegram_api_key: credentials.telegramApiKey,

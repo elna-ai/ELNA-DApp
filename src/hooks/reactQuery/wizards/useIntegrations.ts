@@ -16,6 +16,8 @@ type useLoginMutationProps = {
   principalId: string;
 };
 
+type IntegrationAPIError = AxiosError<{ error?: string }>;
+
 export const useGetAgentXIntegrations = (agent_id?: string) =>
   useQuery({
     queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS, agent_id],
@@ -101,7 +103,7 @@ export const useUpdateTelegramIntegration = () =>
         payload,
         { headers: { Authorization: Cookies.get("integrations_token") } }
       ),
-    onError: (error: AxiosError<{ error?: string }>) => {
+    onError: (error: IntegrationAPIError) => {
       const errorMsg =
         error.response?.data.error || error.message || "Something went wrong";
       console.error(error);
@@ -119,5 +121,10 @@ export const useIntegrationsLogin = () =>
     },
     onSuccess: ({ data }) =>
       Cookies.set("integrations_token", data.token, { secure: true }),
-    onError: error => toast.error(error.message),
+    onError: (error: IntegrationAPIError) => {
+      const errorMsg =
+        error.response?.data.error || error.message || "Something went wrong";
+      console.error(error);
+      toast.error(errorMsg);
+    },
   });

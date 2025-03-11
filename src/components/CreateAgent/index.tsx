@@ -11,7 +11,8 @@ import Create from "./Create";
 function CreateAgent() {
   const wallet = useWallet();
   const userToken = useUserStore(state => state.userToken);
-  const { mutate: generateUserToken } = useGenerateUserToken();
+  const { mutate: generateUserToken, isPending: isGeneratingToken } =
+    useGenerateUserToken();
   const { mutate: loginExternalService } = useIntegrationsLogin();
 
   useEffect(() => {
@@ -23,8 +24,10 @@ function CreateAgent() {
     if (Cookies.get("integrations_token")) return;
     if (!userToken) return;
     if (!wallet?.principalId) return;
+    if (isGeneratingToken) return;
+
     loginExternalService({ token: userToken, principalId: wallet.principalId });
-  }, [userToken, wallet?.principalId]);
+  }, [userToken, wallet?.principalId, isGeneratingToken]);
 
   return (
     <Routes>

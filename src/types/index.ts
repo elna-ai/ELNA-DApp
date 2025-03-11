@@ -64,7 +64,7 @@ export type XAgentIntegrationResponse = {
 
 export type TelegramIntegrationCreate = {
   telegram_api_key: string;
-  owner: string;
+  agent_owner: string;
   prompt: string;
   agent_id: string;
   integration_id: string;
