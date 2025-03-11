@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios, { AxiosError, AxiosResponse } from "axios";
+import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import { QUERY_KEYS, ONE_HOUR_STALE_TIME } from "src/constants/query";
 import {
@@ -10,12 +11,18 @@ import {
   XAgentIntegrationUpdate,
 } from "src/types";
 
+type useLoginMutationProps = {
+  token: string;
+  principalId: string;
+};
+
 export const useGetAgentXIntegrations = (agent_id?: string) =>
   useQuery({
     queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS, agent_id],
     queryFn: () =>
       axios.get<any, AxiosResponse<XAgentIntegrationResponse>>(
-        `${import.meta.env.VITE_INTEGRATIONS_BASE}/integrate/x/${agent_id}`
+        `${import.meta.env.VITE_INTEGRATIONS_BASE}/integrate/x/${agent_id}`,
+        { headers: { Authorization: Cookies.get("integrations_token") } }
       ),
     select: response => response.data,
     enabled: !!agent_id,
@@ -28,7 +35,8 @@ export const useAddAgentXIntegration = () =>
     mutationFn: (payload: XAgentIntegrationCreate) =>
       axios.post<XAgentIntegrationCreate>(
         `${import.meta.env.VITE_INTEGRATIONS_BASE}/integrate/x`,
-        payload
+        payload,
+        { headers: { Authorization: Cookies.get("integrations_token") } }
       ),
   });
 export const useUpdateAgentXIntegration = () =>
@@ -36,7 +44,8 @@ export const useUpdateAgentXIntegration = () =>
     mutationFn: (payload: XAgentIntegrationUpdate) =>
       axios.put<XAgentIntegrationUpdate>(
         `${import.meta.env.VITE_INTEGRATIONS_BASE}/integrate/x`,
-        payload
+        payload,
+        { headers: { Authorization: Cookies.get("integrations_token") } }
       ),
   });
 
@@ -45,7 +54,8 @@ export const useAddTelegramIntegration = () =>
     mutationFn: (payload: TelegramIntegrationCreate) =>
       axios.post<TelegramIntegrationCreate>(
         `${import.meta.env.VITE_TELEGRAM_INTEGRATIONS}/integrate/telegram`,
-        payload
+        payload,
+        { headers: { Authorization: Cookies.get("integrations_token") } }
       ),
     onError: (error: AxiosError<{ error?: string }>) => {
       const errorMsg =
@@ -61,7 +71,8 @@ export const useGetTelegramIntegration = (agentId?: string) =>
       axios.get<any, AxiosResponse<TelegramAgentIntegrationResponse>>(
         `${
           import.meta.env.VITE_TELEGRAM_INTEGRATIONS
-        }/integrate/telegram/${agentId}`
+        }/integrate/telegram/${agentId}`,
+        { headers: { Authorization: Cookies.get("integrations_token") } }
       ),
     queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS_TELEGRAM, agentId],
     enabled: !!agentId,
@@ -87,7 +98,8 @@ export const useUpdateTelegramIntegration = () =>
         `${
           import.meta.env.VITE_TELEGRAM_INTEGRATIONS
         }/integrate/telegram/${integrationId}`,
-        payload
+        payload,
+        { headers: { Authorization: Cookies.get("integrations_token") } }
       ),
     onError: (error: AxiosError<{ error?: string }>) => {
       const errorMsg =
@@ -95,4 +107,17 @@ export const useUpdateTelegramIntegration = () =>
       console.error(error);
       toast.error(errorMsg);
     },
+  });
+
+export const useIntegrationsLogin = () =>
+  useMutation({
+    mutationFn: ({ token, principalId }: useLoginMutationProps) => {
+      return axios.post(`${import.meta.env.VITE_INTEGRATIONS_BASE}/login`, {
+        principal_id: principalId,
+        user_token: token,
+      });
+    },
+    onSuccess: ({ data }) =>
+      Cookies.set("integrations_token", data.token, { secure: true }),
+    onError: error => toast.error(error.message),
   });
