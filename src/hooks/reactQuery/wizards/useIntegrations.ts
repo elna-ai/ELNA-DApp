@@ -94,7 +94,7 @@ export const useUpdateTelegramIntegration = () =>
       payload,
     }: {
       integrationId: string;
-      payload: { telegram_api_key: string };
+      payload: { telegram_api_key: string; agent_id: string };
     }) =>
       axios.put(
         `${
