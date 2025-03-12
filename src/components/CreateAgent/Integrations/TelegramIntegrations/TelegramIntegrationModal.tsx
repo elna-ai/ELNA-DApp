@@ -101,7 +101,10 @@ function TelegramIntegrationModal({
     updateAgentIntegration(
       {
         integrationId: integrationData.integration_id,
-        payload: { telegram_api_key: credentials.telegramApiKey },
+        payload: {
+          telegram_api_key: credentials.telegramApiKey,
+          agent_id: integrationData.agent_id,
+        },
       },
       {
         onSuccess: () => {
