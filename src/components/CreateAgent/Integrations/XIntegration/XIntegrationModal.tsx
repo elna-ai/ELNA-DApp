@@ -72,10 +72,7 @@ function XIntegrationModal({
           onSuccess: () => {
             toast.success("X Integration successful");
             queryClient.invalidateQueries({
-              queryKey: [
-                QUERY_KEYS.AGENT_INTEGRATIONS_TELEGRAM,
-                uuid ?? wizardId,
-              ],
+              queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS, uuid ?? wizardId],
             });
           },
         }
