@@ -30,6 +30,7 @@ export const useGetAgentXIntegrations = (agent_id?: string) =>
     enabled: !!agent_id,
     staleTime: ONE_HOUR_STALE_TIME,
     retry: 0,
+    refetchOnWindowFocus: false,
   });
 
 export const useAddAgentXIntegration = () =>
@@ -78,7 +79,11 @@ export const useGetTelegramIntegration = (agentId?: string) =>
       ),
     queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS_TELEGRAM, agentId],
     enabled: !!agentId,
-    select: response => {
+    staleTime: ONE_HOUR_STALE_TIME,
+    retry: 0,
+    refetchOnWindowFocus: false,
+    // @ts-ignore
+    select: (response: AxiosResponse<TelegramAgentIntegrationResponse>) => {
       const { integrations, ...data } = response.data;
       let telegram = integrations?.find(
         integration => integration.integration_type === "TELEGRAM"
