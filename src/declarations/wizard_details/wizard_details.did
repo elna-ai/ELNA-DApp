@@ -71,7 +71,17 @@ type WizardDetails =
    userId: text;
    visibility: WizardVisibility;
  };
+type TransferOwnershipError = 
+ variant {
+   AgentNotFound;
+   UserNotAuthorized;
+ };
 type Time = int;
+type Result_1 = 
+ variant {
+   err: TransferOwnershipError;
+   ok: text;
+ };
 type Result = 
  variant {
    err: Error;
@@ -100,6 +110,11 @@ type Main =
    getWizards: () -> (vec WizardDetailsBasicWithCreatorName);
    isWizardNameValid: (text) -> (bool) query;
    publishWizard: (text) -> (Response);
+   transferAgentOwnership:
+    (record {
+       agentId: text;
+       newPrincipal: principal;
+     }) -> (Result_1);
    unpublishWizard: (text) -> (Response);
    updateKnowledgeAnalytics: (text) -> (text);
    updateLaunchpadOwner: (principal) -> (text);

@@ -90,13 +90,15 @@ function AddProfile() {
             initialValues={
               userProfile
                 ? {
-                    bio: userProfile.bio[0] || "",
-                    alias: userProfile.alias,
-                    xHandle: userProfile.xHandle[0] || "",
-                  }
+                  bio: userProfile.bio[0] || "",
+                  alias: userProfile.alias,
+                  xHandle: userProfile.xHandle[0] || "",
+                }
                 : USER_PROFILE_FORM_INITIAL
             }
             validationSchema={USER_PROFILE_FORM_VALIDATION}
+            validateOnChange={false}
+            validateOnBlur={true}
             onSubmit={handleSubmit}
           >
             {({ dirty, handleSubmit, handleReset }) => (

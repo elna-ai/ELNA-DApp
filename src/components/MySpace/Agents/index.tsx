@@ -125,7 +125,7 @@ function MyWizards() {
 
     return (
       <>
-        <div className="my-wizards__card-wrapper">
+        <div className="row gx-3 row-cols-xxl-5 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mt-4 mb-5">
           {userWizards?.map(
             ({
               id,

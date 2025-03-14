@@ -189,10 +189,20 @@ actor class Main(initialArgs : Types.InitialArgs) {
 
     switch (doesWizardIdExist) {
       case (?_) {
-        return { status = 422; message = " Wizard id exist" };
+        return { status = 422; message = "Agent id exist" };
       };
       case (null) {
         if (isNewWizardName) {
+          if (wizard.name.size() < 1) {
+            return { status = 422; message = "Agent name is too short" };
+          };
+          if (wizard.biography.size() < 30) {
+            return { status = 422; message = "Agent biography is too short" };
+          };
+          if (wizard.greeting.size() < 20) {
+            return { status = 422; message = "Agent greeting is too short" };
+          };
+
           wizardsV3.add(addTimeStamp({ wizard with poolAddress = null; tokenAddress = null }));
           ignore CapCanister.addRecord(
             caller,
@@ -343,26 +353,31 @@ actor class Main(initialArgs : Types.InitialArgs) {
   public shared (message) func deleteWizard(wizardId : Text) : async Types.Response {
 
     switch (findWizardById(wizardId, wizardsV3)) {
-      case null { return { status = 422; message = "Wizard does not exist" } };
+      case null { return { status = 422; message = "Agent does not exist" } };
       case (?wizard) {
         let canUserDelete = isOwner(message.caller) or isUserBotCreator(message.caller, wizard);
 
         if (not canUserDelete) {
           return {
             status = 403;
-            message = "Wizard does not belong to user";
+            message = "Agent does not belong to user";
           };
         };
+
+        if (Option.isSome(wizard.poolAddress) or Option.isSome(wizard.tokenAddress)) {
+          return { status = 403; message = "Unable to delete tokenized agent" };
+        };
+
         switch (findWizardIndex(wizard, wizardsV3)) {
           case null {
-            return { status = 422; message = "Wizard does not exist" };
+            return { status = 422; message = "Agent does not exist" };
           };
           case (?index) {
             ignore wizardsV3.remove(index);
             ignore analytics.remove(wizardId);
             ignore CapCanister.addRecord(
               message.caller,
-              "delete_agent",
+              "deleteAgent",
               [("agentId", #Text(wizard.id))],
             );
             return { status = 200; message = "Wizard deleted" };
@@ -391,6 +406,51 @@ actor class Main(initialArgs : Types.InitialArgs) {
       isPublish = false;
       capCanister = CapCanister;
     });
+  };
+
+  public shared ({ caller }) func transferAgentOwnership({
+    newPrincipal : Principal;
+    agentId : Text;
+  }) : async Result.Result<Text, Types.TransferOwnershipError> {
+    let wizard = findWizardById(agentId, wizardsV3);
+
+    switch (wizard) {
+      case null {
+        return #err(#AgentNotFound);
+      };
+      case (?wizard) {
+        if ((wizard.userId != Principal.toText(caller)) and (not isOwner(caller))) {
+          Debug.print("user not authorized for transferAgentOwnership" # debug_show (caller));
+          return #err(#UserNotAuthorized);
+        };
+
+        let index = findWizardIndex(wizard, wizardsV3);
+
+        switch (index) {
+          case null {
+            return #err(#AgentNotFound);
+          };
+          case (?index) {
+            let updatedWizard = {
+              wizard with userId = Principal.toText(newPrincipal)
+            };
+            wizardsV3.put(index, updatedWizard);
+
+            ignore CapCanister.addRecord(
+              caller,
+              "transferOwnership",
+              [
+                ("agentId", #Text(wizard.id)),
+                ("from", #Text(wizard.userId)),
+                ("to", #Text(Principal.toText(newPrincipal))),
+              ],
+            );
+
+            return #ok("Owner transferred");
+          };
+        };
+      };
+    };
   };
 
   public shared ({ caller }) func getAllWizards() : async [Types.WizardDetailsWithTimeStamp] {

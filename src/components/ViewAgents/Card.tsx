@@ -123,14 +123,14 @@ function Card({
           </div>
           <div className="user-desg text-truncate">{description}</div>
         </div>
-        <div className="d-flex card-footer position-relative justify-content-between align-items-center">
+        <div className="d-flex flex-wrap card-footer position-relative justify-content-between align-items-center">
           <div className="d-flex align-items-center gap-1">
             <i className="ri-chat-4-line"></i>
             <span>{messagesReplied.toString()}</span>
           </div>
           {!!handleDelete && (
             <span
-              className={classNames("badge tool-card__footer__badge mb-0", {
+              className={classNames("badge tool-card__footer__badge mb-0 mx-2", {
                 "bg-secondary": !isPublished,
                 "bg-primary": isPublished,
               })}

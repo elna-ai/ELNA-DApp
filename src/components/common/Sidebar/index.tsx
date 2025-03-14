@@ -157,13 +157,6 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
           </div>
           <div className="callout card card-flush text-center mx-auto">
             <div className="card-body">
-              <div className="price-subcard">
-                <span className="me-2 p-2">
-                  <span>40</span>
-                  <i className="px-1 border-end border-dark ri-shining-fill"></i>
-                </span>
-                <span>{t("common.free")}</span>
-              </div>
               <h5 className="h5">
                 {t("sidebar.plusHeading", {
                   name: t(`common.${import.meta.env.VITE_APP_NAME}`),
@@ -171,7 +164,7 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
               </h5>
               <p className="p-sm card-text">{t("sidebar.plusDescription")}</p>
               <a
-                href="#"
+                href="https://hyperlaunch.fun/"
                 target="_blank"
                 className="btn btn-primary btn-block"
                 rel="noreferrer"

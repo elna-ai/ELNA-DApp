@@ -2,6 +2,8 @@
   width: 60px;
   height: 60px;
   border-radius: 999px;
+  -o-object-fit: cover;
+  object-fit: cover;
 
   &-wrapper {
     border-radius: 999px !important;
