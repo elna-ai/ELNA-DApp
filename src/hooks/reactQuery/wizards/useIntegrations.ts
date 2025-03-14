@@ -19,7 +19,7 @@ type useLoginMutationProps = {
 type IntegrationAPIError = AxiosError<{ error?: string }>;
 
 export const useGetAgentXIntegrations = (agent_id?: string) =>
-  useQuery<any, AxiosError>({
+  useQuery({
     queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS, agent_id],
     queryFn: () =>
       axios.get<any, AxiosResponse<XAgentIntegrationResponse>>(
@@ -69,7 +69,7 @@ export const useAddTelegramIntegration = () =>
   });
 
 export const useGetTelegramIntegration = (agentId?: string) =>
-  useQuery<unknown, AxiosError>({
+  useQuery({
     queryFn: () =>
       axios.get<any, AxiosResponse<TelegramAgentIntegrationResponse>>(
         `${
