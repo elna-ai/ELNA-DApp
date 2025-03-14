@@ -56,14 +56,14 @@ function XIntegrationModal({
       const integration_id = uuidv4();
       addAgentIntegration(
         {
-          x_api_key: values.apiKey,
-          x_api_key_secret: values.apiKeySecret,
-          x_access_token: values.accessToken,
-          x_access_token_secret: values.accessTokenSecret,
-          x_bearer_token: values.bearerToken,
+          x_api_key: values.apiKey.trim(),
+          x_api_key_secret: values.apiKeySecret.trim(),
+          x_access_token: values.accessToken.trim(),
+          x_access_token_secret: values.accessTokenSecret.trim(),
+          x_bearer_token: values.bearerToken.trim(),
           agent_id: wizard?.id,
           owner: principalId,
-          user_id: values.userId,
+          user_id: values.userId.trim(),
           prompt: wizard?.biography,
           integration_id,
           agent_name: wizard?.name,
@@ -91,12 +91,12 @@ function XIntegrationModal({
     const integrationId = match ? match[1] : "";
     updateAgentIntegration(
       {
-        x_api_key: credentials.apiKey,
-        x_api_key_secret: credentials.apiKeySecret,
-        x_access_token: credentials.accessToken,
-        x_access_token_secret: credentials.accessTokenSecret,
-        x_bearer_token: credentials.bearerToken,
-        user_id: credentials.userId,
+        x_api_key: credentials.apiKey.trim(),
+        x_api_key_secret: credentials.apiKeySecret.trim(),
+        x_access_token: credentials.accessToken.trim(),
+        x_access_token_secret: credentials.accessTokenSecret.trim(),
+        x_bearer_token: credentials.bearerToken.trim(),
+        user_id: credentials.userId.trim(),
         integration_id: integrationId,
       },
       {

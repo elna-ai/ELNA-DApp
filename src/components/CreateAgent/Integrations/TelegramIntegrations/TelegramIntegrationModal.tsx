@@ -73,7 +73,7 @@ function TelegramIntegrationModal({
         agent_owner: userId,
         agent_name: wizard?.name,
         prompt: wizard?.biography,
-        telegram_api_key: credentials.telegramApiKey,
+        telegram_api_key: credentials.telegramApiKey.trim(),
       },
       {
         onSuccess: () => {
@@ -102,7 +102,7 @@ function TelegramIntegrationModal({
       {
         integrationId: integrationData.integration_id,
         payload: {
-          telegram_api_key: credentials.telegramApiKey,
+          telegram_api_key: credentials.telegramApiKey.trim(),
           agent_id: integrationData.agent_id,
         },
       },
