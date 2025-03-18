@@ -11,6 +11,7 @@ import Debug "mo:base/Debug";
 import Int "mo:base/Int";
 import Result "mo:base/Result";
 import Option "mo:base/Option";
+import Cycles "mo:new-base/Cycles";
 
 import Types "./Types";
 import {
@@ -42,6 +43,7 @@ actor class Main(initialArgs : Types.InitialArgs) {
   private stable var _capCanisterId : Principal = initialArgs.capCanisterId;
   private stable var _ragCanisterId : Principal = initialArgs.ragCanisterId;
   private stable var launchpadOwner : Principal = initialArgs.owner;
+  private stable var _benchmarkAnalytics : [Types.Benchmark] = [];
 
   // unstable memory
   var wizards = Buffer.Buffer<Types.WizardDetails>(10);
@@ -183,6 +185,7 @@ actor class Main(initialArgs : Types.InitialArgs) {
   public shared ({ caller }) func addWizard(wizard : Types.WizardDetails) : async Types.Response {
     // Throws profile not found error if profile is not complete
     let _userProfile = await UserManagementCanister.getUserProfile(caller);
+    let initial_balance = Cycles.balance();
     let isNewWizardName = isWizardNameTakenByUser(wizardsV3, Principal.toText(caller), wizard.name);
 
     let doesWizardIdExist = findWizardById(wizard.id, wizardsV3);
@@ -212,7 +215,20 @@ actor class Main(initialArgs : Types.InitialArgs) {
               ("createdBy", #Text(wizard.userId)),
             ],
           );
-          return { status = 200; message = "Created wizard" };
+          let finial_balance = Cycles.balance();
+
+          _benchmarkAnalytics := AnalyticsUtils.logCycleUsage({
+            initial = initial_balance;
+            final = finial_balance;
+            functionName = "addWizard";
+            benchmark = _benchmarkAnalytics;
+            agentId = wizard.id;
+            caller = caller;
+          });
+          return {
+            status = 200;
+            message = "Created wizard";
+          };
         } else {
           return { status = 422; message = "Wizard named already exist" };
         };
@@ -466,6 +482,7 @@ actor class Main(initialArgs : Types.InitialArgs) {
   };
 
   public shared ({ caller }) func updateWizard(wizardId : Text, wizardDetails : Types.WizardUpdateDetails) : async Text {
+    let initial_balance = Cycles.balance();
     let wizard = findWizardById(wizardId, wizardsV3);
     switch (wizard) {
       case null {
@@ -547,6 +564,15 @@ actor class Main(initialArgs : Types.InitialArgs) {
               logDetails.add(("after:visibility", #Text(visibilityToText(wizardDetails.visibility))));
               changesCount := changesCount + 1;
             };
+            let finial_balance = Cycles.balance();
+            _benchmarkAnalytics := AnalyticsUtils.logCycleUsage({
+              initial = initial_balance;
+              final = finial_balance;
+              functionName = "updateWizard";
+              benchmark = _benchmarkAnalytics;
+              agentId = wizard.id;
+              caller = caller;
+            });
 
             AnalyticsUtils.updateModificationAnalytics(wizard.id, changesCount, analytics);
             ignore CapCanister.addRecord(caller, "update_agent", Buffer.toArray(logDetails));
@@ -642,6 +668,23 @@ actor class Main(initialArgs : Types.InitialArgs) {
         };
       },
     );
+  };
+
+  public shared ({ caller }) func getBenchmark() : async [Types.Benchmark] {
+    if (not isOwner(caller)) {
+      throw Error.reject("User not authorized");
+    };
+
+    return _benchmarkAnalytics;
+  };
+
+  public shared ({ caller }) func resetBenchmark() : async Text {
+    if (not isOwner(caller)) {
+      throw Error.reject("User not authorized");
+    };
+
+    _benchmarkAnalytics := [];
+    return "Benchmark reset";
   };
 
   system func preupgrade() {

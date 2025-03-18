@@ -1,5 +1,9 @@
 import HashMap "mo:base/HashMap";
 import Text "mo:base/Text";
+import Debug "mo:base/Debug";
+import Array "mo:base/Array";
+import Principal "mo:base/Principal";
+import Time "mo:base/Time";
 import Types "Types";
 
 module {
@@ -39,5 +43,27 @@ module {
         );
       };
     };
+  };
+
+  public func logCycleUsage({
+    initial : Nat;
+    final : Nat;
+    functionName : Text;
+    agentId : Text;
+    caller : Principal;
+    benchmark : [Types.Benchmark];
+  }) : [Types.Benchmark] {
+    let cyclesUsed : Nat = initial - final;
+    let finalMessage = "fn:" # debug_show (functionName) # "amount: " # debug_show (cyclesUsed) # ".message:";
+    Debug.print("CYCLES USED: " # finalMessage);
+    let newBenchmark : Types.Benchmark = {
+      agentId;
+      functionName;
+      caller;
+      cyclesUsed;
+      timeStamp = Time.now();
+    };
+    return Array.append(benchmark, [newBenchmark]);
+
   };
 };

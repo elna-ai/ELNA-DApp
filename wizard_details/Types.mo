@@ -115,6 +115,14 @@ module {
     bio : ?Text;
   };
 
+  public type Benchmark = {
+    functionName : Text;
+    caller : Principal;
+    cyclesUsed : Nat;
+    agentId : Text;
+    timeStamp : Time.Time;
+  };
+
   public type Error = {
     #UserNotAuthorized;
     #UnableToUploadAvatar;
