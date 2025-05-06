@@ -34,7 +34,6 @@ import Login from "components/common/Login";
 
 function App() {
   const [isExpanded, setIsExpanded] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
 
   return (
     <ErrorBoundary>
@@ -47,44 +46,77 @@ function App() {
             })}
           >
             <Sidebar {...{ isExpanded, setIsExpanded }} />
-            <Header setIsLoading={setIsLoading} />
+            <Header />
             <div className="container-fluid p-0">
               <div className="hk-pg-wrapper">
                 <div className="mx-4 pt-2">
                   <div className="w-100 mt-2">
-                    {isLoading ? (
+                    {/* {isLoading ? (
                       <PageLoader />
-                    ) : (
-                      <Routes>
-                        <Route path="/chat/:id?" element={<LoggedInRoute><Chat /></LoggedInRoute>} />
-                        <Route path="/" element={<ViewAgents />} />
-                        <Route path="/agents/:id/integrations/chat-widget" element={<WidgetIntegration />} />{/* Incomplete feature, to be removed */}
-                        <Route
-                          path="/my-space/*"
-                          element={<LoggedInRoute><MySpace /></LoggedInRoute>}
-                        />
-                        <Route
-                          path="/create-agent/*"
-                          element={<LoggedInRoute><CreateAgent /></LoggedInRoute>}
-                        />
-                        <Route
-                          path="/agent-marketplace/*"
-                          element={<PopularWizards isHomePage={false} />}
-                        />
-                        <Route
-                          path="/developer-studio/*"
-                          element={<LoggedInRoute><DeveloperStudio /></LoggedInRoute>}
-                        />
-                        <Route
-                          path="/admin/*"
-                          element={<PrivateRoute component={AdminDashboard} />}
-                        />
-                        <Route path="/profile/add" element={<LoggedInRoute><AddProfile /></LoggedInRoute>} />
-                        <Route path="/tool-details/:id?" element={<ToolDetails />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="*" element={<Page404 />} />
-                      </Routes>
-                    )}
+                    ) : ( */}
+                    <Routes>
+                      <Route
+                        path="/chat/:id?"
+                        element={
+                          <LoggedInRoute>
+                            <Chat />
+                          </LoggedInRoute>
+                        }
+                      />
+                      <Route path="/" element={<ViewAgents />} />
+                      <Route
+                        path="/agents/:id/integrations/chat-widget"
+                        element={<WidgetIntegration />}
+                      />
+                      {/* Incomplete feature, to be removed */}
+                      <Route
+                        path="/my-space/*"
+                        element={
+                          <LoggedInRoute>
+                            <MySpace />
+                          </LoggedInRoute>
+                        }
+                      />
+                      <Route
+                        path="/create-agent/*"
+                        element={
+                          <LoggedInRoute>
+                            <CreateAgent />
+                          </LoggedInRoute>
+                        }
+                      />
+                      <Route
+                        path="/agent-marketplace/*"
+                        element={<PopularWizards isHomePage={false} />}
+                      />
+                      <Route
+                        path="/developer-studio/*"
+                        element={
+                          <LoggedInRoute>
+                            <DeveloperStudio />
+                          </LoggedInRoute>
+                        }
+                      />
+                      <Route
+                        path="/admin/*"
+                        element={<PrivateRoute component={AdminDashboard} />}
+                      />
+                      <Route
+                        path="/profile/add"
+                        element={
+                          <LoggedInRoute>
+                            <AddProfile />
+                          </LoggedInRoute>
+                        }
+                      />
+                      <Route
+                        path="/tool-details/:id?"
+                        element={<ToolDetails />}
+                      />
+                      <Route path="/login" element={<Login />} />
+                      <Route path="*" element={<Page404 />} />
+                    </Routes>
+                    {/* )} */}
                     <Footer />
                   </div>
                 </div>

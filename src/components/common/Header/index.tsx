@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import Spinner from "react-bootstrap/Spinner";
@@ -12,12 +12,10 @@ import { useWallet } from "hooks/useWallet";
 import { useUserStore } from "stores/useUser";
 import { useGetUserProfile, useIsUserAdmin } from "hooks/reactQuery/useUser";
 import useGetDisplayAddress from "hooks/useGetDisplayAddress";
+import useAuth from "stores/auth";
+import { trim } from "utils/trim";
 
-interface HeaderProps {
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-function Header({ setIsLoading }: HeaderProps) {
+function Header() {
   const [isWalletModelOpen, setIsWalletModelOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -28,24 +26,58 @@ function Header({ setIsLoading }: HeaderProps) {
   const wallet = useWallet();
   const location = useLocation();
   const navigate = useNavigate();
-  const displayAddress = useGetDisplayAddress();
+  // const displayAddress = useGetDisplayAddress();
   const { data: isAdmin } = useIsUserAdmin();
+  const { update, isConnected, principalId } = useAuth();
   useGetUserProfile(wallet?.principalId);
+  const timer = useRef<NodeJS.Timeout | null>(null);
 
+  const clearAuth = () => {
+    update({
+      isConnected: !1,
+      accountId: null,
+      principalId: null,
+      isConnecting: !1,
+    });
+  };
   useEffect(() => {
-    const autoLogin = async () => {
-      setIsLoading(true);
-      if (wallet === undefined) {
-        console.error("wallet is not available");
-        setIsLoading(false);
-        return;
-      }
-      await wallet.autoConnect();
-      setIsLoading(false);
-    };
+    if (isConnected) {
+      return;
+    }
 
-    autoLogin();
-  }, [wallet]);
+    const autoLogin = async () => {
+      if (wallet && wallet?.autoConnect) {
+        try {
+          update({
+            isConnecting: !0,
+          });
+          const principal = await wallet.autoConnect();
+          if (principal && typeof principal === "string") {
+            update({
+              isConnected: true,
+              principalId: principal,
+              accountId: wallet.accountId,
+              isConnecting: !1,
+            });
+          } else {
+            clearAuth();
+          }
+        } catch (e) {
+          clearAuth();
+        }
+      }
+    };
+    const onLoad = () => {
+      timer.current = setTimeout(autoLogin, 1000);
+    };
+    window.addEventListener("load", onLoad);
+    return () => {
+      window.removeEventListener("load", onLoad);
+      if (timer.current) {
+        clearTimeout(timer.current);
+      }
+    };
+  }, [wallet, isConnected]);
 
   const handleLoginLogout = async () => {
     if (isUserLoggedIn) {
@@ -55,7 +87,8 @@ function Header({ setIsLoading }: HeaderProps) {
       resetLoggedInState();
       //   await wallet.disconnect();
       setIsLoggingOut(false);
-      if(location.pathname.includes("/my-space")) navigate("/");
+      clearAuth();
+      if (location.pathname.includes("/my-space")) navigate("/");
     } else {
       setIsWalletModelOpen(prev => !prev);
     }
@@ -68,7 +101,7 @@ function Header({ setIsLoading }: HeaderProps) {
         return;
       }
 
-      await navigator.clipboard.writeText(wallet?.principalId);
+      await navigator.clipboard.writeText(principalId ?? "");
       toast.success("Principal Id copied");
     } catch (err) {
       toast.error("Failed to copy Principal Id");
@@ -80,7 +113,7 @@ function Header({ setIsLoading }: HeaderProps) {
       <header className="d-flex p-2 h-12">
         <nav className="hk-navbar navbar navbar-expand-xl fixed-top">
           <div className="container-fluid justify-content-end">
-            {isUserLoggedIn ? (
+            {isConnected ? (
               <Dropdown className="ml-auto d-flex">
                 <Dropdown.Toggle
                   variant="dark"
@@ -94,7 +127,7 @@ function Header({ setIsLoading }: HeaderProps) {
                       width={32}
                     />
                   </span>
-                  <span>{displayAddress}</span>
+                  <span>{trim(principalId ?? "")}</span>
                   {isLoggingOut && <Spinner animation="border" size="sm" />}
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="profile-dropdown">
@@ -103,7 +136,7 @@ function Header({ setIsLoading }: HeaderProps) {
                     className="dropdown-menu__item"
                   >
                     <i className="ri-file-copy-line"></i>
-                    Principal Id {displayAddress}
+                    Principal Id {trim(principalId ?? "")}
                   </Dropdown.Item>
                   <Dropdown.Item>
                     <Link to="/my-space/profile">
