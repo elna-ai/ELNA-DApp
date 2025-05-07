@@ -49,11 +49,13 @@ function Card({
   const navigate = useNavigate();
 
   return (
-    <div className="col"
+    <div
+      className="col"
       onClick={() => {
         if (isUserLoggedIn) return;
         navigate(`/chat/${id}`);
-      }}>
+      }}
+    >
       <div className="card card-border contact-card elna-card">
         <div className="card-body text-center">
           <div className="d-flex">
@@ -130,10 +132,13 @@ function Card({
           </div>
           {!!handleDelete && (
             <span
-              className={classNames("badge tool-card__footer__badge mb-0 mx-2", {
-                "bg-secondary": !isPublished,
-                "bg-primary": isPublished,
-              })}
+              className={classNames(
+                "badge tool-card__footer__badge mb-0 mx-2",
+                {
+                  "bg-secondary": !isPublished,
+                  "bg-primary": isPublished,
+                }
+              )}
             >
               {isPublished ? "Published" : "Unpublished"}
             </span>

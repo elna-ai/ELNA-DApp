@@ -63,7 +63,7 @@ export const useAddTelegramIntegration = () =>
     onError: (error: AxiosError<{ error?: string }>) => {
       const errorMsg =
         error.response?.data.error || error.message || "Something went wrong";
-      console.log(error);
+
       toast.error(errorMsg);
     },
   });

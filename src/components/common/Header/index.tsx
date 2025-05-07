@@ -109,7 +109,6 @@ function Header() {
     }
   };
 
-  console.log(wallet);
   return (
     <>
       <header className="d-flex p-2 h-12">

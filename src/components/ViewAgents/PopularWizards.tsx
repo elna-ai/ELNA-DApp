@@ -1,4 +1,4 @@
-import PageLoader from "components/common/PageLoader";
+// import PageLoader from "components/common/PageLoader";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Dropdown } from "react-bootstrap";
@@ -13,6 +13,7 @@ import { useFetchPublicWizards } from "hooks/reactQuery/wizards/usePublicWizards
 import Card from "./Card";
 import SearchBarWizards from "./SearchBarWizards";
 import FilterToggleButton from "./FilterToggleButton";
+import { Skeleton } from "components/common/Skeleton";
 
 type SortByOptions = "popularity" | "recentlyUpdated";
 
@@ -163,8 +164,13 @@ function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
         </>
       )}
       <div className="row gx-3 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-3 row-cols-md-2 row-cols-1 mt-4 mb-5">
+        {/* <Skeleton /> */}
         {isLoadingPopularWizards ? (
-          <PageLoader />
+          <>
+            {Array.from(new Array(30)).map((_, index) => {
+              return <Skeleton key={index} />;
+            })}
+          </>
         ) : (
           <>
             {sortedResult?.map(

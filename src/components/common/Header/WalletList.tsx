@@ -30,7 +30,7 @@ function WalletList({ isOpen, onClose, onSuccess }: WalletListProps) {
         isConnecting: !0,
       });
       const principalId = await wallet.connect(id);
-      console.log(principalId, "princi");
+
       if (principalId && typeof principalId === "string") {
         update({
           isConnecting: !1,
