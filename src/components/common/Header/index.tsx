@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import Spinner from "react-bootstrap/Spinner";
@@ -26,11 +26,11 @@ function Header() {
   const wallet = useWallet();
   const location = useLocation();
   const navigate = useNavigate();
-  // const displayAddress = useGetDisplayAddress();
+
   const { data: isAdmin } = useIsUserAdmin();
-  const { update, isConnected, principalId } = useAuth();
+  const { update, isConnected, principalId, isConnecting } = useAuth();
   useGetUserProfile(wallet?.principalId);
-  const timer = useRef<NodeJS.Timeout | null>(null);
+  // const timer = useRef<NodeJS.Timeout | null>(null);
 
   const clearAuth = useCallback(() => {
     update({
@@ -41,7 +41,7 @@ function Header() {
     });
   }, [update]);
   useEffect(() => {
-    if (isConnected) {
+    if (!wallet || isConnected) {
       return;
     }
 
@@ -67,16 +67,17 @@ function Header() {
         }
       }
     };
-    const onLoad = () => {
-      timer.current = setTimeout(autoLogin, 1000);
-    };
-    window.addEventListener("load", onLoad);
-    return () => {
-      window.removeEventListener("load", onLoad);
-      if (timer.current) {
-        clearTimeout(timer.current);
-      }
-    };
+    // const onLoad = () => {
+    //   timer.current = setTimeout(autoLogin, 1000);
+    // };
+    // window.addEventListener("load", onLoad);
+    // return () => {
+    //   window.removeEventListener("load", onLoad);
+    //   if (timer.current) {
+    //     clearTimeout(timer.current);
+    //   }
+    // };
+    autoLogin();
   }, [wallet, isConnected, update, clearAuth]);
 
   const handleLoginLogout = async () => {
@@ -108,6 +109,7 @@ function Header() {
     }
   };
 
+  console.log(wallet);
   return (
     <>
       <header className="d-flex p-2 h-12">
@@ -193,7 +195,10 @@ function Header() {
                     ></path>
                   </svg>
                 </div>
-                {t("header.connectWallet")}
+
+                {isConnecting
+                  ? t("header.connectingWallet")
+                  : t("header.connectWallet")}
               </Button>
             )}
           </div>

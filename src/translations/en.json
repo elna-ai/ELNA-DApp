@@ -10,7 +10,8 @@
   },
   "header": {
     "connectWallet": "Connect Wallet",
-    "userProfile": "User Profile"
+    "userProfile": "User Profile",
+    "connectingWallet": "Connecting wallet"
   },
   "completeLogin": {
     "modalHeaderTitle": "Login",

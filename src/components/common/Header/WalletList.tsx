@@ -8,6 +8,7 @@ import { useWallet } from "hooks/useWallet";
 
 import { WALLET_LIST } from "./constants";
 import { useUserStore } from "stores/useUser";
+import useAuth from "stores/auth";
 
 interface WalletListProps {
   isOpen: boolean;
@@ -17,16 +18,27 @@ interface WalletListProps {
 
 function WalletList({ isOpen, onClose, onSuccess }: WalletListProps) {
   const [isLoading, setIsLoading] = useState(false);
-
   const { t } = useTranslation();
   const wallet = useWallet();
   const resetLoginState = useUserStore(state => state.resetLoggedInState);
-
+  const { update } = useAuth();
   const handleConnection = async (id: string) => {
     try {
       setIsLoading(true);
       if (wallet === undefined) return;
-      await wallet.connect(id);
+      update({
+        isConnecting: !0,
+      });
+      const principalId = await wallet.connect(id);
+      console.log(principalId, "princi");
+      if (principalId && typeof principalId === "string") {
+        update({
+          isConnecting: !1,
+          principalId: principalId ?? "",
+          accountId: wallet?.accountId ?? "",
+          isConnected: !0,
+        });
+      }
       resetLoginState();
       onSuccess?.();
       onClose();
@@ -36,6 +48,7 @@ function WalletList({ isOpen, onClose, onSuccess }: WalletListProps) {
       setIsLoading(false);
     }
   };
+
   return (
     <Modal show={isOpen} onHide={onClose} centered>
       <Modal.Header closeButton className="wallet-list-modal-header">

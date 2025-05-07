@@ -14,7 +14,6 @@ export const useAuth = create<AppState>(set => ({
   accountId: null,
   isConnecting: false,
   update: newState => {
-    console.log("autoLoginStart", newState);
     set(state => ({ ...state, ...newState }));
   },
 }));
