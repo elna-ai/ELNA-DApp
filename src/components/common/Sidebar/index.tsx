@@ -10,7 +10,7 @@ import { useIsUserAdmin } from "hooks/reactQuery/useUser";
 import useIsMobileScreen from "../../../hooks/useIsMobileScreen";
 // import useIsMobileScreen from "hooks/useIsMobileScreen";
 
-import BrandSm from "images/brandSm.svg?react"
+import BrandSm from "images/brandSm.svg?react";
 import ElanLogo from "images/logoElna.svg?react";
 import ExpandButton from "./ExpandButton";
 import SideBarLink from "./SideBarLink";
@@ -33,7 +33,7 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
 
   useEffect(() => {
     setIsExpanded(!isMobile);
-  }, [isMobile]);
+  }, [isMobile, setIsExpanded]);
 
   const handleExpand = () => setIsExpanded(prev => !prev);
   const sideBarLink =
@@ -62,8 +62,8 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
               <Modal.Header closeButton />
               <Modal.Body>
                 <ul className="navbar-nav flex-column">
-                  {sideBarLink.map(linkGroup => (
-                    <div className="menu-sidebar-card">
+                  {sideBarLink.map((linkGroup, index) => (
+                    <div className="menu-sidebar-card" key={index}>
                       {linkGroup.map((link: SidebarLinkProps) => (
                         <OverlayTrigger
                           key={link.key}
@@ -93,7 +93,10 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
           )}
         </div>
         <Link to="/" className="navbar-brand-homeBtn">
-          <BrandSm className="brand-img img-fluid" style={{ height: "41px", width: "41px" }} />
+          <BrandSm
+            className="brand-img img-fluid"
+            style={{ height: "41px", width: "41px" }}
+          />
         </Link>
       </>
     );
@@ -117,7 +120,9 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
                 className="brand-img img-fluid"
                 style={{ width: "200px" }}
               />
-            ) : <BrandSm style={{ height: "41px", width: "41px" }} />}
+            ) : (
+              <BrandSm style={{ height: "41px", width: "41px" }} />
+            )}
           </Link>
         </span>
         <ExpandButton
@@ -132,8 +137,8 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
         <div className="menu-content-wrap">
           <div className="menu-group">
             <ul className="navbar-nav flex-column">
-              {sideBarLink.map(linkGroup => (
-                <div className="menu-sidebar-card">
+              {sideBarLink.map((linkGroup, index) => (
+                <div className="menu-sidebar-card" key={index}>
                   {linkGroup.map((link: SidebarLinkProps) => (
                     <OverlayTrigger
                       key={link.key}

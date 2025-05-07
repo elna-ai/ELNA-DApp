@@ -40,7 +40,7 @@ function AddProfile() {
     };
     if (userProfile) {
       updateProfile(payload, {
-        onSuccess: data => {
+        onSuccess: () => {
           toast.success("Profile Details updated");
           queryClient.invalidateQueries({
             queryKey: [QUERY_KEYS.USER_PROFILE],
@@ -55,7 +55,7 @@ function AddProfile() {
       addUserProfile(payload, {
         onSuccess: () => {
           navigate("/my-space/profile");
-          toast.success("Profile Details added")
+          toast.success("Profile Details added");
         },
         onError: err => {
           console.error(err);
@@ -90,10 +90,10 @@ function AddProfile() {
             initialValues={
               userProfile
                 ? {
-                  bio: userProfile.bio[0] || "",
-                  alias: userProfile.alias,
-                  xHandle: userProfile.xHandle[0] || "",
-                }
+                    bio: userProfile.bio[0] || "",
+                    alias: userProfile.alias,
+                    xHandle: userProfile.xHandle[0] || "",
+                  }
                 : USER_PROFILE_FORM_INITIAL
             }
             validationSchema={USER_PROFILE_FORM_VALIDATION}

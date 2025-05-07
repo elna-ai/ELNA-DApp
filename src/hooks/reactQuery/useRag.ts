@@ -3,10 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { elna_RAG_backend as elnaRagBackend } from "declarations/elna_RAG_backend";
 import { ONE_HOUR_STALE_TIME, QUERY_KEYS } from "src/constants/query";
 import { isRagErr } from "utils/ragCanister";
-import {
-  History,
-  _SERVICE,
-} from "declarations/elna_RAG_backend/elna_RAG_backend.did";
+import { _SERVICE } from "declarations/elna_RAG_backend/elna_RAG_backend.did";
 import {
   canisterId as ragId,
   idlFactory as ragFactory,
@@ -46,7 +43,11 @@ export const useGetAgentChatHistory = (agentId: string | undefined) => {
   const wallet = useWallet();
 
   return useQuery({
-    queryKey: [`${QUERY_KEYS.AGENT_CHATS}-${agentId}`, wallet?.principalId],
+    queryKey: [
+      `${QUERY_KEYS.AGENT_CHATS}-${agentId}`,
+      wallet?.principalId,
+      wallet,
+    ],
     queryFn: async () => {
       if (wallet === undefined) throw Error("user not logged in");
 

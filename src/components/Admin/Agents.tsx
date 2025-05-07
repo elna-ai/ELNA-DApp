@@ -13,7 +13,7 @@ function Agents() {
     if (!isError) return;
 
     toast.error(error.message);
-  }, [isError]);
+  }, [error?.message, isError]);
 
   if (isFetching) {
     return <PageLoader />;
@@ -29,7 +29,7 @@ function Agents() {
         <Col>isPublished</Col>
       </Row>
       {wizards?.map(wizard => (
-        <Row className="gap-2">
+        <Row className="gap-2" key={wizard.id}>
           <Col>{wizard.id}</Col>
           <Col>{wizard.name}</Col>
           <Col>{wizard.userId}</Col>

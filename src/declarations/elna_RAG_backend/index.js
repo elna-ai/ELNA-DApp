@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { Actor, HttpAgent } from "@dfinity/agent";
 
 // Imports and re-exports candid interface

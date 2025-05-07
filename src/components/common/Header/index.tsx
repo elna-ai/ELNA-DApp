@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import Spinner from "react-bootstrap/Spinner";
@@ -11,7 +11,7 @@ import AvatarImg from "images/avatar.png";
 import { useWallet } from "hooks/useWallet";
 import { useUserStore } from "stores/useUser";
 import { useGetUserProfile, useIsUserAdmin } from "hooks/reactQuery/useUser";
-import useGetDisplayAddress from "hooks/useGetDisplayAddress";
+
 import useAuth from "stores/auth";
 import { trim } from "utils/trim";
 
@@ -32,14 +32,14 @@ function Header() {
   useGetUserProfile(wallet?.principalId);
   const timer = useRef<NodeJS.Timeout | null>(null);
 
-  const clearAuth = () => {
+  const clearAuth = useCallback(() => {
     update({
       isConnected: !1,
       accountId: null,
       principalId: null,
       isConnecting: !1,
     });
-  };
+  }, [update]);
   useEffect(() => {
     if (isConnected) {
       return;
@@ -77,7 +77,7 @@ function Header() {
         clearTimeout(timer.current);
       }
     };
-  }, [wallet, isConnected]);
+  }, [wallet, isConnected, update, clearAuth]);
 
   const handleLoginLogout = async () => {
     if (isUserLoggedIn) {

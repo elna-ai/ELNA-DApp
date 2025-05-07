@@ -33,7 +33,7 @@ export const useGetDeveloperTools = () => {
   const wallet = useWallet();
 
   return useQuery({
-    queryKey: [QUERY_KEYS.DEVELOPER_TOOLS],
+    queryKey: [QUERY_KEYS.DEVELOPER_TOOLS, wallet],
     queryFn: async () => {
       if (wallet === undefined) throw Error("user not logged in");
 
@@ -92,7 +92,7 @@ export const useGetUserTools = () => {
   const wallet = useWallet();
 
   return useQuery({
-    queryKey: [QUERY_KEYS.DEVELOPER_TOOLS, wallet?.principalId],
+    queryKey: [QUERY_KEYS.DEVELOPER_TOOLS, wallet?.principalId, wallet],
     queryFn: async () => {
       if (wallet === undefined) throw Error("user not logged in");
 

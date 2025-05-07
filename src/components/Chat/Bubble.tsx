@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import classNames from "classnames";
 import DOMPurify from "dompurify";
-import { useTranslation } from "react-i18next";
+
 import { Placeholder } from "react-bootstrap";
 
 type BubbleProps = {
@@ -14,8 +14,12 @@ type BubbleProps = {
   isPageLoading?: boolean;
 } & React.HTMLProps<HTMLDivElement>;
 
-function Bubble({ user, message, isLoading = false, isPageLoading = false }: BubbleProps) {
-  const { t } = useTranslation();
+function Bubble({
+  user,
+  message,
+  isLoading = false,
+  isPageLoading = false,
+}: BubbleProps) {
   const bubbleRef = useRef<HTMLDivElement | null>(null);
 
   const isUserBot = user?.isBot ?? false;
@@ -49,25 +53,28 @@ function Bubble({ user, message, isLoading = false, isPageLoading = false }: Bub
             })}
           >
             {isPageLoading ? (
-              <Placeholder as="div" animation="glow" style={{ width: "40vw", maxWidth: "30rem" }}>
-                <Placeholder xs={7} /> <Placeholder xs={3} /> <Placeholder xs={4} />{' '}
-                <Placeholder xs={4} />
+              <Placeholder
+                as="div"
+                animation="glow"
+                style={{ width: "40vw", maxWidth: "30rem" }}
+              >
+                <Placeholder xs={7} /> <Placeholder xs={3} />{" "}
+                <Placeholder xs={4} /> <Placeholder xs={4} />
               </Placeholder>
-            ) :
-              isLoading ? (
-                <div className="typing">
-                  <div className="dot"></div>
-                  <div className="dot"></div>
-                  <div className="dot"></div>
-                </div>
-              ) : (
-                <div
-                  className="chat-bubble__message"
-                  dangerouslySetInnerHTML={{
-                    __html: sanitize(message || ""),
-                  }}
-                />
-              )}
+            ) : isLoading ? (
+              <div className="typing">
+                <div className="dot"></div>
+                <div className="dot"></div>
+                <div className="dot"></div>
+              </div>
+            ) : (
+              <div
+                className="chat-bubble__message"
+                dangerouslySetInnerHTML={{
+                  __html: sanitize(message || ""),
+                }}
+              />
+            )}
             <div className="media-body">
               <div className="msg-box"></div>
             </div>

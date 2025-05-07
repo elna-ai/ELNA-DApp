@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   wizard_details as wizardDetails,
   canisterId,
@@ -7,11 +7,6 @@ import {
 import { Main } from "declarations/wizard_details/wizard_details.did";
 import { useWallet } from "hooks/useWallet";
 import { QUERY_KEYS, ONE_HOUR_STALE_TIME } from "src/constants/query";
-import {
-  XAgentIntegrationCreate,
-  XAgentIntegrationResponse,
-  XAgentIntegrationUpdate,
-} from "src/types";
 
 type useShowWizardProps = string | undefined;
 export const useShowWizard = (wizardId: useShowWizardProps) =>
@@ -40,6 +35,6 @@ export const useFetchAllWizards = () => {
       const response = await wizardDetails.getAllWizards();
       return response;
     },
-    queryKey: [QUERY_KEYS.ALL_WIZARDS],
+    queryKey: [QUERY_KEYS.ALL_WIZARDS, wallet],
   });
 };

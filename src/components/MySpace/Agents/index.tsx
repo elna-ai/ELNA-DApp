@@ -43,8 +43,7 @@ function MyWizards() {
   const { mutate: publishUnpublishWizard } = usePublishUnpublishWizard();
   const { mutate: deleteIndex } = useDeleteCollections();
   const { data: analytics } = useGetAllAnalytics();
-  const { mutate: deleteCustomImage, isPending: isDeletingCustomImage } =
-    useDeleteCustomImage();
+  const { mutate: deleteCustomImage } = useDeleteCustomImage();
 
   const handleDeletePopup = (id: string, name: string) => {
     setIsDeleteWizard(true);
@@ -165,7 +164,7 @@ function MyWizards() {
     if (!isError) return;
 
     toast.error(error.message);
-  }, [isError]);
+  }, [error?.message, isError]);
 
   return (
     <div>

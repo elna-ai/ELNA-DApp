@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useFormikContext } from "formik";
 import { InputGroup } from "react-bootstrap";
 import { toast } from "react-toastify";
@@ -14,7 +15,15 @@ type ImageUploaderProps<T> = {
   height: number;
   width: number;
 };
-function ImageUploader<T>({ id, value, name, shapeType, maxSize, height, width }: ImageUploaderProps<T>) {
+function ImageUploader<T>({
+  id,
+  value,
+  name,
+  shapeType,
+  maxSize,
+  height,
+  width,
+}: ImageUploaderProps<T>) {
   const { setFieldValue, errors, setFieldError } = useFormikContext();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,7 +33,7 @@ function ImageUploader<T>({ id, value, name, shapeType, maxSize, height, width }
       const reader = new FileReader();
       reader.onload = () => {
         const base64String = reader.result as string;
-        var image = new Image();
+        const image = new Image();
         image.src = base64String;
 
         image.onload = function () {
@@ -34,7 +43,10 @@ function ImageUploader<T>({ id, value, name, shapeType, maxSize, height, width }
               image: base64String,
             });
           } else {
-            setFieldError(`${name as string}.image`, `Height and Width must not exceed ${width} and ${height} respectively.`);
+            setFieldError(
+              `${name as string}.image`,
+              `Height and Width must not exceed ${width} and ${height} respectively.`
+            );
           }
         };
       };
@@ -62,10 +74,13 @@ function ImageUploader<T>({ id, value, name, shapeType, maxSize, height, width }
           id={id}
         />
         <label
-          className={classNames("custom-avatar-parent btn bg-dark d-flex align-items-center justify-content-center", {
-            "avatar-image-rectangle": shapeType === "rectangle",
-            "avatar-image": shapeType === "circle",
-          })}
+          className={classNames(
+            "custom-avatar-parent btn bg-dark d-flex align-items-center justify-content-center",
+            {
+              "avatar-image-rectangle": shapeType === "rectangle",
+              "avatar-image": shapeType === "circle",
+            }
+          )}
           htmlFor={id}
         >
           {value.image ? (
@@ -80,7 +95,9 @@ function ImageUploader<T>({ id, value, name, shapeType, maxSize, height, width }
             <i className="ri-upload-2-fill custom-avatar-parent__child text-white"></i>
           )}
         </label>
-        <span style={{ color: "red", width: "180%", textAlign: "center" }}>{(errors?.[name] as any)?.image}</span>
+        <span style={{ color: "red", width: "180%", textAlign: "center" }}>
+          {(errors?.[name] as any)?.image}
+        </span>
       </div>
     </InputGroup>
   );

@@ -5,7 +5,7 @@ import environment from "vite-plugin-environment";
 import path from "path";
 import dotenv from "dotenv";
 import svgr from "vite-plugin-svgr";
-
+import eslint from "vite-plugin-eslint";
 dotenv.config();
 
 export default defineConfig(({ mode }) => {
@@ -34,6 +34,7 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       react(),
+      eslint(),
       environment("all", { prefix: "CANISTER_" }),
       environment("all", { prefix: "DFX_" }),
       environment({ BACKEND_CANISTER_ID: "" }),

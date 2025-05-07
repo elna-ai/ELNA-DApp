@@ -8,6 +8,7 @@ type PrivateRouteProps = {
 };
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({
+  // eslint-disable-next-line react/prop-types
   component: RouteComponent,
 }) => {
   const { data: isAdmin } = useIsUserAdmin();

@@ -28,7 +28,7 @@ function Create() {
   const [isPublishSuccessful, setIsPublishSuccessful] = useState(false);
 
   const { t } = useTranslation();
-  const [urlSearchParams, _] = useSearchParams();
+  const [urlSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { uuid } = useParams();
   const wizardName = useCreateWizardStore(state => state.wizardName);

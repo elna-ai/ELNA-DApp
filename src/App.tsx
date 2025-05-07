@@ -1,4 +1,4 @@
-import PageLoader from "components/common/PageLoader";
+// import PageLoader from "components/common/PageLoader";
 import { useState } from "react";
 
 import classNames from "classnames";

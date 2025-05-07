@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from "uuid";
 import queryClient from "utils/queryClient";
 import { QUERY_KEYS } from "src/constants/query";
 // import { AgentIntegrationData, TelegramAgentCredentials } from 'src/types';
-import { useEffect } from "react";
+
 import { useWallet } from "hooks/useWallet";
 import { useCreateWizardStore } from "stores/useCreateWizard";
 import { useShowWizard } from "hooks/reactQuery/wizards/useWizard";
@@ -33,7 +33,7 @@ type IntegrationModalProps = {
 
 function TelegramIntegrationModal({
   integrationData,
-  toggleIntegration,
+
   show,
   onHide,
 }: IntegrationModalProps) {

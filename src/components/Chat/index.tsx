@@ -50,9 +50,9 @@ function Chat() {
       ? undefined
       : `${wallet?.principalId}-${id}`;
 
-  const chats = useChatStore((state) => state.chats);
-  const updateMessage = useChatStore((state) => state.updateChat);
-  const resetChat = useChatStore((state) => state.resetChat);
+  const chats = useChatStore(state => state.chats);
+  const updateMessage = useChatStore(state => state.updateChat);
+  const resetChat = useChatStore(state => state.resetChat);
   const messages = historyId === undefined ? undefined : chats?.[historyId];
 
   const { data: agentHistory, isFetching: isLoadingAgentHistory } =
@@ -64,12 +64,14 @@ function Chat() {
   const lastBubbleRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
   const { mutate: updateMessagesReplied } = useUpdateMessagesReplied();
-  const { mutate: createQuestionEmbedding, isPending: isCreatingQuestionEmbedding } = useCreatingQuestionEmbedding();
+  const {
+    mutate: createQuestionEmbedding,
+    isPending: isCreatingQuestionEmbedding,
+  } = useCreatingQuestionEmbedding();
   useAutoSizeTextArea(inputRef.current, messageInput);
   const { mutate: sendChat, isPending: isResponseLoading } = useChat();
   const { data: avatar } = useGetAsset(wizard?.avatar);
-  const { data: userProfile, isFetching: isUserProfileLoading } =
-    useGetUserProfile(wizard?.userId);
+  const { data: userProfile } = useGetUserProfile(wizard?.userId);
   const { mutate: deleteChatHistory, isPending: isDeletingChatHistory } =
     useDeleteAgentChatHistory();
 
@@ -85,31 +87,42 @@ function Chat() {
 
   const clearChatFn = () => {
     deleteChatHistory(wizard?.id);
-    historyId && resetChat(historyId)
+    historyId && resetChat(historyId);
     setInitialMessage();
   };
 
   useEffect(() => {
     if (!isError) return;
     toast.error(error.message);
-  }, [isError]);
+  }, [error?.message, isError]);
 
   useEffect(() => {
     if (wizard === undefined || historyId === undefined) return;
     if (messages !== undefined && messages.length > 0) return;
     if (isLoadingAgentHistory) return;
-    if (isRagErr(agentHistory)) console.error(agentHistory?.Err)
-    else if (agentHistory?.Ok === null || agentHistory?.Ok === undefined || agentHistory?.Ok.length === 0) {
+    if (isRagErr(agentHistory)) console.error(agentHistory?.Err);
+    else if (
+      agentHistory?.Ok === null ||
+      agentHistory?.Ok === undefined ||
+      agentHistory?.Ok.length === 0
+    ) {
       updateMessage(historyId, {
         user: { name: wizard.name, isBot: true },
         message: wizard.greeting,
       });
-    }
-    else updateMessage(
-      historyId,
-      transformHistoryToMessages(agentHistory?.Ok, wizard.name)
-    );
-  }, [wizard, agentHistory, isLoadingAgentHistory, historyId]);
+    } else
+      updateMessage(
+        historyId,
+        transformHistoryToMessages(agentHistory?.Ok, wizard.name)
+      );
+  }, [
+    wizard,
+    agentHistory,
+    isLoadingAgentHistory,
+    historyId,
+    messages,
+    updateMessage,
+  ]);
 
   const handleSubmit = async () => {
     const message = messageInput.trim();
@@ -164,11 +177,16 @@ function Chat() {
 
   useEffect(() => {
     if (!isLoadingWizard || !isLoadingAgentHistory) scrollToBottom();
-  }, [messages, isLoadingWizard, isLoadingAgentHistory]);
+  }, [messages, isLoadingWizard, isLoadingAgentHistory, scrollToBottom]);
 
   useEffect(() => inputRef?.current?.focus(), [wizard]);
 
-  if (isLoadingWizard || !wizard || isLoadingAgentHistory || isDeletingChatHistory)
+  if (
+    isLoadingWizard ||
+    !wizard ||
+    isLoadingAgentHistory ||
+    isDeletingChatHistory
+  )
     return <PageLoader />;
 
   return (
@@ -185,7 +203,7 @@ function Chat() {
       >
         <i className="ri-arrow-down-line"></i>
       </Button>
-      <div className="container-fluid" style={{ position: 'relative' }}>
+      <div className="container-fluid" style={{ position: "relative" }}>
         <header className="text-left chat-header-wrapper">
           <div className="d-flex flex-column">
             <div className="d-flex justify-content-between align-items-center">

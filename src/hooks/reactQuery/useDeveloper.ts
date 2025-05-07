@@ -24,7 +24,7 @@ export const useIsDeveloper = () => {
       const result = await backend.isDeveloper();
       return result;
     },
-    queryKey: [QUERY_KEYS.IS_USER_DEVELOPER, wallet?.principalId],
+    queryKey: [QUERY_KEYS.IS_USER_DEVELOPER, wallet?.principalId, wallet],
     enabled: !!wallet?.principalId,
     staleTime: ONE_HOUR_STALE_TIME,
   });
@@ -106,7 +106,7 @@ export const useGetUserRequest = () => {
   const wallet = useWallet();
 
   return useQuery({
-    queryKey: [QUERY_KEYS.USER_PENDING_REQUEST],
+    queryKey: [QUERY_KEYS.USER_PENDING_REQUEST, wallet],
     queryFn: async () => {
       if (wallet === undefined) throw Error("user not logged in");
 

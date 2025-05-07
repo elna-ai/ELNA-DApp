@@ -1,4 +1,3 @@
-import classNames from "classnames";
 import { useState } from "react";
 import { Button } from "react-bootstrap";
 import TelegramIntegrationModal from "./TelegramIntegrationModal";
@@ -13,7 +12,7 @@ export default function TelegramIntegration({
   integrationData?: TelegramAgentIntegrationResponse;
 }) {
   const [telegramModalShow, setTelegramModalShow] = useState(false);
-  const [telegramToggle, setTelegramToggle] = useState(
+  const [telegramToggle] = useState(
     // integrationData?.is_enabled ||
     false
   );

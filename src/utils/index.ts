@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 export const extractDocumentsFromPDF = async (file: File) => {
   const loader = new WebPDFLoader(file, {
     //  TODO: ignore requried here?
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     /* @ts-ignore */
     pdfjs: () => {
       pdfJs.GlobalWorkerOptions.workerSrc = pdfJsWorker;
@@ -25,7 +26,9 @@ export const extractDocumentsFromPDF = async (file: File) => {
   }
 };
 
-export const getChunks = async (document: Document<Record<string, any>>[]) => {
+export const getChunks = async (
+  document: Document<Record<string, unknown>>[]
+) => {
   const splitter = new CharacterTextSplitter({
     separator: " ",
     chunkSize: 1000,
@@ -93,6 +96,7 @@ export const generateTwitterShareLink = (content: string, hashtags: string) =>
   )}&hashtags=${hashtags}`;
 
 export const convertToMotokoOptional = <T>(value: T | undefined): [T] | [] =>
+  // eslint-disable-next-line no-extra-boolean-cast
   !!value ? [value] : [];
 
 export const convertFromMotokoOptional = <T>(value: [T] | []) => {
@@ -105,7 +109,7 @@ export const convertFromMotokoVariant = <T extends object>(
   return Object.keys(status)[0] as VariantKeys<T>;
 };
 
-export const convertToMotokoVariant = <T>(
+export const convertToMotokoVariant = (
   status: string
 ): Record<string, null> => {
   const variant: Record<string, null> = {};

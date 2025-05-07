@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 export const idlFactory = ({ IDL }) => {
   const InitialArgs = IDL.Record({
     'capCanisterId' : IDL.Principal,

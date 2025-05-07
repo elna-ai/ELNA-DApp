@@ -30,8 +30,10 @@ export const useChatStore = create<ChatStore>()(
           chats: {
             ...chats,
             [id]: Array.isArray(message)
-              ? [...chats?.[id], ...message]
-              : [...chats?.[id], message],
+              ? // eslint-disable-next-line no-unsafe-optional-chaining
+                [...chats?.[id], ...message]
+              : // eslint-disable-next-line no-unsafe-optional-chaining
+                [...chats?.[id], message],
           },
         });
       },

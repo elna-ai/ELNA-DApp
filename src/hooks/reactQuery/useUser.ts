@@ -54,7 +54,7 @@ export const useGetWhitelistedUsers = () => {
       const whitelistedUsers = await backend.getWhitelistedUser();
       return whitelistedUsers;
     },
-    queryKey: [QUERY_KEYS.WHITELISTED_USERS],
+    queryKey: [QUERY_KEYS.WHITELISTED_USERS, wallet],
   });
 };
 
@@ -125,7 +125,7 @@ export const useIsUserAdmin = () => {
       const response = await backend.isUserAdmin();
       return response;
     },
-    queryKey: [wallet?.principalId, QUERY_KEYS.IS_USER_ADMIN],
+    queryKey: [wallet?.principalId, QUERY_KEYS.IS_USER_ADMIN, wallet],
     enabled: !!wallet?.principalId,
   });
 };

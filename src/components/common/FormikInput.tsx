@@ -6,7 +6,7 @@ type FormikInputProps = {
   name: string;
   label: ReactElement | string;
   placeholder?: string;
-  as?: ElementType<any>;
+  as?: ElementType;
   rows?: number;
 };
 function FormikInput({

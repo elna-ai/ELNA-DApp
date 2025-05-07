@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Form from "react-bootstrap/Form";
@@ -31,6 +32,7 @@ import UploadAvatarImage from "./UploadAvatarImage";
 import { CreateAgentNavTypes } from "src/types";
 
 type PersonaProps = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wizard: any;
   setCurrentNav: React.Dispatch<React.SetStateAction<CreateAgentNavTypes>>;
   isEdit: boolean;
@@ -48,8 +50,7 @@ function Persona({ wizard, setCurrentNav, isEdit }: PersonaProps) {
     useUpdateWizard();
   const { mutate: uploadCustomImage, isPending: isUploadingCustomImage } =
     useUploadCustomImage();
-  const { mutate: deleteCustomImage, isPending: isDeletingCustomImage } =
-    useDeleteCustomImage();
+  const { mutate: deleteCustomImage } = useDeleteCustomImage();
 
   const isTokenizedAgent =
     !!wizard?.poolAddress?.length || !!wizard?.tokenAddress?.length;
@@ -229,7 +230,7 @@ function Persona({ wizard, setCurrentNav, isEdit }: PersonaProps) {
       validateOnBlur={true}
       onSubmit={handleSubmit}
     >
-      {({ dirty, errors, values, handleSubmit, handleChange }) => (
+      {({ dirty, errors, values, handleSubmit, handleChange }: any) => (
         <Form onSubmit={handleSubmit} noValidate>
           <div className="personaCreate">
             <h3 className="sub-title-bot">
@@ -326,7 +327,7 @@ function Persona({ wizard, setCurrentNav, isEdit }: PersonaProps) {
                 isInvalid={!!errors.biography}
               />
               <Form.Control.Feedback type="invalid">
-                {errors.biography}
+                {errors?.biography}
               </Form.Control.Feedback>
             </Form.Group>
             <h3 className="sub-title-bot">

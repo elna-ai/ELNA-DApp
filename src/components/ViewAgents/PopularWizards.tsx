@@ -1,5 +1,5 @@
 import PageLoader from "components/common/PageLoader";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Dropdown } from "react-bootstrap";
 import { toast } from "react-toastify";
@@ -35,45 +35,55 @@ function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
   } = useFetchPublicWizards();
   const { data: analytics } = useGetAllAnalytics();
 
-  const sortWizards = (
-    popularWizards: WizardDetailsBasicWithCreatorName[] | undefined,
-    sortBy: SortByOptions
-  ) => {
-    if (popularWizards === undefined) return undefined;
+  const sortWizards = useCallback(
+    (
+      popularWizards: WizardDetailsBasicWithCreatorName[] | undefined,
+      sortBy: SortByOptions
+    ) => {
+      if (popularWizards === undefined) return undefined;
 
-    const chosenWizardArray =
-      searchButtonActive && suggestionResults.length
-        ? suggestionResults
-        : popularWizards;
+      const chosenWizardArray =
+        searchButtonActive && suggestionResults.length
+          ? suggestionResults
+          : popularWizards;
 
-    let wizardsWithAnalytics = chosenWizardArray.map(agent => ({
-      ...agent,
-      messagesReplied: analytics?.[agent.id]?.messagesReplied || 0n,
-    }));
+      let wizardsWithAnalytics = chosenWizardArray.map(agent => ({
+        ...agent,
+        messagesReplied: analytics?.[agent.id]?.messagesReplied || 0n,
+      }));
 
-    if (filterTokenizedAgent) {
-      wizardsWithAnalytics = wizardsWithAnalytics.filter(
-        wizard => !!wizard.tokenAddress.length || !!wizard.poolAddress.length
-      );
-    }
+      if (filterTokenizedAgent) {
+        wizardsWithAnalytics = wizardsWithAnalytics.filter(
+          wizard => !!wizard.tokenAddress.length || !!wizard.poolAddress.length
+        );
+      }
 
-    if (sortBy === "popularity") {
-      return wizardsWithAnalytics?.sort(
-        (a, b) => Number(b.messagesReplied) - Number(a.messagesReplied)
-      );
-    } else {
-      return wizardsWithAnalytics?.sort(
-        (a, b) => Number(b.updatedAt) - Number(a.updatedAt)
-      );
-    }
-  };
+      if (sortBy === "popularity") {
+        return wizardsWithAnalytics?.sort(
+          (a, b) => Number(b.messagesReplied) - Number(a.messagesReplied)
+        );
+      } else {
+        return wizardsWithAnalytics?.sort(
+          (a, b) => Number(b.updatedAt) - Number(a.updatedAt)
+        );
+      }
+    },
+    [analytics, filterTokenizedAgent, searchButtonActive, suggestionResults]
+  );
 
   useEffect(() => {
     if (!isError) return;
 
     console.error(error);
     toast.error(error.message);
-  }, [isError]);
+  }, [error, isError]);
+
+  const sortedResult = useMemo(() => {
+    if (!popularWizards || !popularWizards.length) {
+      return [];
+    }
+    return sortWizards(popularWizards, sortBy);
+  }, [popularWizards, sortBy, sortWizards]);
 
   return (
     <>
@@ -157,7 +167,7 @@ function PopularWizards({ isHomePage }: { isHomePage: boolean }) {
           <PageLoader />
         ) : (
           <>
-            {sortWizards(popularWizards, sortBy)?.map(
+            {sortedResult?.map(
               ({
                 id,
                 name,

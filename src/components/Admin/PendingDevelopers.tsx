@@ -4,7 +4,6 @@ import LoadingButton from "components/common/LoadingButton";
 import PageLoader from "components/common/PageLoader";
 import {
   useApproveDeveloper,
-  useGetDevelopers,
   useGetPendingDeveloperRequest,
   useRejectDeveloper,
 } from "hooks/reactQuery/useDeveloper";

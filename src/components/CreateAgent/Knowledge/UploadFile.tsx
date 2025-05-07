@@ -14,7 +14,7 @@ import {
   fixNewlines,
   removeMultipleNewlines,
 } from "src/utils";
-import { useNavigate } from "react-router-dom";
+
 import { useCreateIndex } from "hooks/reactQuery/useExternalService";
 import LoadingButton from "components/common/LoadingButton";
 import queryClient from "utils/queryClient";
@@ -32,7 +32,7 @@ function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
   const [isUploading, setIsUploading] = useState(false);
 
   const { t } = useTranslation();
-  const navigate = useNavigate();
+
   const { mutate: createIndex, isPending: isCreatingIndex } = useCreateIndex();
   // const { mutate: createElnaDbIndex, isPending: isCreatingElnaDbIndex } =
   //   useCreateElnaVectorDbIndex();
@@ -127,7 +127,11 @@ function UploadFile({ isOpen, onClose, agentId }: UploadFileProps) {
             <Form.Label>
               <h6>{t("createAgent.knowledge.uploadFile.title")}</h6>
             </Form.Label>
-            <Form.Control type="file" accept="application/pdf" onChange={handleFileChange} />
+            <Form.Control
+              type="file"
+              accept="application/pdf"
+              onChange={handleFileChange}
+            />
             <p className="mt-2">
               <small>
                 <span className="mr-2 info-text">

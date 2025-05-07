@@ -22,7 +22,7 @@ export const useGetAgentXIntegrations = (agent_id?: string) =>
   useQuery({
     queryKey: [QUERY_KEYS.AGENT_INTEGRATIONS, agent_id],
     queryFn: () =>
-      axios.get<any, AxiosResponse<XAgentIntegrationResponse>>(
+      axios.get<unknown, AxiosResponse<XAgentIntegrationResponse>>(
         `${import.meta.env.VITE_INTEGRATIONS_BASE}/integrate/x/${agent_id}`,
         { headers: { Authorization: Cookies.get("integrations_token") } }
       ),
@@ -71,7 +71,7 @@ export const useAddTelegramIntegration = () =>
 export const useGetTelegramIntegration = (agentId?: string) =>
   useQuery({
     queryFn: () =>
-      axios.get<any, AxiosResponse<TelegramAgentIntegrationResponse>>(
+      axios.get<unknown, AxiosResponse<TelegramAgentIntegrationResponse>>(
         `${
           import.meta.env.VITE_TELEGRAM_INTEGRATIONS
         }/integrate/telegram/${agentId}`,
@@ -82,10 +82,10 @@ export const useGetTelegramIntegration = (agentId?: string) =>
     staleTime: ONE_HOUR_STALE_TIME,
     retry: 0,
     refetchOnWindowFocus: false,
-    // @ts-ignore
+
     select: (response: AxiosResponse<TelegramAgentIntegrationResponse>) => {
       const { integrations, ...data } = response.data;
-      let telegram = integrations?.find(
+      const telegram = integrations?.find(
         integration => integration.integration_type === "TELEGRAM"
       );
       return { ...data, integration_id: telegram?.integration_id };

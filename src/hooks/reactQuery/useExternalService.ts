@@ -11,7 +11,7 @@ type useLoginMutationProps = {
 };
 
 type useCreateIndexProps = {
-  documents: Document<Record<string, any>>[];
+  documents: Document<Record<string, unknown>>[];
   index_name: string;
   file_name: string;
 };
