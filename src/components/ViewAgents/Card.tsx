@@ -110,6 +110,7 @@ function Card({
               src={avatarData?.asset || AvatarPlaceholder}
               alt="avatar image"
               className="avatar-img"
+              style={{ border: "solid 1px #1f1f1f" }}
             />
           </div>
           <div className="user-name text-truncate" style={{ marginTop: 8 }}>

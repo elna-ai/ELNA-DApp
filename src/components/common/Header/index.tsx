@@ -161,7 +161,7 @@ function Header() {
         <nav className="hk-navbar navbar navbar-expand-xl fixed-top">
           <div className="container-fluid justify-content-end">
             {isConnected ? (
-              <Dropdown className="ml-auto d-flex">
+              <Dropdown className="ml-auto d-flex" align={"end"}>
                 <Dropdown.Toggle
                   variant="dark"
                   className="flex gap-2 items-center"

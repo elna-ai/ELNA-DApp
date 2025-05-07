@@ -54,6 +54,11 @@
 }
 
 // X-Small devices (portrait phones, less than 576px)
+
+ .my-wizards__hero__title {
+ font-size: 30px !important;
+    line-height: 30px !important;
+ }
 @media (max-width: 699px) {
   .my-wizards__hero__title {
     font-size: 24px;

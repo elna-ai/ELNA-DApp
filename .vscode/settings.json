@@ -3,5 +3,6 @@
   "workbench.editorAssociations": {
     "README.md": "vscode.markdown.preview.editor"
   },
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "nxConsole.nxWorkspacePath": "..\\..\\NX\\elna"
 }

@@ -107,6 +107,14 @@ a {
   font-weight: 500;
 }
 
+
+.btn-primary-light {
+  background-color: #fff !important;
+  border: var(--elna-primary-color) !important;
+  color: var(--elna-primary-text-color) !important;
+  font-weight: 500;
+}
+
 .btn-primary:hover {
   background-color: var(--primary-hover-color);
   border: var(--primary-hover-color);
@@ -591,26 +599,31 @@ textarea.chat-input-area:focus-visible {
 
 .profile-dropdown.dropdown-menu {
   box-shadow: 0 10px 28px -7px rgba(153, 161, 170, 0.15);
-  border-color: transparent;
+  border-color: #272727;
   margin-top: 5px;
-  background-color: var(--background-elevated-base);
+  
   color: var(--title-sub-color);
+  background-color: #1f2022   !important;
 
   a {
     color: var(--title-sub-color);
     display: flex;
     gap: 0.5rem;
     align-items: center;
-
+    font-size: 15px ;
+    background-color: transparent !important;
+    padding-top: 7px !important;
+       padding-bottom: 7px !important;
     &:hover {
-      background-color: var(--background-elevated-base);
+      background-color: #121212  !important;
       color: var(--title-color);
+      
     }
   }
 
   i,
   svg {
-    color: rgba(0, 125, 136, 1);
+    color: #55e6a5;
   }
 
   i {

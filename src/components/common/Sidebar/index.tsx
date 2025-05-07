@@ -118,7 +118,7 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
             {isExpanded ? (
               <ElanLogo
                 className="brand-img img-fluid"
-                style={{ width: "200px" }}
+                style={{ width: "160px" }}
               />
             ) : (
               <BrandSm style={{ height: "41px", width: "41px" }} />
@@ -162,17 +162,30 @@ function Sidebar({ isExpanded, setIsExpanded }: SidebarProps) {
           </div>
           <div className="callout card card-flush text-center mx-auto">
             <div className="card-body">
-              <h5 className="h5">
+              {/* <h5 className="h5">
                 {t("sidebar.plusHeading", {
                   name: t(`common.${import.meta.env.VITE_APP_NAME}`),
                 })}
-              </h5>
+              </h5> */}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginBottom: 15,
+                }}
+              >
+                <img
+                  style={{ width: 150 }}
+                  src="https://hyperlaunch.fun/logo.svg"
+                />
+              </div>
               <p className="p-sm card-text">{t("sidebar.plusDescription")}</p>
               <a
                 href="https://hyperlaunch.fun/"
                 target="_blank"
-                className="btn btn-primary btn-block"
+                className="btn btn-primary-light btn-block"
                 rel="noreferrer"
+                style={{ width: "100%" }}
               >
                 <i className="ri-vip-crown-fill me-2"></i>
                 {t("sidebar.upgradePlan")}

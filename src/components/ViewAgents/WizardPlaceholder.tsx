@@ -12,6 +12,7 @@ function WizardPlaceholder() {
           backgroundImage: `url(${agentMontageBg})`,
           backgroundSize: "cover",
           borderRadius: "16px",
+          padding: "45px 0",
         }}
       >
         {/* <img
@@ -25,13 +26,21 @@ function WizardPlaceholder() {
       </div>
       <div className="my-wizards__footer">
         <div>
-          <div className="my-wizards__footer__title">Bring your Ai to Life</div>
+          <div
+            className="my-wizards__footer__title"
+            style={{
+              color: " var(--elna-primary-color)",
+              fontWeight: "bolder",
+            }}
+          >
+            Bring your Ai to Life
+          </div>
           <div className="my-wizards__footer__description">
             with simple no-code steps
           </div>
         </div>
         <CheckWizardNameCreateModal>
-          <Button>Create Agent</Button>
+          <Button style={{ fontWeight: "bold" }}>+ Create Agent</Button>
         </CheckWizardNameCreateModal>
       </div>
     </div>
