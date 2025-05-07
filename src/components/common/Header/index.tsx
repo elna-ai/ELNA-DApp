@@ -157,7 +157,6 @@ function Header() {
   };
   return (
     <>
-      {JSON.stringify(menus)}
       <header className="d-flex p-2 h-12">
         <nav className="hk-navbar navbar navbar-expand-xl fixed-top">
           <div className="container-fluid justify-content-end">

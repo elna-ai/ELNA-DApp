@@ -9,11 +9,14 @@ export const Skeleton: React.FC = () => {
           <div className="d-flex">
             <div style={{ minHeight: "30px" }} />
           </div>
-          <div className="avatar avatar-xl avatar-rounded">
+          <div
+            className="avatar avatar-lg avatar-rounded"
+            style={{ width: 80, height: 80 }}
+          >
             <SkeletonText
               style={{
-                width: "7rem",
-                height: "7rem",
+                width: 80,
+                height: 80,
                 display: "inline-block",
                 borderRadius: "50%",
               }}
@@ -21,7 +24,7 @@ export const Skeleton: React.FC = () => {
           </div>
           <div
             className="user-name text-truncate"
-            style={{ textAlign: "center" }}
+            style={{ textAlign: "center", marginTop: 8 }}
           >
             <SkeletonText
               style={{ height: 8, width: 80, display: "inline-block" }}

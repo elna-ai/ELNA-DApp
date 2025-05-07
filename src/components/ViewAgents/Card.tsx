@@ -60,10 +60,7 @@ function Card({
         <div className="card-body text-center">
           <div className="d-flex">
             {tokenized ? (
-              <i
-                className="ri-coin-fill"
-                style={{ color: "var(--elna-primary-color)" }}
-              />
+              <i className="ri-coin-fill" style={{ color: "#474747" }} />
             ) : (
               <div style={{ minHeight: "30px" }} />
             )}
@@ -105,14 +102,17 @@ function Card({
               </Dropdown>
             )}
           </div>
-          <div className="avatar avatar-xl avatar-rounded">
+          <div
+            className="avatar avatar-xl avatar-rounded"
+            style={{ width: 80, height: 80 }}
+          >
             <img
               src={avatarData?.asset || AvatarPlaceholder}
               alt="avatar image"
               className="avatar-img"
             />
           </div>
-          <div className="user-name text-truncate">
+          <div className="user-name text-truncate" style={{ marginTop: 8 }}>
             {isUserLoggedIn ? (
               <Link to={`/chat/${id}`} className="btn-link stretched-link">
                 {name}
