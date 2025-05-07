@@ -1,11 +1,14 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import Spinner from "react-bootstrap/Spinner";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
+import { MdContentCopy } from "react-icons/md";
+import { FiUser } from "react-icons/fi";
+import { RiAdminLine } from "react-icons/ri";
+import { IoLogOutOutline } from "react-icons/io5";
 import WalletList from "./WalletList";
 import AvatarImg from "images/avatar.png";
 import { useWallet } from "hooks/useWallet";
@@ -80,7 +83,7 @@ function Header() {
     autoLogin();
   }, [wallet, isConnected, update, clearAuth]);
 
-  const handleLoginLogout = async () => {
+  const handleLoginLogout = useCallback(async () => {
     if (isUserLoggedIn) {
       setIsLoggingOut(true);
       localStorage.removeItem("dfinityWallet");
@@ -93,9 +96,16 @@ function Header() {
     } else {
       setIsWalletModelOpen(prev => !prev);
     }
-  };
+  }, [
+    clearAuth,
+    isUserLoggedIn,
+    location.pathname,
+    navigate,
+    resetLoggedInState,
+    resetUserToken,
+  ]);
 
-  const copyToClipBoard = async () => {
+  const copyToClipBoard = useCallback(async () => {
     try {
       if (wallet === undefined) {
         toast.error("Failed to copy Principal Id");
@@ -107,10 +117,47 @@ function Header() {
     } catch (err) {
       toast.error("Failed to copy Principal Id");
     }
-  };
+  }, [principalId, wallet]);
 
+  const menus = useMemo(
+    () => [
+      {
+        icon: () => <MdContentCopy />,
+        label: "Principal ID",
+        id: "principalId",
+        onClick: copyToClipBoard,
+      },
+      {
+        icon: () => <FiUser />,
+        label: "User profile",
+        id: "profile",
+        onClick: () => navigate("/my-space/profile"),
+      },
+      {
+        icon: () => <RiAdminLine />,
+        label: "Admin",
+        id: "admin",
+        hide: !isAdmin,
+        onClick: () => navigate("/admin"),
+      },
+      {
+        icon: () => <IoLogOutOutline />,
+        label: "Logout",
+        id: "logout",
+        onClick: handleLoginLogout,
+      },
+    ],
+    [copyToClipBoard, handleLoginLogout, isAdmin, navigate]
+  );
+
+  const onClickHandler = (callback?: () => void) => {
+    if (typeof callback === "function") {
+      callback();
+    }
+  };
   return (
     <>
+      {JSON.stringify(menus)}
       <header className="d-flex p-2 h-12">
         <nav className="hk-navbar navbar navbar-expand-xl fixed-top">
           <div className="container-fluid justify-content-end">
@@ -132,45 +179,30 @@ function Header() {
                   {isLoggingOut && <Spinner animation="border" size="sm" />}
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="profile-dropdown">
-                  <Dropdown.Item
-                    onClick={copyToClipBoard}
-                    className="dropdown-menu__item"
-                  >
-                    <i className="ri-file-copy-line"></i>
-                    Principal Id {trim(principalId ?? "")}
-                  </Dropdown.Item>
-                  <Dropdown.Item>
-                    <Link to="/my-space/profile">
-                      <i className="ri-user-fill"></i>
-                      {t("header.userProfile")}
-                    </Link>
-                  </Dropdown.Item>
+                  {menus.map(item => {
+                    if (item.hide) {
+                      return null;
+                    }
+                    return (
+                      <Dropdown.Item
+                        key={item.id}
+                        onClick={() => onClickHandler(item.onClick)}
+                      >
+                        {item.icon()}
+                        {item.label}
+                      </Dropdown.Item>
+                    );
+                  })}
                   {isAdmin && (
-                    <Dropdown.Item>
+                    <Dropdown.Item
+                      style={{
+                        backgroundColor: "red !important",
+                        opacity: 0.5,
+                      }}
+                    >
                       <Link to="/admin">Admin dashboard</Link>
                     </Dropdown.Item>
                   )}
-                  <Dropdown.Item
-                    onClick={handleLoginLogout}
-                    className="dropdown-menu__item"
-                  >
-                    <span className="mr-2">
-                      <svg
-                        className="d-inline"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        height="24"
-                      >
-                        <path fill="none" d="M0 0h24v24H0z"></path>
-                        <path
-                          d="M5 22C4.44772 22 4 21.5523 4 21V3C4 2.44772 4.44772 2 5 2H19C19.5523 2 20 2.44772 20 3V6H18V4H6V20H18V18H20V21C20 21.5523 19.5523 22 19 22H5ZM18 16V13H11V11H18V8L23 12L18 16Z"
-                          fill="currentColor"
-                        ></path>
-                      </svg>
-                    </span>
-                    {t("common.logout")}
-                  </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             ) : (
