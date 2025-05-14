@@ -290,7 +290,7 @@ actor class Main(initialArgs : Types.InitialArgs) {
 
   };
 
-  public shared ({ caller }) func updateWizardLaunchpad(wizardId : Text, wizardDetails : { tokenAddress : ?Text; poolAddress : ?Text; agentId : Text; userId : Text }) : async Result.Result<Text, Types.Error> {
+  public shared ({ caller }) func updateWizardLaunchpad(wizardId : Text, wizardDetails : { tokenAddress : ?Text; poolAddress : ?Text; agentId : Text; userId : Text; modelDetails : ?Types.AIModelDetails }) : async Result.Result<Text, Types.Error> {
     if (not (caller == launchpadOwner)) {
       return #err(#UserNotAuthorized);
     };
@@ -319,6 +319,9 @@ actor class Main(initialArgs : Types.InitialArgs) {
               poolAddress = if (Option.isNull(wizardDetails.poolAddress)) {
                 wizard.poolAddress;
               } else { wizardDetails.poolAddress };
+              modelDetails = if (Option.isNull(wizardDetails.modelDetails)) {
+                wizard.modelDetails;
+              } else { wizardDetails.modelDetails };
               updatedAt = Time.now();
             };
             wizardsV3.put(index, updatedWizardDetails);
@@ -465,7 +468,7 @@ actor class Main(initialArgs : Types.InitialArgs) {
     };
   };
 
-  public shared ({ caller }) func updateWizard(wizardId : Text, wizardDetails : Types.WizardUpdateDetails) : async Text {
+  public shared ({ caller }) func updateWizard(wizardId : Text, wizardDetails : Types.WizardUpdateDetails, modelDetails : ?Types.AIModelDetails) : async Text {
     let wizard = findWizardById(wizardId, wizardsV3);
     switch (wizard) {
       case null {
@@ -495,6 +498,12 @@ actor class Main(initialArgs : Types.InitialArgs) {
               createdAt = wizard.createdAt;
               tokenAddress = wizard.tokenAddress;
               poolAddress = wizard.poolAddress;
+              modelDetails = if (Option.isNull(modelDetails)) {
+                wizard.modelDetails;
+              } else {
+                modelDetails;
+              };
+
               updatedAt = Time.now();
             };
 
@@ -588,6 +597,7 @@ actor class Main(initialArgs : Types.InitialArgs) {
               summary = wizard.summary;
               createdAt = wizard.createdAt;
               updatedAt = wizard.updatedAt;
+              modelDetails = wizard.modelDetails;
             };
             wizardsV2.put(index, updatedWizardDetails);
             return "Agent avatar updated";
