@@ -367,6 +367,18 @@ actor class Backend(_owner : Principal) {
     Iter.toArray(userProfiles.entries());
   };
 
+  public query func getUserAliases(principals : [Principal]) : async [(Principal, Text)] {
+    Array.map<Principal, (Principal, Text)>(
+      principals,
+      func(p : Principal) : (Principal, Text) {
+        switch (userProfiles.get(p)) {
+          case (?profile) { (p, profile.alias) };
+          case null { (p, "") };
+        };
+      },
+    );
+  };
+
   public shared ({ caller }) func addUserProfile(profileDetails : Types.UserProfile) : async Text {
     switch (userProfiles.get(caller)) {
       case (?_userProfile) {
