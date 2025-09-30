@@ -23,6 +23,12 @@ module {
 
   public type UserAddress = Principal;
 
+  public type AIModelDetails = {
+    platform : Text;
+    modelName : Text;
+    apiKey : Text;
+  };
+
   public type WizardDetailsBasic = {
     id : Text;
     name : Text;
@@ -32,6 +38,7 @@ module {
     description : Text;
     avatar : Text;
     isPublished : Bool;
+    modelDetails : ?AIModelDetails;
   };
 
   public type WizardDetailsBasicWithTimeStamp = WizardDetailsBasic and {

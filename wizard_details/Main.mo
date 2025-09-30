@@ -58,6 +58,7 @@ actor class Main(initialArgs : Types.InitialArgs) {
     isPrincipalAdmin : (Principal) -> async (Bool);
     getUserProfile : (Principal) -> async (Types.UserProfile);
     getAllUserProfiles : () -> async [(Principal, Types.UserProfile)];
+    getUserAliases : ([Principal]) -> async [(Principal, Text)];
   };
   // TODO: find a way to directly use the generated .mo file instead of defining custom actor
   let ElnaImagesCanister = actor (Principal.toText(_elnaImagesCanisterId)) : actor {
@@ -160,6 +161,66 @@ actor class Main(initialArgs : Types.InitialArgs) {
     let userProfilesArray = await UserManagementCanister.getAllUserProfiles();
     let wizardsWithCreatorNames = getWizardsWithCreator(publicWizards, userProfilesArray);
 
+    getWizardsBasicDetails(wizardsWithCreatorNames);
+  };
+
+  public func getPublicWizards() : async [Types.WizardDetailsBasicWithCreatorName] {
+    // Step 1: Filter public wizards
+    let publicWizards = Array.filter(
+      Buffer.toArray(wizardsV3),
+      func(wizard : Types.WizardDetailsWithTimeV3) : Bool {
+        wizard.visibility == #publicVisibility and wizard.isPublished;
+      },
+    );
+
+    // Step 2: Collect unique user IDs from public wizards
+    let creatorPrincipals = Array.map(
+      publicWizards,
+      func(wizard : Types.WizardDetailsWithTimeV3) : Principal {
+        Principal.fromText(wizard.userId);
+      },
+    );
+
+    // ----- Fixed: Use Buffer + HashMap for uniqueness -----
+    let seen = HashMap.HashMap<Principal, Bool>(
+      creatorPrincipals.size(),
+      Principal.equal,
+      Principal.hash,
+    );
+    let uniqueBuffer = Buffer.Buffer<Principal>(creatorPrincipals.size());
+
+    for (p in creatorPrincipals.vals()) {
+      if (seen.get(p) == null) {
+        // <- Changed here
+        uniqueBuffer.add(p);
+        seen.put(p, true);
+      };
+    };
+    let uniqueCreators = Buffer.toArray(uniqueBuffer);
+    // ------------------------------------------------------
+
+    // Step 3: Fetch aliases for these principals
+    let creatorAliases = await UserManagementCanister.getUserAliases(uniqueCreators);
+    let aliasMap = HashMap.fromIter<Principal, Text>(
+      creatorAliases.vals(),
+      uniqueCreators.size(),
+      Principal.equal,
+      Principal.hash,
+    );
+
+    // Step 4: Attach creator names
+    let wizardsWithCreatorNames = Array.map(
+      publicWizards,
+      func(wizard : Types.WizardDetailsWithTimeV3) : Types.WizardDetailsWithCreatorName {
+        let creatorName = switch (aliasMap.get(Principal.fromText(wizard.userId))) {
+          case (?name) { name };
+          case null { "" };
+        };
+        { wizard and { creatorName = creatorName } };
+      },
+    );
+
+    // Step 5: Return basic details
     getWizardsBasicDetails(wizardsWithCreatorNames);
   };
 
@@ -290,7 +351,7 @@ actor class Main(initialArgs : Types.InitialArgs) {
 
   };
 
-  public shared ({ caller }) func updateWizardLaunchpad(wizardId : Text, wizardDetails : { tokenAddress : ?Text; poolAddress : ?Text; agentId : Text; userId : Text }) : async Result.Result<Text, Types.Error> {
+  public shared ({ caller }) func updateWizardLaunchpad(wizardId : Text, wizardDetails : { tokenAddress : ?Text; poolAddress : ?Text; agentId : Text; userId : Text; modelDetails : ?Types.AIModelDetails }) : async Result.Result<Text, Types.Error> {
     if (not (caller == launchpadOwner)) {
       return #err(#UserNotAuthorized);
     };
@@ -319,6 +380,9 @@ actor class Main(initialArgs : Types.InitialArgs) {
               poolAddress = if (Option.isNull(wizardDetails.poolAddress)) {
                 wizard.poolAddress;
               } else { wizardDetails.poolAddress };
+              modelDetails = if (Option.isNull(wizardDetails.modelDetails)) {
+                wizard.modelDetails;
+              } else { wizardDetails.modelDetails };
               updatedAt = Time.now();
             };
             wizardsV3.put(index, updatedWizardDetails);
@@ -465,7 +529,7 @@ actor class Main(initialArgs : Types.InitialArgs) {
     };
   };
 
-  public shared ({ caller }) func updateWizard(wizardId : Text, wizardDetails : Types.WizardUpdateDetails) : async Text {
+  public shared ({ caller }) func updateWizard(wizardId : Text, wizardDetails : Types.WizardUpdateDetails, modelDetails : ?Types.AIModelDetails) : async Text {
     let wizard = findWizardById(wizardId, wizardsV3);
     switch (wizard) {
       case null {
@@ -495,6 +559,12 @@ actor class Main(initialArgs : Types.InitialArgs) {
               createdAt = wizard.createdAt;
               tokenAddress = wizard.tokenAddress;
               poolAddress = wizard.poolAddress;
+              modelDetails = if (Option.isNull(modelDetails)) {
+                wizard.modelDetails;
+              } else {
+                modelDetails;
+              };
+
               updatedAt = Time.now();
             };
 
@@ -588,6 +658,7 @@ actor class Main(initialArgs : Types.InitialArgs) {
               summary = wizard.summary;
               createdAt = wizard.createdAt;
               updatedAt = wizard.updatedAt;
+              modelDetails = wizard.modelDetails;
             };
             wizardsV2.put(index, updatedWizardDetails);
             return "Agent avatar updated";

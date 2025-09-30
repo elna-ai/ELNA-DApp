@@ -57,7 +57,7 @@ module {
           creatorName = wizard.creatorName;
           tokenAddress = wizard.tokenAddress;
           poolAddress = wizard.poolAddress;
-
+          modelDetails = wizard.modelDetails;
         };
       },
     );
