@@ -1,0 +1,147 @@
+// ELNA Design System Tokens
+// Forest Green + Glassmorphic Design
+
+// Dark Theme (default) - Dark Blue-Black Base
+[data-theme="dark"],
+body:not([data-theme="light"]) {
+  // Backgrounds - Dark Blue-Black Palette
+  --bg-base: #080a0c;           // Very dark blue-black
+  --bg-surface: #0d1014;        // Slightly lighter
+  --bg-elevated: #12161a;       // Card/panel level
+  --bg-raised: #171c20;         // Raised elements, dropdowns
+  --bg-highlight: #1c2226;      // Hover states, selected
+
+  // Glass Backgrounds
+  --glass-base: rgba(13, 16, 20, 0.6);
+  --glass-surface: rgba(18, 22, 26, 0.5);
+  --glass-border: rgba(74, 222, 128, 0.12);
+  --glass-border-hover: rgba(74, 222, 128, 0.25);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(74, 222, 128, 0.08);
+
+  // Accent Colors
+  --accent-primary: #4ade80;    // Bright green - buttons, links, active states
+  --accent-secondary: #22c55e;  // Slightly darker green - hover on primary
+  --accent-muted: #16a34a;      // Muted green - secondary actions
+  --accent-glow: rgba(74, 222, 128, 0.2);
+
+  // Text Colors
+  --text-primary: #f0fdf4;      // Near white with green tint - main text
+  --text-secondary: #bbf7d0;    // Soft green-white - subheadings, labels
+  --text-muted: #86efac;        // Muted green - captions, placeholders
+  --text-disabled: #4b7a5e;     // Disabled state text
+  --text-on-accent: #052e16;    // Dark text on bright green buttons
+
+  // Borders
+  --border-subtle: rgba(74, 222, 128, 0.08);
+  --border-default: rgba(74, 222, 128, 0.15);
+  --border-emphasis: rgba(74, 222, 128, 0.3);
+  --border-input: rgba(74, 222, 128, 0.2);
+  --border-input-focus: rgba(74, 222, 128, 0.6);
+
+  // Status Colors
+  --status-success-bg: rgba(74, 222, 128, 0.15);
+  --status-success-text: #4ade80;
+  --status-warning-bg: rgba(251, 191, 36, 0.15);
+  --status-warning-text: #fbbf24;
+  --status-error-bg: rgba(248, 113, 113, 0.15);
+  --status-error-text: #f87171;
+  --status-info-bg: rgba(56, 189, 248, 0.15);
+  --status-info-text: #38bdf8;
+
+  // Scrollbar
+  --scrollbar-track: #080a0c;
+  --scrollbar-thumb: rgba(74, 222, 128, 0.25);
+  --scrollbar-thumb-hover: rgba(74, 222, 128, 0.45);
+}
+
+// Light Theme - Warm Paper Gray Base
+[data-theme="light"] {
+  // Backgrounds - Warm Paper Gray Palette
+  --bg-base: #f5f0eb;           // Warm paper gray - main page bg
+  --bg-surface: #ede8e3;        // Slightly darker paper - sidebars, panels
+  --bg-elevated: #e8e2db;       // Cards
+  --bg-raised: #e2dbd3;         // Raised elements
+  --bg-highlight: #d9d1c8;      // Hover states
+
+  // Glass Backgrounds
+  --glass-base: rgba(245, 240, 235, 0.7);
+  --glass-surface: rgba(237, 232, 227, 0.6);
+  --glass-border: rgba(22, 101, 52, 0.12);
+  --glass-border-hover: rgba(22, 101, 52, 0.25);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+
+  // Accent Colors
+  --accent-primary: #16a34a;    // Forest green - buttons, links
+  --accent-secondary: #15803d;  // Darker green - hover
+  --accent-muted: #166534;      // Deep green - secondary actions
+  --accent-glow: rgba(22, 163, 74, 0.15);
+
+  // Text Colors
+  --text-primary: #1a2e1d;      // Very dark green-black - main text
+  --text-secondary: #2d4f35;    // Dark green - subheadings
+  --text-muted: #4a7a57;        // Medium green - captions
+  --text-disabled: #9dbaaa;     // Disabled state
+  --text-on-accent: #f0fdf4;    // Light text on green buttons
+
+  // Borders
+  --border-subtle: rgba(22, 163, 74, 0.08);
+  --border-default: rgba(22, 163, 74, 0.15);
+  --border-emphasis: rgba(22, 163, 74, 0.3);
+  --border-input: rgba(22, 163, 74, 0.2);
+  --border-input-focus: rgba(22, 163, 74, 0.5);
+
+  // Status Colors
+  --status-success-bg: rgba(22, 163, 74, 0.1);
+  --status-success-text: #16a34a;
+  --status-warning-bg: rgba(180, 130, 0, 0.1);
+  --status-warning-text: #b45309;
+  --status-error-bg: rgba(200, 60, 60, 0.1);
+  --status-error-text: #dc2626;
+  --status-info-bg: rgba(0, 100, 170, 0.1);
+  --status-info-text: #0369a1;
+
+  // Scrollbar
+  --scrollbar-track: #f5f0eb;
+  --scrollbar-thumb: rgba(22, 163, 74, 0.25);
+  --scrollbar-thumb-hover: rgba(22, 163, 74, 0.45);
+}
+
+// Common Design Tokens (theme-independent)
+:root {
+  // Typography Scale
+  --font-xs: 0.75rem;    // 12px
+  --font-sm: 0.875rem;   // 14px
+  --font-base: 1rem;     // 16px
+  --font-lg: 1.125rem;   // 18px
+  --font-xl: 1.5rem;     // 24px
+  --font-2xl: 2rem;      // 32px
+  --font-3xl: 2.5rem;    // 40px
+
+  // Spacing Scale
+  --space-xs: 0.25rem;   // 4px
+  --space-sm: 0.5rem;    // 8px
+  --space-md: 1rem;      // 16px
+  --space-lg: 1.5rem;    // 24px
+  --space-xl: 2rem;      // 32px
+  --space-2xl: 3rem;     // 48px
+
+  // Border Radius
+  --radius-sm: 0.375rem; // 6px
+  --radius-md: 0.5rem;   // 8px
+  --radius-lg: 0.75rem;  // 12px
+  --radius-xl: 1rem;     // 16px
+  --radius-full: 9999px;
+
+  // Transitions
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  // Z-index Scale
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-modal: 1300;
+  --z-popover: 1400;
+  --z-tooltip: 1500;
+}
